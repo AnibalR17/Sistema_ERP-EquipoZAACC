@@ -23,7 +23,6 @@ namespace Sistema_ERP
             }
         }
 
-        // The caller must dispose the returned connection after use.
         public static SqlConnection CrearConexion() => new(ConnectionString);
 
         public static SqlConnection AbrirConexion()
