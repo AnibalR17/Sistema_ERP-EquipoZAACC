@@ -101,5 +101,33 @@ namespace Sistema_ERP
                 g.DrawString(days[i], dayFont, ink, new PointF(x, baseline + 42), centered);
             }
         }
+
+        private async void btnprobarconexion_Click(object? sender, System.EventArgs e)
+        {
+            if (sender is not Button button) return;
+            button.Enabled = false;
+
+            try
+            {
+                using var conexion = ConexionDB.CrearConexion();
+                await conexion.OpenAsync();
+                MessageBox.Show(this, "Conexión a la base de datos exitosa.",
+                    "Conexión", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this,
+                    "No se pudo conectar a la base de datos. Verifique la conexión a Internet y la configuración de acceso.",
+                    "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                button.Enabled = true;
+            }
+        }
+
+        private void headingPanel_Paint(object? sender, System.Windows.Forms.PaintEventArgs e)
+        {
+        }
     }
 }

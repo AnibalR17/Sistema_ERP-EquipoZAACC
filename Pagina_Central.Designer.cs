@@ -47,6 +47,7 @@ namespace Sistema_ERP
             this.headingPanel = new System.Windows.Forms.Panel();
             this.titleLabel = new System.Windows.Forms.Label();
             this.subtitleLabel = new System.Windows.Forms.Label();
+            this.btnprobarconexion = new System.Windows.Forms.Button();
             this.infoPanel = new System.Windows.Forms.Panel();
             this.infoLabel = new System.Windows.Forms.Label();
             this.cardsLayout = new System.Windows.Forms.TableLayoutPanel();
@@ -337,6 +338,14 @@ namespace Sistema_ERP
             this.headingPanel.Size = new System.Drawing.Size(1171, 86);
             this.headingPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.headingPanel.Margin = System.Windows.Forms.Padding.Empty;
+            this.headingPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.headingPanel_Paint);
+            this.btnprobarconexion.Name = "btnprobarconexion";
+            this.btnprobarconexion.Text = "Probar conexión";
+            this.btnprobarconexion.Location = new System.Drawing.Point(971, 16);
+            this.btnprobarconexion.Size = new System.Drawing.Size(180, 40);
+            this.btnprobarconexion.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
+            this.btnprobarconexion.UseVisualStyleBackColor = true;
+            this.btnprobarconexion.Click += new System.EventHandler(this.btnprobarconexion_Click);
             this.titleLabel.Name = "titleLabel";
             this.titleLabel.Location = new System.Drawing.Point(0, 0);
             this.titleLabel.Size = new System.Drawing.Size(400, 48);
@@ -557,6 +566,7 @@ namespace Sistema_ERP
             this.dashboardLayout.Controls.Add(this.headingPanel, 0, 0);
             this.headingPanel.Controls.Add(this.titleLabel);
             this.headingPanel.Controls.Add(this.subtitleLabel);
+            this.headingPanel.Controls.Add(this.btnprobarconexion);
             this.dashboardLayout.Controls.Add(this.infoPanel, 0, 1);
             this.infoPanel.Controls.Add(this.infoLabel);
             this.dashboardLayout.Controls.Add(this.cardsLayout, 0, 3);
@@ -626,6 +636,7 @@ namespace Sistema_ERP
         private System.Windows.Forms.Panel headingPanel = null!;
         private System.Windows.Forms.Label titleLabel = null!;
         private System.Windows.Forms.Label subtitleLabel = null!;
+        private System.Windows.Forms.Button btnprobarconexion = null!;
         private System.Windows.Forms.Panel infoPanel = null!;
         private System.Windows.Forms.Label infoLabel = null!;
         private System.Windows.Forms.TableLayoutPanel cardsLayout = null!;
