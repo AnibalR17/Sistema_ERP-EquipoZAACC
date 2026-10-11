@@ -8,4 +8,16 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Update="Pagina_Central.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Pagina_Central.Designer.cs">
+      <DependentUpon>Pagina_Central.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Pagina_Central.resx">
+      <DependentUpon>Pagina_Central.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>
