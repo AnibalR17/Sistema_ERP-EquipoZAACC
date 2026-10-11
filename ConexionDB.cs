@@ -18,15 +18,13 @@ namespace Sistema_ERP
                     if (!string.IsNullOrWhiteSpace(local)) return local;
                 }
 
-                throw new InvalidOperationException("Configure SISTEMA_ERP_CONNECTION_STRING o connection.local.txt para conectar a la base de datos.");
+                throw new InvalidOperationException(
+                    "Configure SISTEMA_ERP_CONNECTION_STRING o connection.local.txt para conectar a la base de datos.");
             }
         }
 
         // The caller must dispose the returned connection after use.
-        public static SqlConnection CrearConexion()
-        {
-            return new SqlConnection(ConnectionString);
-        }
+        public static SqlConnection CrearConexion() => new(ConnectionString);
 
         public static SqlConnection AbrirConexion()
         {
