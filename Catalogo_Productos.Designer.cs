@@ -1,4 +1,4 @@
-﻿namespace Sistema_ERP
+namespace Sistema_ERP
 {
     partial class Catalogo_Productos
     {
@@ -28,45 +28,45 @@
         /// </summary>
         private void InitializeComponent()
         {
-            sidebar = new Panel();
-            brandLabel = new Label();
-            discoverLabel = new Label();
-            homeButton = new Button();
-            salesButton = new Button();
-            adminLabel = new Label();
-            inventoryButton = new Button();
-            transferButton = new Button();
-            validationButton = new Button();
-            bulkButton = new Button();
-            catalogButton = new Button();
-            returnsButton = new Button();
-            rolesButton = new Button();
-            investorsButton = new Button();
-            settingsButton = new Button();
-            userLabel = new Label();
-            roleLabel = new Label();
-            logoutButton = new Button();
-            header = new Panel();
-            toggleButton = new Button();
-            searchBox = new TextBox();
-            accountLabel = new Label();
-            notificationButton = new Button();
-            content = new Panel();
-            titleLabel = new Label();
-            subtitleLabel = new Label();
-            label1 = new Label();
-            btnNuevoProducto = new Button();
-            txtBuscar = new TextBox();
-            dgvProductos = new DataGridView();
-            Column1 = new DataGridViewTextBoxColumn();
-            Column2 = new DataGridViewTextBoxColumn();
-            Column3 = new DataGridViewTextBoxColumn();
-            Column4 = new DataGridViewTextBoxColumn();
-            label2 = new Label();
-            label3 = new Label();
-            button2 = new Button();
-            btnEditar = new Button();
-            btnEliminar = new Button();
+            sidebar = new System.Windows.Forms.Panel();
+            brandLabel = new System.Windows.Forms.Label();
+            discoverLabel = new System.Windows.Forms.Label();
+            homeButton = new System.Windows.Forms.Button();
+            salesButton = new System.Windows.Forms.Button();
+            adminLabel = new System.Windows.Forms.Label();
+            inventoryButton = new System.Windows.Forms.Button();
+            transferButton = new System.Windows.Forms.Button();
+            validationButton = new System.Windows.Forms.Button();
+            bulkButton = new System.Windows.Forms.Button();
+            catalogButton = new System.Windows.Forms.Button();
+            returnsButton = new System.Windows.Forms.Button();
+            rolesButton = new System.Windows.Forms.Button();
+            investorsButton = new System.Windows.Forms.Button();
+            settingsButton = new System.Windows.Forms.Button();
+            userLabel = new System.Windows.Forms.Label();
+            roleLabel = new System.Windows.Forms.Label();
+            logoutButton = new System.Windows.Forms.Button();
+            header = new System.Windows.Forms.Panel();
+            toggleButton = new System.Windows.Forms.Button();
+            searchBox = new System.Windows.Forms.TextBox();
+            accountLabel = new System.Windows.Forms.Label();
+            notificationButton = new System.Windows.Forms.Button();
+            content = new System.Windows.Forms.Panel();
+            titleLabel = new System.Windows.Forms.Label();
+            subtitleLabel = new System.Windows.Forms.Label();
+            label1 = new System.Windows.Forms.Label();
+            btnNuevoProducto = new System.Windows.Forms.Button();
+            txtBuscar = new System.Windows.Forms.TextBox();
+            dgvProductos = new System.Windows.Forms.DataGridView();
+            Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            label2 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
+            button2 = new System.Windows.Forms.Button();
+            btnEditar = new System.Windows.Forms.Button();
+            btnEliminar = new System.Windows.Forms.Button();
             sidebar.SuspendLayout();
             header.SuspendLayout();
             content.SuspendLayout();
@@ -75,7 +75,7 @@
             // 
             // sidebar
             // 
-            sidebar.BackColor = Color.White;
+            sidebar.BackColor = System.Drawing.Color.White;
             sidebar.Controls.Add(label2);
             sidebar.Controls.Add(label3);
             sidebar.Controls.Add(button2);
@@ -96,320 +96,320 @@
             sidebar.Controls.Add(userLabel);
             sidebar.Controls.Add(roleLabel);
             sidebar.Controls.Add(logoutButton);
-            sidebar.Dock = DockStyle.Left;
-            sidebar.Location = new Point(0, 0);
+            sidebar.Dock = System.Windows.Forms.DockStyle.Left;
+            sidebar.Location = new System.Drawing.Point(0, 0);
             sidebar.Name = "sidebar";
-            sidebar.Size = new Size(265, 796);
+            sidebar.Size = new System.Drawing.Size(265, 796);
             sidebar.TabIndex = 2;
             // 
             // brandLabel
             // 
-            brandLabel.BackColor = Color.Transparent;
-            brandLabel.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
-            brandLabel.Location = new Point(24, 16);
+            brandLabel.BackColor = System.Drawing.Color.Transparent;
+            brandLabel.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
+            brandLabel.Location = new System.Drawing.Point(24, 16);
             brandLabel.Name = "brandLabel";
-            brandLabel.Size = new Size(225, 40);
+            brandLabel.Size = new System.Drawing.Size(225, 40);
             brandLabel.TabIndex = 0;
             brandLabel.Text = "Sistema ERP";
-            brandLabel.TextAlign = ContentAlignment.MiddleLeft;
+            brandLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // discoverLabel
             // 
-            discoverLabel.BackColor = Color.Transparent;
-            discoverLabel.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            discoverLabel.Location = new Point(24, 80);
+            discoverLabel.BackColor = System.Drawing.Color.Transparent;
+            discoverLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            discoverLabel.Location = new System.Drawing.Point(24, 80);
             discoverLabel.Name = "discoverLabel";
-            discoverLabel.Size = new Size(220, 28);
+            discoverLabel.Size = new System.Drawing.Size(220, 28);
             discoverLabel.TabIndex = 1;
             discoverLabel.Text = "Descubrir";
-            discoverLabel.TextAlign = ContentAlignment.MiddleLeft;
+            discoverLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // homeButton
             // 
-            homeButton.BackColor = Color.White;
-            homeButton.Cursor = Cursors.Hand;
+            homeButton.BackColor = System.Drawing.Color.White;
+            homeButton.Cursor = System.Windows.Forms.Cursors.Hand;
             homeButton.FlatAppearance.BorderSize = 0;
-            homeButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            homeButton.FlatStyle = FlatStyle.Flat;
-            homeButton.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            homeButton.Location = new Point(14, 112);
+            homeButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            homeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            homeButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            homeButton.Location = new System.Drawing.Point(14, 112);
             homeButton.Name = "homeButton";
-            homeButton.Padding = new Padding(10, 0, 0, 0);
-            homeButton.Size = new Size(236, 40);
+            homeButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            homeButton.Size = new System.Drawing.Size(236, 40);
             homeButton.TabIndex = 2;
             homeButton.Text = "Inicio";
-            homeButton.TextAlign = ContentAlignment.MiddleLeft;
+            homeButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             homeButton.UseVisualStyleBackColor = false;
             // 
             // salesButton
             // 
-            salesButton.BackColor = Color.White;
-            salesButton.Cursor = Cursors.Hand;
+            salesButton.BackColor = System.Drawing.Color.White;
+            salesButton.Cursor = System.Windows.Forms.Cursors.Hand;
             salesButton.FlatAppearance.BorderSize = 0;
-            salesButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            salesButton.FlatStyle = FlatStyle.Flat;
-            salesButton.Location = new Point(14, 154);
+            salesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            salesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            salesButton.Location = new System.Drawing.Point(14, 154);
             salesButton.Name = "salesButton";
-            salesButton.Padding = new Padding(10, 0, 0, 0);
-            salesButton.Size = new Size(236, 40);
+            salesButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            salesButton.Size = new System.Drawing.Size(236, 40);
             salesButton.TabIndex = 3;
             salesButton.Text = "Punto de Venta";
-            salesButton.TextAlign = ContentAlignment.MiddleLeft;
+            salesButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             salesButton.UseVisualStyleBackColor = false;
             // 
             // adminLabel
             // 
-            adminLabel.BackColor = Color.Transparent;
-            adminLabel.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
-            adminLabel.Location = new Point(24, 205);
+            adminLabel.BackColor = System.Drawing.Color.Transparent;
+            adminLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
+            adminLabel.Location = new System.Drawing.Point(24, 205);
             adminLabel.Name = "adminLabel";
-            adminLabel.Size = new Size(220, 28);
+            adminLabel.Size = new System.Drawing.Size(220, 28);
             adminLabel.TabIndex = 4;
             adminLabel.Text = "Administración";
-            adminLabel.TextAlign = ContentAlignment.MiddleLeft;
+            adminLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // inventoryButton
             // 
-            inventoryButton.BackColor = Color.White;
-            inventoryButton.Cursor = Cursors.Hand;
+            inventoryButton.BackColor = System.Drawing.Color.White;
+            inventoryButton.Cursor = System.Windows.Forms.Cursors.Hand;
             inventoryButton.FlatAppearance.BorderSize = 0;
-            inventoryButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            inventoryButton.FlatStyle = FlatStyle.Flat;
-            inventoryButton.Location = new Point(14, 236);
+            inventoryButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            inventoryButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            inventoryButton.Location = new System.Drawing.Point(14, 236);
             inventoryButton.Name = "inventoryButton";
-            inventoryButton.Padding = new Padding(10, 0, 0, 0);
-            inventoryButton.Size = new Size(236, 40);
+            inventoryButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            inventoryButton.Size = new System.Drawing.Size(236, 40);
             inventoryButton.TabIndex = 5;
             inventoryButton.Text = "Inventario y movimientos";
-            inventoryButton.TextAlign = ContentAlignment.MiddleLeft;
+            inventoryButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             inventoryButton.UseVisualStyleBackColor = false;
             // 
             // transferButton
             // 
-            transferButton.BackColor = Color.White;
-            transferButton.Cursor = Cursors.Hand;
+            transferButton.BackColor = System.Drawing.Color.White;
+            transferButton.Cursor = System.Windows.Forms.Cursors.Hand;
             transferButton.FlatAppearance.BorderSize = 0;
-            transferButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            transferButton.FlatStyle = FlatStyle.Flat;
-            transferButton.Location = new Point(14, 276);
+            transferButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            transferButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            transferButton.Location = new System.Drawing.Point(14, 276);
             transferButton.Name = "transferButton";
-            transferButton.Padding = new Padding(10, 0, 0, 0);
-            transferButton.Size = new Size(236, 40);
+            transferButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            transferButton.Size = new System.Drawing.Size(236, 40);
             transferButton.TabIndex = 6;
             transferButton.Text = "Traspaso entre Tiendas";
-            transferButton.TextAlign = ContentAlignment.MiddleLeft;
+            transferButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             transferButton.UseVisualStyleBackColor = false;
             // 
             // validationButton
             // 
-            validationButton.BackColor = Color.White;
-            validationButton.Cursor = Cursors.Hand;
+            validationButton.BackColor = System.Drawing.Color.White;
+            validationButton.Cursor = System.Windows.Forms.Cursors.Hand;
             validationButton.FlatAppearance.BorderSize = 0;
-            validationButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            validationButton.FlatStyle = FlatStyle.Flat;
-            validationButton.Location = new Point(14, 316);
+            validationButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            validationButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            validationButton.Location = new System.Drawing.Point(14, 316);
             validationButton.Name = "validationButton";
-            validationButton.Padding = new Padding(10, 0, 0, 0);
-            validationButton.Size = new Size(236, 40);
+            validationButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            validationButton.Size = new System.Drawing.Size(236, 40);
             validationButton.TabIndex = 7;
             validationButton.Text = "Validación traspaso";
-            validationButton.TextAlign = ContentAlignment.MiddleLeft;
+            validationButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             validationButton.UseVisualStyleBackColor = false;
             // 
             // bulkButton
             // 
-            bulkButton.BackColor = Color.White;
-            bulkButton.Cursor = Cursors.Hand;
+            bulkButton.BackColor = System.Drawing.Color.White;
+            bulkButton.Cursor = System.Windows.Forms.Cursors.Hand;
             bulkButton.FlatAppearance.BorderSize = 0;
-            bulkButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            bulkButton.FlatStyle = FlatStyle.Flat;
-            bulkButton.Location = new Point(14, 356);
+            bulkButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            bulkButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            bulkButton.Location = new System.Drawing.Point(14, 356);
             bulkButton.Name = "bulkButton";
-            bulkButton.Padding = new Padding(10, 0, 0, 0);
-            bulkButton.Size = new Size(236, 40);
+            bulkButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            bulkButton.Size = new System.Drawing.Size(236, 40);
             bulkButton.TabIndex = 8;
             bulkButton.Text = "Carga masiva";
-            bulkButton.TextAlign = ContentAlignment.MiddleLeft;
+            bulkButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             bulkButton.UseVisualStyleBackColor = false;
             // 
             // catalogButton
             // 
-            catalogButton.BackColor = Color.White;
-            catalogButton.Cursor = Cursors.Hand;
+            catalogButton.BackColor = System.Drawing.Color.White;
+            catalogButton.Cursor = System.Windows.Forms.Cursors.Hand;
             catalogButton.FlatAppearance.BorderSize = 0;
-            catalogButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            catalogButton.FlatStyle = FlatStyle.Flat;
-            catalogButton.Location = new Point(14, 396);
+            catalogButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            catalogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            catalogButton.Location = new System.Drawing.Point(14, 396);
             catalogButton.Name = "catalogButton";
-            catalogButton.Padding = new Padding(10, 0, 0, 0);
-            catalogButton.Size = new Size(236, 40);
+            catalogButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            catalogButton.Size = new System.Drawing.Size(236, 40);
             catalogButton.TabIndex = 9;
             catalogButton.Text = "Catálogo de productos";
-            catalogButton.TextAlign = ContentAlignment.MiddleLeft;
+            catalogButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             catalogButton.UseVisualStyleBackColor = false;
             // 
             // returnsButton
             // 
-            returnsButton.BackColor = Color.White;
-            returnsButton.Cursor = Cursors.Hand;
+            returnsButton.BackColor = System.Drawing.Color.White;
+            returnsButton.Cursor = System.Windows.Forms.Cursors.Hand;
             returnsButton.FlatAppearance.BorderSize = 0;
-            returnsButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            returnsButton.FlatStyle = FlatStyle.Flat;
-            returnsButton.Location = new Point(14, 436);
+            returnsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            returnsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            returnsButton.Location = new System.Drawing.Point(14, 436);
             returnsButton.Name = "returnsButton";
-            returnsButton.Padding = new Padding(10, 0, 0, 0);
-            returnsButton.Size = new Size(236, 40);
+            returnsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            returnsButton.Size = new System.Drawing.Size(236, 40);
             returnsButton.TabIndex = 10;
             returnsButton.Text = "Apartados y devoluciones";
-            returnsButton.TextAlign = ContentAlignment.MiddleLeft;
+            returnsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             returnsButton.UseVisualStyleBackColor = false;
             // 
             // rolesButton
             // 
-            rolesButton.BackColor = Color.White;
-            rolesButton.Cursor = Cursors.Hand;
+            rolesButton.BackColor = System.Drawing.Color.White;
+            rolesButton.Cursor = System.Windows.Forms.Cursors.Hand;
             rolesButton.FlatAppearance.BorderSize = 0;
-            rolesButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            rolesButton.FlatStyle = FlatStyle.Flat;
-            rolesButton.Location = new Point(14, 476);
+            rolesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            rolesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            rolesButton.Location = new System.Drawing.Point(14, 476);
             rolesButton.Name = "rolesButton";
-            rolesButton.Padding = new Padding(10, 0, 0, 0);
-            rolesButton.Size = new Size(236, 40);
+            rolesButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            rolesButton.Size = new System.Drawing.Size(236, 40);
             rolesButton.TabIndex = 11;
             rolesButton.Text = "Directorio y roles";
-            rolesButton.TextAlign = ContentAlignment.MiddleLeft;
+            rolesButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             rolesButton.UseVisualStyleBackColor = false;
             // 
             // investorsButton
             // 
-            investorsButton.BackColor = Color.White;
-            investorsButton.Cursor = Cursors.Hand;
+            investorsButton.BackColor = System.Drawing.Color.White;
+            investorsButton.Cursor = System.Windows.Forms.Cursors.Hand;
             investorsButton.FlatAppearance.BorderSize = 0;
-            investorsButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            investorsButton.FlatStyle = FlatStyle.Flat;
-            investorsButton.Location = new Point(14, 516);
+            investorsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            investorsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            investorsButton.Location = new System.Drawing.Point(14, 516);
             investorsButton.Name = "investorsButton";
-            investorsButton.Padding = new Padding(10, 0, 0, 0);
-            investorsButton.Size = new Size(236, 40);
+            investorsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            investorsButton.Size = new System.Drawing.Size(236, 40);
             investorsButton.TabIndex = 12;
             investorsButton.Text = "Control de inversores";
-            investorsButton.TextAlign = ContentAlignment.MiddleLeft;
+            investorsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             investorsButton.UseVisualStyleBackColor = false;
             // 
             // settingsButton
             // 
-            settingsButton.BackColor = Color.White;
-            settingsButton.Cursor = Cursors.Hand;
+            settingsButton.BackColor = System.Drawing.Color.White;
+            settingsButton.Cursor = System.Windows.Forms.Cursors.Hand;
             settingsButton.FlatAppearance.BorderSize = 0;
-            settingsButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            settingsButton.FlatStyle = FlatStyle.Flat;
-            settingsButton.Location = new Point(14, 556);
+            settingsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            settingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            settingsButton.Location = new System.Drawing.Point(14, 556);
             settingsButton.Name = "settingsButton";
-            settingsButton.Padding = new Padding(10, 0, 0, 0);
-            settingsButton.Size = new Size(236, 40);
+            settingsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            settingsButton.Size = new System.Drawing.Size(236, 40);
             settingsButton.TabIndex = 13;
             settingsButton.Text = "Configuración y auditoría";
-            settingsButton.TextAlign = ContentAlignment.MiddleLeft;
+            settingsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             settingsButton.UseVisualStyleBackColor = false;
             // 
             // userLabel
             // 
-            userLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            userLabel.BackColor = Color.Transparent;
-            userLabel.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            userLabel.Location = new Point(24, 1474);
+            userLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            userLabel.BackColor = System.Drawing.Color.Transparent;
+            userLabel.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            userLabel.Location = new System.Drawing.Point(24, 1474);
             userLabel.Name = "userLabel";
-            userLabel.Size = new Size(225, 30);
+            userLabel.Size = new System.Drawing.Size(225, 30);
             userLabel.TabIndex = 14;
             userLabel.Text = "Usuario Adm-01";
-            userLabel.TextAlign = ContentAlignment.MiddleLeft;
+            userLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // roleLabel
             // 
-            roleLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            roleLabel.BackColor = Color.Transparent;
-            roleLabel.Font = new Font("Segoe UI", 9F);
-            roleLabel.ForeColor = Color.FromArgb(125, 125, 125);
-            roleLabel.Location = new Point(24, 1502);
+            roleLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            roleLabel.BackColor = System.Drawing.Color.Transparent;
+            roleLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
+            roleLabel.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
+            roleLabel.Location = new System.Drawing.Point(24, 1502);
             roleLabel.Name = "roleLabel";
-            roleLabel.Size = new Size(225, 22);
+            roleLabel.Size = new System.Drawing.Size(225, 22);
             roleLabel.TabIndex = 15;
             roleLabel.Text = "Administrador";
-            roleLabel.TextAlign = ContentAlignment.MiddleLeft;
+            roleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // logoutButton
             // 
-            logoutButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            logoutButton.BackColor = Color.FromArgb(242, 242, 242);
-            logoutButton.Cursor = Cursors.Hand;
+            logoutButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            logoutButton.BackColor = System.Drawing.Color.FromArgb(242, 242, 242);
+            logoutButton.Cursor = System.Windows.Forms.Cursors.Hand;
             logoutButton.FlatAppearance.BorderSize = 0;
-            logoutButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            logoutButton.FlatStyle = FlatStyle.Flat;
-            logoutButton.Location = new Point(24, 1531);
+            logoutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            logoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            logoutButton.Location = new System.Drawing.Point(24, 1531);
             logoutButton.Name = "logoutButton";
-            logoutButton.Padding = new Padding(10, 0, 0, 0);
-            logoutButton.Size = new Size(216, 38);
+            logoutButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            logoutButton.Size = new System.Drawing.Size(216, 38);
             logoutButton.TabIndex = 16;
             logoutButton.Text = "Cerrar sesión";
-            logoutButton.TextAlign = ContentAlignment.MiddleLeft;
+            logoutButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             logoutButton.UseVisualStyleBackColor = false;
             // 
             // header
             // 
-            header.BackColor = Color.White;
+            header.BackColor = System.Drawing.Color.White;
             header.Controls.Add(toggleButton);
             header.Controls.Add(searchBox);
             header.Controls.Add(accountLabel);
             header.Controls.Add(notificationButton);
-            header.Dock = DockStyle.Top;
-            header.Location = new Point(265, 0);
+            header.Dock = System.Windows.Forms.DockStyle.Top;
+            header.Location = new System.Drawing.Point(265, 0);
             header.Name = "header";
-            header.Size = new Size(1296, 64);
+            header.Size = new System.Drawing.Size(1296, 64);
             header.TabIndex = 3;
             // 
             // toggleButton
             // 
-            toggleButton.BackColor = Color.White;
-            toggleButton.Cursor = Cursors.Hand;
-            toggleButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            toggleButton.FlatStyle = FlatStyle.Flat;
-            toggleButton.Location = new Point(32, 18);
+            toggleButton.BackColor = System.Drawing.Color.White;
+            toggleButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            toggleButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            toggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            toggleButton.Location = new System.Drawing.Point(32, 18);
             toggleButton.Name = "toggleButton";
-            toggleButton.Size = new Size(36, 30);
+            toggleButton.Size = new System.Drawing.Size(36, 30);
             toggleButton.TabIndex = 0;
             toggleButton.Text = "☰";
             toggleButton.UseVisualStyleBackColor = false;
             // 
             // searchBox
             // 
-            searchBox.BorderStyle = BorderStyle.None;
-            searchBox.Font = new Font("Segoe UI", 12F);
-            searchBox.Location = new Point(82, 23);
+            searchBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            searchBox.Font = new System.Drawing.Font("Segoe UI", 12F);
+            searchBox.Location = new System.Drawing.Point(82, 23);
             searchBox.Name = "searchBox";
             searchBox.PlaceholderText = "🔍 Buscador global...";
-            searchBox.Size = new Size(420, 27);
+            searchBox.Size = new System.Drawing.Size(420, 27);
             searchBox.TabIndex = 1;
             // 
             // accountLabel
             // 
-            accountLabel.BackColor = Color.Transparent;
-            accountLabel.Font = new Font("Segoe UI", 11F);
-            accountLabel.Location = new Point(520, 16);
+            accountLabel.BackColor = System.Drawing.Color.Transparent;
+            accountLabel.Font = new System.Drawing.Font("Segoe UI", 11F);
+            accountLabel.Location = new System.Drawing.Point(520, 16);
             accountLabel.Name = "accountLabel";
-            accountLabel.Size = new Size(145, 34);
+            accountLabel.Size = new System.Drawing.Size(145, 34);
             accountLabel.TabIndex = 2;
             accountLabel.Text = "Administrador ⌄";
-            accountLabel.TextAlign = ContentAlignment.MiddleLeft;
+            accountLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // notificationButton
             // 
-            notificationButton.BackColor = Color.White;
-            notificationButton.Cursor = Cursors.Hand;
-            notificationButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            notificationButton.FlatStyle = FlatStyle.Flat;
-            notificationButton.Location = new Point(680, 18);
+            notificationButton.BackColor = System.Drawing.Color.White;
+            notificationButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            notificationButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            notificationButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            notificationButton.Location = new System.Drawing.Point(680, 18);
             notificationButton.Name = "notificationButton";
-            notificationButton.Size = new Size(54, 30);
+            notificationButton.Size = new System.Drawing.Size(54, 30);
             notificationButton.TabIndex = 3;
             notificationButton.Text = "🔔";
             notificationButton.UseVisualStyleBackColor = false;
@@ -424,77 +424,77 @@
             content.Controls.Add(label1);
             content.Controls.Add(subtitleLabel);
             content.Controls.Add(titleLabel);
-            content.Dock = DockStyle.Fill;
-            content.Location = new Point(265, 64);
+            content.Dock = System.Windows.Forms.DockStyle.Fill;
+            content.Location = new System.Drawing.Point(265, 64);
             content.Name = "content";
-            content.Padding = new Padding(32, 34, 32, 36);
-            content.Size = new Size(1296, 732);
+            content.Padding = new System.Windows.Forms.Padding(32, 34, 32, 36);
+            content.Size = new System.Drawing.Size(1296, 732);
             content.TabIndex = 4;
             // 
             // titleLabel
             // 
-            titleLabel.BackColor = Color.Transparent;
-            titleLabel.Font = new Font("Segoe UI", 27F, FontStyle.Bold);
-            titleLabel.Location = new Point(32, 16);
+            titleLabel.BackColor = System.Drawing.Color.Transparent;
+            titleLabel.Font = new System.Drawing.Font("Segoe UI", 27F, System.Drawing.FontStyle.Bold);
+            titleLabel.Location = new System.Drawing.Point(32, 16);
             titleLabel.Name = "titleLabel";
-            titleLabel.Size = new Size(516, 72);
+            titleLabel.Size = new System.Drawing.Size(516, 72);
             titleLabel.TabIndex = 1;
             titleLabel.Text = "Catálogo de productos";
-            titleLabel.TextAlign = ContentAlignment.MiddleLeft;
+            titleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // subtitleLabel
             // 
-            subtitleLabel.BackColor = Color.Transparent;
-            subtitleLabel.Font = new Font("Segoe UI", 12F);
-            subtitleLabel.ForeColor = Color.FromArgb(125, 125, 125);
-            subtitleLabel.Location = new Point(35, 88);
+            subtitleLabel.BackColor = System.Drawing.Color.Transparent;
+            subtitleLabel.Font = new System.Drawing.Font("Segoe UI", 12F);
+            subtitleLabel.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
+            subtitleLabel.Location = new System.Drawing.Point(35, 88);
             subtitleLabel.Name = "subtitleLabel";
-            subtitleLabel.Size = new Size(331, 28);
+            subtitleLabel.Size = new System.Drawing.Size(331, 28);
             subtitleLabel.TabIndex = 2;
             subtitleLabel.Text = "Producto, Categorías y Proveedores.";
-            subtitleLabel.TextAlign = ContentAlignment.MiddleLeft;
+            subtitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label1
             // 
-            label1.BackColor = Color.Transparent;
-            label1.Font = new Font("Segoe UI", 12F);
-            label1.ForeColor = Color.FromArgb(125, 125, 125);
-            label1.Location = new Point(35, 130);
+            label1.BackColor = System.Drawing.Color.Transparent;
+            label1.Font = new System.Drawing.Font("Segoe UI", 12F);
+            label1.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
+            label1.Location = new System.Drawing.Point(35, 130);
             label1.Name = "label1";
-            label1.Size = new Size(776, 28);
+            label1.Size = new System.Drawing.Size(776, 28);
             label1.TabIndex = 3;
             label1.Text = "ℹ El stock actual es solo lectura: Cambia unicamente con moviminentos de inventario.";
-            label1.TextAlign = ContentAlignment.MiddleLeft;
+            label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // btnNuevoProducto
             // 
-            btnNuevoProducto.BackColor = SystemColors.ActiveCaptionText;
-            btnNuevoProducto.ForeColor = SystemColors.Window;
-            btnNuevoProducto.Location = new Point(35, 183);
+            btnNuevoProducto.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            btnNuevoProducto.ForeColor = System.Drawing.SystemColors.Window;
+            btnNuevoProducto.Location = new System.Drawing.Point(35, 183);
             btnNuevoProducto.Name = "btnNuevoProducto";
-            btnNuevoProducto.Size = new Size(153, 56);
+            btnNuevoProducto.Size = new System.Drawing.Size(153, 56);
             btnNuevoProducto.TabIndex = 4;
             btnNuevoProducto.Text = "+ Nuevo Producto";
             btnNuevoProducto.UseVisualStyleBackColor = false;
             // 
             // txtBuscar
             // 
-            txtBuscar.BorderStyle = BorderStyle.None;
-            txtBuscar.Font = new Font("Segoe UI", 12F);
-            txtBuscar.Location = new Point(35, 255);
+            txtBuscar.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            txtBuscar.Font = new System.Drawing.Font("Segoe UI", 12F);
+            txtBuscar.Location = new System.Drawing.Point(35, 255);
             txtBuscar.Name = "txtBuscar";
             txtBuscar.PlaceholderText = "🔍 Buscar...";
-            txtBuscar.Size = new Size(420, 27);
+            txtBuscar.Size = new System.Drawing.Size(420, 27);
             txtBuscar.TabIndex = 5;
             // 
             // dgvProductos
             // 
-            dgvProductos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvProductos.Columns.AddRange(new DataGridViewColumn[] { Column1, Column2, Column3, Column4 });
-            dgvProductos.Location = new Point(35, 304);
+            dgvProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dgvProductos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Column1, Column2, Column3, Column4 });
+            dgvProductos.Location = new System.Drawing.Point(35, 304);
             dgvProductos.Name = "dgvProductos";
             dgvProductos.RowHeadersWidth = 51;
-            dgvProductos.Size = new Size(540, 188);
+            dgvProductos.Size = new System.Drawing.Size(540, 188);
             dgvProductos.TabIndex = 6;
             // 
             // Column1
@@ -527,74 +527,74 @@
             // 
             // label2
             // 
-            label2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            label2.BackColor = Color.Transparent;
-            label2.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
-            label2.Location = new Point(24, 689);
+            label2.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            label2.BackColor = System.Drawing.Color.Transparent;
+            label2.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
+            label2.Location = new System.Drawing.Point(24, 689);
             label2.Name = "label2";
-            label2.Size = new Size(225, 30);
+            label2.Size = new System.Drawing.Size(225, 30);
             label2.TabIndex = 17;
             label2.Text = "Usuario Adm-01";
-            label2.TextAlign = ContentAlignment.MiddleLeft;
+            label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label3
             // 
-            label3.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            label3.BackColor = Color.Transparent;
-            label3.Font = new Font("Segoe UI", 9F);
-            label3.ForeColor = Color.FromArgb(125, 125, 125);
-            label3.Location = new Point(24, 717);
+            label3.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            label3.BackColor = System.Drawing.Color.Transparent;
+            label3.Font = new System.Drawing.Font("Segoe UI", 9F);
+            label3.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
+            label3.Location = new System.Drawing.Point(24, 717);
             label3.Name = "label3";
-            label3.Size = new Size(225, 22);
+            label3.Size = new System.Drawing.Size(225, 22);
             label3.TabIndex = 18;
             label3.Text = "Administrador";
-            label3.TextAlign = ContentAlignment.MiddleLeft;
+            label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // button2
             // 
-            button2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
-            button2.BackColor = Color.FromArgb(242, 242, 242);
-            button2.Cursor = Cursors.Hand;
+            button2.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            button2.BackColor = System.Drawing.Color.FromArgb(242, 242, 242);
+            button2.Cursor = System.Windows.Forms.Cursors.Hand;
             button2.FlatAppearance.BorderSize = 0;
-            button2.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
-            button2.FlatStyle = FlatStyle.Flat;
-            button2.Location = new Point(24, 746);
+            button2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            button2.Location = new System.Drawing.Point(24, 746);
             button2.Name = "button2";
-            button2.Padding = new Padding(10, 0, 0, 0);
-            button2.Size = new Size(216, 38);
+            button2.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            button2.Size = new System.Drawing.Size(216, 38);
             button2.TabIndex = 19;
             button2.Text = "Cerrar sesión";
-            button2.TextAlign = ContentAlignment.MiddleLeft;
+            button2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             button2.UseVisualStyleBackColor = false;
             // 
             // btnEditar
             // 
-            btnEditar.BackColor = SystemColors.ActiveCaptionText;
-            btnEditar.ForeColor = SystemColors.Window;
-            btnEditar.Location = new Point(194, 183);
+            btnEditar.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            btnEditar.ForeColor = System.Drawing.SystemColors.Window;
+            btnEditar.Location = new System.Drawing.Point(194, 183);
             btnEditar.Name = "btnEditar";
-            btnEditar.Size = new Size(153, 56);
+            btnEditar.Size = new System.Drawing.Size(153, 56);
             btnEditar.TabIndex = 7;
             btnEditar.Text = "Editar";
             btnEditar.UseVisualStyleBackColor = false;
             // 
             // btnEliminar
             // 
-            btnEliminar.BackColor = SystemColors.ActiveCaptionText;
-            btnEliminar.ForeColor = SystemColors.Window;
-            btnEliminar.Location = new Point(353, 183);
+            btnEliminar.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            btnEliminar.ForeColor = System.Drawing.SystemColors.Window;
+            btnEliminar.Location = new System.Drawing.Point(353, 183);
             btnEliminar.Name = "btnEliminar";
-            btnEliminar.Size = new Size(153, 56);
+            btnEliminar.Size = new System.Drawing.Size(153, 56);
             btnEliminar.TabIndex = 8;
             btnEliminar.Text = "Eliminar";
             btnEliminar.UseVisualStyleBackColor = false;
             // 
             // Catalogo_Productos
             // 
-            AutoScaleDimensions = new SizeF(8F, 20F);
-            AutoScaleMode = AutoScaleMode.Font;
-            BackColor = SystemColors.Window;
-            ClientSize = new Size(1561, 796);
+            AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            BackColor = System.Drawing.SystemColors.Window;
+            ClientSize = new System.Drawing.Size(1561, 796);
             Controls.Add(content);
             Controls.Add(header);
             Controls.Add(sidebar);
@@ -611,44 +611,44 @@
 
         #endregion
 
-        private Panel sidebar;
-        private Label brandLabel;
-        private Label discoverLabel;
-        private Button homeButton;
-        private Button salesButton;
-        private Label adminLabel;
-        private Button inventoryButton;
-        private Button transferButton;
-        private Button validationButton;
-        private Button bulkButton;
-        private Button catalogButton;
-        private Button returnsButton;
-        private Button rolesButton;
-        private Button investorsButton;
-        private Button settingsButton;
-        private Label userLabel;
-        private Label roleLabel;
-        private Button logoutButton;
-        private Panel header;
-        private Button toggleButton;
-        private TextBox searchBox;
-        private Label accountLabel;
-        private Button notificationButton;
-        private Panel content;
-        private Label label2;
-        private Label label3;
-        private Button button2;
-        private Button btnEliminar;
-        private Button btnEditar;
-        private DataGridView dgvProductos;
-        private DataGridViewTextBoxColumn Column1;
-        private DataGridViewTextBoxColumn Column2;
-        private DataGridViewTextBoxColumn Column3;
-        private DataGridViewTextBoxColumn Column4;
-        private TextBox txtBuscar;
-        private Button btnNuevoProducto;
-        private Label label1;
-        private Label subtitleLabel;
-        private Label titleLabel;
+        private System.Windows.Forms.Panel sidebar;
+        private System.Windows.Forms.Label brandLabel;
+        private System.Windows.Forms.Label discoverLabel;
+        private System.Windows.Forms.Button homeButton;
+        private System.Windows.Forms.Button salesButton;
+        private System.Windows.Forms.Label adminLabel;
+        private System.Windows.Forms.Button inventoryButton;
+        private System.Windows.Forms.Button transferButton;
+        private System.Windows.Forms.Button validationButton;
+        private System.Windows.Forms.Button bulkButton;
+        private System.Windows.Forms.Button catalogButton;
+        private System.Windows.Forms.Button returnsButton;
+        private System.Windows.Forms.Button rolesButton;
+        private System.Windows.Forms.Button investorsButton;
+        private System.Windows.Forms.Button settingsButton;
+        private System.Windows.Forms.Label userLabel;
+        private System.Windows.Forms.Label roleLabel;
+        private System.Windows.Forms.Button logoutButton;
+        private System.Windows.Forms.Panel header;
+        private System.Windows.Forms.Button toggleButton;
+        private System.Windows.Forms.TextBox searchBox;
+        private System.Windows.Forms.Label accountLabel;
+        private System.Windows.Forms.Button notificationButton;
+        private System.Windows.Forms.Panel content;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnEliminar;
+        private System.Windows.Forms.Button btnEditar;
+        private System.Windows.Forms.DataGridView dgvProductos;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.TextBox txtBuscar;
+        private System.Windows.Forms.Button btnNuevoProducto;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label subtitleLabel;
+        private System.Windows.Forms.Label titleLabel;
     }
 }

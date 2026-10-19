@@ -4,6 +4,8 @@ namespace Sistema_ERP
 {
     public partial class Pagina_Central : Form
     {
+        private Catalogo_Productos? catalogo;
+
         public Pagina_Central()
         {
             InitializeComponent();
@@ -135,9 +137,59 @@ namespace Sistema_ERP
 
         }
 
-        private void catalogButton_Click(object sender, EventArgs e)
+        private void catalogButton_Click(object? sender, EventArgs e)
         {
-            
+            if (catalogo == null)
+            {
+                catalogo = new Catalogo_Productos { Dock = DockStyle.Fill };
+                catalogo.HomeRequested += (_, _) =>
+                {
+                    catalogo.Hide();
+                    main.Show();
+                    panelContenedor.Show();
+                };
+                Controls.Add(catalogo);
+            }
+
+            main.Hide();
+            panelContenedor.Hide();
+            catalogo.Show();
+            catalogo.BringToFront();
+        }
+
+        private void returnsButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rolesButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void investorsButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void settingsButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void logoutButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void salesButton_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void notificationButton_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

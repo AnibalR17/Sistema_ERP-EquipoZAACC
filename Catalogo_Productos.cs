@@ -9,9 +9,14 @@ namespace Sistema_ERP
     {
         private DataView? _vista;
 
+        public event EventHandler? HomeRequested;
+
         public Catalogo_Productos()
         {
             InitializeComponent();
+
+            homeButton.Click += (_, _) => HomeRequested?.Invoke(this, EventArgs.Empty);
+            toggleButton.Click += (_, _) => sidebar.Visible = !sidebar.Visible;
 
             Load += Catalogo_Productos_Load;
             txtBuscar.TextChanged += TxtBuscar_TextChanged;
