@@ -9,6 +9,7 @@ namespace Sistema_ERP
         public Pagina_Central()
         {
             InitializeComponent();
+            homeButton.Click += (_, _) => MostrarInicio();
             Header_Resize(this, EventArgs.Empty);
             foreach (Panel panel in new[] { infoPanel, cardPanel0, cardPanel1, cardPanel2, cardPanel3, chartPanel })
             {
@@ -142,19 +143,20 @@ namespace Sistema_ERP
             if (catalogo == null)
             {
                 catalogo = new Catalogo_Productos { Dock = DockStyle.Fill };
-                catalogo.HomeRequested += (_, _) =>
-                {
-                    catalogo.Hide();
-                    main.Show();
-                    panelContenedor.Show();
-                };
-                Controls.Add(catalogo);
+                catalogo.UsarNavegacionPrincipal();
+                catalogo.HomeRequested += (_, _) => MostrarInicio();
+                main.Controls.Add(catalogo);
             }
 
-            main.Hide();
-            panelContenedor.Hide();
+            content.Hide();
             catalogo.Show();
             catalogo.BringToFront();
+        }
+
+        private void MostrarInicio()
+        {
+            catalogo?.Hide();
+            content.Show();
         }
 
         private void returnsButton_Click(object sender, EventArgs e)

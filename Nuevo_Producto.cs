@@ -9,7 +9,7 @@ namespace Sistema_ERP
         public Nuevo_Producto(Producto? producto = null)
         {
             InitializeComponent();
-            // Tema.Aplicar(this);
+            ConfigurarPresentacion();
             _editando = producto;
 
             Load += FormProducto_Load;
@@ -47,6 +47,8 @@ namespace Sistema_ERP
             if (_editando is not null)
             {
                 Text = "Editar producto";
+                titleLabel.Text = "Editar producto";
+                btnGuardar.Text = "Guardar cambios";
                 txtCodigo.Text = _editando.CodigoBarras;
                 txtNombre.Text = _editando.Nombre;
                 nudPrecio.Value = Math.Min(_editando.PrecioUnitario, nudPrecio.Maximum);
