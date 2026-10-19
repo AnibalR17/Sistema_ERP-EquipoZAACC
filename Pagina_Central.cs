@@ -17,7 +17,7 @@ namespace Sistema_ERP
 
         private void ToggleButton_Click(object? sender, EventArgs e)
         {
-            sidebar.Visible = !sidebar.Visible;
+            panelContenedor.Visible = !panelContenedor.Visible;
         }
 
         private void Header_Resize(object? sender, EventArgs e)
@@ -31,7 +31,7 @@ namespace Sistema_ERP
 
         private void Sidebar_Paint(object? sender, PaintEventArgs e)
         {
-            e.Graphics.DrawLine(Pens.LightGray, sidebar.Width - 1, 0, sidebar.Width - 1, sidebar.Height);
+            e.Graphics.DrawLine(Pens.LightGray, panelContenedor.Width - 1, 0, panelContenedor.Width - 1, panelContenedor.Height);
         }
 
         private void Header_Paint(object? sender, PaintEventArgs e)
@@ -128,6 +128,16 @@ namespace Sistema_ERP
 
         private void headingPanel_Paint(object? sender, System.Windows.Forms.PaintEventArgs e)
         {
+        }
+
+        private void infoLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void catalogButton_Click(object sender, EventArgs e)
+        {
+            
         }
     }
 }

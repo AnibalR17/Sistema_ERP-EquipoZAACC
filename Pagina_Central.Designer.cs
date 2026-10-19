@@ -18,616 +18,809 @@ namespace Sistema_ERP
 
         private void InitializeComponent()
         {
-            this.main = new System.Windows.Forms.Panel();
-            this.sidebar = new System.Windows.Forms.Panel();
-            this.content = new System.Windows.Forms.Panel();
-            this.header = new System.Windows.Forms.Panel();
-            this.brandLabel = new System.Windows.Forms.Label();
-            this.discoverLabel = new System.Windows.Forms.Label();
-            this.homeButton = new System.Windows.Forms.Button();
-            this.salesButton = new System.Windows.Forms.Button();
-            this.adminLabel = new System.Windows.Forms.Label();
-            this.inventoryButton = new System.Windows.Forms.Button();
-            this.transferButton = new System.Windows.Forms.Button();
-            this.validationButton = new System.Windows.Forms.Button();
-            this.bulkButton = new System.Windows.Forms.Button();
-            this.catalogButton = new System.Windows.Forms.Button();
-            this.returnsButton = new System.Windows.Forms.Button();
-            this.rolesButton = new System.Windows.Forms.Button();
-            this.investorsButton = new System.Windows.Forms.Button();
-            this.settingsButton = new System.Windows.Forms.Button();
-            this.userLabel = new System.Windows.Forms.Label();
-            this.roleLabel = new System.Windows.Forms.Label();
-            this.logoutButton = new System.Windows.Forms.Button();
-            this.toggleButton = new System.Windows.Forms.Button();
-            this.searchBox = new System.Windows.Forms.TextBox();
-            this.accountLabel = new System.Windows.Forms.Label();
-            this.notificationButton = new System.Windows.Forms.Button();
-            this.dashboardLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.headingPanel = new System.Windows.Forms.Panel();
-            this.titleLabel = new System.Windows.Forms.Label();
-            this.subtitleLabel = new System.Windows.Forms.Label();
-            this.btnprobarconexion = new System.Windows.Forms.Button();
-            this.infoPanel = new System.Windows.Forms.Panel();
-            this.infoLabel = new System.Windows.Forms.Label();
-            this.cardsLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.cardPanel0 = new System.Windows.Forms.Panel();
-            this.cardTitle0 = new System.Windows.Forms.Label();
-            this.cardValue0 = new System.Windows.Forms.Label();
-            this.cardDetail0 = new System.Windows.Forms.Label();
-            this.cardPanel1 = new System.Windows.Forms.Panel();
-            this.cardTitle1 = new System.Windows.Forms.Label();
-            this.cardValue1 = new System.Windows.Forms.Label();
-            this.cardDetail1 = new System.Windows.Forms.Label();
-            this.cardPanel2 = new System.Windows.Forms.Panel();
-            this.cardTitle2 = new System.Windows.Forms.Label();
-            this.cardValue2 = new System.Windows.Forms.Label();
-            this.cardDetail2 = new System.Windows.Forms.Label();
-            this.cardPanel3 = new System.Windows.Forms.Panel();
-            this.cardTitle3 = new System.Windows.Forms.Label();
-            this.cardValue3 = new System.Windows.Forms.Label();
-            this.cardDetail3 = new System.Windows.Forms.Label();
-            this.chartPanel = new System.Windows.Forms.Panel();
-            this.chartTitleLabel = new System.Windows.Forms.Label();
-            this.main.SuspendLayout();
-            this.sidebar.SuspendLayout();
-            this.content.SuspendLayout();
-            this.header.SuspendLayout();
-            this.dashboardLayout.SuspendLayout();
-            this.headingPanel.SuspendLayout();
-            this.infoPanel.SuspendLayout();
-            this.cardsLayout.SuspendLayout();
-            this.cardPanel0.SuspendLayout();
-            this.cardPanel1.SuspendLayout();
-            this.cardPanel2.SuspendLayout();
-            this.cardPanel3.SuspendLayout();
-            this.chartPanel.SuspendLayout();
-            this.SuspendLayout();
-            this.main.Name = "main";
-            this.main.Location = new System.Drawing.Point(265, 0);
-            this.main.Size = new System.Drawing.Size(1235, 900);
-            this.main.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.main.BackColor = System.Drawing.Color.FromArgb(253, 253, 253);
-            this.sidebar.Name = "sidebar";
-            this.sidebar.Location = new System.Drawing.Point(0, 0);
-            this.sidebar.Size = new System.Drawing.Size(265, 900);
-            this.sidebar.Dock = System.Windows.Forms.DockStyle.Left;
-            this.sidebar.BackColor = System.Drawing.Color.White;
-            this.sidebar.Paint += new System.Windows.Forms.PaintEventHandler(this.Sidebar_Paint);
-            this.content.Name = "content";
-            this.content.Location = new System.Drawing.Point(0, 64);
-            this.content.Size = new System.Drawing.Size(1235, 836);
-            this.content.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.content.Padding = new System.Windows.Forms.Padding(32, 34, 32, 36);
-            this.header.Name = "header";
-            this.header.Location = new System.Drawing.Point(0, 0);
-            this.header.Size = new System.Drawing.Size(1235, 64);
-            this.header.Dock = System.Windows.Forms.DockStyle.Top;
-            this.header.BackColor = System.Drawing.Color.White;
-            this.header.Paint += new System.Windows.Forms.PaintEventHandler(this.Header_Paint);
-            this.header.Resize += new System.EventHandler(this.Header_Resize);
-            this.brandLabel.Name = "brandLabel";
-            this.brandLabel.Location = new System.Drawing.Point(24, 16);
-            this.brandLabel.Size = new System.Drawing.Size(225, 40);
-            this.brandLabel.Text = "Sistema ERP";
-            this.brandLabel.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
-            this.brandLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.brandLabel.BackColor = System.Drawing.Color.Transparent;
-            this.discoverLabel.Name = "discoverLabel";
-            this.discoverLabel.Location = new System.Drawing.Point(24, 80);
-            this.discoverLabel.Size = new System.Drawing.Size(220, 28);
-            this.discoverLabel.Text = "Descubrir";
-            this.discoverLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.discoverLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.discoverLabel.BackColor = System.Drawing.Color.Transparent;
-            this.homeButton.Name = "homeButton";
-            this.homeButton.Location = new System.Drawing.Point(14, 112);
-            this.homeButton.Size = new System.Drawing.Size(236, 40);
-            this.homeButton.Text = "Inicio";
-            this.homeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.homeButton.FlatAppearance.BorderSize = 0;
-            this.homeButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.homeButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.homeButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.homeButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.homeButton.BackColor = System.Drawing.Color.White;
-            this.homeButton.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.salesButton.Name = "salesButton";
-            this.salesButton.Location = new System.Drawing.Point(14, 154);
-            this.salesButton.Size = new System.Drawing.Size(236, 40);
-            this.salesButton.Text = "Punto de Venta";
-            this.salesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.salesButton.FlatAppearance.BorderSize = 0;
-            this.salesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.salesButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.salesButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.salesButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.salesButton.BackColor = System.Drawing.Color.White;
-            this.adminLabel.Name = "adminLabel";
-            this.adminLabel.Location = new System.Drawing.Point(24, 205);
-            this.adminLabel.Size = new System.Drawing.Size(220, 28);
-            this.adminLabel.Text = "Administración";
-            this.adminLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
-            this.adminLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.adminLabel.BackColor = System.Drawing.Color.Transparent;
-            this.inventoryButton.Name = "inventoryButton";
-            this.inventoryButton.Location = new System.Drawing.Point(14, 236);
-            this.inventoryButton.Size = new System.Drawing.Size(236, 40);
-            this.inventoryButton.Text = "Inventario y movimientos";
-            this.inventoryButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.inventoryButton.FlatAppearance.BorderSize = 0;
-            this.inventoryButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.inventoryButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.inventoryButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.inventoryButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.inventoryButton.BackColor = System.Drawing.Color.White;
-            this.transferButton.Name = "transferButton";
-            this.transferButton.Location = new System.Drawing.Point(14, 276);
-            this.transferButton.Size = new System.Drawing.Size(236, 40);
-            this.transferButton.Text = "Traspaso entre Tiendas";
-            this.transferButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.transferButton.FlatAppearance.BorderSize = 0;
-            this.transferButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.transferButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.transferButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.transferButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.transferButton.BackColor = System.Drawing.Color.White;
-            this.validationButton.Name = "validationButton";
-            this.validationButton.Location = new System.Drawing.Point(14, 316);
-            this.validationButton.Size = new System.Drawing.Size(236, 40);
-            this.validationButton.Text = "Validación traspaso";
-            this.validationButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.validationButton.FlatAppearance.BorderSize = 0;
-            this.validationButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.validationButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.validationButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.validationButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.validationButton.BackColor = System.Drawing.Color.White;
-            this.bulkButton.Name = "bulkButton";
-            this.bulkButton.Location = new System.Drawing.Point(14, 356);
-            this.bulkButton.Size = new System.Drawing.Size(236, 40);
-            this.bulkButton.Text = "Carga masiva";
-            this.bulkButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.bulkButton.FlatAppearance.BorderSize = 0;
-            this.bulkButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.bulkButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.bulkButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.bulkButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.bulkButton.BackColor = System.Drawing.Color.White;
-            this.catalogButton.Name = "catalogButton";
-            this.catalogButton.Location = new System.Drawing.Point(14, 396);
-            this.catalogButton.Size = new System.Drawing.Size(236, 40);
-            this.catalogButton.Text = "Catálogo de productos";
-            this.catalogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.catalogButton.FlatAppearance.BorderSize = 0;
-            this.catalogButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.catalogButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.catalogButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.catalogButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.catalogButton.BackColor = System.Drawing.Color.White;
-            this.returnsButton.Name = "returnsButton";
-            this.returnsButton.Location = new System.Drawing.Point(14, 436);
-            this.returnsButton.Size = new System.Drawing.Size(236, 40);
-            this.returnsButton.Text = "Apartados y devoluciones";
-            this.returnsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.returnsButton.FlatAppearance.BorderSize = 0;
-            this.returnsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.returnsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.returnsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.returnsButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.returnsButton.BackColor = System.Drawing.Color.White;
-            this.rolesButton.Name = "rolesButton";
-            this.rolesButton.Location = new System.Drawing.Point(14, 476);
-            this.rolesButton.Size = new System.Drawing.Size(236, 40);
-            this.rolesButton.Text = "Directorio y roles";
-            this.rolesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.rolesButton.FlatAppearance.BorderSize = 0;
-            this.rolesButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.rolesButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.rolesButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.rolesButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.rolesButton.BackColor = System.Drawing.Color.White;
-            this.investorsButton.Name = "investorsButton";
-            this.investorsButton.Location = new System.Drawing.Point(14, 516);
-            this.investorsButton.Size = new System.Drawing.Size(236, 40);
-            this.investorsButton.Text = "Control de inversores";
-            this.investorsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.investorsButton.FlatAppearance.BorderSize = 0;
-            this.investorsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.investorsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.investorsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.investorsButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.investorsButton.BackColor = System.Drawing.Color.White;
-            this.settingsButton.Name = "settingsButton";
-            this.settingsButton.Location = new System.Drawing.Point(14, 556);
-            this.settingsButton.Size = new System.Drawing.Size(236, 40);
-            this.settingsButton.Text = "Configuración y auditoría";
-            this.settingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.settingsButton.FlatAppearance.BorderSize = 0;
-            this.settingsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.settingsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.settingsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.settingsButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.settingsButton.BackColor = System.Drawing.Color.White;
-            this.userLabel.Name = "userLabel";
-            this.userLabel.Location = new System.Drawing.Point(24, 778);
-            this.userLabel.Size = new System.Drawing.Size(225, 30);
-            this.userLabel.Text = "Usuario Adm-01";
-            this.userLabel.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
-            this.userLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.userLabel.BackColor = System.Drawing.Color.Transparent;
-            this.roleLabel.Name = "roleLabel";
-            this.roleLabel.Location = new System.Drawing.Point(24, 806);
-            this.roleLabel.Size = new System.Drawing.Size(225, 22);
-            this.roleLabel.Text = "Administrador";
-            this.roleLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular);
-            this.roleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.roleLabel.BackColor = System.Drawing.Color.Transparent;
-            this.roleLabel.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
-            this.logoutButton.Name = "logoutButton";
-            this.logoutButton.Location = new System.Drawing.Point(24, 835);
-            this.logoutButton.Size = new System.Drawing.Size(216, 38);
-            this.logoutButton.Text = "Cerrar sesión";
-            this.logoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.logoutButton.FlatAppearance.BorderSize = 0;
-            this.logoutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.logoutButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.logoutButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.logoutButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.logoutButton.BackColor = System.Drawing.Color.FromArgb(242, 242, 242);
-            this.userLabel.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left);
-            this.roleLabel.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left);
-            this.logoutButton.Anchor = (System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left);
-            this.toggleButton.Name = "toggleButton";
-            this.toggleButton.Location = new System.Drawing.Point(32, 18);
-            this.toggleButton.Size = new System.Drawing.Size(36, 30);
-            this.toggleButton.Text = "☰";
-            this.toggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.toggleButton.FlatAppearance.BorderSize = 0;
-            this.toggleButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.toggleButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.toggleButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.toggleButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.toggleButton.BackColor = System.Drawing.Color.White;
-            this.toggleButton.Padding = System.Windows.Forms.Padding.Empty;
-            this.toggleButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.toggleButton.FlatAppearance.BorderSize = 1;
-            this.toggleButton.Click += new System.EventHandler(this.ToggleButton_Click);
-            this.searchBox.Name = "searchBox";
-            this.searchBox.Location = new System.Drawing.Point(82, 23);
-            this.searchBox.Size = new System.Drawing.Size(420, 28);
-            this.searchBox.PlaceholderText = "🔍 Buscador global...";
-            this.searchBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.searchBox.Font = new System.Drawing.Font("Segoe UI", 12F);
-            this.accountLabel.Name = "accountLabel";
-            this.accountLabel.Location = new System.Drawing.Point(520, 16);
-            this.accountLabel.Size = new System.Drawing.Size(145, 34);
-            this.accountLabel.Text = "Administrador ⌄";
-            this.accountLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular);
-            this.accountLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.accountLabel.BackColor = System.Drawing.Color.Transparent;
-            this.notificationButton.Name = "notificationButton";
-            this.notificationButton.Location = new System.Drawing.Point(680, 18);
-            this.notificationButton.Size = new System.Drawing.Size(54, 30);
-            this.notificationButton.Text = "🔔";
-            this.notificationButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.notificationButton.FlatAppearance.BorderSize = 0;
-            this.notificationButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            this.notificationButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.notificationButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            this.notificationButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.notificationButton.BackColor = System.Drawing.Color.White;
-            this.notificationButton.Padding = System.Windows.Forms.Padding.Empty;
-            this.notificationButton.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.notificationButton.FlatAppearance.BorderSize = 1;
-            this.dashboardLayout.Name = "dashboardLayout";
-            this.dashboardLayout.Location = new System.Drawing.Point(32, 34);
-            this.dashboardLayout.Size = new System.Drawing.Size(1171, 766);
-            this.dashboardLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dashboardLayout.ColumnCount = 1;
-            this.dashboardLayout.RowCount = 5;
-            this.dashboardLayout.Margin = System.Windows.Forms.Padding.Empty;
-            this.dashboardLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.dashboardLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 86F));
-            this.dashboardLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
-            this.dashboardLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.dashboardLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 144F));
-            this.dashboardLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.headingPanel.Name = "headingPanel";
-            this.headingPanel.Location = new System.Drawing.Point(0, 0);
-            this.headingPanel.Size = new System.Drawing.Size(1171, 86);
-            this.headingPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.headingPanel.Margin = System.Windows.Forms.Padding.Empty;
-            this.headingPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.headingPanel_Paint);
-            this.btnprobarconexion.Name = "btnprobarconexion";
-            this.btnprobarconexion.Text = "Probar conexión";
-            this.btnprobarconexion.Location = new System.Drawing.Point(971, 16);
-            this.btnprobarconexion.Size = new System.Drawing.Size(180, 40);
-            this.btnprobarconexion.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
-            this.btnprobarconexion.UseVisualStyleBackColor = true;
-            this.btnprobarconexion.Click += new System.EventHandler(this.btnprobarconexion_Click);
-            this.titleLabel.Name = "titleLabel";
-            this.titleLabel.Location = new System.Drawing.Point(0, 0);
-            this.titleLabel.Size = new System.Drawing.Size(400, 48);
-            this.titleLabel.Text = "Inicio";
-            this.titleLabel.Font = new System.Drawing.Font("Segoe UI", 27F, System.Drawing.FontStyle.Bold);
-            this.titleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.titleLabel.BackColor = System.Drawing.Color.Transparent;
-            this.subtitleLabel.Name = "subtitleLabel";
-            this.subtitleLabel.Location = new System.Drawing.Point(0, 48);
-            this.subtitleLabel.Size = new System.Drawing.Size(500, 28);
-            this.subtitleLabel.Text = "Resumen general del negocio";
-            this.subtitleLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular);
-            this.subtitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.subtitleLabel.BackColor = System.Drawing.Color.Transparent;
-            this.subtitleLabel.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
-            this.infoPanel.Name = "infoPanel";
-            this.infoPanel.Location = new System.Drawing.Point(0, 86);
-            this.infoPanel.Size = new System.Drawing.Size(1171, 42);
-            this.infoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.infoPanel.Margin = System.Windows.Forms.Padding.Empty;
-            this.infoPanel.BackColor = System.Drawing.Color.FromArgb(243, 243, 243);
-            this.infoPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.RoundedPanel_Paint);
-            this.infoLabel.Name = "infoLabel";
-            this.infoLabel.Location = new System.Drawing.Point(0, 0);
-            this.infoLabel.Size = new System.Drawing.Size(1171, 42);
-            this.infoLabel.Text = "ℹ Vista rápida de ventas, traspasos, stock e inversiones. Los datos son de ejemplo.";
-            this.infoLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular);
-            this.infoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.infoLabel.BackColor = System.Drawing.Color.Transparent;
-            this.infoLabel.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
-            this.infoLabel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.infoLabel.Padding = new System.Windows.Forms.Padding(16, 0, 8, 0);
-            this.cardsLayout.Name = "cardsLayout";
-            this.cardsLayout.Location = new System.Drawing.Point(0, 148);
-            this.cardsLayout.Size = new System.Drawing.Size(1171, 144);
-            this.cardsLayout.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cardsLayout.Margin = System.Windows.Forms.Padding.Empty;
-            this.cardsLayout.ColumnCount = 4;
-            this.cardsLayout.RowCount = 1;
-            this.cardsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.cardsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.cardsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.cardsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.cardsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.cardPanel0.Name = "cardPanel0";
-            this.cardPanel0.Location = new System.Drawing.Point(0, 0);
-            this.cardPanel0.Size = new System.Drawing.Size(272, 124);
-            this.cardPanel0.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cardPanel0.BackColor = System.Drawing.Color.White;
-            this.cardPanel0.Margin = new System.Windows.Forms.Padding(0, 0, 10, 20);
-            this.cardPanel0.Paint += new System.Windows.Forms.PaintEventHandler(this.RoundedPanel_Paint);
-            this.cardTitle0.Name = "cardTitle0";
-            this.cardTitle0.Location = new System.Drawing.Point(24, 18);
-            this.cardTitle0.Size = new System.Drawing.Size(224, 26);
-            this.cardTitle0.Text = "Ventas del día";
-            this.cardTitle0.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular);
-            this.cardTitle0.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cardTitle0.BackColor = System.Drawing.Color.Transparent;
-            this.cardTitle0.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
-            this.cardTitle0.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right);
-            this.cardValue0.Name = "cardValue0";
-            this.cardValue0.Location = new System.Drawing.Point(24, 44);
-            this.cardValue0.Size = new System.Drawing.Size(220, 38);
-            this.cardValue0.Text = "L. 0.00";
-            this.cardValue0.Font = new System.Drawing.Font("Segoe UI", 25F, System.Drawing.FontStyle.Bold);
-            this.cardValue0.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cardValue0.BackColor = System.Drawing.Color.Transparent;
-            this.cardDetail0.Name = "cardDetail0";
-            this.cardDetail0.Location = new System.Drawing.Point(24, 82);
-            this.cardDetail0.Size = new System.Drawing.Size(220, 24);
-            this.cardDetail0.Text = "—";
-            this.cardDetail0.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular);
-            this.cardDetail0.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cardDetail0.BackColor = System.Drawing.Color.Transparent;
-            this.cardDetail0.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
-            this.cardPanel1.Name = "cardPanel1";
-            this.cardPanel1.Location = new System.Drawing.Point(0, 0);
-            this.cardPanel1.Size = new System.Drawing.Size(272, 124);
-            this.cardPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cardPanel1.BackColor = System.Drawing.Color.White;
-            this.cardPanel1.Margin = new System.Windows.Forms.Padding(10, 0, 10, 20);
-            this.cardPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.RoundedPanel_Paint);
-            this.cardTitle1.Name = "cardTitle1";
-            this.cardTitle1.Location = new System.Drawing.Point(24, 18);
-            this.cardTitle1.Size = new System.Drawing.Size(224, 26);
-            this.cardTitle1.Text = "Traspasos pendientes";
-            this.cardTitle1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular);
-            this.cardTitle1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cardTitle1.BackColor = System.Drawing.Color.Transparent;
-            this.cardTitle1.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
-            this.cardTitle1.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right);
-            this.cardValue1.Name = "cardValue1";
-            this.cardValue1.Location = new System.Drawing.Point(24, 44);
-            this.cardValue1.Size = new System.Drawing.Size(220, 38);
-            this.cardValue1.Text = "0";
-            this.cardValue1.Font = new System.Drawing.Font("Segoe UI", 25F, System.Drawing.FontStyle.Bold);
-            this.cardValue1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cardValue1.BackColor = System.Drawing.Color.Transparent;
-            this.cardDetail1.Name = "cardDetail1";
-            this.cardDetail1.Location = new System.Drawing.Point(24, 82);
-            this.cardDetail1.Size = new System.Drawing.Size(220, 24);
-            this.cardDetail1.Text = "Esperan aprobación";
-            this.cardDetail1.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular);
-            this.cardDetail1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cardDetail1.BackColor = System.Drawing.Color.Transparent;
-            this.cardDetail1.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
-            this.cardPanel2.Name = "cardPanel2";
-            this.cardPanel2.Location = new System.Drawing.Point(0, 0);
-            this.cardPanel2.Size = new System.Drawing.Size(272, 124);
-            this.cardPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cardPanel2.BackColor = System.Drawing.Color.White;
-            this.cardPanel2.Margin = new System.Windows.Forms.Padding(10, 0, 10, 20);
-            this.cardPanel2.Paint += new System.Windows.Forms.PaintEventHandler(this.RoundedPanel_Paint);
-            this.cardTitle2.Name = "cardTitle2";
-            this.cardTitle2.Location = new System.Drawing.Point(24, 18);
-            this.cardTitle2.Size = new System.Drawing.Size(224, 26);
-            this.cardTitle2.Text = "Alertas de stock";
-            this.cardTitle2.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular);
-            this.cardTitle2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cardTitle2.BackColor = System.Drawing.Color.Transparent;
-            this.cardTitle2.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
-            this.cardTitle2.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right);
-            this.cardValue2.Name = "cardValue2";
-            this.cardValue2.Location = new System.Drawing.Point(24, 44);
-            this.cardValue2.Size = new System.Drawing.Size(220, 38);
-            this.cardValue2.Text = "0";
-            this.cardValue2.Font = new System.Drawing.Font("Segoe UI", 25F, System.Drawing.FontStyle.Bold);
-            this.cardValue2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cardValue2.BackColor = System.Drawing.Color.Transparent;
-            this.cardDetail2.Name = "cardDetail2";
-            this.cardDetail2.Location = new System.Drawing.Point(24, 82);
-            this.cardDetail2.Size = new System.Drawing.Size(220, 24);
-            this.cardDetail2.Text = "Bajo mínimo";
-            this.cardDetail2.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular);
-            this.cardDetail2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cardDetail2.BackColor = System.Drawing.Color.Transparent;
-            this.cardDetail2.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
-            this.cardPanel3.Name = "cardPanel3";
-            this.cardPanel3.Location = new System.Drawing.Point(0, 0);
-            this.cardPanel3.Size = new System.Drawing.Size(272, 124);
-            this.cardPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cardPanel3.BackColor = System.Drawing.Color.White;
-            this.cardPanel3.Margin = new System.Windows.Forms.Padding(10, 0, 0, 20);
-            this.cardPanel3.Paint += new System.Windows.Forms.PaintEventHandler(this.RoundedPanel_Paint);
-            this.cardTitle3.Name = "cardTitle3";
-            this.cardTitle3.Location = new System.Drawing.Point(24, 18);
-            this.cardTitle3.Size = new System.Drawing.Size(224, 26);
-            this.cardTitle3.Text = "Inversiones por vencer";
-            this.cardTitle3.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular);
-            this.cardTitle3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cardTitle3.BackColor = System.Drawing.Color.Transparent;
-            this.cardTitle3.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
-            this.cardTitle3.Anchor = (System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right);
-            this.cardValue3.Name = "cardValue3";
-            this.cardValue3.Location = new System.Drawing.Point(24, 44);
-            this.cardValue3.Size = new System.Drawing.Size(220, 38);
-            this.cardValue3.Text = "0";
-            this.cardValue3.Font = new System.Drawing.Font("Segoe UI", 25F, System.Drawing.FontStyle.Bold);
-            this.cardValue3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cardValue3.BackColor = System.Drawing.Color.Transparent;
-            this.cardDetail3.Name = "cardDetail3";
-            this.cardDetail3.Location = new System.Drawing.Point(24, 82);
-            this.cardDetail3.Size = new System.Drawing.Size(220, 24);
-            this.cardDetail3.Text = "En 30 días";
-            this.cardDetail3.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular);
-            this.cardDetail3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.cardDetail3.BackColor = System.Drawing.Color.Transparent;
-            this.cardDetail3.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
-            this.chartPanel.Name = "chartPanel";
-            this.chartPanel.Location = new System.Drawing.Point(0, 292);
-            this.chartPanel.Size = new System.Drawing.Size(1171, 474);
-            this.chartPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chartPanel.Margin = System.Windows.Forms.Padding.Empty;
-            this.chartPanel.BackColor = System.Drawing.Color.White;
-            this.chartPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.ChartPanel_Paint);
-            this.chartTitleLabel.Name = "chartTitleLabel";
-            this.chartTitleLabel.Location = new System.Drawing.Point(26, 14);
-            this.chartTitleLabel.Size = new System.Drawing.Size(300, 32);
-            this.chartTitleLabel.Text = "Ventas de la semana";
-            this.chartTitleLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular);
-            this.chartTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.chartTitleLabel.BackColor = System.Drawing.Color.Transparent;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1500, 900);
-            this.MinimumSize = new System.Drawing.Size(1050, 720);
-            this.BackColor = System.Drawing.Color.White;
-            this.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.Name = "Pagina_Central";
-            this.Text = "Sistema ERP — Inicio";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Controls.Add(this.main);
-            this.Controls.Add(this.sidebar);
-            this.main.Controls.Add(this.content);
-            this.main.Controls.Add(this.header);
-            this.sidebar.Controls.Add(this.brandLabel);
-            this.sidebar.Controls.Add(this.discoverLabel);
-            this.sidebar.Controls.Add(this.homeButton);
-            this.sidebar.Controls.Add(this.salesButton);
-            this.sidebar.Controls.Add(this.adminLabel);
-            this.sidebar.Controls.Add(this.inventoryButton);
-            this.sidebar.Controls.Add(this.transferButton);
-            this.sidebar.Controls.Add(this.validationButton);
-            this.sidebar.Controls.Add(this.bulkButton);
-            this.sidebar.Controls.Add(this.catalogButton);
-            this.sidebar.Controls.Add(this.returnsButton);
-            this.sidebar.Controls.Add(this.rolesButton);
-            this.sidebar.Controls.Add(this.investorsButton);
-            this.sidebar.Controls.Add(this.settingsButton);
-            this.sidebar.Controls.Add(this.userLabel);
-            this.sidebar.Controls.Add(this.roleLabel);
-            this.sidebar.Controls.Add(this.logoutButton);
-            this.header.Controls.Add(this.toggleButton);
-            this.header.Controls.Add(this.searchBox);
-            this.header.Controls.Add(this.accountLabel);
-            this.header.Controls.Add(this.notificationButton);
-            this.content.Controls.Add(this.dashboardLayout);
-            this.dashboardLayout.Controls.Add(this.headingPanel, 0, 0);
-            this.headingPanel.Controls.Add(this.titleLabel);
-            this.headingPanel.Controls.Add(this.subtitleLabel);
-            this.headingPanel.Controls.Add(this.btnprobarconexion);
-            this.dashboardLayout.Controls.Add(this.infoPanel, 0, 1);
-            this.infoPanel.Controls.Add(this.infoLabel);
-            this.dashboardLayout.Controls.Add(this.cardsLayout, 0, 3);
-            this.cardsLayout.Controls.Add(this.cardPanel0, 0, 0);
-            this.cardPanel0.Controls.Add(this.cardTitle0);
-            this.cardPanel0.Controls.Add(this.cardValue0);
-            this.cardPanel0.Controls.Add(this.cardDetail0);
-            this.cardsLayout.Controls.Add(this.cardPanel1, 1, 0);
-            this.cardPanel1.Controls.Add(this.cardTitle1);
-            this.cardPanel1.Controls.Add(this.cardValue1);
-            this.cardPanel1.Controls.Add(this.cardDetail1);
-            this.cardsLayout.Controls.Add(this.cardPanel2, 2, 0);
-            this.cardPanel2.Controls.Add(this.cardTitle2);
-            this.cardPanel2.Controls.Add(this.cardValue2);
-            this.cardPanel2.Controls.Add(this.cardDetail2);
-            this.cardsLayout.Controls.Add(this.cardPanel3, 3, 0);
-            this.cardPanel3.Controls.Add(this.cardTitle3);
-            this.cardPanel3.Controls.Add(this.cardValue3);
-            this.cardPanel3.Controls.Add(this.cardDetail3);
-            this.dashboardLayout.Controls.Add(this.chartPanel, 0, 4);
-            this.chartPanel.Controls.Add(this.chartTitleLabel);
-            this.main.ResumeLayout(false);
-            this.sidebar.ResumeLayout(false);
-            this.content.ResumeLayout(false);
-            this.header.ResumeLayout(false);
-            this.header.PerformLayout();
-            this.dashboardLayout.ResumeLayout(false);
-            this.headingPanel.ResumeLayout(false);
-            this.infoPanel.ResumeLayout(false);
-            this.cardsLayout.ResumeLayout(false);
-            this.cardPanel0.ResumeLayout(false);
-            this.cardPanel1.ResumeLayout(false);
-            this.cardPanel2.ResumeLayout(false);
-            this.cardPanel3.ResumeLayout(false);
-            this.chartPanel.ResumeLayout(false);
-            this.ResumeLayout(false);
+            main = new Panel();
+            content = new Panel();
+            dashboardLayout = new TableLayoutPanel();
+            headingPanel = new Panel();
+            titleLabel = new Label();
+            subtitleLabel = new Label();
+            btnprobarconexion = new Button();
+            infoPanel = new Panel();
+            infoLabel = new Label();
+            cardsLayout = new TableLayoutPanel();
+            cardPanel0 = new Panel();
+            cardTitle0 = new Label();
+            cardValue0 = new Label();
+            cardDetail0 = new Label();
+            cardPanel1 = new Panel();
+            cardTitle1 = new Label();
+            cardValue1 = new Label();
+            cardDetail1 = new Label();
+            cardPanel2 = new Panel();
+            cardTitle2 = new Label();
+            cardValue2 = new Label();
+            cardDetail2 = new Label();
+            cardPanel3 = new Panel();
+            cardTitle3 = new Label();
+            cardValue3 = new Label();
+            cardDetail3 = new Label();
+            chartPanel = new Panel();
+            chartTitleLabel = new Label();
+            header = new Panel();
+            toggleButton = new Button();
+            searchBox = new TextBox();
+            accountLabel = new Label();
+            notificationButton = new Button();
+            logoutButton = new Button();
+            roleLabel = new Label();
+            userLabel = new Label();
+            settingsButton = new Button();
+            investorsButton = new Button();
+            rolesButton = new Button();
+            returnsButton = new Button();
+            catalogButton = new Button();
+            bulkButton = new Button();
+            validationButton = new Button();
+            transferButton = new Button();
+            inventoryButton = new Button();
+            adminLabel = new Label();
+            salesButton = new Button();
+            homeButton = new Button();
+            discoverLabel = new Label();
+            brandLabel = new Label();
+            panelContenedor = new Panel();
+            main.SuspendLayout();
+            content.SuspendLayout();
+            dashboardLayout.SuspendLayout();
+            headingPanel.SuspendLayout();
+            infoPanel.SuspendLayout();
+            cardsLayout.SuspendLayout();
+            cardPanel0.SuspendLayout();
+            cardPanel1.SuspendLayout();
+            cardPanel2.SuspendLayout();
+            cardPanel3.SuspendLayout();
+            chartPanel.SuspendLayout();
+            header.SuspendLayout();
+            panelContenedor.SuspendLayout();
+            SuspendLayout();
+            // 
+            // main
+            // 
+            main.BackColor = Color.FromArgb(253, 253, 253);
+            main.Controls.Add(content);
+            main.Controls.Add(header);
+            main.Dock = DockStyle.Fill;
+            main.Location = new Point(265, 0);
+            main.Name = "main";
+            main.Size = new Size(1235, 900);
+            main.TabIndex = 0;
+            // 
+            // content
+            // 
+            content.Controls.Add(dashboardLayout);
+            content.Dock = DockStyle.Fill;
+            content.Location = new Point(0, 64);
+            content.Name = "content";
+            content.Padding = new Padding(32, 34, 32, 36);
+            content.Size = new Size(1235, 836);
+            content.TabIndex = 0;
+            // 
+            // dashboardLayout
+            // 
+            dashboardLayout.ColumnCount = 1;
+            dashboardLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            dashboardLayout.Controls.Add(headingPanel, 0, 0);
+            dashboardLayout.Controls.Add(infoPanel, 0, 1);
+            dashboardLayout.Controls.Add(cardsLayout, 0, 3);
+            dashboardLayout.Controls.Add(chartPanel, 0, 4);
+            dashboardLayout.Dock = DockStyle.Fill;
+            dashboardLayout.Location = new Point(32, 34);
+            dashboardLayout.Margin = new Padding(0);
+            dashboardLayout.Name = "dashboardLayout";
+            dashboardLayout.RowCount = 5;
+            dashboardLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 86F));
+            dashboardLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 42F));
+            dashboardLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            dashboardLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 144F));
+            dashboardLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            dashboardLayout.Size = new Size(1171, 766);
+            dashboardLayout.TabIndex = 0;
+            // 
+            // headingPanel
+            // 
+            headingPanel.Controls.Add(titleLabel);
+            headingPanel.Controls.Add(subtitleLabel);
+            headingPanel.Controls.Add(btnprobarconexion);
+            headingPanel.Dock = DockStyle.Fill;
+            headingPanel.Location = new Point(0, 0);
+            headingPanel.Margin = new Padding(0);
+            headingPanel.Name = "headingPanel";
+            headingPanel.Size = new Size(1171, 86);
+            headingPanel.TabIndex = 0;
+            headingPanel.Paint += headingPanel_Paint;
+            // 
+            // titleLabel
+            // 
+            titleLabel.BackColor = Color.Transparent;
+            titleLabel.Font = new Font("Segoe UI", 27F, FontStyle.Bold);
+            titleLabel.Location = new Point(0, -1);
+            titleLabel.Name = "titleLabel";
+            titleLabel.Size = new Size(400, 48);
+            titleLabel.TabIndex = 0;
+            titleLabel.Text = "Inicio";
+            titleLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // subtitleLabel
+            // 
+            subtitleLabel.BackColor = Color.Transparent;
+            subtitleLabel.Font = new Font("Segoe UI", 12F);
+            subtitleLabel.ForeColor = Color.FromArgb(125, 125, 125);
+            subtitleLabel.Location = new Point(0, 48);
+            subtitleLabel.Name = "subtitleLabel";
+            subtitleLabel.Size = new Size(500, 28);
+            subtitleLabel.TabIndex = 1;
+            subtitleLabel.Text = "Resumen general del negocio";
+            subtitleLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // btnprobarconexion
+            // 
+            btnprobarconexion.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            btnprobarconexion.Location = new Point(971, 16);
+            btnprobarconexion.Name = "btnprobarconexion";
+            btnprobarconexion.Size = new Size(180, 40);
+            btnprobarconexion.TabIndex = 2;
+            btnprobarconexion.Text = "Probar conexión";
+            btnprobarconexion.UseVisualStyleBackColor = true;
+            btnprobarconexion.Click += btnprobarconexion_Click;
+            // 
+            // infoPanel
+            // 
+            infoPanel.BackColor = Color.FromArgb(243, 243, 243);
+            infoPanel.Controls.Add(infoLabel);
+            infoPanel.Dock = DockStyle.Fill;
+            infoPanel.Location = new Point(0, 86);
+            infoPanel.Margin = new Padding(0);
+            infoPanel.Name = "infoPanel";
+            infoPanel.Size = new Size(1171, 42);
+            infoPanel.TabIndex = 1;
+            infoPanel.Paint += RoundedPanel_Paint;
+            // 
+            // infoLabel
+            // 
+            infoLabel.BackColor = Color.Transparent;
+            infoLabel.Dock = DockStyle.Fill;
+            infoLabel.Font = new Font("Segoe UI", 11F);
+            infoLabel.ForeColor = Color.FromArgb(125, 125, 125);
+            infoLabel.Location = new Point(0, 0);
+            infoLabel.Name = "infoLabel";
+            infoLabel.Padding = new Padding(16, 0, 8, 0);
+            infoLabel.Size = new Size(1171, 42);
+            infoLabel.TabIndex = 0;
+            infoLabel.Text = "ℹ Vista rápida de ventas, traspasos, stock e inversiones. Los datos son de ejemplo.";
+            infoLabel.TextAlign = ContentAlignment.MiddleLeft;
+            infoLabel.Click += infoLabel_Click;
+            // 
+            // cardsLayout
+            // 
+            cardsLayout.ColumnCount = 4;
+            cardsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            cardsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            cardsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            cardsLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            cardsLayout.Controls.Add(cardPanel0, 0, 0);
+            cardsLayout.Controls.Add(cardPanel1, 1, 0);
+            cardsLayout.Controls.Add(cardPanel2, 2, 0);
+            cardsLayout.Controls.Add(cardPanel3, 3, 0);
+            cardsLayout.Dock = DockStyle.Fill;
+            cardsLayout.Location = new Point(0, 148);
+            cardsLayout.Margin = new Padding(0);
+            cardsLayout.Name = "cardsLayout";
+            cardsLayout.RowCount = 1;
+            cardsLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            cardsLayout.Size = new Size(1171, 144);
+            cardsLayout.TabIndex = 2;
+            // 
+            // cardPanel0
+            // 
+            cardPanel0.BackColor = Color.White;
+            cardPanel0.Controls.Add(cardTitle0);
+            cardPanel0.Controls.Add(cardValue0);
+            cardPanel0.Controls.Add(cardDetail0);
+            cardPanel0.Dock = DockStyle.Fill;
+            cardPanel0.Location = new Point(0, 0);
+            cardPanel0.Margin = new Padding(0, 0, 10, 20);
+            cardPanel0.Name = "cardPanel0";
+            cardPanel0.Size = new Size(282, 124);
+            cardPanel0.TabIndex = 0;
+            cardPanel0.Paint += RoundedPanel_Paint;
+            // 
+            // cardTitle0
+            // 
+            cardTitle0.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cardTitle0.BackColor = Color.Transparent;
+            cardTitle0.Font = new Font("Segoe UI", 10F);
+            cardTitle0.ForeColor = Color.FromArgb(125, 125, 125);
+            cardTitle0.Location = new Point(24, 18);
+            cardTitle0.Name = "cardTitle0";
+            cardTitle0.Size = new Size(234, 26);
+            cardTitle0.TabIndex = 0;
+            cardTitle0.Text = "Ventas del día";
+            cardTitle0.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cardValue0
+            // 
+            cardValue0.BackColor = Color.Transparent;
+            cardValue0.Font = new Font("Segoe UI", 25F, FontStyle.Bold);
+            cardValue0.Location = new Point(24, 44);
+            cardValue0.Name = "cardValue0";
+            cardValue0.Size = new Size(220, 38);
+            cardValue0.TabIndex = 1;
+            cardValue0.Text = "L. 0.00";
+            cardValue0.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cardDetail0
+            // 
+            cardDetail0.BackColor = Color.Transparent;
+            cardDetail0.Font = new Font("Segoe UI", 10F);
+            cardDetail0.ForeColor = Color.FromArgb(125, 125, 125);
+            cardDetail0.Location = new Point(24, 82);
+            cardDetail0.Name = "cardDetail0";
+            cardDetail0.Size = new Size(220, 24);
+            cardDetail0.TabIndex = 2;
+            cardDetail0.Text = "—";
+            cardDetail0.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cardPanel1
+            // 
+            cardPanel1.BackColor = Color.White;
+            cardPanel1.Controls.Add(cardTitle1);
+            cardPanel1.Controls.Add(cardValue1);
+            cardPanel1.Controls.Add(cardDetail1);
+            cardPanel1.Dock = DockStyle.Fill;
+            cardPanel1.Location = new Point(302, 0);
+            cardPanel1.Margin = new Padding(10, 0, 10, 20);
+            cardPanel1.Name = "cardPanel1";
+            cardPanel1.Size = new Size(272, 124);
+            cardPanel1.TabIndex = 1;
+            cardPanel1.Paint += RoundedPanel_Paint;
+            // 
+            // cardTitle1
+            // 
+            cardTitle1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cardTitle1.BackColor = Color.Transparent;
+            cardTitle1.Font = new Font("Segoe UI", 10F);
+            cardTitle1.ForeColor = Color.FromArgb(125, 125, 125);
+            cardTitle1.Location = new Point(24, 18);
+            cardTitle1.Name = "cardTitle1";
+            cardTitle1.Size = new Size(224, 26);
+            cardTitle1.TabIndex = 0;
+            cardTitle1.Text = "Traspasos pendientes";
+            cardTitle1.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cardValue1
+            // 
+            cardValue1.BackColor = Color.Transparent;
+            cardValue1.Font = new Font("Segoe UI", 25F, FontStyle.Bold);
+            cardValue1.Location = new Point(24, 44);
+            cardValue1.Name = "cardValue1";
+            cardValue1.Size = new Size(220, 38);
+            cardValue1.TabIndex = 1;
+            cardValue1.Text = "0";
+            cardValue1.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cardDetail1
+            // 
+            cardDetail1.BackColor = Color.Transparent;
+            cardDetail1.Font = new Font("Segoe UI", 10F);
+            cardDetail1.ForeColor = Color.FromArgb(125, 125, 125);
+            cardDetail1.Location = new Point(24, 82);
+            cardDetail1.Name = "cardDetail1";
+            cardDetail1.Size = new Size(220, 24);
+            cardDetail1.TabIndex = 2;
+            cardDetail1.Text = "Esperan aprobación";
+            cardDetail1.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cardPanel2
+            // 
+            cardPanel2.BackColor = Color.White;
+            cardPanel2.Controls.Add(cardTitle2);
+            cardPanel2.Controls.Add(cardValue2);
+            cardPanel2.Controls.Add(cardDetail2);
+            cardPanel2.Dock = DockStyle.Fill;
+            cardPanel2.Location = new Point(594, 0);
+            cardPanel2.Margin = new Padding(10, 0, 10, 20);
+            cardPanel2.Name = "cardPanel2";
+            cardPanel2.Size = new Size(272, 124);
+            cardPanel2.TabIndex = 2;
+            cardPanel2.Paint += RoundedPanel_Paint;
+            // 
+            // cardTitle2
+            // 
+            cardTitle2.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cardTitle2.BackColor = Color.Transparent;
+            cardTitle2.Font = new Font("Segoe UI", 10F);
+            cardTitle2.ForeColor = Color.FromArgb(125, 125, 125);
+            cardTitle2.Location = new Point(24, 18);
+            cardTitle2.Name = "cardTitle2";
+            cardTitle2.Size = new Size(224, 26);
+            cardTitle2.TabIndex = 0;
+            cardTitle2.Text = "Alertas de stock";
+            cardTitle2.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cardValue2
+            // 
+            cardValue2.BackColor = Color.Transparent;
+            cardValue2.Font = new Font("Segoe UI", 25F, FontStyle.Bold);
+            cardValue2.Location = new Point(24, 44);
+            cardValue2.Name = "cardValue2";
+            cardValue2.Size = new Size(220, 38);
+            cardValue2.TabIndex = 1;
+            cardValue2.Text = "0";
+            cardValue2.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cardDetail2
+            // 
+            cardDetail2.BackColor = Color.Transparent;
+            cardDetail2.Font = new Font("Segoe UI", 10F);
+            cardDetail2.ForeColor = Color.FromArgb(125, 125, 125);
+            cardDetail2.Location = new Point(24, 82);
+            cardDetail2.Name = "cardDetail2";
+            cardDetail2.Size = new Size(220, 24);
+            cardDetail2.TabIndex = 2;
+            cardDetail2.Text = "Bajo mínimo";
+            cardDetail2.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cardPanel3
+            // 
+            cardPanel3.BackColor = Color.White;
+            cardPanel3.Controls.Add(cardTitle3);
+            cardPanel3.Controls.Add(cardValue3);
+            cardPanel3.Controls.Add(cardDetail3);
+            cardPanel3.Dock = DockStyle.Fill;
+            cardPanel3.Location = new Point(886, 0);
+            cardPanel3.Margin = new Padding(10, 0, 0, 20);
+            cardPanel3.Name = "cardPanel3";
+            cardPanel3.Size = new Size(285, 124);
+            cardPanel3.TabIndex = 3;
+            cardPanel3.Paint += RoundedPanel_Paint;
+            // 
+            // cardTitle3
+            // 
+            cardTitle3.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            cardTitle3.BackColor = Color.Transparent;
+            cardTitle3.Font = new Font("Segoe UI", 10F);
+            cardTitle3.ForeColor = Color.FromArgb(125, 125, 125);
+            cardTitle3.Location = new Point(24, 18);
+            cardTitle3.Name = "cardTitle3";
+            cardTitle3.Size = new Size(237, 26);
+            cardTitle3.TabIndex = 0;
+            cardTitle3.Text = "Inversiones por vencer";
+            cardTitle3.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cardValue3
+            // 
+            cardValue3.BackColor = Color.Transparent;
+            cardValue3.Font = new Font("Segoe UI", 25F, FontStyle.Bold);
+            cardValue3.Location = new Point(24, 44);
+            cardValue3.Name = "cardValue3";
+            cardValue3.Size = new Size(220, 38);
+            cardValue3.TabIndex = 1;
+            cardValue3.Text = "0";
+            cardValue3.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // cardDetail3
+            // 
+            cardDetail3.BackColor = Color.Transparent;
+            cardDetail3.Font = new Font("Segoe UI", 10F);
+            cardDetail3.ForeColor = Color.FromArgb(125, 125, 125);
+            cardDetail3.Location = new Point(24, 82);
+            cardDetail3.Name = "cardDetail3";
+            cardDetail3.Size = new Size(220, 24);
+            cardDetail3.TabIndex = 2;
+            cardDetail3.Text = "En 30 días";
+            cardDetail3.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // chartPanel
+            // 
+            chartPanel.BackColor = Color.White;
+            chartPanel.Controls.Add(chartTitleLabel);
+            chartPanel.Dock = DockStyle.Fill;
+            chartPanel.Location = new Point(0, 292);
+            chartPanel.Margin = new Padding(0);
+            chartPanel.Name = "chartPanel";
+            chartPanel.Size = new Size(1171, 474);
+            chartPanel.TabIndex = 3;
+            chartPanel.Paint += ChartPanel_Paint;
+            // 
+            // chartTitleLabel
+            // 
+            chartTitleLabel.BackColor = Color.Transparent;
+            chartTitleLabel.Font = new Font("Segoe UI", 12F);
+            chartTitleLabel.Location = new Point(26, 14);
+            chartTitleLabel.Name = "chartTitleLabel";
+            chartTitleLabel.Size = new Size(300, 32);
+            chartTitleLabel.TabIndex = 0;
+            chartTitleLabel.Text = "Ventas de la semana";
+            chartTitleLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // header
+            // 
+            header.BackColor = Color.White;
+            header.Controls.Add(toggleButton);
+            header.Controls.Add(searchBox);
+            header.Controls.Add(accountLabel);
+            header.Controls.Add(notificationButton);
+            header.Dock = DockStyle.Top;
+            header.Location = new Point(0, 0);
+            header.Name = "header";
+            header.Size = new Size(1235, 64);
+            header.TabIndex = 1;
+            header.Paint += Header_Paint;
+            header.Resize += Header_Resize;
+            // 
+            // toggleButton
+            // 
+            toggleButton.BackColor = Color.White;
+            toggleButton.Cursor = Cursors.Hand;
+            toggleButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            toggleButton.FlatStyle = FlatStyle.Flat;
+            toggleButton.Location = new Point(32, 18);
+            toggleButton.Name = "toggleButton";
+            toggleButton.Size = new Size(36, 30);
+            toggleButton.TabIndex = 0;
+            toggleButton.Text = "☰";
+            toggleButton.UseVisualStyleBackColor = false;
+            toggleButton.Click += ToggleButton_Click;
+            // 
+            // searchBox
+            // 
+            searchBox.BorderStyle = BorderStyle.None;
+            searchBox.Font = new Font("Segoe UI", 12F);
+            searchBox.Location = new Point(82, 23);
+            searchBox.Name = "searchBox";
+            searchBox.PlaceholderText = "🔍 Buscador global...";
+            searchBox.Size = new Size(420, 27);
+            searchBox.TabIndex = 1;
+            // 
+            // accountLabel
+            // 
+            accountLabel.BackColor = Color.Transparent;
+            accountLabel.Font = new Font("Segoe UI", 11F);
+            accountLabel.Location = new Point(520, 16);
+            accountLabel.Name = "accountLabel";
+            accountLabel.Size = new Size(145, 34);
+            accountLabel.TabIndex = 2;
+            accountLabel.Text = "Administrador ⌄";
+            accountLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // notificationButton
+            // 
+            notificationButton.BackColor = Color.White;
+            notificationButton.Cursor = Cursors.Hand;
+            notificationButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            notificationButton.FlatStyle = FlatStyle.Flat;
+            notificationButton.Location = new Point(680, 18);
+            notificationButton.Name = "notificationButton";
+            notificationButton.Size = new Size(54, 30);
+            notificationButton.TabIndex = 3;
+            notificationButton.Text = "🔔";
+            notificationButton.UseVisualStyleBackColor = false;
+            // 
+            // logoutButton
+            // 
+            logoutButton.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            logoutButton.BackColor = Color.FromArgb(242, 242, 242);
+            logoutButton.Cursor = Cursors.Hand;
+            logoutButton.FlatAppearance.BorderSize = 0;
+            logoutButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            logoutButton.FlatStyle = FlatStyle.Flat;
+            logoutButton.Location = new Point(24, 835);
+            logoutButton.Name = "logoutButton";
+            logoutButton.Padding = new Padding(10, 0, 0, 0);
+            logoutButton.Size = new Size(216, 38);
+            logoutButton.TabIndex = 16;
+            logoutButton.Text = "Cerrar sesión";
+            logoutButton.TextAlign = ContentAlignment.MiddleLeft;
+            logoutButton.UseVisualStyleBackColor = false;
+            // 
+            // roleLabel
+            // 
+            roleLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            roleLabel.BackColor = Color.Transparent;
+            roleLabel.Font = new Font("Segoe UI", 9F);
+            roleLabel.ForeColor = Color.FromArgb(125, 125, 125);
+            roleLabel.Location = new Point(24, 806);
+            roleLabel.Name = "roleLabel";
+            roleLabel.Size = new Size(225, 22);
+            roleLabel.TabIndex = 15;
+            roleLabel.Text = "Administrador";
+            roleLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // userLabel
+            // 
+            userLabel.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            userLabel.BackColor = Color.Transparent;
+            userLabel.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            userLabel.Location = new Point(24, 778);
+            userLabel.Name = "userLabel";
+            userLabel.Size = new Size(225, 30);
+            userLabel.TabIndex = 14;
+            userLabel.Text = "Usuario Adm-01";
+            userLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // settingsButton
+            // 
+            settingsButton.BackColor = Color.White;
+            settingsButton.Cursor = Cursors.Hand;
+            settingsButton.FlatAppearance.BorderSize = 0;
+            settingsButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            settingsButton.FlatStyle = FlatStyle.Flat;
+            settingsButton.Location = new Point(14, 556);
+            settingsButton.Name = "settingsButton";
+            settingsButton.Padding = new Padding(10, 0, 0, 0);
+            settingsButton.Size = new Size(236, 40);
+            settingsButton.TabIndex = 13;
+            settingsButton.Text = "Configuración y auditoría";
+            settingsButton.TextAlign = ContentAlignment.MiddleLeft;
+            settingsButton.UseVisualStyleBackColor = false;
+            // 
+            // investorsButton
+            // 
+            investorsButton.BackColor = Color.White;
+            investorsButton.Cursor = Cursors.Hand;
+            investorsButton.FlatAppearance.BorderSize = 0;
+            investorsButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            investorsButton.FlatStyle = FlatStyle.Flat;
+            investorsButton.Location = new Point(14, 516);
+            investorsButton.Name = "investorsButton";
+            investorsButton.Padding = new Padding(10, 0, 0, 0);
+            investorsButton.Size = new Size(236, 40);
+            investorsButton.TabIndex = 12;
+            investorsButton.Text = "Control de inversores";
+            investorsButton.TextAlign = ContentAlignment.MiddleLeft;
+            investorsButton.UseVisualStyleBackColor = false;
+            // 
+            // rolesButton
+            // 
+            rolesButton.BackColor = Color.White;
+            rolesButton.Cursor = Cursors.Hand;
+            rolesButton.FlatAppearance.BorderSize = 0;
+            rolesButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            rolesButton.FlatStyle = FlatStyle.Flat;
+            rolesButton.Location = new Point(14, 476);
+            rolesButton.Name = "rolesButton";
+            rolesButton.Padding = new Padding(10, 0, 0, 0);
+            rolesButton.Size = new Size(236, 40);
+            rolesButton.TabIndex = 11;
+            rolesButton.Text = "Directorio y roles";
+            rolesButton.TextAlign = ContentAlignment.MiddleLeft;
+            rolesButton.UseVisualStyleBackColor = false;
+            // 
+            // returnsButton
+            // 
+            returnsButton.BackColor = Color.White;
+            returnsButton.Cursor = Cursors.Hand;
+            returnsButton.FlatAppearance.BorderSize = 0;
+            returnsButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            returnsButton.FlatStyle = FlatStyle.Flat;
+            returnsButton.Location = new Point(14, 436);
+            returnsButton.Name = "returnsButton";
+            returnsButton.Padding = new Padding(10, 0, 0, 0);
+            returnsButton.Size = new Size(236, 40);
+            returnsButton.TabIndex = 10;
+            returnsButton.Text = "Apartados y devoluciones";
+            returnsButton.TextAlign = ContentAlignment.MiddleLeft;
+            returnsButton.UseVisualStyleBackColor = false;
+            // 
+            // catalogButton
+            // 
+            catalogButton.BackColor = Color.White;
+            catalogButton.Cursor = Cursors.Hand;
+            catalogButton.FlatAppearance.BorderSize = 0;
+            catalogButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            catalogButton.FlatStyle = FlatStyle.Flat;
+            catalogButton.Location = new Point(14, 396);
+            catalogButton.Name = "catalogButton";
+            catalogButton.Padding = new Padding(10, 0, 0, 0);
+            catalogButton.Size = new Size(226, 40);
+            catalogButton.TabIndex = 9;
+            catalogButton.Text = "Catálogo de productos";
+            catalogButton.TextAlign = ContentAlignment.MiddleLeft;
+            catalogButton.UseVisualStyleBackColor = false;
+            catalogButton.Click += catalogButton_Click;
+            // 
+            // bulkButton
+            // 
+            bulkButton.BackColor = Color.White;
+            bulkButton.Cursor = Cursors.Hand;
+            bulkButton.FlatAppearance.BorderSize = 0;
+            bulkButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            bulkButton.FlatStyle = FlatStyle.Flat;
+            bulkButton.Location = new Point(14, 356);
+            bulkButton.Name = "bulkButton";
+            bulkButton.Padding = new Padding(10, 0, 0, 0);
+            bulkButton.Size = new Size(236, 40);
+            bulkButton.TabIndex = 8;
+            bulkButton.Text = "Carga masiva";
+            bulkButton.TextAlign = ContentAlignment.MiddleLeft;
+            bulkButton.UseVisualStyleBackColor = false;
+            // 
+            // validationButton
+            // 
+            validationButton.BackColor = Color.White;
+            validationButton.Cursor = Cursors.Hand;
+            validationButton.FlatAppearance.BorderSize = 0;
+            validationButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            validationButton.FlatStyle = FlatStyle.Flat;
+            validationButton.Location = new Point(14, 316);
+            validationButton.Name = "validationButton";
+            validationButton.Padding = new Padding(10, 0, 0, 0);
+            validationButton.Size = new Size(236, 40);
+            validationButton.TabIndex = 7;
+            validationButton.Text = "Validación traspaso";
+            validationButton.TextAlign = ContentAlignment.MiddleLeft;
+            validationButton.UseVisualStyleBackColor = false;
+            // 
+            // transferButton
+            // 
+            transferButton.BackColor = Color.White;
+            transferButton.Cursor = Cursors.Hand;
+            transferButton.FlatAppearance.BorderSize = 0;
+            transferButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            transferButton.FlatStyle = FlatStyle.Flat;
+            transferButton.Location = new Point(14, 276);
+            transferButton.Name = "transferButton";
+            transferButton.Padding = new Padding(10, 0, 0, 0);
+            transferButton.Size = new Size(236, 40);
+            transferButton.TabIndex = 6;
+            transferButton.Text = "Traspaso entre Tiendas";
+            transferButton.TextAlign = ContentAlignment.MiddleLeft;
+            transferButton.UseVisualStyleBackColor = false;
+            // 
+            // inventoryButton
+            // 
+            inventoryButton.BackColor = Color.White;
+            inventoryButton.Cursor = Cursors.Hand;
+            inventoryButton.FlatAppearance.BorderSize = 0;
+            inventoryButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            inventoryButton.FlatStyle = FlatStyle.Flat;
+            inventoryButton.Location = new Point(14, 236);
+            inventoryButton.Name = "inventoryButton";
+            inventoryButton.Padding = new Padding(10, 0, 0, 0);
+            inventoryButton.Size = new Size(236, 40);
+            inventoryButton.TabIndex = 5;
+            inventoryButton.Text = "Inventario y movimientos";
+            inventoryButton.TextAlign = ContentAlignment.MiddleLeft;
+            inventoryButton.UseVisualStyleBackColor = false;
+            // 
+            // adminLabel
+            // 
+            adminLabel.BackColor = Color.Transparent;
+            adminLabel.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            adminLabel.Location = new Point(24, 205);
+            adminLabel.Name = "adminLabel";
+            adminLabel.Size = new Size(220, 28);
+            adminLabel.TabIndex = 4;
+            adminLabel.Text = "Administración";
+            adminLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // salesButton
+            // 
+            salesButton.BackColor = Color.White;
+            salesButton.Cursor = Cursors.Hand;
+            salesButton.FlatAppearance.BorderSize = 0;
+            salesButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            salesButton.FlatStyle = FlatStyle.Flat;
+            salesButton.Location = new Point(14, 154);
+            salesButton.Name = "salesButton";
+            salesButton.Padding = new Padding(10, 0, 0, 0);
+            salesButton.Size = new Size(236, 40);
+            salesButton.TabIndex = 3;
+            salesButton.Text = "Punto de Venta";
+            salesButton.TextAlign = ContentAlignment.MiddleLeft;
+            salesButton.UseVisualStyleBackColor = false;
+            // 
+            // homeButton
+            // 
+            homeButton.BackColor = Color.White;
+            homeButton.Cursor = Cursors.Hand;
+            homeButton.FlatAppearance.BorderSize = 0;
+            homeButton.FlatAppearance.MouseOverBackColor = Color.FromArgb(245, 245, 245);
+            homeButton.FlatStyle = FlatStyle.Flat;
+            homeButton.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            homeButton.Location = new Point(14, 112);
+            homeButton.Name = "homeButton";
+            homeButton.Padding = new Padding(10, 0, 0, 0);
+            homeButton.Size = new Size(236, 40);
+            homeButton.TabIndex = 2;
+            homeButton.Text = "Inicio";
+            homeButton.TextAlign = ContentAlignment.MiddleLeft;
+            homeButton.UseVisualStyleBackColor = false;
+            // 
+            // discoverLabel
+            // 
+            discoverLabel.BackColor = Color.Transparent;
+            discoverLabel.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            discoverLabel.Location = new Point(24, 80);
+            discoverLabel.Name = "discoverLabel";
+            discoverLabel.Size = new Size(220, 28);
+            discoverLabel.TabIndex = 1;
+            discoverLabel.Text = "Descubrir";
+            discoverLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // brandLabel
+            // 
+            brandLabel.BackColor = Color.Transparent;
+            brandLabel.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            brandLabel.Location = new Point(24, 16);
+            brandLabel.Name = "brandLabel";
+            brandLabel.Size = new Size(225, 40);
+            brandLabel.TabIndex = 0;
+            brandLabel.Text = "Sistema ERP";
+            brandLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // panelContenedor
+            // 
+            panelContenedor.BackColor = Color.White;
+            panelContenedor.Controls.Add(brandLabel);
+            panelContenedor.Controls.Add(discoverLabel);
+            panelContenedor.Controls.Add(homeButton);
+            panelContenedor.Controls.Add(salesButton);
+            panelContenedor.Controls.Add(adminLabel);
+            panelContenedor.Controls.Add(inventoryButton);
+            panelContenedor.Controls.Add(transferButton);
+            panelContenedor.Controls.Add(validationButton);
+            panelContenedor.Controls.Add(bulkButton);
+            panelContenedor.Controls.Add(catalogButton);
+            panelContenedor.Controls.Add(returnsButton);
+            panelContenedor.Controls.Add(rolesButton);
+            panelContenedor.Controls.Add(investorsButton);
+            panelContenedor.Controls.Add(settingsButton);
+            panelContenedor.Controls.Add(userLabel);
+            panelContenedor.Controls.Add(roleLabel);
+            panelContenedor.Controls.Add(logoutButton);
+            panelContenedor.Dock = DockStyle.Left;
+            panelContenedor.Location = new Point(0, 0);
+            panelContenedor.Name = "panelContenedor";
+            panelContenedor.Size = new Size(265, 900);
+            panelContenedor.TabIndex = 1;
+            panelContenedor.Paint += Sidebar_Paint;
+            // 
+            // Pagina_Central
+            // 
+            AutoScaleDimensions = new SizeF(10F, 25F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.White;
+            ClientSize = new Size(1500, 900);
+            Controls.Add(main);
+            Controls.Add(panelContenedor);
+            Font = new Font("Segoe UI", 11F);
+            MinimumSize = new Size(1050, 720);
+            Name = "Pagina_Central";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Sistema ERP — Inicio";
+            main.ResumeLayout(false);
+            content.ResumeLayout(false);
+            dashboardLayout.ResumeLayout(false);
+            headingPanel.ResumeLayout(false);
+            infoPanel.ResumeLayout(false);
+            cardsLayout.ResumeLayout(false);
+            cardPanel0.ResumeLayout(false);
+            cardPanel1.ResumeLayout(false);
+            cardPanel2.ResumeLayout(false);
+            cardPanel3.ResumeLayout(false);
+            chartPanel.ResumeLayout(false);
+            header.ResumeLayout(false);
+            header.PerformLayout();
+            panelContenedor.ResumeLayout(false);
+            ResumeLayout(false);
         }
 
         #endregion
 
         private System.Windows.Forms.Panel main = null!;
-        private System.Windows.Forms.Panel sidebar = null!;
         private System.Windows.Forms.Panel content = null!;
         private System.Windows.Forms.Panel header = null!;
-        private System.Windows.Forms.Label brandLabel = null!;
-        private System.Windows.Forms.Label discoverLabel = null!;
-        private System.Windows.Forms.Button homeButton = null!;
-        private System.Windows.Forms.Button salesButton = null!;
-        private System.Windows.Forms.Label adminLabel = null!;
-        private System.Windows.Forms.Button inventoryButton = null!;
-        private System.Windows.Forms.Button transferButton = null!;
-        private System.Windows.Forms.Button validationButton = null!;
-        private System.Windows.Forms.Button bulkButton = null!;
-        private System.Windows.Forms.Button catalogButton = null!;
-        private System.Windows.Forms.Button returnsButton = null!;
-        private System.Windows.Forms.Button rolesButton = null!;
-        private System.Windows.Forms.Button investorsButton = null!;
-        private System.Windows.Forms.Button settingsButton = null!;
-        private System.Windows.Forms.Label userLabel = null!;
-        private System.Windows.Forms.Label roleLabel = null!;
-        private System.Windows.Forms.Button logoutButton = null!;
         private System.Windows.Forms.Button toggleButton = null!;
         private System.Windows.Forms.TextBox searchBox = null!;
         private System.Windows.Forms.Label accountLabel = null!;
@@ -658,5 +851,23 @@ namespace Sistema_ERP
         private System.Windows.Forms.Label cardDetail3 = null!;
         private System.Windows.Forms.Panel chartPanel = null!;
         private System.Windows.Forms.Label chartTitleLabel = null!;
+        private Button logoutButton;
+        private Label roleLabel;
+        private Label userLabel;
+        private Button settingsButton;
+        private Button investorsButton;
+        private Button rolesButton;
+        private Button returnsButton;
+        private Button catalogButton;
+        private Button bulkButton;
+        private Button validationButton;
+        private Button transferButton;
+        private Button inventoryButton;
+        private Label adminLabel;
+        private Button salesButton;
+        private Button homeButton;
+        private Label discoverLabel;
+        private Label brandLabel;
+        private Panel panelContenedor;
     }
 }
