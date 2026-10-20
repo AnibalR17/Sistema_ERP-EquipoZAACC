@@ -5,11 +5,17 @@ namespace Sistema_ERP
     public partial class Pagina_Central : Form
     {
         private Catalogo_Productos? catalogo;
+        private Inventario? inventario;
+        private Traspaso_Tiendas? traspaso;
+        private Validacion_Traspasos? validacion;
 
         public Pagina_Central()
         {
             InitializeComponent();
             homeButton.Click += (_, _) => MostrarInicio();
+            inventoryButton.Click += (_, _) => MostrarInventario();
+            transferButton.Click += (_, _) => MostrarTraspaso();
+            validationButton.Click += (_, _) => MostrarValidacion();
             Header_Resize(this, EventArgs.Empty);
             foreach (Panel panel in new[] { infoPanel, cardPanel0, cardPanel1, cardPanel2, cardPanel3, chartPanel })
             {
@@ -148,15 +154,62 @@ namespace Sistema_ERP
                 main.Controls.Add(catalogo);
             }
 
-            content.Hide();
-            catalogo.Show();
-            catalogo.BringToFront();
+            MostrarVista(catalogo, catalogButton);
         }
 
         private void MostrarInicio()
         {
-            catalogo?.Hide();
-            content.Show();
+            MostrarVista(content, homeButton);
+        }
+
+        private void MostrarInventario()
+        {
+            if (inventario == null)
+            {
+                inventario = new Inventario { Dock = DockStyle.Fill };
+                inventario.UsarNavegacionPrincipal();
+                main.Controls.Add(inventario);
+            }
+            MostrarVista(inventario, inventoryButton);
+        }
+
+        private void MostrarTraspaso()
+        {
+            if (traspaso == null)
+            {
+                traspaso = new Traspaso_Tiendas { Dock = DockStyle.Fill };
+                traspaso.UsarNavegacionPrincipal();
+                main.Controls.Add(traspaso);
+            }
+            MostrarVista(traspaso, transferButton);
+        }
+
+        private void MostrarValidacion()
+        {
+            if (validacion == null)
+            {
+                validacion = new Validacion_Traspasos { Dock = DockStyle.Fill };
+                validacion.UsarNavegacionPrincipal();
+                main.Controls.Add(validacion);
+            }
+            MostrarVista(validacion, validationButton);
+        }
+
+        private void MostrarVista(Control vista, Button seleccionado)
+        {
+            foreach (Control? pantalla in new Control?[] { content, catalogo, inventario, traspaso, validacion })
+                if (pantalla != null) pantalla.Visible = pantalla == vista;
+
+            vista.BringToFront();
+            foreach (Button boton in new[] { homeButton, catalogButton, inventoryButton, transferButton, validationButton })
+            {
+                FontStyle estilo = boton == seleccionado ? FontStyle.Bold : FontStyle.Regular;
+                if (boton.Font.Style != estilo)
+                {
+                    boton.Font = new Font(boton.Font, estilo);
+                }
+                boton.BackColor = boton == seleccionado ? Color.FromArgb(243, 243, 243) : Color.White;
+            }
         }
 
         private void returnsButton_Click(object sender, EventArgs e)

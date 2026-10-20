@@ -9,6 +9,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Inventario.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Inventario.Designer.cs">
+      <DependentUpon>Inventario.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Traspaso_Tiendas.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Traspaso_Tiendas.Designer.cs">
+      <DependentUpon>Traspaso_Tiendas.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Validacion_Traspasos.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Validacion_Traspasos.Designer.cs">
+      <DependentUpon>Validacion_Traspasos.cs</DependentUpon>
+    </Compile>
     <Compile Update="Pagina_Central.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -37,5 +37,10 @@ namespace LoginERP
 
             MessageBox.Show("Datos listos para validar");
         }
+
+        private void cmbRol_SelectedIndexChanged(object sender, System.EventArgs e)
+        {
+        
+        }
     }
 }
