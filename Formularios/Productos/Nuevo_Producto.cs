@@ -38,7 +38,7 @@ namespace Sistema_ERP
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "No se pudieron cargar las categorías y proveedores.\n" + ex.Message,
+                MessageBox.Show(this, "No se pudieron cargar las categorias y proveedores.\n" + ex.Message,
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.Cancel;
                 return;
@@ -89,7 +89,7 @@ namespace Sistema_ERP
             {
                 if (ProductoDatos.ExisteCodigo(producto.CodigoBarras, _editando?.IdProducto))
                 {
-                    Error("Ya existe un producto con ese código de barras.", txtCodigo);
+                    Error("Ya existe un producto con ese codigo de barras.", txtCodigo);
                     return;
                 }
 
@@ -100,7 +100,7 @@ namespace Sistema_ERP
             }
             catch (SqlException)
             {
-                MessageBox.Show(this, "No se pudo guardar el producto. Verifique la conexión a la base de datos.",
+                MessageBox.Show(this, "No se pudo guardar el producto. Verifique la conexion a la base de datos.",
                     "Error de base de datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -109,10 +109,10 @@ namespace Sistema_ERP
         {
             idCategoria = idProveedor = 0;
 
-            if (string.IsNullOrWhiteSpace(txtCodigo.Text)) { Error("El código de barras es obligatorio.", txtCodigo); return false; }
+            if (string.IsNullOrWhiteSpace(txtCodigo.Text)) { Error("El codigo de barras es obligatorio.", txtCodigo); return false; }
             if (string.IsNullOrWhiteSpace(txtNombre.Text)) { Error("El nombre es obligatorio.", txtNombre); return false; }
-            if (nudPrecio.Value <= 0) { Error("El precio unitario debe ser un número mayor a cero.", nudPrecio); return false; }
-            if (cmbCategoria.SelectedValue is not int cat) { Error("Seleccione una categoría.", cmbCategoria); return false; }
+            if (nudPrecio.Value <= 0) { Error("El precio unitario debe ser un numero mayor a cero.", nudPrecio); return false; }
+            if (cmbCategoria.SelectedValue is not int cat) { Error("Seleccione una categoria.", cmbCategoria); return false; }
             if (cmbProveedor.SelectedValue is not int prov) { Error("Seleccione un proveedor.", cmbProveedor); return false; }
 
             idCategoria = cat;
@@ -122,7 +122,7 @@ namespace Sistema_ERP
 
         private void Error(string mensaje, Control foco)
         {
-            MessageBox.Show(this, mensaje, "Validación", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(this, mensaje, "Validacion", MessageBoxButtons.OK, MessageBoxIcon.Error);
             foco.Focus();
         }
     }

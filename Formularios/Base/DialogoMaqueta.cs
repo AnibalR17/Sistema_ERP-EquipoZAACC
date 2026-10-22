@@ -13,7 +13,7 @@ namespace Sistema_ERP
             Contenido = PantallaMaqueta.Filas(40, -100, 54);
             Contenido.Controls.Add(PantallaMaqueta.Etiqueta(titulo, 16, true), 0, 0); Controls.Add(Contenido);
             var cerrar = new Button { Text = "Cerrar", DialogResult = DialogResult.Cancel };
-            CancelButton = cerrar; // La tecla Escape tambi?n cierra los di?logos sin bordes.
+            CancelButton = cerrar; // La tecla Escape tambien cierra los dialogos sin bordes.
         }
         protected override void OnShown(EventArgs e)
         {

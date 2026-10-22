@@ -31,7 +31,7 @@ namespace LoginERP
         {
             if (txtUsuario.Text == "" || txtClave.Text == "")
             {
-                MessageBox.Show("Complete el usuario y la contraseña");
+                MessageBox.Show("Complete el usuario y la contrasena");
                 return;
             }
 

@@ -121,7 +121,7 @@ namespace Sistema_ERP
             adminLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             adminLabel.ForeColor = System.Drawing.Color.FromArgb(18, 18, 18);
             adminLabel.BackColor = System.Drawing.Color.Transparent;
-            adminLabel.Text = "Administración";
+            adminLabel.Text = "Administracion";
             adminLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             sidebar.Controls.Add(adminLabel);
             // homeButton
@@ -182,7 +182,7 @@ namespace Sistema_ERP
             validationButton.Size = new System.Drawing.Size(236, 40);
             validationButton.BackColor = System.Drawing.Color.White;
             validationButton.Font = new System.Drawing.Font("Segoe UI", 11F);
-            validationButton.Text = "Validación traspaso";
+            validationButton.Text = "Validacion traspaso";
             validationButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             validationButton.UseVisualStyleBackColor = false;
             validationButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
@@ -208,7 +208,7 @@ namespace Sistema_ERP
             catalogButton.Size = new System.Drawing.Size(236, 40);
             catalogButton.BackColor = System.Drawing.Color.White;
             catalogButton.Font = new System.Drawing.Font("Segoe UI", 11F);
-            catalogButton.Text = "Catálogo de productos";
+            catalogButton.Text = "Catalogo de productos";
             catalogButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             catalogButton.UseVisualStyleBackColor = false;
             catalogButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
@@ -260,7 +260,7 @@ namespace Sistema_ERP
             settingsButton.Size = new System.Drawing.Size(236, 40);
             settingsButton.BackColor = System.Drawing.Color.White;
             settingsButton.Font = new System.Drawing.Font("Segoe UI", 11F);
-            settingsButton.Text = "Configuración y auditoría";
+            settingsButton.Text = "Configuracion y auditoria";
             settingsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             settingsButton.UseVisualStyleBackColor = false;
             settingsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
@@ -298,7 +298,7 @@ namespace Sistema_ERP
             logoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             logoutButton.UseVisualStyleBackColor = false;
             logoutButton.BackColor = System.Drawing.Color.FromArgb(242, 242, 242);
-            logoutButton.Text = "Cerrar sesión";
+            logoutButton.Text = "Cerrar sesion";
             sidebar.Controls.Add(logoutButton);
             logoutButton.FlatAppearance.BorderSize = 0;
             // main
@@ -411,7 +411,7 @@ namespace Sistema_ERP
             aviso.Font = new System.Drawing.Font("Segoe UI", 10F);
             aviso.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
             aviso.BackColor = System.Drawing.Color.Transparent;
-            aviso.Text = "ℹ Sigue los 3 pasos. El traspaso quedará Pendiente hasta que un Gerente lo apruebe en \"Validación traspaso\".";
+            aviso.Text = "ℹ Sigue los 3 pasos. El traspaso quedara Pendiente hasta que un Gerente lo apruebe en \"Validacion traspaso\".";
             aviso.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             avisoPanel.Controls.Add(aviso);
             // tiendasPanel
@@ -568,7 +568,7 @@ namespace Sistema_ERP
             resumen.Font = new System.Drawing.Font("Segoe UI", 9F);
             resumen.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
             resumen.BackColor = System.Drawing.Color.Transparent;
-            resumen.Text = "Inventario origen después del traspaso";
+            resumen.Text = "Inventario origen despues del traspaso";
             resumen.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             resumenPanel.Controls.Add(resumen);
             // cancelar

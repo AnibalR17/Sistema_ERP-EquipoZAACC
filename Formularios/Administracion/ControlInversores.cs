@@ -3,9 +3,9 @@
     public sealed class ControlInversores : PantallaMaqueta
     {
         public ControlInversores() : base("Control de inversores", "Solo Administradores",
-            "Rojo: vencida o vence en menos de 30 días. Amarillo: menos de 60 días.")
+            "Rojo: vencida o vence en menos de 30 dias. Amarillo: menos de 60 dias.")
         {
-            // Mantiene accesibles todos los campos mediante desplazamiento en ventanas pequeñas.
+            // Mantiene accesibles todos los campos mediante desplazamiento en ventanas pequenas.
             Pagina.MinimumSize = new Size(680, 810);
             var contenido = Filas(120, 360, 174);
             var resumen = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty };
@@ -34,7 +34,7 @@
             campos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50));
             foreach (float altura in new[] { 38F, 24F, 48F, 24F, 48F, 24F, 48F, 56F })
                 campos.RowStyles.Add(new RowStyle(SizeType.Absolute, altura));
-            var titulo = Etiqueta("Registrar inversión");
+            var titulo = Etiqueta("Registrar inversion");
             campos.Controls.Add(titulo, 0, 0); campos.SetColumnSpan(titulo, 2);
             void Campo(string texto, Control control, int columna, int fila)
             {
@@ -45,24 +45,24 @@
                 campos.Controls.Add(etiqueta, columna, fila);
                 campos.Controls.Add(control, columna, fila + 1);
             }
-            Campo("Institución", new TextBox(), 0, 1);
+            Campo("Institucion", new TextBox(), 0, 1);
             Campo("Monto", new NumericUpDown { DecimalPlaces = 2, Maximum = 1000000000, ThousandsSeparator = true }, 1, 1);
             var tipo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList };
             tipo.Items.AddRange(new object[] { "Plazo fijo", "Ahorro", "Otro" }); tipo.SelectedIndex = 0;
             Campo("Tipo", tipo, 0, 3);
-            Campo("Tasa de interés %", new NumericUpDown { DecimalPlaces = 2, Maximum = 100 }, 1, 3);
+            Campo("Tasa de interes %", new NumericUpDown { DecimalPlaces = 2, Maximum = 100 }, 1, 3);
             Campo("Inicio", new DateTimePicker { Format = DateTimePickerFormat.Short }, 0, 5);
             Campo("Vencimiento", new DateTimePicker { Format = DateTimePickerFormat.Short }, 1, 5);
             var guardar = Boton("Guardar", true); guardar.Name = "guardarInversion"; guardar.Width = 120;
-            // Esta pantalla conserva el alcance de diseño, sin guardar inversiones reales.
-            guardar.Click += (_, _) => MessageBox.Show(this, "El registro de inversiones aún no está disponible.",
+            // Esta pantalla conserva el alcance de diseno, sin guardar inversiones reales.
+            guardar.Click += (_, _) => MessageBox.Show(this, "El registro de inversiones aun no esta disponible.",
                 "Control de inversores", MessageBoxButtons.OK, MessageBoxIcon.Information);
             campos.Controls.Add(guardar, 0, 7); registro.Controls.Add(campos);
 
             var listado = Tarjeta(174); var filas = Filas(44, -100, 24);
             var buscar = Buscar(); buscar.Dock = DockStyle.Left;
             filas.Controls.Add(buscar, 0, 0);
-            filas.Controls.Add(Tabla("Institución", "Tipo", "Monto", "Tasa", "Inicio", "Días"), 0, 1);
+            filas.Controls.Add(Tabla("Institucion", "Tipo", "Monto", "Tasa", "Inicio", "Dias"), 0, 1);
             filas.Controls.Add(Etiqueta("Mostrando 0 registros", 9), 0, 2); listado.Controls.Add(filas);
             contenido.Controls.Add(resumen, 0, 0); contenido.Controls.Add(registro, 0, 1);
             contenido.Controls.Add(listado, 0, 2); Cuerpo.Controls.Add(contenido);

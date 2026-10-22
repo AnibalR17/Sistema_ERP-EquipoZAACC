@@ -9,7 +9,7 @@
                 (lblProveedor, cmbProveedor), (lblFecha, dtpFecha), (lblFactura, txtFactura));
             EstiloFormularios.Campos(pnlProducto, lblSeccionProd,
                 (lblProducto, cmbProducto), (lblCantidad, txtCantidad), (lblPrecio, txtPrecio));
-            // Coloca la acci?n del carrito en una fila propia para evitar que se superponga al precio.
+            // Coloca la accion del carrito en una fila propia para evitar que se superponga al precio.
             mainLayout.Controls.Remove(pnlProducto);
             var productos = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2 };
             productos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));

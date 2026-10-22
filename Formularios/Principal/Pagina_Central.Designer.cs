@@ -169,7 +169,7 @@ namespace Sistema_ERP
             btnprobarconexion.Name = "btnprobarconexion";
             btnprobarconexion.Size = new System.Drawing.Size(180, 40);
             btnprobarconexion.TabIndex = 2;
-            btnprobarconexion.Text = "Probar conexión";
+            btnprobarconexion.Text = "Probar conexion";
             btnprobarconexion.UseVisualStyleBackColor = true;
             btnprobarconexion.Click += btnprobarconexion_Click;
             // 
@@ -196,7 +196,7 @@ namespace Sistema_ERP
             infoLabel.Padding = new System.Windows.Forms.Padding(16, 0, 8, 0);
             infoLabel.Size = new System.Drawing.Size(1171, 42);
             infoLabel.TabIndex = 0;
-            infoLabel.Text = "ℹ Vista rápida de ventas, traspasos, stock e inversiones. Los datos son de ejemplo.";
+            infoLabel.Text = "ℹ Vista rapida de ventas, traspasos, stock e inversiones. Los datos son de ejemplo.";
             infoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             infoLabel.Click += infoLabel_Click;
             // 
@@ -244,7 +244,7 @@ namespace Sistema_ERP
             cardTitle0.Name = "cardTitle0";
             cardTitle0.Size = new System.Drawing.Size(234, 26);
             cardTitle0.TabIndex = 0;
-            cardTitle0.Text = "Ventas del día";
+            cardTitle0.Text = "Ventas del dia";
             cardTitle0.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardValue0
@@ -317,7 +317,7 @@ namespace Sistema_ERP
             cardDetail1.Name = "cardDetail1";
             cardDetail1.Size = new System.Drawing.Size(220, 24);
             cardDetail1.TabIndex = 2;
-            cardDetail1.Text = "Esperan aprobación";
+            cardDetail1.Text = "Esperan aprobacion";
             cardDetail1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardPanel2
@@ -367,7 +367,7 @@ namespace Sistema_ERP
             cardDetail2.Name = "cardDetail2";
             cardDetail2.Size = new System.Drawing.Size(220, 24);
             cardDetail2.TabIndex = 2;
-            cardDetail2.Text = "Bajo mínimo";
+            cardDetail2.Text = "Bajo minimo";
             cardDetail2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardPanel3
@@ -417,7 +417,7 @@ namespace Sistema_ERP
             cardDetail3.Name = "cardDetail3";
             cardDetail3.Size = new System.Drawing.Size(220, 24);
             cardDetail3.TabIndex = 2;
-            cardDetail3.Text = "En 30 días";
+            cardDetail3.Text = "En 30 dias";
             cardDetail3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // chartPanel
@@ -520,7 +520,7 @@ namespace Sistema_ERP
             logoutButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             logoutButton.Size = new System.Drawing.Size(216, 38);
             logoutButton.TabIndex = 16;
-            logoutButton.Text = "Cerrar sesión";
+            logoutButton.Text = "Cerrar sesion";
             logoutButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             logoutButton.UseVisualStyleBackColor = false;
             logoutButton.Click += logoutButton_Click;
@@ -562,7 +562,7 @@ namespace Sistema_ERP
             settingsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             settingsButton.Size = new System.Drawing.Size(236, 40);
             settingsButton.TabIndex = 13;
-            settingsButton.Text = "Configuración y auditoría";
+            settingsButton.Text = "Configuracion y auditoria";
             settingsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             settingsButton.UseVisualStyleBackColor = false;
             settingsButton.Click += settingsButton_Click;
@@ -630,7 +630,7 @@ namespace Sistema_ERP
             catalogButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             catalogButton.Size = new System.Drawing.Size(226, 40);
             catalogButton.TabIndex = 9;
-            catalogButton.Text = "Catálogo de productos";
+            catalogButton.Text = "Catalogo de productos";
             catalogButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             catalogButton.UseVisualStyleBackColor = false;
             catalogButton.Click += catalogButton_Click;
@@ -663,7 +663,7 @@ namespace Sistema_ERP
             validationButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             validationButton.Size = new System.Drawing.Size(236, 40);
             validationButton.TabIndex = 7;
-            validationButton.Text = "Validación traspaso";
+            validationButton.Text = "Validacion traspaso";
             validationButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             validationButton.UseVisualStyleBackColor = false;
             // 
@@ -707,7 +707,7 @@ namespace Sistema_ERP
             adminLabel.Name = "adminLabel";
             adminLabel.Size = new System.Drawing.Size(220, 28);
             adminLabel.TabIndex = 4;
-            adminLabel.Text = "Administración";
+            adminLabel.Text = "Administracion";
             adminLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // salesButton

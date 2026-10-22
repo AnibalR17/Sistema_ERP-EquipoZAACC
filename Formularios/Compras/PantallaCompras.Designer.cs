@@ -16,7 +16,7 @@
         private System.Windows.Forms.Label lblFactura;
         private System.Windows.Forms.TextBox txtFactura;
 
-        // Panel 2: Selección de Productos
+        // Panel 2: Seleccion de Productos
         private System.Windows.Forms.Panel pnlProducto;
         private System.Windows.Forms.Label lblSeccionProd;
         private System.Windows.Forms.Label lblProducto;
