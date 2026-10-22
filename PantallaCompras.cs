@@ -14,6 +14,7 @@ namespace Sistema_ERP.Vistas
         public PantallaCompras()
         {
             InitializeComponent();
+            ConfigurarPresentacion();
         }
 
         private void PantallaCompras_Load(object sender, EventArgs e)

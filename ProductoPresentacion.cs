@@ -1,4 +1,4 @@
-namespace Sistema_ERP
+﻿namespace Sistema_ERP
 {
     internal static class ProductoEstilo
     {
@@ -25,9 +25,7 @@ namespace Sistema_ERP
     {
         internal void UsarNavegacionPrincipal()
         {
-            // Conserva el encabezado y la navegación de Pagina_Central al abrir el catálogo.
-            sidebar.Visible = false;
-            header.Visible = false;
+            VistaContenido.Preparar(this, content);
         }
 
         private void ConfigurarPresentacion()

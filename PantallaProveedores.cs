@@ -12,6 +12,7 @@ namespace Sistema_ERP.Vistas
         public PantallaProveedores()
         {
             InitializeComponent();
+            ConfigurarPresentacion();
         }
 
         private void PantallaProveedores_Load(object sender, EventArgs e)

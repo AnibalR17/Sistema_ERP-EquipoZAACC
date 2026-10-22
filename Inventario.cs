@@ -1,17 +1,16 @@
-namespace Sistema_ERP
+﻿namespace Sistema_ERP
 {
     public partial class Inventario : UserControl
     {
         internal void UsarNavegacionPrincipal()
         {
-            sidebar.Visible = false;
-            header.Visible = false;
-            MinimumSize = Size.Empty;
+            VistaContenido.Preparar(this, content);
         }
 
         public Inventario()
         {
             InitializeComponent();
+            UsarNavegacionPrincipal();
         }
     }
 }
