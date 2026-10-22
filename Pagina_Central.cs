@@ -161,6 +161,26 @@ namespace Sistema_ERP
             navegacion.Add(inicio, homeButton);
             MdiChildActivate += (_, _) => ActualizarNavegacion();
 
+            var proveedoresButton = new Button
+            {
+                Name = "proveedoresButton", Text = "Proveedores",
+                Location = new Point(inventoryButton.Left, inventoryButton.Bottom), Size = catalogButton.Size,
+                FlatStyle = FlatStyle.Flat, BackColor = Color.White,
+                TextAlign = ContentAlignment.MiddleLeft, Padding = catalogButton.Padding,
+                Cursor = Cursors.Hand, Font = new Font(Font, FontStyle.Regular),
+                TabIndex = inventoryButton.TabIndex + 1
+            };
+            proveedoresButton.FlatAppearance.BorderSize = 0;
+            proveedoresButton.Click += (_, _) => MostrarPantalla("Proveedores", proveedoresButton,
+                () => new Vistas.PantallaProveedores());
+            panelContenedor.Controls.Add(proveedoresButton);
+            foreach (var boton in new[] { transferButton, validationButton, bulkButton, catalogButton,
+                returnsButton, rolesButton, investorsButton, settingsButton })
+            {
+                boton.Top += proveedoresButton.Height;
+                boton.TabIndex++;
+            }
+
             // Permite desplazar el men? de forma independiente para acceder a todas las opciones en ventanas peque?as.
             var menu = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
             var pie = new Panel { Dock = DockStyle.Bottom, Height = 130 };
@@ -253,7 +273,7 @@ namespace Sistema_ERP
             MostrarPantalla("Directorio y roles", rolesButton, () => new DirectorioRoles());
 
         private void investorsButton_Click(object sender, EventArgs e) =>
-            MostrarPantalla("Proveedores", investorsButton, () => new Vistas.PantallaProveedores());
+            MostrarPantalla("Control de inversores", investorsButton, () => new ControlInversores());
 
         private void settingsButton_Click(object sender, EventArgs e) =>
             MostrarPantalla("Configuraci\u00f3n y auditor\u00eda", settingsButton, () => new ConfiguracionAuditoria());
