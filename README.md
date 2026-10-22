@@ -1,5 +1,32 @@
 # Sistema ERP
 
+
+## Organización del proyecto
+
+```text
+Formularios/
+  Acceso/          Inicio de sesión
+  Principal/       Ventana MDI y navegación compartida
+  Productos/       Catálogo, productos, carga masiva y nuevo producto
+  Proveedores/     Gestión de proveedores
+  Compras/         Registro de compras
+  Inventario/      Inventario, traspasos y validación
+  Ventas/          Punto de venta, apartados y devoluciones
+  Administracion/  Inversiones, directorio y auditoría
+  Dialogos/        Confirmación de venta y notificaciones
+  Base/            Clases compartidas de pantallas y diálogos
+Datos/             Conexión y acceso a SQL Server
+Presentacion/      Estilos y utilidades compartidas de interfaz
+Controles/         Controles visuales reutilizables
+Program.cs         Punto de entrada
+```
+
+Cada formulario conserva juntos sus archivos `.cs`, `.Designer.cs` y `.resx`, cuando existen. Los archivos `.Presentacion.cs` contienen la configuración visual de esa misma clase y aparecen anidados bajo el formulario en Visual Studio. Los estilos compartidos se encuentran en `Presentacion/`.
+
+Los namespaces originales (`Sistema_ERP`, `Sistema_ERP.Vistas` y `LoginERP`) se mantienen para conservar las referencias existentes. Al agregar o mover archivos del diseñador, actualice las rutas y las relaciones `DependentUpon` en `Sistema_ERP.csproj`.
+
+`connection.local.txt` permanece en la raíz y se copia al directorio de salida. No debe incluirse en Git.
+
 ## Conexión a la base de datos
 
 Configure la variable de entorno `SISTEMA_ERP_CONNECTION_STRING` o cree `connection.local.txt` en la raíz del proyecto con la cadena de conexión de SQL Server. La variable de entorno tiene prioridad. El archivo local se copia al directorio de salida y está excluido de Git para proteger las credenciales.
@@ -10,7 +37,7 @@ Aplicación de escritorio desarrollada con C# y Windows Forms sobre .NET 10 para
 
 ## Estándar gráfico
 
-Documento extraído de la implementación actual de `Pagina_Central.Designer.cs` y `Pagina_Central.cs`. Describe la única pantalla implementada en el proyecto; sirve como base para mantener coherencia en nuevas pantallas.
+Documento extraído de la implementación actual de `Formularios/Principal/Pagina_Central.Designer.cs` y `Formularios/Principal/Pagina_Central.cs`. Describe la única pantalla implementada en el proyecto; sirve como base para mantener coherencia en nuevas pantallas.
 
 ### 1. Identidad visual
 

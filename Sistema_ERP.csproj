@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -9,33 +9,102 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Update="Inventario.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Inventario.Designer.cs">
-      <DependentUpon>Inventario.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Traspaso_Tiendas.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Traspaso_Tiendas.Designer.cs">
-      <DependentUpon>Traspaso_Tiendas.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Validacion_Traspasos.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Update="Validacion_Traspasos.Designer.cs">
-      <DependentUpon>Validacion_Traspasos.cs</DependentUpon>
-    </Compile>
-    <Compile Update="Pagina_Central.cs">
+    <Compile Update="Formularios/Principal/Pagina_Central.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="Pagina_Central.Designer.cs">
+    <Compile Update="Formularios/Principal/Pagina_Central.Designer.cs">
       <DependentUpon>Pagina_Central.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Update="Pagina_Central.resx">
+    <EmbeddedResource Update="Formularios/Principal/Pagina_Central.resx">
       <DependentUpon>Pagina_Central.cs</DependentUpon>
     </EmbeddedResource>
+    <Compile Update="Formularios/Acceso/FrmLogin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Acceso/FrmLogin.Designer.cs">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios/Acceso/FrmLogin.resx">
+      <DependentUpon>FrmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Formularios/Productos/Catalogo_Productos.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Formularios/Productos/Catalogo_Productos.Designer.cs">
+      <DependentUpon>Catalogo_Productos.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Productos/Catalogo_Productos.Presentacion.cs">
+      <DependentUpon>Catalogo_Productos.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios/Productos/Catalogo_Productos.resx">
+      <DependentUpon>Catalogo_Productos.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Formularios/Productos/PantallaProductos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Productos/PantallaProductos.Designer.cs">
+      <DependentUpon>PantallaProductos.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Productos/PantallaProductos.Presentacion.cs">
+      <DependentUpon>PantallaProductos.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios/Productos/PantallaProductos.resx">
+      <DependentUpon>PantallaProductos.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Formularios/Productos/Nuevo_Producto.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Productos/Nuevo_Producto.Designer.cs">
+      <DependentUpon>Nuevo_Producto.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Productos/Nuevo_Producto.Presentacion.cs">
+      <DependentUpon>Nuevo_Producto.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios/Productos/Nuevo_Producto.resx">
+      <DependentUpon>Nuevo_Producto.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Formularios/Proveedores/PantallaProveedores.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Proveedores/PantallaProveedores.Designer.cs">
+      <DependentUpon>PantallaProveedores.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Proveedores/PantallaProveedores.Presentacion.cs">
+      <DependentUpon>PantallaProveedores.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios/Proveedores/PantallaProveedores.resx">
+      <DependentUpon>PantallaProveedores.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Formularios/Compras/PantallaCompras.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Compras/PantallaCompras.Designer.cs">
+      <DependentUpon>PantallaCompras.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Compras/PantallaCompras.Presentacion.cs">
+      <DependentUpon>PantallaCompras.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios/Compras/PantallaCompras.resx">
+      <DependentUpon>PantallaCompras.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Formularios/Inventario/Inventario.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Formularios/Inventario/Inventario.Designer.cs">
+      <DependentUpon>Inventario.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Inventario/Traspaso_Tiendas.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Formularios/Inventario/Traspaso_Tiendas.Designer.cs">
+      <DependentUpon>Traspaso_Tiendas.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Inventario/Validacion_Traspasos.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="Formularios/Inventario/Validacion_Traspasos.Designer.cs">
+      <DependentUpon>Validacion_Traspasos.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <ItemGroup>
