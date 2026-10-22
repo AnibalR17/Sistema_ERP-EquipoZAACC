@@ -1,4 +1,4 @@
-namespace Sistema_ERP
+﻿namespace Sistema_ERP
 {
     partial class Catalogo_Productos
     {
@@ -66,7 +66,7 @@ namespace Sistema_ERP
             label3 = new System.Windows.Forms.Label();
             button2 = new System.Windows.Forms.Button();
             btnEditar = new System.Windows.Forms.Button();
-            btnEliminar = new System.Windows.Forms.Button();
+            btnDesactivar = new System.Windows.Forms.Button();
             sidebar.SuspendLayout();
             header.SuspendLayout();
             content.SuspendLayout();
@@ -165,7 +165,7 @@ namespace Sistema_ERP
             adminLabel.Name = "adminLabel";
             adminLabel.Size = new System.Drawing.Size(220, 28);
             adminLabel.TabIndex = 4;
-            adminLabel.Text = "Administración";
+            adminLabel.Text = "Administracion";
             adminLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // inventoryButton
@@ -212,7 +212,7 @@ namespace Sistema_ERP
             validationButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             validationButton.Size = new System.Drawing.Size(236, 40);
             validationButton.TabIndex = 7;
-            validationButton.Text = "Validación traspaso";
+            validationButton.Text = "Validacion traspaso";
             validationButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             validationButton.UseVisualStyleBackColor = false;
             // 
@@ -244,7 +244,7 @@ namespace Sistema_ERP
             catalogButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             catalogButton.Size = new System.Drawing.Size(236, 40);
             catalogButton.TabIndex = 9;
-            catalogButton.Text = "Catálogo de productos";
+            catalogButton.Text = "Catalogo de productos";
             catalogButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             catalogButton.UseVisualStyleBackColor = false;
             // 
@@ -308,7 +308,7 @@ namespace Sistema_ERP
             settingsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             settingsButton.Size = new System.Drawing.Size(236, 40);
             settingsButton.TabIndex = 13;
-            settingsButton.Text = "Configuración y auditoría";
+            settingsButton.Text = "Configuracion y auditoria";
             settingsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             settingsButton.UseVisualStyleBackColor = false;
             // 
@@ -350,7 +350,7 @@ namespace Sistema_ERP
             logoutButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             logoutButton.Size = new System.Drawing.Size(216, 38);
             logoutButton.TabIndex = 16;
-            logoutButton.Text = "Cerrar sesión";
+            logoutButton.Text = "Cerrar sesion";
             logoutButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             logoutButton.UseVisualStyleBackColor = false;
             // 
@@ -416,7 +416,7 @@ namespace Sistema_ERP
             // 
             // content
             // 
-            content.Controls.Add(btnEliminar);
+            content.Controls.Add(btnDesactivar);
             content.Controls.Add(btnEditar);
             content.Controls.Add(dgvProductos);
             content.Controls.Add(txtBuscar);
@@ -439,7 +439,7 @@ namespace Sistema_ERP
             titleLabel.Name = "titleLabel";
             titleLabel.Size = new System.Drawing.Size(516, 72);
             titleLabel.TabIndex = 1;
-            titleLabel.Text = "Catálogo de productos";
+            titleLabel.Text = "Catalogo de productos";
             titleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // subtitleLabel
@@ -451,7 +451,7 @@ namespace Sistema_ERP
             subtitleLabel.Name = "subtitleLabel";
             subtitleLabel.Size = new System.Drawing.Size(331, 28);
             subtitleLabel.TabIndex = 2;
-            subtitleLabel.Text = "Producto, Categorías y Proveedores.";
+            subtitleLabel.Text = "Producto, Categorias y Proveedores.";
             subtitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // label1
@@ -563,7 +563,7 @@ namespace Sistema_ERP
             button2.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             button2.Size = new System.Drawing.Size(216, 38);
             button2.TabIndex = 19;
-            button2.Text = "Cerrar sesión";
+            button2.Text = "Cerrar sesion";
             button2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             button2.UseVisualStyleBackColor = false;
             // 
@@ -578,16 +578,16 @@ namespace Sistema_ERP
             btnEditar.Text = "Editar";
             btnEditar.UseVisualStyleBackColor = false;
             // 
-            // btnEliminar
+            // btnDesactivar
             // 
-            btnEliminar.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
-            btnEliminar.ForeColor = System.Drawing.SystemColors.Window;
-            btnEliminar.Location = new System.Drawing.Point(353, 183);
-            btnEliminar.Name = "btnEliminar";
-            btnEliminar.Size = new System.Drawing.Size(153, 56);
-            btnEliminar.TabIndex = 8;
-            btnEliminar.Text = "Eliminar";
-            btnEliminar.UseVisualStyleBackColor = false;
+            btnDesactivar.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
+            btnDesactivar.ForeColor = System.Drawing.SystemColors.Window;
+            btnDesactivar.Location = new System.Drawing.Point(353, 183);
+            btnDesactivar.Name = "btnDesactivar";
+            btnDesactivar.Size = new System.Drawing.Size(153, 56);
+            btnDesactivar.TabIndex = 8;
+            btnDesactivar.Text = "Desactivar";
+            btnDesactivar.UseVisualStyleBackColor = false;
             // 
             // Catalogo_Productos
             // 
@@ -638,7 +638,7 @@ namespace Sistema_ERP
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button btnEliminar;
+        private System.Windows.Forms.Button btnDesactivar;
         private System.Windows.Forms.Button btnEditar;
         private System.Windows.Forms.DataGridView dgvProductos;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column1;

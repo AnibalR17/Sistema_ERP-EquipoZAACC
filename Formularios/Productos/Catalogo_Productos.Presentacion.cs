@@ -13,21 +13,21 @@
             Font = new Font("Segoe UI", 11F);
             ForeColor = ProductoEstilo.Texto;
             content.BackColor = ProductoEstilo.Fondo;
-            // El diseñador contiene dos copias del bloque de usuario.
+            // El disenador contiene dos copias del bloque de usuario.
             label2.Visible = label3.Visible = button2.Visible = false;
             homeButton.Font = new Font(Font, FontStyle.Regular);
             catalogButton.Font = new Font(Font, FontStyle.Bold);
             catalogButton.BackColor = ProductoEstilo.Suave;
-            subtitleLabel.Text = "Administra tus productos, categorías y proveedores.";
+            subtitleLabel.Text = "Administra tus productos, categorias y proveedores.";
             label1.Text = "El stock se actualiza con los movimientos de inventario.";
             label1.BackColor = ProductoEstilo.Suave;
             label1.Padding = new Padding(12, 0, 8, 0);
             label1.Font = new Font("Segoe UI", 10F);
-            txtBuscar.PlaceholderText = "Buscar por nombre o código de barras...";
+            txtBuscar.PlaceholderText = "Buscar por nombre o codigo de barras...";
             txtBuscar.BorderStyle = BorderStyle.FixedSingle;
             ProductoEstilo.Boton(btnNuevoProducto, true);
             ProductoEstilo.Boton(btnEditar);
-            ProductoEstilo.Boton(btnEliminar);
+            ProductoEstilo.Boton(btnDesactivar);
             btnNuevoProducto.Text = "+ Nuevo producto";
 
             dgvProductos.BackgroundColor = Color.White;
@@ -63,7 +63,7 @@
                 layout.RowStyles.Add(new RowStyle(SizeType.Absolute, height));
             layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             var acciones = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false };
-            acciones.Controls.AddRange(new Control[] { btnNuevoProducto, btnEditar, btnEliminar });
+            acciones.Controls.AddRange(new Control[] { btnNuevoProducto, btnEditar, btnDesactivar });
             foreach (Button boton in acciones.Controls) boton.Margin = new Padding(0, 10, 12, 0);
             Control[] filas = { titleLabel, subtitleLabel, label1, acciones, txtBuscar, dgvProductos };
             for (int i = 0; i < filas.Length; i++)

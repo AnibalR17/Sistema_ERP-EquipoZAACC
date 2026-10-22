@@ -5,7 +5,7 @@
         private void ConfigurarPresentacion()
         {
             EstiloFormularios.Aplicar(this, mainLayout, lblTitulo);
-            EstiloFormularios.Acciones(pnlAcciones, txtBuscar, btnNuevo, btnEditar, btnEliminar);
+            EstiloFormularios.Acciones(pnlAcciones, txtBuscar, btnNuevo, btnEditar, btnDesactivar);
         }
     }
 }

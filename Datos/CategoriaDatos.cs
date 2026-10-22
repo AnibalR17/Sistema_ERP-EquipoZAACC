@@ -6,11 +6,10 @@ namespace Sistema_ERP
     
     public static class CategoriaDatos
     {
-        private const int ErrorLlaveForanea = 547;
 
         public static DataTable Listar()
         {
-            const string sql = "SELECT id_categoria, nombre FROM Categoria ORDER BY nombre";
+            const string sql = "SELECT id_categoria, nombre FROM Categoria WHERE activo = 1 ORDER BY nombre";
 
             using SqlConnection conexion = ConexionDB.AbrirConexion();
             using var adaptador = new SqlDataAdapter(sql, conexion);
@@ -55,22 +54,14 @@ namespace Sistema_ERP
             return comando.ExecuteNonQuery() > 0;
         }
 
-        public static bool Eliminar(int idCategoria)
+        public static bool Desactivar(int id_categoria)
         {
-            const string sql = "DELETE FROM Categoria WHERE id_categoria = @id";
-
-            try
-            {
-                using SqlConnection conexion = ConexionDB.AbrirConexion();
-                using var comando = new SqlCommand(sql, conexion);
-                comando.Parameters.Add("@id", SqlDbType.Int).Value = idCategoria;
-                return comando.ExecuteNonQuery() > 0;
-            }
-            catch (SqlException ex) when (ex.Number == ErrorLlaveForanea)
-            {
-                throw new InvalidOperationException(
-                    "No se puede eliminar la categoría porque tiene productos asociados.", ex);
-            }
+            const string sql = "UPDATE Categoria SET activo = 0 WHERE id_categoria = @id AND activo = 1";
+            using SqlConnection conexion = ConexionDB.AbrirConexion();
+            using var comando = new SqlCommand(sql, conexion);
+            comando.Parameters.Add("@id", SqlDbType.Int).Value = id_categoria;
+            return comando.ExecuteNonQuery() > 0;
         }
+
     }
 }

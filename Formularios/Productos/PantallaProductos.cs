@@ -13,6 +13,7 @@ namespace Sistema_ERP.Vistas
         {
             InitializeComponent();
             ConfigurarPresentacion();
+            btnDesactivar.Click += BtnDesactivar_Click;
         }
 
         private void PantallaProductos_Load(object sender, EventArgs e)
@@ -39,6 +40,8 @@ namespace Sistema_ERP.Vistas
             dgvProductos.DefaultCellStyle.SelectionForeColor = Color.Black;
             dgvProductos.RowTemplate.Height = 45;
             dgvProductos.AllowUserToAddRows = false;
+            dgvProductos.AllowUserToDeleteRows = false;
+            dgvProductos.ReadOnly = true;
             dgvProductos.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
@@ -48,7 +51,7 @@ namespace Sistema_ERP.Vistas
             {
                 using (SqlConnection conn = ConexionDB.AbrirConexion())
                 {
-                    string query = "SELECT * FROM Producto";
+                    string query = "SELECT * FROM Producto WHERE activo = 1";
                     SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
@@ -58,6 +61,27 @@ namespace Sistema_ERP.Vistas
             catch (Exception ex)
             {
                 MessageBox.Show("Error al cargar productos: " + ex.Message);
+            }
+        }
+
+        private void BtnDesactivar_Click(object? sender, EventArgs e)
+        {
+            if (dgvProductos.CurrentRow?.DataBoundItem is not DataRowView fila)
+            {
+                MessageBox.Show(this, "Seleccione un registro de la tabla.", "Desactivar");
+                return;
+            }
+            if (MessageBox.Show(this, "¿Desactivar el registro seleccionado? Se conservara su historial.",
+                "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            try
+            {
+                if (!ProductoDatos.Desactivar(Convert.ToInt32(fila["id_producto"])))
+                    MessageBox.Show(this, "El registro ya esta inactivo o no esta disponible.", "Desactivar");
+                CargarDatos();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this, "No se pudo desactivar el registro.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

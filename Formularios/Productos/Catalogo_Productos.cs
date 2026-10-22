@@ -24,7 +24,7 @@ namespace Sistema_ERP
             txtBuscar.TextChanged += TxtBuscar_TextChanged;
             btnNuevoProducto.Click += BtnNuevoProducto_Click;
             btnEditar.Click += BtnEditar_Click;
-            btnEliminar.Click += BtnEliminar_Click;
+            btnDesactivar.Click += BtnDesactivar_Click;
             dgvProductos.CellDoubleClick += (_, e) => { if (e.RowIndex >= 0) BtnEditar_Click(this, EventArgs.Empty); };
         }
 
@@ -45,9 +45,9 @@ namespace Sistema_ERP
             dgvProductos.RowHeadersVisible = false;
 
             dgvProductos.Columns.Clear();
-            dgvProductos.Columns.Add(Columna("codigo_barras", "Código", 18));
+            dgvProductos.Columns.Add(Columna("codigo_barras", "Codigo", 18));
             dgvProductos.Columns.Add(Columna("nombre", "Nombre", 34));
-            dgvProductos.Columns.Add(Columna("categoria", "Categoría", 20));
+            dgvProductos.Columns.Add(Columna("categoria", "Categoria", 20));
             var stock = Columna("stock_actual", "Stock", 10);
             stock.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dgvProductos.Columns.Add(stock);
@@ -79,7 +79,7 @@ namespace Sistema_ERP
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, "No se pudo cargar el catálogo de productos.\n" + ex.Message,
+                MessageBox.Show(this, "No se pudo cargar el catalogo de productos.\n" + ex.Message,
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -122,32 +122,33 @@ namespace Sistema_ERP
             if (formulario.ShowDialog(FindForm()) == DialogResult.OK) CargarProductos();
         }
 
-        private void BtnEliminar_Click(object? sender, EventArgs e)
+        private void BtnDesactivar_Click(object? sender, EventArgs e)
         {
             Producto? producto = ProductoSeleccionado();
             if (producto is null)
             {
-                MessageBox.Show(this, "Seleccione un producto de la tabla.", "Eliminar",
+                MessageBox.Show(this, "Seleccione un producto de la tabla.", "Desactivar",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
-            var confirmar = MessageBox.Show(this, $"¿Eliminar el producto \"{producto.Nombre}\"?", "Confirmar",
+            var confirmar = MessageBox.Show(this, $"¿Desactivar el producto \"{producto.Nombre}\"?", "Confirmar",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirmar != DialogResult.Yes) return;
 
             try
             {
-                ProductoDatos.Eliminar(producto.IdProducto);
+                if (!ProductoDatos.Desactivar(producto.IdProducto))
+                    MessageBox.Show(this, "El producto ya esta inactivo o no esta disponible.", "Desactivar");
                 CargarProductos();
             }
             catch (InvalidOperationException ex)
             {
-                MessageBox.Show(this, ex.Message, "No se puede eliminar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, ex.Message, "No se puede desactivar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception)
             {
-                MessageBox.Show(this, "No se pudo eliminar el producto.", "Error",
+                MessageBox.Show(this, "No se pudo desactivar el producto.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

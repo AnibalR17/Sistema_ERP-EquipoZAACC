@@ -20,7 +20,7 @@
 
             Label[] etiquetas = { subtitleLabel, label1, label2, label3, label4, label5 };
             Control[] campos = { txtCodigo, txtNombre, nudPrecio, txtStock, cmbCategoria, cmbProveedor };
-            string[] textos = { "Código de barras *", "Nombre *", "Precio unitario (L.) *", "Stock actual · solo lectura", "Categoría *", "Proveedor *" };
+            string[] textos = { "Codigo de barras *", "Nombre *", "Precio unitario (L.) *", "Stock actual · solo lectura", "Categoria *", "Proveedor *" };
             for (int i = 0; i < campos.Length; i++)
             {
                 int y = 100 + i * 76;

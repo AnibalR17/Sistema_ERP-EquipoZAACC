@@ -2,7 +2,7 @@
 {
     internal static class VistaContenido
     {
-        // Conserva el contenido del dise?ador; la navegaci?n compartida pertenece al formulario MDI principal.
+        // Conserva el contenido del disenador; la navegacion compartida pertenece al formulario MDI principal.
         internal static void Preparar(UserControl vista, Control contenido)
         {
             vista.SuspendLayout();

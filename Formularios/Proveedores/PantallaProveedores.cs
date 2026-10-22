@@ -13,6 +13,7 @@ namespace Sistema_ERP.Vistas
         {
             InitializeComponent();
             ConfigurarPresentacion();
+            btnDesactivar.Click += BtnDesactivar_Click;
         }
 
         private void PantallaProveedores_Load(object sender, EventArgs e)
@@ -39,6 +40,8 @@ namespace Sistema_ERP.Vistas
             dgvProveedores.DefaultCellStyle.SelectionForeColor = Color.Black;
             dgvProveedores.RowTemplate.Height = 45;
             dgvProveedores.AllowUserToAddRows = false;
+            dgvProveedores.AllowUserToDeleteRows = false;
+            dgvProveedores.ReadOnly = true;
       
             dgvProveedores.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
@@ -49,7 +52,7 @@ namespace Sistema_ERP.Vistas
             {
                 using (SqlConnection conn = ConexionDB.AbrirConexion())
                 {
-                    string query = "SELECT * FROM Proveedor";
+                    string query = "SELECT * FROM Proveedor WHERE activo = 1";
                     SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
                     DataTable dt = new DataTable();
                     adapter.Fill(dt);
@@ -58,7 +61,28 @@ namespace Sistema_ERP.Vistas
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error de conexión: " + ex.Message);
+                MessageBox.Show("Error de conexion: " + ex.Message);
+            }
+        }
+
+        private void BtnDesactivar_Click(object? sender, EventArgs e)
+        {
+            if (dgvProveedores.CurrentRow?.DataBoundItem is not DataRowView fila)
+            {
+                MessageBox.Show(this, "Seleccione un registro de la tabla.", "Desactivar");
+                return;
+            }
+            if (MessageBox.Show(this, "¿Desactivar el registro seleccionado? Se conservara su historial.",
+                "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            try
+            {
+                if (!ProveedorDatos.Desactivar(Convert.ToInt32(fila["id_proveedor"])))
+                    MessageBox.Show(this, "El registro ya esta inactivo o no esta disponible.", "Desactivar");
+                CargarDatos();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show(this, "No se pudo desactivar el registro.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

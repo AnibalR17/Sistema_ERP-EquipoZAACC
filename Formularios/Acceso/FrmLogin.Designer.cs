@@ -3,12 +3,12 @@
     partial class FrmLogin
     {
         /// <summary>
-        /// Variable del diseñador necesaria.
+        /// Variable del disenador necesaria.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
 
         /// <summary>
-        /// Limpiar los recursos que se estén usando.
+        /// Limpiar los recursos que se esten usando.
         /// </summary>
         /// <param name="disposing">true si los recursos administrados se deben desechar; false en caso contrario.</param>
         protected override void Dispose(bool disposing)
@@ -20,11 +20,11 @@
             base.Dispose(disposing);
         }
 
-        #region Código generado por el Diseñador de Windows Forms
+        #region Codigo generado por el Disenador de Windows Forms
 
         /// <summary>
-        /// Método necesario para admitir el Diseñador. No se puede modificar
-        /// el contenido de este método con el editor de código.
+        /// Metodo necesario para admitir el Disenador. No se puede modificar
+        /// el contenido de este metodo con el editor de codigo.
         /// </summary>
         private void InitializeComponent()
         {
@@ -151,7 +151,7 @@
             this.lblTarjeta1Desc.Name = "lblTarjeta1Desc";
             this.lblTarjeta1Desc.Size = new System.Drawing.Size(246, 17);
             this.lblTarjeta1Desc.TabIndex = 1;
-            this.lblTarjeta1Desc.Text = "Facturación rápida con control de pagos";
+            this.lblTarjeta1Desc.Text = "Facturacion rapida con control de pagos";
             // 
             // pnlTarjeta2
             // 
@@ -172,7 +172,7 @@
             this.lblTarjeta2Desc.Name = "lblTarjeta2Desc";
             this.lblTarjeta2Desc.Size = new System.Drawing.Size(216, 17);
             this.lblTarjeta2Desc.TabIndex = 1;
-            this.lblTarjeta2Desc.Text = "Solicitud, aprobación y seguimiento";
+            this.lblTarjeta2Desc.Text = "Solicitud, aprobacion y seguimiento";
             // 
             // lblTarjeta2Titulo
             // 
@@ -247,7 +247,7 @@
             this.lblLoginTitulo.Name = "lblLoginTitulo";
             this.lblLoginTitulo.Size = new System.Drawing.Size(229, 46);
             this.lblLoginTitulo.TabIndex = 0;
-            this.lblLoginTitulo.Text = "Iniciar sesión";
+            this.lblLoginTitulo.Text = "Iniciar sesion";
             // 
             // lblLoginSub
             // 
@@ -280,7 +280,7 @@
             this.lblClave.Name = "lblClave";
             this.lblClave.Size = new System.Drawing.Size(74, 17);
             this.lblClave.TabIndex = 3;
-            this.lblClave.Text = "Contraseña";
+            this.lblClave.Text = "Contrasena";
             // 
             // txtUsuario
             // 
@@ -382,7 +382,7 @@
             this.MaximizeBox = false;
             this.Name = "FrmLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Iniciar Sesión";
+            this.Text = "Iniciar Sesion";
             this.Load += new System.EventHandler(this.FrmLogin_Load);
             this.pnlIzquierdo.ResumeLayout(false);
             this.pnlIzquierdo.PerformLayout();

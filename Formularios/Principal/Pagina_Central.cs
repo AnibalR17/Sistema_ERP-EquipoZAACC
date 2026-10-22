@@ -32,7 +32,7 @@ namespace Sistema_ERP
 
         private void Header_Resize(object? sender, EventArgs e)
         {
-            // El dise?o puede generar este evento antes de que termine InitializeComponent.
+            // El diseno puede generar este evento antes de que termine InitializeComponent.
             if (searchBox == null || accountLabel == null || notificationButton == null) return;
             searchBox.Width = Math.Max(160, Math.Min(420, header.Width - 390));
             accountLabel.Left = searchBox.Right + 18;
@@ -121,14 +121,14 @@ namespace Sistema_ERP
             {
                 using var conexion = ConexionDB.CrearConexion();
                 await conexion.OpenAsync();
-                MessageBox.Show(this, "Conexión a la base de datos exitosa.",
-                    "Conexión", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(this, "Conexion a la base de datos exitosa.",
+                    "Conexion", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception)
             {
                 MessageBox.Show(this,
-                    "No se pudo conectar a la base de datos. Verifique la conexión a Internet y la configuración de acceso.",
-                    "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "No se pudo conectar a la base de datos. Verifique la conexion a Internet y la configuracion de acceso.",
+                    "Error de conexion", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -153,7 +153,7 @@ namespace Sistema_ERP
             main.Controls.Remove(content);
             Controls.Remove(main);
             main.Dispose();
-            // El ?rea MDI ocupa el espacio disponible junto al encabezado y al men? lateral compartidos.
+            // El area MDI ocupa el espacio disponible junto al encabezado y al menu lateral compartidos.
             Controls.SetChildIndex(header, 1);
             panelContenedor.BringToFront();
             inicio = CrearPantalla(content, "Inicio");
@@ -181,7 +181,7 @@ namespace Sistema_ERP
                 boton.TabIndex++;
             }
 
-            // Permite desplazar el men? de forma independiente para acceder a todas las opciones en ventanas peque?as.
+            // Permite desplazar el menu de forma independiente para acceder a todas las opciones en ventanas pequenas.
             var menu = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
             var pie = new Panel { Dock = DockStyle.Bottom, Height = 130 };
             foreach (Control control in panelContenedor.Controls.Cast<Control>().ToArray())
@@ -252,7 +252,7 @@ namespace Sistema_ERP
         }
 
         private void catalogButton_Click(object? sender, EventArgs e) =>
-            MostrarPantalla("Catálogo", catalogButton, () => CrearPantalla(new Catalogo_Productos(), "Catálogo"));
+            MostrarPantalla("Catalogo", catalogButton, () => CrearPantalla(new Catalogo_Productos(), "Catalogo"));
 
         private void MostrarInicio() =>
             MostrarPantalla("Inicio", homeButton, () => inicio!);
@@ -264,7 +264,7 @@ namespace Sistema_ERP
             MostrarPantalla("Traspasos", transferButton, () => CrearPantalla(new Traspaso_Tiendas(), "Traspasos"));
 
         private void MostrarValidacion() =>
-            MostrarPantalla("Validación", validationButton, () => CrearPantalla(new Validacion_Traspasos(), "Validación"));
+            MostrarPantalla("Validacion", validationButton, () => CrearPantalla(new Validacion_Traspasos(), "Validacion"));
 
         private void returnsButton_Click(object sender, EventArgs e) =>
             MostrarPantalla("Apartados y devoluciones", returnsButton, () => new ApartadosDevoluciones());

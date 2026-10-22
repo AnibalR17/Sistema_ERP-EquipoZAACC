@@ -7,7 +7,7 @@ namespace Sistema_ERP
         public Notificaciones() : base("Notificaciones", 260)
         {
             var avisos = PantallaMaqueta.Filas(50, 50);
-            foreach (var (texto, color, fila) in new[] { ("⚠ Alerta de stock", Color.DarkOrange, 0), ("● Inversión próxima a vencer", Color.Firebrick, 1) })
+            foreach (var (texto, color, fila) in new[] { ("⚠ Alerta de stock", Color.DarkOrange, 0), ("● Inversion proxima a vencer", Color.Firebrick, 1) })
             {
                 var aviso = new PanelDisenoInventario { Dock = DockStyle.Fill, MostrarSombra = false, Radio = 16, BackColor = ProductoEstilo.Suave, Padding = new Padding(16, 0, 8, 0), Margin = new Padding(0, 0, 0, 8) };
                 aviso.Controls.Add(PantallaMaqueta.Etiqueta(texto)); aviso.Paint += (_, e) => { using var borde = new Pen(color, 4); e.Graphics.DrawLine(borde, 2, 10, 2, aviso.Height - 10); }; avisos.Controls.Add(aviso, 0, fila);
