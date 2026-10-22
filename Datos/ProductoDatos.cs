@@ -16,7 +16,6 @@ namespace Sistema_ERP
 
     public static class ProductoDatos
     {
-        private const int ErrorLlaveForanea = 547;
 
         public static DataTable Listar()
         {
@@ -25,6 +24,7 @@ namespace Sistema_ERP
                                         p.id_categoria, p.id_proveedor
                                  FROM Producto p
                                  INNER JOIN Categoria c ON c.id_categoria = p.id_categoria
+                                 WHERE p.activo = 1
                                  ORDER BY p.nombre";
 
             using SqlConnection conexion = ConexionDB.AbrirConexion();
@@ -65,7 +65,7 @@ namespace Sistema_ERP
             const string sql = @"UPDATE Producto
                                  SET codigo_barras = @codigo, nombre = @nombre, precio_unitario = @precio,
                                      id_categoria = @idCategoria, id_proveedor = @idProveedor
-                                 WHERE id_producto = @id";
+                                 WHERE id_producto = @id AND activo = 1";
 
             using SqlConnection conexion = ConexionDB.AbrirConexion();
             using var comando = new SqlCommand(sql, conexion);
@@ -74,22 +74,13 @@ namespace Sistema_ERP
             return comando.ExecuteNonQuery() > 0;
         }
 
-        public static bool Eliminar(int idProducto)
+        public static bool Desactivar(int id_producto)
         {
-            const string sql = "DELETE FROM Producto WHERE id_producto = @id";
-
-            try
-            {
-                using SqlConnection conexion = ConexionDB.AbrirConexion();
-                using var comando = new SqlCommand(sql, conexion);
-                comando.Parameters.Add("@id", SqlDbType.Int).Value = idProducto;
-                return comando.ExecuteNonQuery() > 0;
-            }
-            catch (SqlException ex) when (ex.Number == ErrorLlaveForanea)
-            {
-                throw new InvalidOperationException(
-                    "No se puede eliminar el producto porque tiene ventas, apartados o movimientos asociados.", ex);
-            }
+            const string sql = "UPDATE Producto SET activo = 0 WHERE id_producto = @id AND activo = 1";
+            using SqlConnection conexion = ConexionDB.AbrirConexion();
+            using var comando = new SqlCommand(sql, conexion);
+            comando.Parameters.Add("@id", SqlDbType.Int).Value = id_producto;
+            return comando.ExecuteNonQuery() > 0;
         }
 
         private static void AgregarParametros(SqlCommand comando, Producto p)

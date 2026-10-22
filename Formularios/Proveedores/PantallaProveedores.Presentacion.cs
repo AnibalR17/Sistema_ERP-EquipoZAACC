@@ -5,8 +5,8 @@
         private void ConfigurarPresentacion()
         {
             EstiloFormularios.Aplicar(this, mainLayout, lblTitulo);
-            EstiloFormularios.Acciones(pnlAcciones, txtBuscar, btnNuevo, btnEditar, btnEliminar);
-            // Reserva una fila completa para los botones y otra para la búsqueda.
+            EstiloFormularios.Acciones(pnlAcciones, txtBuscar, btnNuevo, btnEditar, btnDesactivar);
+            // Reserva una fila completa para los botones y otra para la busqueda.
             pnlAcciones.Controls.Remove(txtBuscar);
             pnlAcciones.AutoScroll = false;
             pnlAcciones.Margin = Padding.Empty;
