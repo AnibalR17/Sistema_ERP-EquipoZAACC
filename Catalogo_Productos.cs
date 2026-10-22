@@ -15,6 +15,7 @@ namespace Sistema_ERP
         {
             InitializeComponent();
             ConfigurarPresentacion();
+            UsarNavegacionPrincipal();
 
             homeButton.Click += (_, _) => HomeRequested?.Invoke(this, EventArgs.Empty);
             toggleButton.Click += (_, _) => sidebar.Visible = !sidebar.Visible;

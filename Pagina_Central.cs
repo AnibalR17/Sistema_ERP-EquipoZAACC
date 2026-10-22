@@ -4,18 +4,19 @@ namespace Sistema_ERP
 {
     public partial class Pagina_Central : Form
     {
-        private Catalogo_Productos? catalogo;
-        private Inventario? inventario;
-        private Traspaso_Tiendas? traspaso;
-        private Validacion_Traspasos? validacion;
+        private readonly Dictionary<string, Form> pantallas = new();
+        private readonly Dictionary<Form, Button> navegacion = new();
+        private Form? inicio;
 
         public Pagina_Central()
         {
             InitializeComponent();
+            ConfigurarMdi();
             homeButton.Click += (_, _) => MostrarInicio();
             inventoryButton.Click += (_, _) => MostrarInventario();
             transferButton.Click += (_, _) => MostrarTraspaso();
             validationButton.Click += (_, _) => MostrarValidacion();
+            bulkButton.Click += (_, _) => MostrarPantalla("Carga masiva", bulkButton, () => new CargaMasiva());
             Header_Resize(this, EventArgs.Empty);
             foreach (Panel panel in new[] { infoPanel, cardPanel0, cardPanel1, cardPanel2, cardPanel3, chartPanel })
             {
@@ -31,7 +32,7 @@ namespace Sistema_ERP
 
         private void Header_Resize(object? sender, EventArgs e)
         {
-            // Layout can raise this event before InitializeComponent finishes.
+            // El dise?o puede generar este evento antes de que termine InitializeComponent.
             if (searchBox == null || accountLabel == null || notificationButton == null) return;
             searchBox.Width = Math.Max(160, Math.Min(420, header.Width - 390));
             accountLabel.Left = searchBox.Right + 18;
@@ -144,107 +145,138 @@ namespace Sistema_ERP
 
         }
 
-        private void catalogButton_Click(object? sender, EventArgs e)
+        private void ConfigurarMdi()
         {
-            if (catalogo == null)
+            SuspendLayout();
+            IsMdiContainer = true;
+            header.Parent = this;
+            main.Controls.Remove(content);
+            Controls.Remove(main);
+            main.Dispose();
+            // El ?rea MDI ocupa el espacio disponible junto al encabezado y al men? lateral compartidos.
+            Controls.SetChildIndex(header, 1);
+            panelContenedor.BringToFront();
+            inicio = CrearPantalla(content, "Inicio");
+            pantallas.Add("Inicio", inicio);
+            navegacion.Add(inicio, homeButton);
+            MdiChildActivate += (_, _) => ActualizarNavegacion();
+
+            // Permite desplazar el men? de forma independiente para acceder a todas las opciones en ventanas peque?as.
+            var menu = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
+            var pie = new Panel { Dock = DockStyle.Bottom, Height = 130 };
+            foreach (Control control in panelContenedor.Controls.Cast<Control>().ToArray())
             {
-                catalogo = new Catalogo_Productos { Dock = DockStyle.Fill };
-                catalogo.UsarNavegacionPrincipal();
-                catalogo.HomeRequested += (_, _) => MostrarInicio();
-                main.Controls.Add(catalogo);
+                if (control == userLabel || control == roleLabel || control == logoutButton)
+                    pie.Controls.Add(control);
+                else
+                    menu.Controls.Add(control);
             }
-
-            MostrarVista(catalogo, catalogButton);
+            userLabel.Anchor = roleLabel.Anchor = logoutButton.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            userLabel.Top = 8;
+            roleLabel.Top = 40;
+            logoutButton.Top = 70;
+            panelContenedor.Controls.Add(menu);
+            panelContenedor.Controls.Add(pie);
+            ResumeLayout(true);
+            Shown += (_, _) => MostrarInicio();
         }
 
-        private void MostrarInicio()
+        private Form CrearPantalla(Control contenido, string titulo)
         {
-            MostrarVista(content, homeButton);
+            var pantalla = new Form { Text = titulo, AutoScaleMode = AutoScaleMode.None };
+            contenido.Dock = DockStyle.Fill;
+            pantalla.Controls.Add(contenido);
+            return pantalla;
         }
 
-        private void MostrarInventario()
+        private void MostrarPantalla(string clave, Button boton, Func<Form> crear)
         {
-            if (inventario == null)
+            if (!pantallas.TryGetValue(clave, out var pantalla) || pantalla.IsDisposed)
             {
-                inventario = new Inventario { Dock = DockStyle.Fill };
-                inventario.UsarNavegacionPrincipal();
-                main.Controls.Add(inventario);
-            }
-            MostrarVista(inventario, inventoryButton);
-        }
-
-        private void MostrarTraspaso()
-        {
-            if (traspaso == null)
-            {
-                traspaso = new Traspaso_Tiendas { Dock = DockStyle.Fill };
-                traspaso.UsarNavegacionPrincipal();
-                main.Controls.Add(traspaso);
-            }
-            MostrarVista(traspaso, transferButton);
-        }
-
-        private void MostrarValidacion()
-        {
-            if (validacion == null)
-            {
-                validacion = new Validacion_Traspasos { Dock = DockStyle.Fill };
-                validacion.UsarNavegacionPrincipal();
-                main.Controls.Add(validacion);
-            }
-            MostrarVista(validacion, validationButton);
-        }
-
-        private void MostrarVista(Control vista, Button seleccionado)
-        {
-            foreach (Control? pantalla in new Control?[] { content, catalogo, inventario, traspaso, validacion })
-                if (pantalla != null) pantalla.Visible = pantalla == vista;
-
-            vista.BringToFront();
-            foreach (Button boton in new[] { homeButton, catalogButton, inventoryButton, transferButton, validationButton })
-            {
-                FontStyle estilo = boton == seleccionado ? FontStyle.Bold : FontStyle.Regular;
-                if (boton.Font.Style != estilo)
+                pantalla = crear();
+                pantallas[clave] = pantalla;
+                navegacion[pantalla] = boton;
+                pantalla.FormClosed += (_, _) =>
                 {
-                    boton.Font = new Font(boton.Font, estilo);
-                }
-                boton.BackColor = boton == seleccionado ? Color.FromArgb(243, 243, 243) : Color.White;
+                    pantallas.Remove(clave);
+                    navegacion.Remove(pantalla);
+                };
             }
+            if (pantalla.MdiParent == null)
+            {
+                pantalla.WindowState = FormWindowState.Normal;
+                pantalla.FormBorderStyle = FormBorderStyle.None;
+                pantalla.ControlBox = false;
+                pantalla.ShowInTaskbar = false;
+                pantalla.MinimumSize = Size.Empty;
+                pantalla.MdiParent = this;
+                pantalla.Dock = DockStyle.Fill;
+            }
+            pantalla.Show();
+            pantalla.BringToFront();
+            pantalla.Activate();
+            ActualizarNavegacion();
         }
 
-        private void returnsButton_Click(object sender, EventArgs e)
+        private void ActualizarNavegacion()
         {
-
+            foreach (var boton in navegacion.Values.Distinct())
+            {
+                bool seleccionado = ActiveMdiChild != null &&
+                    navegacion.TryGetValue(ActiveMdiChild, out var activo) && activo == boton;
+                var estilo = seleccionado ? FontStyle.Bold : FontStyle.Regular;
+                if (boton.Font.Style != estilo) boton.Font = new Font(boton.Font, estilo);
+                boton.BackColor = seleccionado ? Color.FromArgb(243, 243, 243) : Color.White;
+            }
+            if (ActiveMdiChild != null) Text = $"Sistema ERP - {ActiveMdiChild.Text}";
         }
 
-        private void rolesButton_Click(object sender, EventArgs e)
-        {
+        private void catalogButton_Click(object? sender, EventArgs e) =>
+            MostrarPantalla("Catálogo", catalogButton, () => CrearPantalla(new Catalogo_Productos(), "Catálogo"));
 
-        }
+        private void MostrarInicio() =>
+            MostrarPantalla("Inicio", homeButton, () => inicio!);
 
-        private void investorsButton_Click(object sender, EventArgs e)
-        {
+        private void MostrarInventario() =>
+            MostrarPantalla("Compras", inventoryButton, () => new Vistas.PantallaCompras());
 
-        }
+        private void MostrarTraspaso() =>
+            MostrarPantalla("Traspasos", transferButton, () => CrearPantalla(new Traspaso_Tiendas(), "Traspasos"));
 
-        private void settingsButton_Click(object sender, EventArgs e)
-        {
+        private void MostrarValidacion() =>
+            MostrarPantalla("Validación", validationButton, () => CrearPantalla(new Validacion_Traspasos(), "Validación"));
 
-        }
+        private void returnsButton_Click(object sender, EventArgs e) =>
+            MostrarPantalla("Apartados y devoluciones", returnsButton, () => new ApartadosDevoluciones());
+
+        private void rolesButton_Click(object sender, EventArgs e) =>
+            MostrarPantalla("Directorio y roles", rolesButton, () => new DirectorioRoles());
+
+        private void investorsButton_Click(object sender, EventArgs e) =>
+            MostrarPantalla("Proveedores", investorsButton, () => new Vistas.PantallaProveedores());
+
+        private void settingsButton_Click(object sender, EventArgs e) =>
+            MostrarPantalla("Configuraci\u00f3n y auditor\u00eda", settingsButton, () => new ConfiguracionAuditoria());
 
         private void logoutButton_Click(object sender, EventArgs e)
         {
-
+            logoutButton.Enabled = false;
+            using var login = new LoginERP.FrmLogin();
+            Hide();
+            try
+            {
+                login.ShowDialog();
+            }
+            finally
+            {
+                Close();
+            }
         }
 
-        private void salesButton_Click(object sender, EventArgs e)
-        {
+        private void salesButton_Click(object sender, EventArgs e) =>
+            MostrarPantalla("Punto de Venta", salesButton, () => new PuntoVenta());
 
-        }
-
-        private void notificationButton_Click(object sender, EventArgs e)
-        {
-
-        }
+        private void notificationButton_Click(object sender, EventArgs e) =>
+            DialogosMaqueta.Mostrar(this, new Notificaciones());
     }
 }

@@ -11,7 +11,7 @@
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
-            Application.Run(new Sistema_ERP.Vistas.PantallaCompras());
+            Application.Run(new Sistema_ERP.Pagina_Central());
         }
     }
 }

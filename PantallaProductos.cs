@@ -12,6 +12,7 @@ namespace Sistema_ERP.Vistas
         public PantallaProductos()
         {
             InitializeComponent();
+            ConfigurarPresentacion();
         }
 
         private void PantallaProductos_Load(object sender, EventArgs e)
