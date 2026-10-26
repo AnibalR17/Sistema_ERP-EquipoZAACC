@@ -1,22 +1,29 @@
-﻿using System.Drawing.Drawing2D;
-
 namespace Sistema_ERP
 {
     internal static class DialogosMaqueta
     {
-        internal static void Mostrar(Form propietario, Form dialogo, bool oscurecerFondo = true)
+        internal static void Mostrar(Form propietario, Form dialogo)
         {
             using (dialogo)
             {
-                if (!oscurecerFondo)
+                using var sombra = new Form
                 {
-                    dialogo.ShowDialog(propietario);
-                    return;
-                }
-                using var sombra = new Form { FormBorderStyle = FormBorderStyle.None, StartPosition = FormStartPosition.Manual, Bounds = propietario.Bounds, BackColor = Color.Black, Opacity = .4, ShowInTaskbar = false };
+                    FormBorderStyle = FormBorderStyle.None,
+                    StartPosition = FormStartPosition.Manual,
+                    Bounds = propietario.Bounds,
+                    BackColor = Color.Black,
+                    Opacity = .4,
+                    ShowInTaskbar = false
+                };
                 sombra.Show(propietario);
-                try { dialogo.ShowDialog(sombra); }
-                finally { sombra.Close(); }
+                try
+                {
+                    dialogo.ShowDialog(sombra);
+                }
+                finally
+                {
+                    sombra.Close();
+                }
             }
         }
     }

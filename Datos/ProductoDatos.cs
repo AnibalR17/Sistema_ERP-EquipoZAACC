@@ -39,7 +39,7 @@ namespace Sistema_ERP
 
         public static bool ExisteCodigo(string codigoBarras, int? excluirId = null)
         {
-            const string sql = @"SELECT COUNT(1) FROM Producto
+            const string sql = @"SELECT COUNT(1) FROM dbo.Producto
                                  WHERE codigo_barras = @codigo
                                    AND (@excluirId IS NULL OR id_producto <> @excluirId)";
 
@@ -50,7 +50,7 @@ namespace Sistema_ERP
             return (int)comando.ExecuteScalar() > 0;
         }
 
-        public static int Agregar(Producto p)
+        public static int Agregar(Producto producto)
         {
             const string sql = @"DECLARE @insertados TABLE (id_producto int);
                                  INSERT INTO dbo.Producto
@@ -61,37 +61,38 @@ namespace Sistema_ERP
 
             using SqlConnection conexion = Conexion.AbrirConexion();
             using var comando = new SqlCommand(sql, conexion);
-            AgregarParametros(comando, p);
+            AgregarParametros(comando, producto);
             return (int)comando.ExecuteScalar();
         }
 
-        public static bool Editar(Producto p)
+        public static bool Editar(Producto producto)
         {
-            const string sql = @"UPDATE Producto
+            const string sql = @"UPDATE dbo.Producto
                                  SET codigo_barras = @codigo, nombre = @nombre, precio_unitario = @precio,
                                      id_categoria = @idCategoria, id_proveedor = @idProveedor
-                                 WHERE id_producto = @id AND activo = 1";
+                                 WHERE id_producto = @id AND activo = 1;
+                                 SELECT CONVERT(int, @@ROWCOUNT);";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
             using var comando = new SqlCommand(sql, conexion);
-            AgregarParametros(comando, p);
-            comando.Parameters.Add("@id", SqlDbType.Int).Value = p.IdProducto;
-            return comando.ExecuteNonQuery() > 0;
+            AgregarParametros(comando, producto);
+            comando.Parameters.Add("@id", SqlDbType.Int).Value = producto.IdProducto;
+            return (int)comando.ExecuteScalar() > 0;
         }
 
         public static bool Desactivar(int idProducto, string motivo) => Borrar.Producto(idProducto, motivo);
         public static bool Reactivar(int idProducto) => Modificar.ReactivarProducto(idProducto);
 
-        private static void AgregarParametros(SqlCommand comando, Producto p)
+        private static void AgregarParametros(SqlCommand comando, Producto producto)
         {
-            comando.Parameters.Add("@codigo", SqlDbType.NVarChar, 50).Value = p.CodigoBarras.Trim();
-            comando.Parameters.Add("@nombre", SqlDbType.NVarChar, 150).Value = p.Nombre.Trim();
+            comando.Parameters.Add("@codigo", SqlDbType.NVarChar, 50).Value = producto.CodigoBarras.Trim();
+            comando.Parameters.Add("@nombre", SqlDbType.NVarChar, 150).Value = producto.Nombre.Trim();
             var precio = comando.Parameters.Add("@precio", SqlDbType.Decimal);
             precio.Precision = 10;
             precio.Scale = 2;
-            precio.Value = p.PrecioUnitario;
-            comando.Parameters.Add("@idCategoria", SqlDbType.Int).Value = p.IdCategoria;
-            comando.Parameters.Add("@idProveedor", SqlDbType.Int).Value = p.IdProveedor;
+            precio.Value = producto.PrecioUnitario;
+            comando.Parameters.Add("@idCategoria", SqlDbType.Int).Value = producto.IdCategoria;
+            comando.Parameters.Add("@idProveedor", SqlDbType.Int).Value = producto.IdProveedor;
         }
     }
 }

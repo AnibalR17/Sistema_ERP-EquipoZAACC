@@ -7,13 +7,18 @@ namespace Sistema_ERP
     {
         private readonly TextBox txtNombreCategoria = new()
         {
-            Name = "txtNombreCategoria", Dock = DockStyle.Fill, MaxLength = 100,
+            Name = "txtNombreCategoria",
+            Dock = DockStyle.Fill,
+            MaxLength = 100,
             PlaceholderText = "Nombre de la categoría"
         };
         private readonly TextBox txtDescripcionCategoria = new()
         {
-            Name = "txtDescripcionCategoria", Dock = DockStyle.Fill, MaxLength = 300,
-            Multiline = true, ScrollBars = ScrollBars.Vertical,
+            Name = "txtDescripcionCategoria",
+            Dock = DockStyle.Fill,
+            MaxLength = 300,
+            Multiline = true,
+            ScrollBars = ScrollBars.Vertical,
             PlaceholderText = "Descripción de la categoría (opcional)"
         };
         private readonly DataGridView dgvCategorias = PantallaMaqueta.Tabla("Nombre", "Descripción");
@@ -23,9 +28,11 @@ namespace Sistema_ERP
         private readonly Button btnReactivarCategoria = PantallaMaqueta.Boton("Reactivar");
         private readonly CheckBox chkCategoriasInactivas = new()
         {
-            Text = "Mostrar también categorías inactivas", AutoSize = true
+            Text = "Mostrar también categorías inactivas",
+            AutoSize = true
         };
         private int? idCategoriaSeleccionada;
+        private bool categoriaSeleccionadaActiva;
 
         private Control CrearPanelCategorias()
         {
@@ -36,16 +43,16 @@ namespace Sistema_ERP
             panel.Controls.Add(txtDescripcionCategoria, 0, 3);
             var acciones = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, AutoScroll = true };
             btnGuardarCategoria.AutoSize = true;
-            btnGuardarCategoria.Click += GuardarCategoria;
+            btnGuardarCategoria.Click += (_, _) => GuardarCategoria(false);
             acciones.Controls.Add(btnGuardarCategoria);
             btnActualizarCategoria.Enabled = false;
-            btnActualizarCategoria.Click += ActualizarCategoria;
+            btnActualizarCategoria.Click += (_, _) => GuardarCategoria(true);
             acciones.Controls.Add(btnActualizarCategoria);
             btnDesactivarCategoria.Enabled = false;
-            btnDesactivarCategoria.Click += DesactivarCategoria;
+            btnDesactivarCategoria.Click += (_, _) => CambiarEstadoCategoria(false);
             acciones.Controls.Add(btnDesactivarCategoria);
             btnReactivarCategoria.Enabled = false;
-            btnReactivarCategoria.Click += ReactivarCategoria;
+            btnReactivarCategoria.Click += (_, _) => CambiarEstadoCategoria(true);
             acciones.Controls.Add(btnReactivarCategoria);
             var btnNuevaCategoria = PantallaMaqueta.Boton("Nueva categoría");
             btnNuevaCategoria.Click += (_, _) => LimpiarCategoria();
@@ -69,7 +76,9 @@ namespace Sistema_ERP
             dgvCategorias.Columns[1].DataPropertyName = "descripcion";
             dgvCategorias.Columns.Add(new DataGridViewCheckBoxColumn
             {
-                Name = "activo", DataPropertyName = "activo", HeaderText = "Activa"
+                Name = "activo",
+                DataPropertyName = "activo",
+                HeaderText = "Activa"
             });
             panel.Controls.Add(dgvCategorias, 0, 6);
             return panel;
@@ -96,12 +105,9 @@ namespace Sistema_ERP
             idCategoriaSeleccionada = Convert.ToInt32(fila["id_categoria"]);
             txtNombreCategoria.Text = Convert.ToString(fila["nombre"]) ?? "";
             txtDescripcionCategoria.Text = Convert.ToString(fila["descripcion"]) ?? "";
-            bool activa = Convert.ToBoolean(fila["activo"]);
-            btnActualizarCategoria.Enabled = activa;
-            btnDesactivarCategoria.Enabled = activa;
-            btnReactivarCategoria.Enabled = !activa;
-            txtNombreCategoria.ReadOnly = txtDescripcionCategoria.ReadOnly = !activa;
-            btnGuardarCategoria.Enabled = false;
+            categoriaSeleccionadaActiva = Convert.ToBoolean(fila["activo"]);
+            txtNombreCategoria.ReadOnly = txtDescripcionCategoria.ReadOnly = !categoriaSeleccionadaActiva;
+            ActualizarBotonesCategoria();
         }
 
         private void LimpiarCategoria()
@@ -110,129 +116,66 @@ namespace Sistema_ERP
             idCategoriaSeleccionada = null;
             txtNombreCategoria.Clear();
             txtDescripcionCategoria.Clear();
-            btnActualizarCategoria.Enabled = false;
-            btnDesactivarCategoria.Enabled = false;
-            btnReactivarCategoria.Enabled = false;
+            categoriaSeleccionadaActiva = false;
             txtNombreCategoria.ReadOnly = txtDescripcionCategoria.ReadOnly = false;
-            btnGuardarCategoria.Enabled = true;
+            ActualizarBotonesCategoria();
             txtNombreCategoria.Focus();
         }
 
-        private void ReactivarCategoria(object? sender, EventArgs e)
+        private void ActualizarBotonesCategoria()
         {
-            if (idCategoriaSeleccionada is not int id ||
-                dgvCategorias.SelectedRows.Count == 0 ||
-                dgvCategorias.SelectedRows[0].DataBoundItem is not DataRowView fila ||
-                Convert.ToBoolean(fila["activo"])) return;
-            string nombre = Convert.ToString(fila["nombre"]) ?? "";
-            if (MessageBox.Show(this, $"¿Reactivar la categoría \"{nombre}\"?",
-                "Reactivar categoría", MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                MessageBoxDefaultButton.Button2) != DialogResult.Yes) return;
-            btnReactivarCategoria.Enabled = false;
-            try
-            {
-                bool reactivada = CategoriaDatos.Reactivar(id);
-                LimpiarCategoria();
-                CargarCategorias();
-                MessageBox.Show(this,
-                    reactivada ? "Categoría reactivada correctamente." : "La categoría ya está activa o no está disponible.",
-                    "Categorías", MessageBoxButtons.OK,
-                    reactivada ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(this, "No se pudo reactivar la categoría. Verifique la conexión e intente nuevamente.",
-                    "Categorías", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                btnReactivarCategoria.Enabled = idCategoriaSeleccionada.HasValue;
-            }
+            bool seleccionada = idCategoriaSeleccionada.HasValue;
+            btnGuardarCategoria.Enabled = !seleccionada;
+            btnActualizarCategoria.Enabled = btnDesactivarCategoria.Enabled = seleccionada && categoriaSeleccionadaActiva;
+            btnReactivarCategoria.Enabled = seleccionada && !categoriaSeleccionadaActiva;
         }
 
-        private void DesactivarCategoria(object? sender, EventArgs e)
+        private void CambiarEstadoCategoria(bool reactivar)
         {
-            if (idCategoriaSeleccionada is not int id ||
+            if (idCategoriaSeleccionada is not int id || categoriaSeleccionadaActiva == reactivar ||
                 dgvCategorias.SelectedRows.Count == 0 ||
                 dgvCategorias.SelectedRows[0].DataBoundItem is not DataRowView fila) return;
 
             string nombre = Convert.ToString(fila["nombre"]) ?? "";
-            using var dialogo = new MotivoDesactivacion(nombre);
-            if (FindForm() is Form propietario)
-                DialogosMaqueta.Mostrar(propietario, dialogo, oscurecerFondo: false);
+            string motivo = "";
+            if (reactivar)
+            {
+                if (MessageBox.Show(this, $"¿Reactivar la categoría «{nombre}»?", "Reactivar categoría",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
+                    != DialogResult.Yes) return;
+            }
             else
-                dialogo.ShowDialog(this);
-            if (dialogo.DialogResult != DialogResult.OK) return;
+            {
+                using var dialogo = new MotivoDesactivacion(nombre, "categoría");
+                if (dialogo.ShowDialog(this) != DialogResult.OK) return;
+                motivo = dialogo.Motivo;
+            }
 
-            btnDesactivarCategoria.Enabled = false;
+            btnDesactivarCategoria.Enabled = btnReactivarCategoria.Enabled = false;
             try
             {
-                bool desactivada = CategoriaDatos.Desactivar(id, dialogo.Motivo);
-                LimpiarCategoria();
+                bool cambiada = reactivar ? CategoriaDatos.Reactivar(id) : CategoriaDatos.Desactivar(id, motivo);
                 CargarCategorias();
-                MessageBox.Show(this,
-                    desactivada ? "Categoría desactivada correctamente." : "La categoría ya está inactiva o no está disponible.",
-                    "Categorías", MessageBoxButtons.OK,
-                    desactivada ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
+                MessageBox.Show(this, cambiada
+                    ? (reactivar ? "Categoría reactivada correctamente." : "Categoría desactivada correctamente.")
+                    : "La categoría ya cambió de estado o no está disponible.",
+                    "Categorías", MessageBoxButtons.OK, cambiada ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
             }
             catch (Exception)
             {
-                MessageBox.Show(this, "No se pudo desactivar la categoría. Verifique la conexión e intente nuevamente.",
+                MessageBox.Show(this, "No se pudo cambiar el estado de la categoría. Verifique la conexión e intente nuevamente.",
                     "Categorías", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
-                btnDesactivarCategoria.Enabled = idCategoriaSeleccionada.HasValue;
+                ActualizarBotonesCategoria();
             }
         }
 
-        private void ActualizarCategoria(object? sender, EventArgs e)
+        private void GuardarCategoria(bool actualizar)
         {
-            if (idCategoriaSeleccionada is not int id) return;
-            string nombre = txtNombreCategoria.Text.Trim();
-            if (nombre.Length == 0)
-            {
-                MessageBox.Show(this, "Introduzca el nombre de la categoría.", "Categorías",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtNombreCategoria.Focus();
-                return;
-            }
-            btnActualizarCategoria.Enabled = false;
-            try
-            {
-                if (CategoriaDatos.ExisteNombre(nombre, id))
-                {
-                    MostrarCategoriaDuplicada();
-                    return;
-                }
-                if (!CategoriaDatos.Editar(id, nombre, txtDescripcionCategoria.Text))
-                {
-                    MessageBox.Show(this, "La categoría ya no está activa o no está disponible.", "Categorías",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    CargarCategorias();
-                    return;
-                }
-                MessageBox.Show(this, "Categoría actualizada correctamente.", "Categorías",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                CargarCategorias();
-            }
-            catch (SqlException ex) when (ex.Number == 2601 || ex.Number == 2627)
-            {
-                MostrarCategoriaDuplicada();
-            }
-            catch (Exception)
-            {
-                MessageBox.Show(this, "No se pudo actualizar la categoría. Verifique la conexión e intente nuevamente.",
-                    "Categorías", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                btnActualizarCategoria.Enabled = idCategoriaSeleccionada.HasValue;
-            }
-        }
-
-        private void GuardarCategoria(object? sender, EventArgs e)
-        {
+            int id = idCategoriaSeleccionada.GetValueOrDefault();
+            if (actualizar && (id == 0 || !categoriaSeleccionadaActiva)) return;
             string nombre = txtNombreCategoria.Text.Trim();
             if (nombre.Length == 0)
             {
@@ -242,21 +185,31 @@ namespace Sistema_ERP
                 return;
             }
 
-            btnGuardarCategoria.Enabled = false;
+            btnGuardarCategoria.Enabled = btnActualizarCategoria.Enabled = false;
             try
             {
-                if (CategoriaDatos.ExisteNombre(nombre))
+                if (CategoriaDatos.ExisteNombre(nombre, actualizar ? idCategoriaSeleccionada : null))
                 {
                     MostrarCategoriaDuplicada();
                     return;
                 }
-                CategoriaDatos.Agregar(nombre, txtDescripcionCategoria.Text);
-                txtNombreCategoria.Clear();
-                txtDescripcionCategoria.Clear();
-                MessageBox.Show(this, "Categoría guardada correctamente.", "Categorías",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (actualizar)
+                {
+                    if (!CategoriaDatos.Editar(id, nombre, txtDescripcionCategoria.Text))
+                    {
+                        MessageBox.Show(this, "La categoría ya no está activa o no está disponible.", "Categorías",
+                            MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        CargarCategorias();
+                        return;
+                    }
+                }
+                else
+                {
+                    CategoriaDatos.Agregar(nombre, txtDescripcionCategoria.Text);
+                }
+                MessageBox.Show(this, actualizar ? "Categoría actualizada correctamente." : "Categoría guardada correctamente.",
+                    "Categorías", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CargarCategorias();
-                txtNombreCategoria.Focus();
             }
             catch (SqlException ex) when (ex.Number == 2601 || ex.Number == 2627)
             {
@@ -269,7 +222,7 @@ namespace Sistema_ERP
             }
             finally
             {
-                btnGuardarCategoria.Enabled = true;
+                ActualizarBotonesCategoria();
             }
         }
 

@@ -4,26 +4,23 @@ namespace Sistema_ERP.Clases
 {
     public static class Conexion
     {
-        private static string ConnectionString
+        private static string ObtenerCadenaConexion()
         {
-            get
+            string? configurada = Environment.GetEnvironmentVariable("SISTEMA_ERP_CONNECTION_STRING");
+            if (!string.IsNullOrWhiteSpace(configurada)) return configurada;
+
+            string ruta = Path.Combine(AppContext.BaseDirectory, "connection.local.txt");
+            if (File.Exists(ruta))
             {
-                string? configured = Environment.GetEnvironmentVariable("SISTEMA_ERP_CONNECTION_STRING");
-                if (!string.IsNullOrWhiteSpace(configured)) return configured;
-
-                string path = Path.Combine(AppContext.BaseDirectory, "connection.local.txt");
-                if (File.Exists(path))
-                {
-                    string local = File.ReadAllText(path).Trim();
-                    if (!string.IsNullOrWhiteSpace(local)) return local;
-                }
-
-                throw new InvalidOperationException(
-                    "Configure SISTEMA_ERP_CONNECTION_STRING o connection.local.txt para conectar a la base de datos.");
+                string local = File.ReadAllText(ruta).Trim();
+                if (!string.IsNullOrWhiteSpace(local)) return local;
             }
+
+            throw new InvalidOperationException(
+                "Configure SISTEMA_ERP_CONNECTION_STRING o connection.local.txt para conectar a la base de datos.");
         }
 
-        public static SqlConnection CrearConexion() => new(ConnectionString);
+        public static SqlConnection CrearConexion() => new(ObtenerCadenaConexion());
 
         public static SqlConnection AbrirConexion()
         {

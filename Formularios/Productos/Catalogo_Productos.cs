@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
@@ -7,7 +7,7 @@ namespace Sistema_ERP
 {
     public partial class Catalogo_Productos : UserControl
     {
-        private DataView? _vista;
+        private DataView? vistaProductos;
 
         public event EventHandler? HomeRequested;
 
@@ -60,7 +60,10 @@ namespace Sistema_ERP
             dgvProductos.Columns.Add(precio);
             dgvProductos.Columns.Add(new DataGridViewCheckBoxColumn
             {
-                Name = "activo", DataPropertyName = "activo", HeaderText = "Activo", Width = 65
+                Name = "activo",
+                DataPropertyName = "activo",
+                HeaderText = "Activo",
+                Width = 65
             });
             dgvProductos.Columns.Add(Columna("motivo_desactivacion", "Motivo de desactivación", 24));
 
@@ -81,9 +84,9 @@ namespace Sistema_ERP
         {
             try
             {
-                _vista = ProductoDatos.Listar(chkProductosInactivos.Checked).DefaultView;
-                dgvProductos.DataSource = _vista;
-                AplicarFiltro(); 
+                vistaProductos = ProductoDatos.Listar(chkProductosInactivos.Checked).DefaultView;
+                dgvProductos.DataSource = vistaProductos;
+                AplicarFiltro();
                 dgvProductos.ClearSelection();
                 ActualizarAccionesProducto();
             }
@@ -98,18 +101,18 @@ namespace Sistema_ERP
 
         private void AplicarFiltro()
         {
-            if (_vista is null) return;
+            if (vistaProductos is null) return;
 
             string texto = txtBuscar.Text.Trim();
             if (texto.Length == 0)
             {
-                _vista.RowFilter = "";
+                vistaProductos.RowFilter = "";
                 return;
             }
 
             // Escapa caracteres especiales de LIKE y comillas para que RowFilter no falle.
             string seguro = Regex.Replace(texto, @"[%*\[\]]", "[$0]").Replace("'", "''");
-            _vista.RowFilter = $"nombre LIKE '%{seguro}%' OR codigo_barras LIKE '%{seguro}%'";
+            vistaProductos.RowFilter = $"nombre LIKE '%{seguro}%' OR codigo_barras LIKE '%{seguro}%'";
         }
 
         private void BtnNuevoProducto_Click(object? sender, EventArgs e)
@@ -156,11 +159,7 @@ namespace Sistema_ERP
             else
             {
                 using var dialogo = new MotivoDesactivacion(producto.Nombre, "producto");
-                if (FindForm() is Form propietario)
-                    DialogosMaqueta.Mostrar(propietario, dialogo, oscurecerFondo: false);
-                else
-                    dialogo.ShowDialog(this);
-                if (dialogo.DialogResult != DialogResult.OK) return;
+                if (dialogo.ShowDialog(this) != DialogResult.OK) return;
                 motivo = dialogo.Motivo;
             }
             btnDesactivar.Enabled = btnReactivarProducto.Enabled = false;

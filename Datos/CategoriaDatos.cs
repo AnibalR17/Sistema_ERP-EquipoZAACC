@@ -4,10 +4,9 @@ using Microsoft.Data.SqlClient;
 
 namespace Sistema_ERP
 {
-    
+
     public static class CategoriaDatos
     {
-
         public static DataTable Listar(bool incluirInactivas = false)
         {
             const string sql = @"SELECT id_categoria, nombre, descripcion, activo FROM dbo.Categoria
@@ -23,7 +22,7 @@ namespace Sistema_ERP
 
         public static bool ExisteNombre(string nombre, int? excluirId = null)
         {
-            const string sql = @"SELECT COUNT(1) FROM Categoria
+            const string sql = @"SELECT COUNT(1) FROM dbo.Categoria
                                  WHERE nombre = @nombre
                                    AND (@excluirId IS NULL OR id_categoria <> @excluirId)";
 
@@ -35,16 +34,15 @@ namespace Sistema_ERP
         }
 
         public static int Agregar(string nombre, string? descripcion = null)
-            => Clases.Ingresar.Categoria(nombre, descripcion);
+            => Ingresar.Categoria(nombre, descripcion);
 
         public static bool Editar(int idCategoria, string nombre, string? descripcion)
-            => Clases.Modificar.Categoria(idCategoria, nombre, descripcion);
+            => Modificar.Categoria(idCategoria, nombre, descripcion);
 
-        public static bool Desactivar(int id_categoria, string motivo)
-            => Clases.Borrar.Categoria(id_categoria, motivo);
+        public static bool Desactivar(int idCategoria, string motivo)
+            => Borrar.Categoria(idCategoria, motivo);
 
         public static bool Reactivar(int idCategoria)
-            => Clases.Modificar.ReactivarCategoria(idCategoria);
-
+            => Modificar.ReactivarCategoria(idCategoria);
     }
 }

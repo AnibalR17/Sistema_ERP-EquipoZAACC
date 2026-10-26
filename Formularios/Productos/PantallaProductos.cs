@@ -1,7 +1,5 @@
-using Sistema_ERP.Clases;
 using System;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -50,14 +48,7 @@ namespace Sistema_ERP.Vistas
         {
             try
             {
-                using (SqlConnection conn = Conexion.AbrirConexion())
-                {
-                    string query = "SELECT * FROM Producto WHERE activo = 1";
-                    SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-                    dgvProductos.DataSource = dt;
-                }
+                dgvProductos.DataSource = ProductoDatos.Listar();
             }
             catch (Exception ex)
             {
@@ -73,8 +64,7 @@ namespace Sistema_ERP.Vistas
                 return;
             }
             using var dialogo = new MotivoDesactivacion(Convert.ToString(fila["nombre"]) ?? "", "producto");
-            DialogosMaqueta.Mostrar(this, dialogo, oscurecerFondo: false);
-            if (dialogo.DialogResult != DialogResult.OK) return;
+            if (dialogo.ShowDialog(this) != DialogResult.OK) return;
             try
             {
                 if (!ProductoDatos.Desactivar(Convert.ToInt32(fila["id_producto"]), dialogo.Motivo))

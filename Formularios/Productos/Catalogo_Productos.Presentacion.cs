@@ -1,11 +1,13 @@
-﻿namespace Sistema_ERP
+namespace Sistema_ERP
 {
     public partial class Catalogo_Productos
     {
         private readonly Button btnReactivarProducto = new() { Name = "btnReactivarProducto", Text = "Reactivar", Enabled = false };
         private readonly CheckBox chkProductosInactivos = new()
         {
-            Name = "chkProductosInactivos", Text = "Mostrar también productos inactivos", AutoSize = true
+            Name = "chkProductosInactivos",
+            Text = "Mostrar también productos inactivos",
+            AutoSize = true
         };
         internal void UsarNavegacionPrincipal()
         {
@@ -45,26 +47,33 @@
             dgvProductos.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
             dgvProductos.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
             {
-                BackColor = ProductoEstilo.Suave, ForeColor = ProductoEstilo.Texto,
+                BackColor = ProductoEstilo.Suave,
+                ForeColor = ProductoEstilo.Texto,
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-                Padding = new Padding(8), SelectionBackColor = ProductoEstilo.Suave,
+                Padding = new Padding(8),
+                SelectionBackColor = ProductoEstilo.Suave,
                 SelectionForeColor = ProductoEstilo.Texto
             };
             dgvProductos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvProductos.ColumnHeadersHeight = 48;
             dgvProductos.DefaultCellStyle = new DataGridViewCellStyle
             {
-                BackColor = Color.White, ForeColor = ProductoEstilo.Texto,
+                BackColor = Color.White,
+                ForeColor = ProductoEstilo.Texto,
                 SelectionBackColor = Color.FromArgb(228, 232, 237),
-                SelectionForeColor = ProductoEstilo.Texto, Padding = new Padding(8, 4, 8, 4)
+                SelectionForeColor = ProductoEstilo.Texto,
+                Padding = new Padding(8, 4, 8, 4)
             };
             dgvProductos.RowTemplate.Height = 44;
             dgvProductos.AllowUserToResizeRows = false;
 
             var layout = new TableLayoutPanel
             {
-                Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 5,
-                Padding = new Padding(32, 20, 32, 28), BackColor = ProductoEstilo.Fondo
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 5,
+                Padding = new Padding(32, 20, 32, 28),
+                BackColor = ProductoEstilo.Fondo
             };
             foreach (float height in new[] { 72F, 40F, 56F, 52F })
                 layout.RowStyles.Add(new RowStyle(SizeType.Absolute, height));

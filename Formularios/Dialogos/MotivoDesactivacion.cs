@@ -4,8 +4,12 @@ namespace Sistema_ERP
     {
         private readonly TextBox txtMotivo = new()
         {
-            Name = "txtMotivo", Dock = DockStyle.Fill, Multiline = true,
-            MaxLength = 300, ScrollBars = ScrollBars.Vertical, AcceptsReturn = true,
+            Name = "txtMotivo",
+            Dock = DockStyle.Fill,
+            Multiline = true,
+            MaxLength = 300,
+            ScrollBars = ScrollBars.Vertical,
+            AcceptsReturn = true,
             BorderStyle = BorderStyle.FixedSingle,
             PlaceholderText = "Escribe el motivo de desactivación..."
         };
@@ -28,7 +32,8 @@ namespace Sistema_ERP
 
             var acciones = new FlowLayoutPanel
             {
-                Dock = DockStyle.Fill, FlowDirection = FlowDirection.RightToLeft,
+                Dock = DockStyle.Fill,
+                FlowDirection = FlowDirection.RightToLeft,
                 WrapContents = false
             };
             var confirmar = PantallaMaqueta.Boton("Desactivar", true);

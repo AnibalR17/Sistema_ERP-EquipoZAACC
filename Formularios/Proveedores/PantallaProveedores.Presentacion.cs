@@ -1,4 +1,4 @@
-﻿namespace Sistema_ERP.Vistas
+namespace Sistema_ERP.Vistas
 {
     public partial class PantallaProveedores
     {
@@ -13,7 +13,9 @@
         private readonly Button btnReactivarProveedor = new() { Name = "btnReactivarProveedor", Text = "Reactivar", Enabled = false };
         private readonly CheckBox chkProveedoresInactivos = new()
         {
-            Name = "chkProveedoresInactivos", Text = "Mostrar también proveedores inactivos", AutoSize = true
+            Name = "chkProveedoresInactivos",
+            Text = "Mostrar también proveedores inactivos",
+            AutoSize = true
         };
 
         private void ConfigurarPresentacion()
@@ -31,7 +33,10 @@
 
             var campos = new TableLayoutPanel
             {
-                Dock = DockStyle.Fill, ColumnCount = 3, RowCount = 2, Margin = Padding.Empty
+                Dock = DockStyle.Fill,
+                ColumnCount = 3,
+                RowCount = 2,
+                Margin = Padding.Empty
             };
             for (int columna = 0; columna < 3; columna++)
                 campos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / 3));
@@ -45,8 +50,13 @@
             };
             for (int i = 0; i < entradas.Length; i++)
             {
-                var celda = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2,
-                    Margin = new Padding(0, 0, 12, 8) };
+                var celda = new TableLayoutPanel
+                {
+                    Dock = DockStyle.Fill,
+                    ColumnCount = 1,
+                    RowCount = 2,
+                    Margin = new Padding(0, 0, 12, 8)
+                };
                 celda.RowStyles.Add(new RowStyle(SizeType.Absolute, 28));
                 celda.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
                 celda.Controls.Add(new Label { Text = entradas[i].Etiqueta, Dock = DockStyle.Fill }, 0, 0);

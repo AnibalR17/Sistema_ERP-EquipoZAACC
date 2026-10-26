@@ -8,7 +8,7 @@ namespace Sistema_ERP
     {
         public static DataTable ListarParaCombo()
         {
-            const string sql = "SELECT id_proveedor, nombre_empresa FROM Proveedor WHERE activo = 1 ORDER BY nombre_empresa";
+            const string sql = "SELECT id_proveedor, nombre_empresa FROM dbo.Proveedor WHERE activo = 1 ORDER BY nombre_empresa";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
             using var adaptador = new SqlDataAdapter(sql, conexion);

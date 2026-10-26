@@ -37,7 +37,7 @@ namespace Sistema_ERP.Vistas
         private void ConfigurarEstiloGrid()
         {
             dgvProveedores.RowHeadersVisible = false;
-     
+
             dgvProveedores.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
             dgvProveedores.GridColor = Color.FromArgb(235, 235, 235);
 
@@ -47,7 +47,7 @@ namespace Sistema_ERP.Vistas
             dgvProveedores.ColumnHeadersDefaultCellStyle.ForeColor = Color.FromArgb(100, 100, 100);
             dgvProveedores.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
             dgvProveedores.ColumnHeadersHeight = 40;
-       
+
             dgvProveedores.DefaultCellStyle.SelectionBackColor = Color.FromArgb(240, 240, 240);
             dgvProveedores.DefaultCellStyle.SelectionForeColor = Color.Black;
             dgvProveedores.RowTemplate.Height = 45;
@@ -67,19 +67,26 @@ namespace Sistema_ERP.Vistas
             })
                 dgvProveedores.Columns.Add(new DataGridViewTextBoxColumn
                 {
-                    Name = campo, DataPropertyName = campo, HeaderText = titulo,
+                    Name = campo,
+                    DataPropertyName = campo,
+                    HeaderText = titulo,
                     MinimumWidth = campo == "telefono" ? 90 : 110
                 });
-      
+
             dgvProveedores.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             dgvProveedores.Columns.Add(new DataGridViewCheckBoxColumn
             {
-                Name = "activo", DataPropertyName = "activo", HeaderText = "Activo", MinimumWidth = 60
+                Name = "activo",
+                DataPropertyName = "activo",
+                HeaderText = "Activo",
+                MinimumWidth = 60
             });
             dgvProveedores.Columns.Add(new DataGridViewTextBoxColumn
             {
-                Name = "motivo_desactivacion", DataPropertyName = "motivo_desactivacion",
-                HeaderText = "Motivo de desactivación", MinimumWidth = 140
+                Name = "motivo_desactivacion",
+                DataPropertyName = "motivo_desactivacion",
+                HeaderText = "Motivo de desactivación",
+                MinimumWidth = 140
             });
         }
 
@@ -122,7 +129,11 @@ namespace Sistema_ERP.Vistas
             dgvProveedores.ClearSelection();
             idProveedorSeleccionado = null;
             proveedorSeleccionadoActivo = false;
-            foreach (var (_, texto) in CamposProveedor()) { texto.Clear(); texto.ReadOnly = false; }
+            foreach (var (_, texto) in CamposProveedor())
+            {
+                texto.Clear();
+                texto.ReadOnly = false;
+            }
             ActualizarBotonesProveedor();
             if (enfocarNombre) txtEmpresaProveedor.Focus();
         }
@@ -143,9 +154,12 @@ namespace Sistema_ERP.Vistas
             var proveedor = new Proveedor
             {
                 IdProveedor = idProveedorSeleccionado ?? 0,
-                NombreEmpresa = txtEmpresaProveedor.Text, Rtn = txtRtnProveedor.Text,
-                Contacto = txtContactoProveedor.Text, Telefono = txtTelefonoProveedor.Text,
-                Correo = txtCorreoProveedor.Text, Direccion = txtDireccionProveedor.Text
+                NombreEmpresa = txtEmpresaProveedor.Text,
+                Rtn = txtRtnProveedor.Text,
+                Contacto = txtContactoProveedor.Text,
+                Telefono = txtTelefonoProveedor.Text,
+                Correo = txtCorreoProveedor.Text,
+                Direccion = txtDireccionProveedor.Text
             };
             btnGuardarProveedor.Enabled = btnEditar.Enabled = false;
             try
@@ -166,7 +180,10 @@ namespace Sistema_ERP.Vistas
                         return;
                     }
                 }
-                else proveedor.IdProveedor = ProveedorDatos.Agregar(proveedor);
+                else
+                {
+                    ProveedorDatos.Agregar(proveedor);
+                }
                 MessageBox.Show(this, actualizar ? "Proveedor actualizado correctamente." : "Proveedor guardado correctamente.",
                     "Proveedores", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 txtBuscar.Clear();
@@ -214,15 +231,13 @@ namespace Sistema_ERP.Vistas
             else
             {
                 using var dialogo = new MotivoDesactivacion(nombre, "proveedor");
-                DialogosMaqueta.Mostrar(this, dialogo, oscurecerFondo: false);
-                if (dialogo.DialogResult != DialogResult.OK) return;
+                if (dialogo.ShowDialog(this) != DialogResult.OK) return;
                 motivo = dialogo.Motivo;
             }
             btnDesactivarProveedor.Enabled = btnReactivarProveedor.Enabled = false;
             try
             {
                 bool cambiado = reactivar ? ProveedorDatos.Reactivar(id) : ProveedorDatos.Desactivar(id, motivo);
-                LimpiarProveedor(enfocarNombre: false);
                 CargarDatos();
                 MessageBox.Show(this, cambiado
                     ? (reactivar ? "Proveedor reactivado correctamente." : "Proveedor desactivado correctamente.")
