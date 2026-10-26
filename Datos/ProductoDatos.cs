@@ -1,4 +1,5 @@
-﻿using System.Data;
+using Sistema_ERP.Clases;
+using System.Data;
 using Microsoft.Data.SqlClient;
 
 namespace Sistema_ERP
@@ -12,23 +13,25 @@ namespace Sistema_ERP
         public int StockActual { get; set; }
         public int IdCategoria { get; set; }
         public int IdProveedor { get; set; }
+        public bool Activo { get; set; } = true;
     }
 
     public static class ProductoDatos
     {
 
-        public static DataTable Listar()
+        public static DataTable Listar(bool incluirInactivos = false)
         {
             const string sql = @"SELECT p.id_producto, p.codigo_barras, p.nombre,
                                         c.nombre AS categoria, p.stock_actual, p.precio_unitario,
-                                        p.id_categoria, p.id_proveedor
-                                 FROM Producto p
-                                 INNER JOIN Categoria c ON c.id_categoria = p.id_categoria
-                                 WHERE p.activo = 1
+                                        p.id_categoria, p.id_proveedor, p.activo, p.motivo_desactivacion
+                                 FROM dbo.vw_ProductoStock p
+                                 INNER JOIN dbo.Categoria c ON c.id_categoria = p.id_categoria
+                                 WHERE p.activo = 1 OR @incluirInactivos = 1
                                  ORDER BY p.nombre";
 
-            using SqlConnection conexion = ConexionDB.AbrirConexion();
+            using SqlConnection conexion = Conexion.AbrirConexion();
             using var adaptador = new SqlDataAdapter(sql, conexion);
+            adaptador.SelectCommand.Parameters.Add("@incluirInactivos", SqlDbType.Bit).Value = incluirInactivos;
             var tabla = new DataTable();
             adaptador.Fill(tabla);
             return tabla;
@@ -40,7 +43,7 @@ namespace Sistema_ERP
                                  WHERE codigo_barras = @codigo
                                    AND (@excluirId IS NULL OR id_producto <> @excluirId)";
 
-            using SqlConnection conexion = ConexionDB.AbrirConexion();
+            using SqlConnection conexion = Conexion.AbrirConexion();
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@codigo", SqlDbType.NVarChar, 50).Value = codigoBarras.Trim();
             comando.Parameters.Add("@excluirId", SqlDbType.Int).Value = (object?)excluirId ?? DBNull.Value;
@@ -49,12 +52,14 @@ namespace Sistema_ERP
 
         public static int Agregar(Producto p)
         {
-            const string sql = @"INSERT INTO Producto
-                                    (codigo_barras, nombre, precio_unitario, stock_actual, id_categoria, id_proveedor)
-                                 OUTPUT INSERTED.id_producto
-                                 VALUES (@codigo, @nombre, @precio, 0, @idCategoria, @idProveedor)";
+            const string sql = @"DECLARE @insertados TABLE (id_producto int);
+                                 INSERT INTO dbo.Producto
+                                    (codigo_barras, nombre, precio_unitario, id_categoria, id_proveedor)
+                                 OUTPUT INSERTED.id_producto INTO @insertados
+                                 VALUES (@codigo, @nombre, @precio, @idCategoria, @idProveedor);
+                                 SELECT id_producto FROM @insertados;";
 
-            using SqlConnection conexion = ConexionDB.AbrirConexion();
+            using SqlConnection conexion = Conexion.AbrirConexion();
             using var comando = new SqlCommand(sql, conexion);
             AgregarParametros(comando, p);
             return (int)comando.ExecuteScalar();
@@ -67,21 +72,15 @@ namespace Sistema_ERP
                                      id_categoria = @idCategoria, id_proveedor = @idProveedor
                                  WHERE id_producto = @id AND activo = 1";
 
-            using SqlConnection conexion = ConexionDB.AbrirConexion();
+            using SqlConnection conexion = Conexion.AbrirConexion();
             using var comando = new SqlCommand(sql, conexion);
             AgregarParametros(comando, p);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = p.IdProducto;
             return comando.ExecuteNonQuery() > 0;
         }
 
-        public static bool Desactivar(int id_producto)
-        {
-            const string sql = "UPDATE Producto SET activo = 0 WHERE id_producto = @id AND activo = 1";
-            using SqlConnection conexion = ConexionDB.AbrirConexion();
-            using var comando = new SqlCommand(sql, conexion);
-            comando.Parameters.Add("@id", SqlDbType.Int).Value = id_producto;
-            return comando.ExecuteNonQuery() > 0;
-        }
+        public static bool Desactivar(int idProducto, string motivo) => Borrar.Producto(idProducto, motivo);
+        public static bool Reactivar(int idProducto) => Modificar.ReactivarProducto(idProducto);
 
         private static void AgregarParametros(SqlCommand comando, Producto p)
         {

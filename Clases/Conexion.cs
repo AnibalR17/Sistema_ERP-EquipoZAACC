@@ -1,8 +1,8 @@
 using Microsoft.Data.SqlClient;
 
-namespace Sistema_ERP
+namespace Sistema_ERP.Clases
 {
-    public class ConexionDB
+    public static class Conexion
     {
         private static string ConnectionString
         {

@@ -10,7 +10,6 @@
         private System.Windows.Forms.FlowLayoutPanel pnlAcciones;
         private System.Windows.Forms.Button btnNuevo;
         private System.Windows.Forms.Button btnEditar;
-        private System.Windows.Forms.Button btnDesactivar;
         private System.Windows.Forms.TextBox txtBuscar;
         private System.Windows.Forms.Panel pnlContenedorGrid;
         private System.Windows.Forms.DataGridView dgvProveedores;
@@ -30,7 +29,6 @@
             pnlAcciones = new FlowLayoutPanel();
             btnNuevo = new Button();
             btnEditar = new Button();
-            btnDesactivar = new Button();
             txtBuscar = new TextBox();
             pnlContenedorGrid = new Panel();
             dgvProveedores = new DataGridView();
@@ -102,7 +100,6 @@
             //
             pnlAcciones.Controls.Add(btnNuevo);
             pnlAcciones.Controls.Add(btnEditar);
-            pnlAcciones.Controls.Add(btnDesactivar);
             pnlAcciones.Controls.Add(txtBuscar);
             pnlAcciones.Dock = DockStyle.Fill;
             pnlAcciones.Location = new Point(0, 120);
@@ -144,23 +141,6 @@
             btnEditar.UseVisualStyleBackColor = false;
             btnEditar.MouseEnter += Btn_MouseEnter;
             btnEditar.MouseLeave += Btn_MouseLeave;
-            //
-            // btnDesactivar
-            //
-            btnDesactivar.BackColor = Color.FromArgb(255, 255, 255);
-            btnDesactivar.Cursor = Cursors.Hand;
-            btnDesactivar.FlatAppearance.BorderSize = 0;
-            btnDesactivar.FlatStyle = FlatStyle.Flat;
-            btnDesactivar.Font = new Font("Segoe UI", 11F);
-            btnDesactivar.Location = new Point(260, 0);
-            btnDesactivar.Margin = new Padding(0, 0, 20, 0);
-            btnDesactivar.Name = "btnDesactivar";
-            btnDesactivar.Size = new Size(120, 38);
-            btnDesactivar.TabIndex = 2;
-            btnDesactivar.Text = "🗑 Desactivar";
-            btnDesactivar.UseVisualStyleBackColor = false;
-            btnDesactivar.MouseEnter += Btn_MouseEnter;
-            btnDesactivar.MouseLeave += Btn_MouseLeave;
             //
             // txtBuscar
             //

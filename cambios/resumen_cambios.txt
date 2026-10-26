@@ -1,0 +1,58 @@
+RESUMEN DE CAMBIOS - 25/10/2026
+
+CLASES (Clases/)
+- Conexion.cs: centraliza la creación y apertura de conexiones SQL; sustituye ConexionDB.
+- Ingresar.cs: consultas para insertar categorías y proveedores, compatibles con triggers.
+- Modificar.cs: consultas para actualizar categorías/proveedores y reactivar registros de las tres áreas.
+- Borrar.cs: desactivación de categorías, proveedores y productos con motivo obligatorio.
+- Proveedor.cs: modelo de datos y validaciones de campos, longitud y correo.
+
+ACCESO A DATOS (Datos/)
+- CategoriaDatos.cs: listado con opción de incluir inactivas y llamadas a las clases de operaciones.
+- ProveedorDatos.cs: listado, búsqueda de RTN duplicado, guardado, actualización y cambios de estado.
+- ProductoDatos.cs: lectura del stock desde vw_ProductoStock y consulta de productos inactivos.
+- ProductoDatos.cs: INSERT corregido para no escribir stock_actual; desactivación/reactivación mediante las clases compartidas.
+- Los cambios de estado usan desactivado_en; no escriben directamente la columna calculada activo.
+
+CATÁLOGO Y CATEGORÍAS (Formularios/Productos/)
+- Catalogo_Productos.Presentacion.cs: botones Productos/Categorías para cambiar de sección.
+- Catalogo_Productos.Categorias.cs: captura de nombre y descripción, guardado y actualización.
+- Categorías: al seleccionar una fila se cargan sus datos en los campos de texto.
+- Categorías: desactivar con motivo, reactivar y mostrar registros inactivos.
+- Categorías: tabla de solo lectura con selección gris y validación de nombres duplicados.
+- Catalogo_Productos.cs: desactivar productos con motivo y reactivar con confirmación.
+- Productos: filtro para mostrar inactivos y columnas de estado y motivo de desactivación.
+- Productos: edición habilitada para registros activos; existencias y reservas se conservan al cambiar de estado.
+- PantallaProductos.cs: adaptada para solicitar y enviar el motivo al desactivar.
+
+PROVEEDORES (Formularios/Proveedores/)
+- Campos según el esquema: empresa, RTN, contacto, teléfono, correo y dirección.
+- Botones Nuevo, Guardar y Actualizar conectados a la base de datos.
+- Seleccionar una fila carga sus datos; los proveedores inactivos se muestran en solo lectura.
+- Desactivar con motivo, reactivar con confirmación y opción para mostrar inactivos.
+- Tabla de solo lectura con selección gris, estado y motivo de desactivación.
+- Búsqueda por empresa o RTN; se corrigió el salto de foco al campo de empresa al escribir.
+- Validaciones de empresa obligatoria, RTN duplicado, correo y límites de longitud.
+
+DIÁLOGOS Y PRESENTACIÓN (Formularios/Dialogos/ y Presentacion/)
+- MotivoDesactivacion.cs: popup reutilizable para categorías, proveedores y productos.
+- Motivo obligatorio de hasta 300 caracteres; cancelar no modifica registros.
+- DialogosMaqueta.cs: opción para abrir el popup sin la capa gris de fondo.
+
+CONEXIÓN Y NAVEGACIÓN
+- connection.local.txt: destino corregido de master a Inventario, según el esquema recibido.
+- Clases y formularios que usaban ConexionDB ahora llaman a Conexion.
+- Pagina_Central.cs: referencia de conexión actualizada.
+
+SCRIPT SQL ENTREGADO DURANTE LA SESIÓN
+- Triggers1_ampliado.sql: automatizaciones de inventario, reservas, traspasos, devoluciones y anulaciones.
+- Agrega validaciones de documentos/pagos, auditoría, eventos de notificación y procedimiento de vencimientos.
+- Se entregaron instrucciones de integración y programación de tareas.
+- Los scripts de prueba y verificadores temporales se eliminaron después de usarlos.
+
+VALIDACIÓN Y PENDIENTES
+- Se comprobó compilación y se probaron las operaciones implementadas contra SQL Server.
+- Los datos de prueba se revirtieron; el script ampliado se validó inicialmente en una base temporal.
+- Pendiente: autenticar usuarios y guardar creado_por, actualizado_por y desactivado_por con el usuario real.
+- Pendiente: establecer el usuario en SESSION_CONTEXT para atribuir la auditoría.
+- El script requiere integrar el usuario, programar vencimientos y definir destinatarios de notificaciones.

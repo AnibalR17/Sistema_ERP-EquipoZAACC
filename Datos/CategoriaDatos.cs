@@ -1,4 +1,5 @@
-﻿using System.Data;
+using Sistema_ERP.Clases;
+using System.Data;
 using Microsoft.Data.SqlClient;
 
 namespace Sistema_ERP
@@ -7,12 +8,14 @@ namespace Sistema_ERP
     public static class CategoriaDatos
     {
 
-        public static DataTable Listar()
+        public static DataTable Listar(bool incluirInactivas = false)
         {
-            const string sql = "SELECT id_categoria, nombre FROM Categoria WHERE activo = 1 ORDER BY nombre";
+            const string sql = @"SELECT id_categoria, nombre, descripcion, activo FROM dbo.Categoria
+                                 WHERE activo = 1 OR @incluirInactivas = 1 ORDER BY nombre";
 
-            using SqlConnection conexion = ConexionDB.AbrirConexion();
+            using SqlConnection conexion = Conexion.AbrirConexion();
             using var adaptador = new SqlDataAdapter(sql, conexion);
+            adaptador.SelectCommand.Parameters.Add("@incluirInactivas", SqlDbType.Bit).Value = incluirInactivas;
             var tabla = new DataTable();
             adaptador.Fill(tabla);
             return tabla;
@@ -24,44 +27,24 @@ namespace Sistema_ERP
                                  WHERE nombre = @nombre
                                    AND (@excluirId IS NULL OR id_categoria <> @excluirId)";
 
-            using SqlConnection conexion = ConexionDB.AbrirConexion();
+            using SqlConnection conexion = Conexion.AbrirConexion();
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@nombre", SqlDbType.NVarChar, 100).Value = nombre.Trim();
             comando.Parameters.Add("@excluirId", SqlDbType.Int).Value = (object?)excluirId ?? DBNull.Value;
             return (int)comando.ExecuteScalar() > 0;
         }
 
-        public static int Agregar(string nombre)
-        {
-            const string sql = @"INSERT INTO Categoria (nombre)
-                                 OUTPUT INSERTED.id_categoria
-                                 VALUES (@nombre)";
+        public static int Agregar(string nombre, string? descripcion = null)
+            => Clases.Ingresar.Categoria(nombre, descripcion);
 
-            using SqlConnection conexion = ConexionDB.AbrirConexion();
-            using var comando = new SqlCommand(sql, conexion);
-            comando.Parameters.Add("@nombre", SqlDbType.NVarChar, 100).Value = nombre.Trim();
-            return (int)comando.ExecuteScalar();
-        }
+        public static bool Editar(int idCategoria, string nombre, string? descripcion)
+            => Clases.Modificar.Categoria(idCategoria, nombre, descripcion);
 
-        public static bool Editar(int idCategoria, string nombre)
-        {
-            const string sql = "UPDATE Categoria SET nombre = @nombre WHERE id_categoria = @id";
+        public static bool Desactivar(int id_categoria, string motivo)
+            => Clases.Borrar.Categoria(id_categoria, motivo);
 
-            using SqlConnection conexion = ConexionDB.AbrirConexion();
-            using var comando = new SqlCommand(sql, conexion);
-            comando.Parameters.Add("@nombre", SqlDbType.NVarChar, 100).Value = nombre.Trim();
-            comando.Parameters.Add("@id", SqlDbType.Int).Value = idCategoria;
-            return comando.ExecuteNonQuery() > 0;
-        }
-
-        public static bool Desactivar(int id_categoria)
-        {
-            const string sql = "UPDATE Categoria SET activo = 0 WHERE id_categoria = @id AND activo = 1";
-            using SqlConnection conexion = ConexionDB.AbrirConexion();
-            using var comando = new SqlCommand(sql, conexion);
-            comando.Parameters.Add("@id", SqlDbType.Int).Value = id_categoria;
-            return comando.ExecuteNonQuery() > 0;
-        }
+        public static bool Reactivar(int idCategoria)
+            => Clases.Modificar.ReactivarCategoria(idCategoria);
 
     }
 }

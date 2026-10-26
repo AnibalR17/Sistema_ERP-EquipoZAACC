@@ -1,4 +1,5 @@
-﻿using System.Drawing.Drawing2D;
+using Sistema_ERP.Clases;
+using System.Drawing.Drawing2D;
 
 namespace Sistema_ERP
 {
@@ -119,7 +120,7 @@ namespace Sistema_ERP
 
             try
             {
-                using var conexion = ConexionDB.CrearConexion();
+                using var conexion = Conexion.CrearConexion();
                 await conexion.OpenAsync();
                 MessageBox.Show(this, "Conexion a la base de datos exitosa.",
                     "Conexion", MessageBoxButtons.OK, MessageBoxIcon.Information);
