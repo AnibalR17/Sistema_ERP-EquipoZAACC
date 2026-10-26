@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
 using System.Drawing;
@@ -9,16 +9,18 @@ namespace Sistema_ERP.Vistas
 {
     public partial class PantallaCompras : Form
     {
-        private DataTable dtCarrito;
+        private DataTable dtCarrito = new();
 
         public PantallaCompras()
         {
             InitializeComponent();
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
         }
 
         private void PantallaCompras_Load(object sender, EventArgs e)
         {
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarEstiloGrid();
             InicializarCarrito();
         }

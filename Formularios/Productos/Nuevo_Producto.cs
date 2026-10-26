@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace Sistema_ERP
 {
@@ -6,9 +6,12 @@ namespace Sistema_ERP
     {
         private readonly Producto? _editando;
 
-        public Nuevo_Producto(Producto? producto = null)
+        public Nuevo_Producto() : this(null) { }
+
+        public Nuevo_Producto(Producto? producto)
         {
             InitializeComponent();
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
             _editando = producto;
 
@@ -21,6 +24,7 @@ namespace Sistema_ERP
 
         private void FormProducto_Load(object? sender, EventArgs e)
         {
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             // Stock: solo lectura, valor por defecto 0
             txtStock.ReadOnly = true;
             txtStock.TabStop = false;

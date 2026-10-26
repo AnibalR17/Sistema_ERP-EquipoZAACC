@@ -14,6 +14,7 @@ namespace Sistema_ERP
         public Catalogo_Productos()
         {
             InitializeComponent();
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
             UsarNavegacionPrincipal();
 
@@ -33,6 +34,7 @@ namespace Sistema_ERP
 
         private void Catalogo_Productos_Load(object? sender, EventArgs e)
         {
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarGrid();
             CargarProductos();
         }

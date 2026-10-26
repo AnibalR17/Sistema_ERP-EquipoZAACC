@@ -17,6 +17,7 @@ namespace Sistema_ERP.Vistas
         public PantallaProveedores()
         {
             InitializeComponent();
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
             btnNuevo.Click += (_, _) => LimpiarProveedor();
             btnGuardarProveedor.Click += (_, _) => GuardarProveedor(false);
@@ -30,6 +31,7 @@ namespace Sistema_ERP.Vistas
 
         private void PantallaProveedores_Load(object sender, EventArgs e)
         {
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarEstiloGrid();
             CargarDatos();
         }

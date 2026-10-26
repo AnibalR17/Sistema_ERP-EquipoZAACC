@@ -1,10 +1,10 @@
-﻿using System.Drawing.Drawing2D;
-
 namespace Sistema_ERP
 {
     public class DialogoMaqueta : Form
     {
         protected readonly TableLayoutPanel Contenido;
+        public DialogoMaqueta() : this("Dialogo", 300) { }
+
         protected DialogoMaqueta(string titulo, int alto)
         {
             Text = titulo; ClientSize = new Size(500, alto); Font = new Font("Segoe UI", 11F);
@@ -18,9 +18,7 @@ namespace Sistema_ERP
         protected override void OnShown(EventArgs e)
         {
             base.OnShown(e);
-            using var path = new GraphicsPath(); int d = 48;
-            path.AddArc(0, 0, d, d, 180, 90); path.AddArc(Width-d, 0, d, d, 270, 90); path.AddArc(Width-d, Height-d, d, d, 0, 90); path.AddArc(0, Height-d, d, d, 90, 90); path.CloseFigure();
-            Region = new Region(path);
+            DialogosMaqueta.Redondear(this);
         }
     }
 }

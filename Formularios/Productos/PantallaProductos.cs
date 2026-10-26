@@ -11,12 +11,14 @@ namespace Sistema_ERP.Vistas
         public PantallaProductos()
         {
             InitializeComponent();
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
             btnDesactivar.Click += BtnDesactivar_Click;
         }
 
         private void PantallaProductos_Load(object sender, EventArgs e)
         {
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarEstiloGrid();
             CargarDatos();
         }

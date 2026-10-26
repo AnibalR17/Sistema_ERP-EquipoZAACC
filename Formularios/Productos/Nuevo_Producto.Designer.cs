@@ -1,4 +1,4 @@
-namespace Sistema_ERP
+﻿namespace Sistema_ERP
 {
     partial class Nuevo_Producto
     {
@@ -225,7 +225,6 @@ namespace Sistema_ERP
         private System.Windows.Forms.Label titleLabel;
         private System.Windows.Forms.Label subtitleLabel;
         private System.Windows.Forms.TextBox txtCodigo;
-        private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtStock;

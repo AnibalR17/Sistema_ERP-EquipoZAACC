@@ -9,6 +9,75 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Formularios/Dialogos/MotivoDesactivacion.Presentacion.cs">
+      <DependentUpon>MotivoDesactivacion.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Administracion/ConfiguracionAuditoria.Designer.cs">
+      <DependentUpon>ConfiguracionAuditoria.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios/Administracion/ConfiguracionAuditoria.resx">
+      <DependentUpon>ConfiguracionAuditoria.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Formularios/Administracion/DirectorioRoles.Designer.cs">
+      <DependentUpon>DirectorioRoles.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Administracion/DirectorioRoles.Presentacion.cs">
+      <DependentUpon>DirectorioRoles.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios/Administracion/DirectorioRoles.resx">
+      <DependentUpon>DirectorioRoles.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Formularios/Dialogos/AgregarDirectorio.Designer.cs">
+      <DependentUpon>AgregarDirectorio.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Dialogos/AgregarDirectorio.Presentacion.cs">
+      <DependentUpon>AgregarDirectorio.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios/Dialogos/AgregarDirectorio.resx">
+      <DependentUpon>AgregarDirectorio.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Formularios/Dialogos/MotivoDesactivacion.Designer.cs">
+      <DependentUpon>MotivoDesactivacion.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios/Dialogos/MotivoDesactivacion.resx">
+      <DependentUpon>MotivoDesactivacion.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Formularios/Administracion/ConfiguracionAuditoria.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Administracion/ControlInversores.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Administracion/DirectorioRoles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Base/DialogoMaqueta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Base/PantallaMaqueta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Dialogos/AgregarDirectorio.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Dialogos/ConfirmarVenta.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Dialogos/MotivoDesactivacion.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Dialogos/Notificaciones.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Productos/CargaMasiva.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Ventas/ApartadosDevoluciones.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Ventas/PuntoVenta.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Formularios/Principal/Pagina_Central.cs">
       <SubType>Form</SubType>
     </Compile>

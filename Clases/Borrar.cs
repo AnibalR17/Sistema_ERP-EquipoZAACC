@@ -14,6 +14,9 @@ namespace Sistema_ERP.Clases
         public static bool Categoria(int idCategoria, string motivo)
             => Desactivar("Categoria", "id_categoria", idCategoria, motivo);
 
+        public static bool Tienda(int idTienda, string motivo)
+            => Desactivar("Tienda", "id_tienda", idTienda, motivo);
+
         private static bool Desactivar(string tabla, string columnaId, int id, string motivo)
         {
             if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));

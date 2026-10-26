@@ -1,9 +1,12 @@
-﻿namespace Sistema_ERP
+namespace Sistema_ERP
 {
     internal static class ProductoEstilo
     {
         internal static readonly Color Fondo = Color.FromArgb(253, 253, 253);
         internal static readonly Color Suave = Color.FromArgb(243, 243, 243);
+        internal static readonly Color Exito = Color.FromArgb(0, 100, 0);
+        internal static readonly Color Error = Color.FromArgb(178, 34, 34);
+        internal static readonly Color TextoSecundario = Color.FromArgb(125, 125, 125);
         internal static readonly Color Texto = Color.FromArgb(24, 24, 24);
 
         internal static void Boton(Button boton, bool principal = false)

@@ -12,6 +12,7 @@ namespace Sistema_ERP
         public Pagina_Central()
         {
             InitializeComponent();
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarMdi();
             homeButton.Click += (_, _) => MostrarInicio();
             inventoryButton.Click += (_, _) => MostrarInventario();
@@ -141,7 +142,7 @@ namespace Sistema_ERP
         {
         }
 
-        private void infoLabel_Click(object sender, EventArgs e)
+        private void infoLabel_Click(object? sender, EventArgs e)
         {
 
         }
@@ -164,11 +165,16 @@ namespace Sistema_ERP
 
             var proveedoresButton = new Button
             {
-                Name = "proveedoresButton", Text = "Proveedores",
-                Location = new Point(inventoryButton.Left, inventoryButton.Bottom), Size = catalogButton.Size,
-                FlatStyle = FlatStyle.Flat, BackColor = Color.White,
-                TextAlign = ContentAlignment.MiddleLeft, Padding = catalogButton.Padding,
-                Cursor = Cursors.Hand, Font = new Font(Font, FontStyle.Regular),
+                Name = "proveedoresButton",
+                Text = "Proveedores",
+                Location = new Point(inventoryButton.Left, inventoryButton.Bottom),
+                Size = catalogButton.Size,
+                FlatStyle = FlatStyle.Flat,
+                BackColor = Color.White,
+                TextAlign = ContentAlignment.MiddleLeft,
+                Padding = catalogButton.Padding,
+                Cursor = Cursors.Hand,
+                Font = new Font(Font, FontStyle.Regular),
                 TabIndex = inventoryButton.TabIndex + 1
             };
             proveedoresButton.FlatAppearance.BorderSize = 0;
@@ -267,19 +273,19 @@ namespace Sistema_ERP
         private void MostrarValidacion() =>
             MostrarPantalla("Validacion", validationButton, () => CrearPantalla(new Validacion_Traspasos(), "Validacion"));
 
-        private void returnsButton_Click(object sender, EventArgs e) =>
+        private void returnsButton_Click(object? sender, EventArgs e) =>
             MostrarPantalla("Apartados y devoluciones", returnsButton, () => new ApartadosDevoluciones());
 
-        private void rolesButton_Click(object sender, EventArgs e) =>
+        private void rolesButton_Click(object? sender, EventArgs e) =>
             MostrarPantalla("Directorio y roles", rolesButton, () => new DirectorioRoles());
 
-        private void investorsButton_Click(object sender, EventArgs e) =>
+        private void investorsButton_Click(object? sender, EventArgs e) =>
             MostrarPantalla("Control de inversores", investorsButton, () => new ControlInversores());
 
-        private void settingsButton_Click(object sender, EventArgs e) =>
+        private void settingsButton_Click(object? sender, EventArgs e) =>
             MostrarPantalla("Configuraci\u00f3n y auditor\u00eda", settingsButton, () => new ConfiguracionAuditoria());
 
-        private void logoutButton_Click(object sender, EventArgs e)
+        private void logoutButton_Click(object? sender, EventArgs e)
         {
             logoutButton.Enabled = false;
             using var login = new LoginERP.FrmLogin();
@@ -294,10 +300,10 @@ namespace Sistema_ERP
             }
         }
 
-        private void salesButton_Click(object sender, EventArgs e) =>
+        private void salesButton_Click(object? sender, EventArgs e) =>
             MostrarPantalla("Punto de Venta", salesButton, () => new PuntoVenta());
 
-        private void notificationButton_Click(object sender, EventArgs e) =>
+        private void notificationButton_Click(object? sender, EventArgs e) =>
             DialogosMaqueta.Mostrar(this, new Notificaciones());
     }
 }
