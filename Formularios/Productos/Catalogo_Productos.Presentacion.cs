@@ -1,7 +1,14 @@
-﻿namespace Sistema_ERP
+namespace Sistema_ERP
 {
     public partial class Catalogo_Productos
     {
+        private readonly Button btnReactivarProducto = new() { Name = "btnReactivarProducto", Text = "Reactivar", Enabled = false };
+        private readonly CheckBox chkProductosInactivos = new()
+        {
+            Name = "chkProductosInactivos",
+            Text = "Mostrar también productos inactivos",
+            AutoSize = true
+        };
         internal void UsarNavegacionPrincipal()
         {
             VistaContenido.Preparar(this, content);
@@ -28,6 +35,8 @@
             ProductoEstilo.Boton(btnNuevoProducto, true);
             ProductoEstilo.Boton(btnEditar);
             ProductoEstilo.Boton(btnDesactivar);
+            ProductoEstilo.Boton(btnReactivarProducto);
+            btnEditar.Enabled = btnDesactivar.Enabled = false;
             btnNuevoProducto.Text = "+ Nuevo producto";
 
             dgvProductos.BackgroundColor = Color.White;
@@ -38,34 +47,72 @@
             dgvProductos.ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None;
             dgvProductos.ColumnHeadersDefaultCellStyle = new DataGridViewCellStyle
             {
-                BackColor = ProductoEstilo.Suave, ForeColor = ProductoEstilo.Texto,
+                BackColor = ProductoEstilo.Suave,
+                ForeColor = ProductoEstilo.Texto,
                 Font = new Font("Segoe UI", 11F, FontStyle.Bold),
-                Padding = new Padding(8), SelectionBackColor = ProductoEstilo.Suave,
+                Padding = new Padding(8),
+                SelectionBackColor = ProductoEstilo.Suave,
                 SelectionForeColor = ProductoEstilo.Texto
             };
             dgvProductos.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             dgvProductos.ColumnHeadersHeight = 48;
             dgvProductos.DefaultCellStyle = new DataGridViewCellStyle
             {
-                BackColor = Color.White, ForeColor = ProductoEstilo.Texto,
+                BackColor = Color.White,
+                ForeColor = ProductoEstilo.Texto,
                 SelectionBackColor = Color.FromArgb(228, 232, 237),
-                SelectionForeColor = ProductoEstilo.Texto, Padding = new Padding(8, 4, 8, 4)
+                SelectionForeColor = ProductoEstilo.Texto,
+                Padding = new Padding(8, 4, 8, 4)
             };
             dgvProductos.RowTemplate.Height = 44;
             dgvProductos.AllowUserToResizeRows = false;
 
             var layout = new TableLayoutPanel
             {
-                Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 6,
-                Padding = new Padding(32, 20, 32, 28), BackColor = ProductoEstilo.Fondo
+                Dock = DockStyle.Fill,
+                ColumnCount = 1,
+                RowCount = 5,
+                Padding = new Padding(32, 20, 32, 28),
+                BackColor = ProductoEstilo.Fondo
             };
-            foreach (float height in new[] { 72F, 40F, 56F, 68F, 48F })
+            foreach (float height in new[] { 72F, 40F, 56F, 52F })
                 layout.RowStyles.Add(new RowStyle(SizeType.Absolute, height));
             layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            var acciones = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false };
-            acciones.Controls.AddRange(new Control[] { btnNuevoProducto, btnEditar, btnDesactivar });
+            var acciones = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, AutoScroll = true };
+            acciones.Controls.AddRange(new Control[] { btnNuevoProducto, btnEditar, btnDesactivar, btnReactivarProducto });
             foreach (Button boton in acciones.Controls) boton.Margin = new Padding(0, 10, 12, 0);
-            Control[] filas = { titleLabel, subtitleLabel, label1, acciones, txtBuscar, dgvProductos };
+            var productos = PantallaMaqueta.Filas(76, 36, 48, -100);
+            acciones.Dock = txtBuscar.Dock = dgvProductos.Dock = DockStyle.Fill;
+            productos.Controls.Add(acciones, 0, 0);
+            productos.Controls.Add(chkProductosInactivos, 0, 1);
+            productos.Controls.Add(txtBuscar, 0, 2);
+            productos.Controls.Add(dgvProductos, 0, 3);
+            var categorias = CrearPanelCategorias();
+            categorias.Visible = false;
+            var cuerpo = new Panel { Dock = DockStyle.Fill, Margin = Padding.Empty };
+            cuerpo.Controls.Add(productos);
+            cuerpo.Controls.Add(categorias);
+            var tabs = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false };
+            var tabProductos = PantallaMaqueta.Boton("Productos", true);
+            var tabCategorias = PantallaMaqueta.Boton("Categorías");
+            tabProductos.Width = tabCategorias.Width = 130;
+            tabs.Controls.AddRange(new Control[] { tabProductos, tabCategorias });
+            void Seleccionar(bool mostrarCategorias)
+            {
+                productos.Visible = !mostrarCategorias;
+                categorias.Visible = mostrarCategorias;
+                foreach (Button boton in tabs.Controls)
+                {
+                    bool seleccionado = boton == (mostrarCategorias ? tabCategorias : tabProductos);
+                    boton.BackColor = seleccionado ? ProductoEstilo.Texto : ProductoEstilo.Suave;
+                    boton.ForeColor = seleccionado ? Color.White : ProductoEstilo.Texto;
+                }
+                if (mostrarCategorias) CargarCategorias();
+            }
+            tabProductos.Click += (_, _) => Seleccionar(false);
+            tabCategorias.Click += (_, _) => Seleccionar(true);
+            tabCategorias.BackColor = ProductoEstilo.Suave;
+            Control[] filas = { titleLabel, subtitleLabel, label1, tabs, cuerpo };
             for (int i = 0; i < filas.Length; i++)
             {
                 filas[i].Dock = DockStyle.Fill;

@@ -8,6 +8,7 @@ namespace Sistema_ERP
     {
         private int radio = 30;
         private bool mostrarSombra = true;
+        private Color colorBorde = Color.Empty;
 
         public PanelDisenoInventario()
         {
@@ -28,6 +29,13 @@ namespace Sistema_ERP
         {
             get => mostrarSombra;
             set { mostrarSombra = value; Invalidate(); }
+        }
+
+        [DefaultValue(typeof(Color), "Empty")]
+        public Color ColorBorde
+        {
+            get => colorBorde;
+            set { colorBorde = value; Invalidate(); }
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
@@ -58,6 +66,11 @@ namespace Sistema_ERP
             using var path = Rounded(bounds, Radio);
             using var fill = new SolidBrush(BackColor);
             e.Graphics.FillPath(fill, path);
+            if (!ColorBorde.IsEmpty)
+            {
+                using var borde = new Pen(ColorBorde);
+                e.Graphics.DrawPath(borde, path);
+            }
             base.OnPaint(e);
         }
 

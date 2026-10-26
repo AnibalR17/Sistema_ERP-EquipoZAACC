@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Data;
-using Microsoft.Data.SqlClient;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
@@ -12,12 +11,14 @@ namespace Sistema_ERP.Vistas
         public PantallaProductos()
         {
             InitializeComponent();
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
             btnDesactivar.Click += BtnDesactivar_Click;
         }
 
         private void PantallaProductos_Load(object sender, EventArgs e)
         {
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarEstiloGrid();
             CargarDatos();
         }
@@ -49,14 +50,7 @@ namespace Sistema_ERP.Vistas
         {
             try
             {
-                using (SqlConnection conn = ConexionDB.AbrirConexion())
-                {
-                    string query = "SELECT * FROM Producto WHERE activo = 1";
-                    SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
-                    DataTable dt = new DataTable();
-                    adapter.Fill(dt);
-                    dgvProductos.DataSource = dt;
-                }
+                dgvProductos.DataSource = ProductoDatos.Listar();
             }
             catch (Exception ex)
             {
@@ -71,11 +65,11 @@ namespace Sistema_ERP.Vistas
                 MessageBox.Show(this, "Seleccione un registro de la tabla.", "Desactivar");
                 return;
             }
-            if (MessageBox.Show(this, "¿Desactivar el registro seleccionado? Se conservara su historial.",
-                "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            using var dialogo = new MotivoDesactivacion(Convert.ToString(fila["nombre"]) ?? "", "producto");
+            if (dialogo.ShowDialog(this) != DialogResult.OK) return;
             try
             {
-                if (!ProductoDatos.Desactivar(Convert.ToInt32(fila["id_producto"])))
+                if (!ProductoDatos.Desactivar(Convert.ToInt32(fila["id_producto"]), dialogo.Motivo))
                     MessageBox.Show(this, "El registro ya esta inactivo o no esta disponible.", "Desactivar");
                 CargarDatos();
             }

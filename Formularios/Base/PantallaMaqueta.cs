@@ -1,4 +1,4 @@
-﻿using System.Drawing.Drawing2D;
+using System.Drawing.Drawing2D;
 
 namespace Sistema_ERP
 {
@@ -6,6 +6,8 @@ namespace Sistema_ERP
     {
         protected readonly TableLayoutPanel Pagina;
         protected readonly Panel Cuerpo;
+
+        public PantallaMaqueta() : this("Pantalla", "", "") { }
 
         protected PantallaMaqueta(string titulo, string subtitulo, string aviso)
         {
@@ -32,9 +34,12 @@ namespace Sistema_ERP
 
         internal static Label Etiqueta(string texto, float tamano = 11, bool negrita = false) => new()
         {
-            Text = texto, Dock = DockStyle.Fill, AutoSize = false,
+            Text = texto,
+            Dock = DockStyle.Fill,
+            AutoSize = false,
             Font = new Font("Segoe UI", tamano, negrita ? FontStyle.Bold : FontStyle.Regular),
-            TextAlign = ContentAlignment.MiddleLeft, Margin = Padding.Empty
+            TextAlign = ContentAlignment.MiddleLeft,
+            Margin = Padding.Empty
         };
 
         internal static Button Boton(string texto, bool principal = false)
@@ -45,7 +50,10 @@ namespace Sistema_ERP
 
         internal static PanelDisenoInventario Tarjeta(int alto) => new()
         {
-            Dock = DockStyle.Top, Height = alto, Padding = new Padding(28, 20, 28, 30), Margin = Padding.Empty
+            Dock = DockStyle.Top,
+            Height = alto,
+            Padding = new Padding(28, 20, 28, 30),
+            Margin = Padding.Empty
         };
 
         internal static TextBox Buscar(string texto = "Buscar...") => new()
@@ -55,12 +63,20 @@ namespace Sistema_ERP
         {
             var tabla = new DataGridView
             {
-                Dock = DockStyle.Fill, BackgroundColor = Color.White, BorderStyle = BorderStyle.None,
-                ReadOnly = true, AllowUserToAddRows = false, AllowUserToDeleteRows = false,
-                RowHeadersVisible = false, AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
-                EnableHeadersVisualStyles = false, ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None,
-                CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal, GridColor = ProductoEstilo.Suave,
-                SelectionMode = DataGridViewSelectionMode.FullRowSelect, ColumnHeadersHeight = 36
+                Dock = DockStyle.Fill,
+                BackgroundColor = Color.White,
+                BorderStyle = BorderStyle.None,
+                ReadOnly = true,
+                AllowUserToAddRows = false,
+                AllowUserToDeleteRows = false,
+                RowHeadersVisible = false,
+                AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill,
+                EnableHeadersVisualStyles = false,
+                ColumnHeadersBorderStyle = DataGridViewHeaderBorderStyle.None,
+                CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal,
+                GridColor = ProductoEstilo.Suave,
+                SelectionMode = DataGridViewSelectionMode.FullRowSelect,
+                ColumnHeadersHeight = 36
             };
             tabla.ColumnHeadersDefaultCellStyle.BackColor = Color.White;
             tabla.ColumnHeadersDefaultCellStyle.ForeColor = Color.Gray;

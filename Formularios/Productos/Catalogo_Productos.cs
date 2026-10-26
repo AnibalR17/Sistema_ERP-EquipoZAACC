@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
@@ -7,13 +7,14 @@ namespace Sistema_ERP
 {
     public partial class Catalogo_Productos : UserControl
     {
-        private DataView? _vista;
+        private DataView? vistaProductos;
 
         public event EventHandler? HomeRequested;
 
         public Catalogo_Productos()
         {
             InitializeComponent();
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
             UsarNavegacionPrincipal();
 
@@ -25,11 +26,15 @@ namespace Sistema_ERP
             btnNuevoProducto.Click += BtnNuevoProducto_Click;
             btnEditar.Click += BtnEditar_Click;
             btnDesactivar.Click += BtnDesactivar_Click;
+            btnReactivarProducto.Click += (_, _) => CambiarEstadoProducto(true);
+            chkProductosInactivos.CheckedChanged += (_, _) => CargarProductos();
+            dgvProductos.SelectionChanged += (_, _) => ActualizarAccionesProducto();
             dgvProductos.CellDoubleClick += (_, e) => { if (e.RowIndex >= 0) BtnEditar_Click(this, EventArgs.Empty); };
         }
 
         private void Catalogo_Productos_Load(object? sender, EventArgs e)
         {
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarGrid();
             CargarProductos();
         }
@@ -55,6 +60,14 @@ namespace Sistema_ERP
             precio.DefaultCellStyle.Format = "'L. 'N2";
             precio.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dgvProductos.Columns.Add(precio);
+            dgvProductos.Columns.Add(new DataGridViewCheckBoxColumn
+            {
+                Name = "activo",
+                DataPropertyName = "activo",
+                HeaderText = "Activo",
+                Width = 65
+            });
+            dgvProductos.Columns.Add(Columna("motivo_desactivacion", "Motivo de desactivación", 24));
 
             foreach (string oculta in new[] { "id_producto", "id_categoria", "id_proveedor" })
                 dgvProductos.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = oculta, Name = oculta, Visible = false });
@@ -73,9 +86,11 @@ namespace Sistema_ERP
         {
             try
             {
-                _vista = ProductoDatos.Listar().DefaultView;
-                dgvProductos.DataSource = _vista;
-                AplicarFiltro(); 
+                vistaProductos = ProductoDatos.Listar(chkProductosInactivos.Checked).DefaultView;
+                dgvProductos.DataSource = vistaProductos;
+                AplicarFiltro();
+                dgvProductos.ClearSelection();
+                ActualizarAccionesProducto();
             }
             catch (Exception ex)
             {
@@ -88,18 +103,18 @@ namespace Sistema_ERP
 
         private void AplicarFiltro()
         {
-            if (_vista is null) return;
+            if (vistaProductos is null) return;
 
             string texto = txtBuscar.Text.Trim();
             if (texto.Length == 0)
             {
-                _vista.RowFilter = "";
+                vistaProductos.RowFilter = "";
                 return;
             }
 
             // Escapa caracteres especiales de LIKE y comillas para que RowFilter no falle.
             string seguro = Regex.Replace(texto, @"[%*\[\]]", "[$0]").Replace("'", "''");
-            _vista.RowFilter = $"nombre LIKE '%{seguro}%' OR codigo_barras LIKE '%{seguro}%'";
+            vistaProductos.RowFilter = $"nombre LIKE '%{seguro}%' OR codigo_barras LIKE '%{seguro}%'";
         }
 
         private void BtnNuevoProducto_Click(object? sender, EventArgs e)
@@ -111,9 +126,9 @@ namespace Sistema_ERP
         private void BtnEditar_Click(object? sender, EventArgs e)
         {
             Producto? producto = ProductoSeleccionado();
-            if (producto is null)
+            if (producto is null || !producto.Activo)
             {
-                MessageBox.Show(this, "Seleccione un producto de la tabla.", "Editar",
+                MessageBox.Show(this, "Seleccione un producto activo de la tabla.", "Editar",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -123,39 +138,62 @@ namespace Sistema_ERP
         }
 
         private void BtnDesactivar_Click(object? sender, EventArgs e)
+            => CambiarEstadoProducto(false);
+
+        private void ActualizarAccionesProducto()
         {
             Producto? producto = ProductoSeleccionado();
-            if (producto is null)
+            btnEditar.Enabled = btnDesactivar.Enabled = producto?.Activo == true;
+            btnReactivarProducto.Enabled = producto is not null && !producto.Activo;
+        }
+
+        private void CambiarEstadoProducto(bool reactivar)
+        {
+            Producto? producto = ProductoSeleccionado();
+            if (producto is null || producto.Activo == reactivar) return;
+            string motivo = "";
+            if (reactivar)
             {
-                MessageBox.Show(this, "Seleccione un producto de la tabla.", "Desactivar",
-                    MessageBoxButtons.OK, MessageBoxIcon.Information);
-                return;
+                if (MessageBox.Show(this, $"¿Reactivar el producto «{producto.Nombre}»?", "Reactivar producto",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
+                    != DialogResult.Yes) return;
             }
-
-            var confirmar = MessageBox.Show(this, $"¿Desactivar el producto \"{producto.Nombre}\"?", "Confirmar",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (confirmar != DialogResult.Yes) return;
-
+            else
+            {
+                using var dialogo = new MotivoDesactivacion(producto.Nombre, "producto");
+                if (dialogo.ShowDialog(this) != DialogResult.OK) return;
+                motivo = dialogo.Motivo;
+            }
+            btnDesactivar.Enabled = btnReactivarProducto.Enabled = false;
             try
             {
-                if (!ProductoDatos.Desactivar(producto.IdProducto))
-                    MessageBox.Show(this, "El producto ya esta inactivo o no esta disponible.", "Desactivar");
+                bool cambiado = reactivar ? ProductoDatos.Reactivar(producto.IdProducto)
+                    : ProductoDatos.Desactivar(producto.IdProducto, motivo);
                 CargarProductos();
+                MessageBox.Show(this, cambiado
+                    ? (reactivar ? "Producto reactivado correctamente." : "Producto desactivado correctamente.")
+                    : "El producto ya cambió de estado o no está disponible.",
+                    "Productos", MessageBoxButtons.OK, cambiado ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
             }
             catch (InvalidOperationException ex)
             {
-                MessageBox.Show(this, ex.Message, "No se puede desactivar", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, ex.Message, "Productos", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception)
             {
-                MessageBox.Show(this, "No se pudo desactivar el producto.", "Error",
+                MessageBox.Show(this, "No se pudo cambiar el estado del producto.", "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                ActualizarAccionesProducto();
             }
         }
 
         private Producto? ProductoSeleccionado()
         {
-            if (dgvProductos.CurrentRow?.DataBoundItem is not DataRowView fila) return null;
+            if (dgvProductos.SelectedRows.Count == 0 ||
+                dgvProductos.SelectedRows[0].DataBoundItem is not DataRowView fila) return null;
 
             return new Producto
             {
@@ -165,7 +203,8 @@ namespace Sistema_ERP
                 PrecioUnitario = Convert.ToDecimal(fila["precio_unitario"]),
                 StockActual = Convert.ToInt32(fila["stock_actual"]),
                 IdCategoria = Convert.ToInt32(fila["id_categoria"]),
-                IdProveedor = Convert.ToInt32(fila["id_proveedor"])
+                IdProveedor = Convert.ToInt32(fila["id_proveedor"]),
+                Activo = Convert.ToBoolean(fila["activo"])
             };
         }
     }

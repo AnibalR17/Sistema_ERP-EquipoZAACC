@@ -1,4 +1,4 @@
-﻿# Sistema ERP
+# Sistema ERP
 
 
 ## Organizacion del proyecto
@@ -12,9 +12,10 @@ Formularios/
   Compras/         Registro de compras
   Inventario/      Inventario, traspasos y validacion
   Ventas/          Punto de venta, apartados y devoluciones
-  Administracion/  Inversiones, directorio y auditoria
+  Administracion/  Inversiones, directorio, tiendas y auditoria
   Dialogos/        Confirmacion de venta y notificaciones
   Base/            Clases compartidas de pantallas y dialogos
+Clases/            Modelos, tipos de dominio y operaciones compartidas
 Datos/             Conexion y acceso a SQL Server
 Presentacion/      Estilos y utilidades compartidas de interfaz
 Controles/         Controles visuales reutilizables
@@ -37,7 +38,7 @@ Aplicacion de escritorio desarrollada con C# y Windows Forms sobre .NET 10 para 
 
 ## Estandar grafico
 
-Documento extraido de la implementacion actual de `Formularios/Principal/Pagina_Central.Designer.cs` y `Formularios/Principal/Pagina_Central.cs`. Describe la unica pantalla implementada en el proyecto; sirve como base para mantener coherencia en nuevas pantallas.
+El estandar parte de `Formularios/Principal/Pagina_Central.Designer.cs` y `Formularios/Principal/Pagina_Central.cs`. Las variantes de captura, tablas y dialogos utilizadas por Configuracion y Directorio se documentan mas abajo para mantener coherencia entre pantallas.
 
 ### 1. Identidad visual
 
@@ -59,7 +60,7 @@ La marca se presenta como texto **Sistema ERP**. No hay logotipo grafico ni colo
 | Separadores del menu y barra superior | `#D3D3D3` | 211, 211, 211 |
 | Puntos y linea del grafico | `#121212` | 18, 18, 18 |
 
-El texto principal hereda el color de texto de WinForms; no tiene un HEX explicito. Los fondos transparentes de las etiquetas dejan ver el contenedor. No existen colores semanticos definidos para exito, advertencia, error o informacion.
+El texto principal hereda el color de texto de WinForms; no tiene un HEX explicito. Los fondos transparentes de las etiquetas dejan ver el contenedor. Los formularios CRUD usan las variantes de estado documentadas en la seccion 8; el resto del diseno conserva la paleta neutra.
 
 ### 3. Tipografia
 
@@ -133,14 +134,38 @@ Estas reglas se proponen a partir de los patrones existentes:
 
 ### 7. Limites del estandar actual
 
-- Los valores visuales estan repetidos en los controles; todavia no existe un tema compartido o una clase de constantes de diseno.
+- `Presentacion/ProductoEstilo.cs` concentra colores y botones compartidos. Las propiedades editables y los valores de distribucion se conservan en cada `.Designer.cs`.
 - Las esquinas redondeadas y el grafico se dibujan durante la ejecucion y pueden no aparecer completos en el disenador.
 - La implementacion no dibuja las sombras de la imagen de referencia.
-- No se han definido variantes para tablas, formularios de captura, cuadros de dialogo, validacion, botones de accion principal o modo oscuro.
+- Las variantes de tablas, captura, dialogos, validacion y acciones principales se describen en la seccion 8. No se ha definido modo oscuro.
 - Este documento describe y propone reglas visuales; no confirma que las opciones de navegacion o el buscador tengan funcionalidad de negocio implementada.
 
-## Desactivacion de registros
+### 8. Variantes de captura y CRUD
 
-Antes de ejecutar esta version, aplique `Datos/Migraciones/001_desactivar_registros.sql` a la base de datos de SQL Server configurada. La migracion agrega `activo` (`bit`, valor predeterminado `1`) a Producto, Categoria y Proveedor, conserva los registros existentes y puede ejecutarse nuevamente.
+- **Superficie:** fondo blanco, margenes de contenido de 32, 34, 32 y 36; el menu y el encabezado compartidos los aporta la ventana MDI. Configuracion y Directorio desplazan su contenido de forma independiente.
+- **Captura:** campos distribuidos en tres columnas; etiquetas de 10 pt y entradas de 11 pt. Los campos obligatorios llevan `*`. El formulario cambia sus campos segun Clientes, Proveedores o Empleados.
+- **Acciones:** Guardar, Actualizar, Desactivar, Reactivar y Nuevo. Botones planos de 110 x 44; la accion principal usa fondo `#181818` y texto blanco. Solo se habilitan las acciones aplicables al registro seleccionado.
+- **Listados:** tabla de solo lectura dentro de un panel blanco de radio 30 y borde `#F7F7F7`, mediante `PanelDisenoInventario.ColorBorde`. Seleccion de una fila, encabezados de 10 pt en negrita y altura de filas de 42. Un buscador filtra el listado y una casilla permite incluir inactivos.
+- **Pestanas:** Clientes, Proveedores y Empleados comparten la misma distribucion. La pestana seleccionada usa la variante principal de boton; no se duplica la navegacion MDI.
+- **Estados:** exito `#006400` y error `#B22222`, centralizados en `ProductoEstilo.Exito` y `ProductoEstilo.Error`. Siempre se acompanan de un mensaje; el estado no depende solo del color.
+- **Dialogos:** captura modal con Guardar y Cancelar; desactivacion con motivo obligatorio de hasta 300 caracteres, confirmacion explicita y Cancelar. El dialogo de motivo conserva el estilo sin bordes y esquinas redondeadas, mediante `DialogosMaqueta.Redondear`.
 
-Las acciones **Desactivar** conservan el registro y sus relaciones, asignando `activo = 0`. Los listados de productos y proveedores y los selectores de categorias y proveedores muestran unicamente registros activos. Los codigos y nombres existentes siguen reservados aunque se desactive el registro. Desactivar una categoria o proveedor no desactiva sus productos ni modifica el historial. La interfaz aun no incluye una accion para reactivar registros.
+## Organizacion de los cambios de formularios
+
+`ConfiguracionAuditoria`, `DirectorioRoles`, `AgregarDirectorio` y `MotivoDesactivacion` conservan sus controles, columnas y propiedades iniciales en `InitializeComponent`, dentro de `.Designer.cs`, con su `.resx` junto al formulario. Los eventos, validaciones y llamadas a datos permanecen en `.cs`. Las variantes de presentacion por tipo de registro y los ajustes visuales dinamicos se encuentran en `.Presentacion.cs`. Las relaciones `DependentUpon` del proyecto anidan estos archivos en Visual Studio.
+
+`Datos/Conexion.cs` conserva el namespace `Sistema_ERP.Clases` para mantener las referencias existentes. `Datos/DirectorioDatos.cs` y `Datos/TiendaDatos.cs` contienen consultas y persistencia; `Clases/TipoDirectorio.cs` define los tipos del directorio. La construccion de formularios y sus eventos de carga comprueban el modo de diseno antes de consultar la base de datos o transformar la navegacion.
+
+## Directorio y tiendas
+
+En **Directorio y roles**, las pestanas Clientes, Proveedores y Empleados permiten crear, consultar, actualizar, desactivar y reactivar registros. Seleccionar una fila carga sus campos; **Nuevo** limpia la seleccion para crear otro registro. Los inactivos se muestran como solo lectura y pueden reactivarse. Se validan los campos obligatorios, las longitudes y el correo; SQL Server conserva las restricciones de unicidad de documentos, RTN y codigos.
+
+En **Configuracion y auditoria**, el CRUD de tiendas usa el mismo flujo, con codigo y nombre obligatorios, direccion y telefono opcionales. Las tiendas activas alimentan el selector de empleados. Un empleado requiere codigo y tienda; no se permiten nuevas asignaciones a una tienda inactiva, pero se puede conservar una asignacion previa al editar sus otros datos. Registrar un empleado no crea una cuenta de usuario ni asigna roles de acceso.
+
+## Desactivacion de registros y esquema requerido
+
+La version actual espera el esquema normalizado con `desactivado_en`, `desactivado_por`, `motivo_desactivacion`, `actualizado_en` y `activo` calculado a partir de `desactivado_en` en Producto, Categoria, Proveedor, Cliente, Empleado y Tienda. Categoria requiere `descripcion`; Proveedor requiere tambien `rtn`, `correo` y `direccion`. La consulta de productos utiliza `dbo.vw_ProductoStock` y las existencias de `InventarioTienda`.
+
+El archivo `Datos/Migraciones/001_desactivar_registros.sql` corresponde al esquema anterior: agrega un `activo` almacenado a Producto, Categoria y Proveedor. No es una migracion completa al esquema normalizado ni debe usarse como unico paso para preparar esta version. Una base existente con el esquema anterior requiere una migracion que preserve sus datos; el script de creacion `01_esquema_erp_3fn.sql` esta destinado a una base vacia. La aplicacion no modifica el esquema automaticamente.
+
+**Desactivar** establece fecha y motivo de desactivacion; **Reactivar** limpia fecha, usuario y motivo. No se escribe directamente en la columna calculada `activo`. Se conservan los registros, sus relaciones y los identificadores reservados. Desactivar una entidad no desactiva en cascada sus registros relacionados ni modifica el historial. Los listados muestran activos por defecto; los CRUD de tiendas y directorio permiten incluir inactivos y reactivarlos.

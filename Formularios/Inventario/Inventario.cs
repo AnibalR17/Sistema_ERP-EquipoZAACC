@@ -1,4 +1,4 @@
-﻿namespace Sistema_ERP
+namespace Sistema_ERP
 {
     public partial class Inventario : UserControl
     {
@@ -10,6 +10,7 @@
         public Inventario()
         {
             InitializeComponent();
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             UsarNavegacionPrincipal();
         }
     }

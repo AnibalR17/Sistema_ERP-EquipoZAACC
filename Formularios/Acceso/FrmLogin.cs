@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,10 +15,12 @@ namespace LoginERP
         public FrmLogin()
         {
             InitializeComponent();
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
         }
 
         private void FrmLogin_Load(object sender, EventArgs e)
         {
+            if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             cmbRol.SelectedIndex = 0;
         }
 
@@ -40,7 +42,7 @@ namespace LoginERP
 
         private void cmbRol_SelectedIndexChanged(object sender, System.EventArgs e)
         {
-        
+
         }
     }
 }
