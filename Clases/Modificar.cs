@@ -18,16 +18,20 @@ namespace Sistema_ERP.Clases
         {
             if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
             ArgumentNullException.ThrowIfNull(version);
-            if (estado is not ("CANCELADO" or "APROBADO" or "RECHAZADO"))
+            if (estado is not ("CANCELADO" or "APROBADO" or "RECHAZADO" or "EN_TRANSITO" or "RECIBIDO"))
                 throw new ArgumentException("Estado inválido.");
-            if (motivo.Length > 500 || (estado != "APROBADO" && string.IsNullOrWhiteSpace(motivo)))
+            if (motivo.Length > 500 || (estado is "CANCELADO" or "RECHAZADO" && string.IsNullOrWhiteSpace(motivo)))
                 throw new ArgumentException("Indique un motivo de hasta 500 caracteres.");
+            if (SesionActual.Exigir().Id != usuario) throw new InvalidOperationException("El operador debe ser el usuario autenticado.");
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction();
             TraspasoDatos.PrepararOperacion(conexion, transaccion, usuario, motivo.Trim());
             using var comando = new SqlCommand(@"UPDATE dbo.Traspaso SET estado=@estado
-                WHERE id_traspaso=@id AND estado='PENDIENTE' AND version_fila=@version;
-                IF @@ROWCOUNT=0 THROW 50003, 'La solicitud cambió o ya no está pendiente. Actualice la lista.', 1;", conexion, transaccion);
+                WHERE id_traspaso=@id AND version_fila=@version AND
+                ((estado='PENDIENTE' AND @estado IN ('APROBADO','RECHAZADO','CANCELADO'))
+                 OR (estado='APROBADO' AND @estado IN ('EN_TRANSITO','CANCELADO'))
+                 OR (estado='EN_TRANSITO' AND @estado='RECIBIDO'));
+                IF @@ROWCOUNT=0 THROW 50003, 'La solicitud cambió o no permite esta transición. Actualice la lista.', 1;", conexion, transaccion);
             comando.Parameters.AddWithValue("@id", id);
             comando.Parameters.AddWithValue("@estado", estado);
             comando.Parameters.Add("@version", SqlDbType.Timestamp).Value = version;

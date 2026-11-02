@@ -11,6 +11,7 @@ namespace Sistema_ERP
         private static DataTable Consultar(string sql, int? id = null)
         {
             using var conexion = Conexion.AbrirConexion();
+            SesionActual.Validar(conexion);
             using var adaptador = new SqlDataAdapter(sql, conexion);
             if (id.HasValue)
                 adaptador.SelectCommand.Parameters.Add("@id", SqlDbType.Int).Value = id.Value;
@@ -66,6 +67,7 @@ namespace Sistema_ERP
                                  WHERE p.activo = 1 OR @incluirInactivos = 1
                                  ORDER BY p.nombre";
             using var conexion = Conexion.AbrirConexion();
+            SesionActual.Validar(conexion);
             using var adaptador = new SqlDataAdapter(sql, conexion);
             adaptador.SelectCommand.Parameters.Add("@id", SqlDbType.Int).Value = idTienda;
             adaptador.SelectCommand.Parameters.Add("@incluirInactivos", SqlDbType.Bit).Value = incluirInactivos;
@@ -94,6 +96,7 @@ namespace Sistema_ERP
             if (lineas.Count == 0 || lineas.Any(l => l.Producto <= 0 || l.Cantidad <= 0 || l.Precio < 0 || l.Precio > 9999999999999999.99m)
                 || lineas.Select(l => l.Producto).Distinct().Count() != lineas.Count)
                 throw new ArgumentException("Agregue productos sin repetir, con cantidades enteras positivas y precios válidos.");
+            if (SesionActual.Exigir().Id != usuario) throw new InvalidOperationException("El operador debe ser el usuario autenticado.");
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
             SqlCommand Comando(string sql) => new(sql, conexion, transaccion);
@@ -157,10 +160,17 @@ namespace Sistema_ERP
 
         internal static void PrepararOperacion(SqlConnection conexion, SqlTransaction transaccion, int usuario, string motivo)
         {
+            if (SesionActual.Validar(conexion, transaccion) != usuario)
+                throw new InvalidOperationException("El operador debe ser el usuario autenticado.");
             ValidarUsuario(conexion, transaccion, usuario);
             const string sql = @"IF NOT EXISTS (SELECT 1 FROM sys.triggers
                                      WHERE object_id = OBJECT_ID(N'dbo.trg_Traspaso_operar') AND is_disabled = 0)
                                      THROW 50004, 'Instale Triggers2.sql antes de operar traspasos.', 1;
+                                 IF EXISTS(SELECT requerido.nombre FROM (VALUES
+                                     (N'trg_Traspaso_estado'),(N'trg_MovimientoInventario_aplicar'),
+                                     (N'trg_MovimientoInventario_validar'),(N'trg_MovimientoInventario_documento')) requerido(nombre)
+                                     WHERE NOT EXISTS(SELECT 1 FROM sys.triggers t WHERE t.object_id=OBJECT_ID(N'dbo.'+requerido.nombre) AND t.is_disabled=0))
+                                     THROW 50004, 'Instale todos los triggers de inventario y traspasos de Triggers2.sql.', 1;
                                  EXEC sys.sp_set_session_context @key=N'id_usuario', @value=@usuario;
                                  EXEC sys.sp_set_session_context @key=N'motivo', @value=@motivo;";
             using var comando = new SqlCommand(sql, conexion, transaccion);

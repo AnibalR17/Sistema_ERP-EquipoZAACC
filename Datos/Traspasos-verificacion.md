@@ -1,35 +1,52 @@
-# Traspasos entre tiendas
+﻿# Inventario, movimientos y traspasos
 
-Solicitud: Alejandro Rovelo. Validación: Anibal Rovelo; depende de solicitudes persistidas.
+## Preparacion
 
-La referencia es files (1).zip: 01_esquema_erp_3fn.sql y Triggers2.sql. Las definiciones de tablas, restricciones, índices y vistas coinciden con el esquema del proyecto. Se conserva su configuración inicial de base de datos.
+Usar una base de pruebas con el esquema 3FN instalado. Base de Datos/01_esquema_erp_3fn.sql es para una base vacia; no ejecutarlo sobre una base con datos. Instalar Base de Datos/Triggers2.sql en la misma base configurada para la aplicacion. La aplicacion no instala ni modifica el esquema.
 
-## Preparación
+Se requieren los triggers de movimientos (validar, aplicar e inmutable), los de estados y operacion de traspasos y sus dependencias. Configurar nested triggers habilitado y RECURSIVE_TRIGGERS deshabilitado, como indica el script. No deshabilitar triggers para eludir errores de disponibilidad.
 
-En una base vacía, ejecute primero Base de Datos/01_esquema_erp_3fn.sql. Después, seleccione esa misma base y ejecute Base de Datos/Triggers2.sql. La copia de triggers conserva las reglas del ZIP y utiliza la base seleccionada, sin forzar el nombre Inventario. No se han ejecutado estos scripts sobre la base configurada ni se ha utilizado el script de reinicio.
+Iniciar sesion con una cuenta activa ligada a un empleado activo. Preparar dos tiendas activas y productos activos. Para cargar existencias de prueba puede registrarse un ajuste positivo con motivo desde Inventario. Se pueden consultar productos sin saldo y registrar su primer movimiento sin crear InventarioTienda manualmente.
 
-El script requiere SQL Server 2016 SP1 o posterior, nested triggers habilitado y RECURSIVE_TRIGGERS deshabilitado. Antes de instalarlo sobre datos existentes, revise sus requisitos de conciliación de inventario. Configure la conexión como indica el proyecto y use datos de prueba con dos tiendas, productos, usuarios activos e inventario disponible en origen.
+## Comportamiento
 
-La aplicación establece id_usuario y motivo en SESSION_CONTEXT dentro de la conexión y transacción de escritura. El trigger trg_Traspaso_operar genera los eventos y reserva inventario al aprobar; el código C# no duplica esas operaciones. Sin ese trigger habilitado, la aplicación impide las escrituras de traspasos.
+- Inventario y movimientos abre su pantalla; Compras conserva una opcion independiente.
+- Existencias muestra saldo fisico, reservado, disponible y minimo por tienda. Incluye productos activos sin saldo y productos inactivos con una fila de inventario. Las fechas no afectan al saldo actual.
+- Movimientos muestra el libro por tienda, texto y fechas UTC, con 30 dias iniciales. Consultar o Enter ejecuta los filtros. El texto se interpreta literalmente mediante parametros y CHARINDEX.
+- Ajustar solicita unidades positivas o negativas y motivo obligatorio de hasta 500 caracteres. El trigger aplica el movimiento al saldo; el codigo no actualiza existencia directamente.
+- Guardar minimo cambia solo el umbral, con comprobacion de version. No registra entradas o salidas de unidades.
+- Revertir ajuste inserta un REVERSO exclusivamente para un AJUSTE manual no revertido. Nunca borra ni modifica el asiento original ni revierte documentos de compra, venta o traspaso.
+- Solicitar crea PENDIENTE sin reservar. Aprobar reserva en origen sin cambiar existencia. Enviar pasa APROBADO a EN_TRANSITO, libera reserva y genera TRASPASO_SALIDA. Recibir pasa EN_TRANSITO a RECIBIDO y genera TRASPASO_ENTRADA en destino.
+- Rechazar una pendiente requiere motivo. Cancelar una pendiente no toca existencias; cancelar una aprobada libera reservas. No se cancela un envio ni se recibe dos veces.
+- Los triggers registran historial, movimientos y notificaciones dentro de la misma transaccion. No se insertan eventos ni movimientos de traspaso desde C#.
+- El operador es el usuario autenticado. Cada escritura verifica la sesion en SQL Server dentro de su transaccion; una sesion vencida, revocada, con otra version o con usuario/empleado inactivo no puede escribir. Ya no hay selector manual de usuarios.
+- Las solicitudes y los saldos usan rowversion para impedir sobrescrituras de cambios concurrentes. Ante conflicto, actualizar el listado antes de reintentar.
 
-## Prueba funcional con SQL Server
+## Pruebas funcionales con SQL Server pendientes
 
-1. Abra Traspaso entre Tiendas: debe mostrar directamente el formulario de creación con Guardar solicitud en una fila inferior fija, sin Consultar solicitudes. Seleccione un usuario, tiendas distintas y productos con cantidades positivas y precios de referencia. Guarde y compruebe el mensaje con número y estado PENDIENTE, y la limpieza de los campos. Abra Validación de Traspasos para comprobar el listado y el detalle persistidos. Compruebe la fila de guardado al redimensionar la ventana; si falla la carga de datos, el botón debe seguir visible y deshabilitado.
-2. Desde Validación de Traspasos, seleccione un usuario y edite una solicitud pendiente; compruebe observaciones y líneas después de actualizar. Las tiendas deben estar deshabilitadas: el trigger impide cambiar tiendas y solicitante. El listado centraliza edición, cancelación, aprobación y rechazo de pendientes.
-3. Intente guardar tiendas iguales, productos repetidos, cantidades cero, negativas o decimales, precios negativos y solicitudes vacías. Deben impedir el guardado completo.
-4. Cancele una pendiente con motivo. Compruebe el estado y el evento con usuario y fecha; no debe permitir editarla ni validarla.
-5. Abra Validación de traspasos. Revise el detalle y apruebe una pendiente con inventario suficiente; compruebe que reservado aumenta y existencia se conserva. Rechace otra con motivo: no debe reservar inventario. Cada creación y decisión debe generar un solo evento con el usuario elegido. El rechazo sin motivo debe impedirse.
-6. Abra la misma pendiente en dos ventanas. Resuelva desde una y trate de editar, cancelar o resolver desde la otra: debe rechazar la operación por cambio de versión, sin guardar cambios parciales.
-7. Solicitar no reserva inventario. Aprobar sí reserva; no debe generar movimientos de salida o entrada. Envío y recepción son etapas posteriores fuera de este alcance. Intente aprobar otra solicitud cuya cantidad exceda existencia menos reservado: el trigger debe impedirlo y conservar estado PENDIENTE, sin reserva ni evento parcial.
-8. En creación, compruebe que cambiar la tienda de origen limpia las líneas y actualiza la disponibilidad. Elegir un producto propone su precio actual. En edición, abrir una solicitud debe conservar su precio histórico hasta que se cambie el producto.
-9. En creación, pulse Agregar sucursal y registre código, nombre, dirección y teléfono. Compruebe su aparición en ambos selectores y en dbo.Tienda al volver a abrir la pantalla, conservando las líneas y selecciones del traspaso. Código o nombre vacíos y código duplicado deben impedir el alta. Cerrar el diálogo no debe guardar. Si falla SQL Server, el formulario debe permanecer abierto y no confirmar el registro.
+1. Abrir Inventario y movimientos y Compras: comprobar que llevan a pantallas distintas. Seleccionar tienda, buscar producto con apostrofos, corchetes, porcentaje y asterisco; verificar busqueda literal, tablas y conteos. Cambiar fechas solo modifica Movimientos.
+2. Producto sin saldo: registrar AJUSTE de +20 con motivo. Debe crearse InventarioTienda con existencia 20, reservado 0 y disponible 20, y un solo movimiento. Registrar -3: saldo 17. Cancelar el dialogo no guarda. Cero, valores fuera de rango y motivo vacio deben impedir guardar.
+3. Cambiar minimo y comprobar persistencia sin generar movimientos de unidades. Modificar saldo o minimo desde otra instancia antes de guardar: debe informar conflicto. Esto incluye la creacion concurrente de un saldo previamente inexistente.
+4. Revertir un ajuste: verificar movimiento opuesto, referencia al original y marca Revertido. Un segundo intento debe fallar. Intentar revertir una salida cuya compensacion deje saldo menor que reservado: debe revertirse toda la operacion, sin asiento parcial.
+5. Crear solicitud con productos y tiendas distintas: comprobar PENDIENTE, solicitante autenticado y evento unico. Nuevo guardado debe limpiar campos y mostrar el numero. Intentar productos repetidos, cantidad cero, precio negativo, campos vacios y tiendas iguales.
+6. En Validacion revisar detalle e historial y editar una pendiente. Las tiendas y el solicitante no se cambian. Verificar precios historicos al abrir edicion y precio actual al cambiar de producto.
+7. Aprobar con disponibilidad: aumenta reservado y conserva existencia. Aprobar sin disponible falla sin cambios parciales. Rechazar exige motivo y no reserva.
+8. Enviar un aprobado: existencia y reservado en origen disminuyen por la cantidad, destino no cambia, estado EN_TRANSITO y un movimiento de salida por detalle. Recibir: aumenta existencia del destino, estado RECIBIDO, un movimiento de entrada por detalle. Actualizar filtro de estado para localizar cada etapa.
+9. Cancelar pendiente y cancelar aprobado con motivo: verificar que solo el segundo libera reserva. Acciones de enviar, recibir, editar, aprobar y cancelar deben estar habilitadas unicamente para los estados aplicables. Reintentar envio o recepcion desde una ventana antigua debe fallar por version o estado, sin movimientos repetidos.
+10. Abrir la misma solicitud en dos instancias. Resolver en una y editar o resolver desde la otra: debe informar conflicto. Comprobar que la transaccion revierte cabecera, detalles, inventario e historial ante cualquier error de trigger.
+11. Desactivar tienda o producto despues de abrir el formulario de ajuste: guardar debe fallar. Los saldos historicos siguen consultables. La reversion de ajustes historicos conserva sus referencias, aunque el producto haya sido desactivado.
+12. Revocar/expirar la sesion o desactivar al usuario/empleado antes de confirmar una operacion: debe rechazarse. No debe poder atribuirse un movimiento a otra cuenta ni operar sin sesion.
+13. Crear una sucursal desde la solicitud y verificar persistencia y actualizacion de selectores sin perder lineas o selecciones. Codigo duplicado o campos obligatorios vacios impiden guardarla.
+14. Deshabilitar un trigger requerido en la base de pruebas: las escrituras deben mostrar que falta Triggers2.sql. Perder conexion no debe cerrar el programa ni confirmar una operacion fallida. Revisar tambien el desplazamiento y las acciones al reducir la ventana.
 
-## Verificación realizada
+## Verificacion realizada
 
-Compilación correcta. Se ejecutaron diez comprobaciones de validación: tiendas iguales, solicitud vacía, cantidad cero, producto repetido, precio negativo, observaciones largas, edición sin versión, estado inválido, rechazo sin motivo y cancelación sin motivo. Las diez impidieron la operación antes de acceder a datos. Se intentó una consulta de solo lectura a SQL Server, pero la conexión falló con código 20. Las pruebas transaccionales y visuales siguen pendientes.
+Compilacion sin errores ni advertencias y git diff --check sin errores de espacios. Un ejecutable temporal realizo 41 comprobaciones de construccion de controles, estados de botones para las seis etapas, validaciones de ajustes/minimos/reversiones/fechas/traspasos y exigencia de sesion antes de enviar: todas aprobadas.
 
-## Límites de integración
+Se intento una conexion de solo lectura a la base configurada para verificar los seis triggers principales. Fallo con codigo SQL 20. No se escribieron datos ni se instalaron scripts; siguen pendientes las pruebas transaccionales y visuales con una conexion operativa.
 
-El inicio de sesión existente es una maqueta. La selección explícita de usuario atribuye eventos, pero no autentica ni autoriza al operador. Debe sustituirse por la identidad de sesión cuando se implemente autenticación y permisos por tienda/rol.
+## Limites
 
-El índice único existente de EventoTraspaso permite un evento por estado. El historial registra creación y decisiones; las ediciones pendientes se protegen con rowversion, pero no producen eventos repetidos PENDIENTE.
+La autorizacion granular por permiso y tienda todavia no se aplica; las operaciones se atribuyen a la identidad autenticada y requieren una sesion vigente. No se implementa recepcion parcial ni diferencias de cantidades: cada envio y recepcion procesa todas las lineas del documento.
+
+El indice unico de EventoTraspaso permite un evento por solicitud y estado. Las ediciones pendientes se protegen con rowversion, pero no generan eventos PENDIENTE adicionales. Las fechas se muestran y filtran en UTC para coincidir con el almacenamiento de SQL Server.

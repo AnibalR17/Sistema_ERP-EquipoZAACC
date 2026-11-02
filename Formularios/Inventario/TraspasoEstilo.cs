@@ -7,7 +7,7 @@ namespace Sistema_ERP
             control.Font = new Font("Segoe UI", 11F);
             control.ForeColor = ProductoEstilo.Texto;
             control.BackColor = ProductoEstilo.Fondo;
-            control.Padding = new Padding(32, 20, 32, 28);
+            control.Padding = new Padding(32, 34, 32, 36);
             if (control is Form ventana)
             {
                 ventana.MinimumSize = new Size(560, 360);
@@ -49,7 +49,7 @@ namespace Sistema_ERP
 
         internal static Control Tarjeta(Control contenido)
         {
-            var panel = new PanelDisenoInventario { Dock = DockStyle.Fill, Padding = new Padding(24, 18, 24, 28), Radio = 24 };
+            var panel = new PanelDisenoInventario { Dock = DockStyle.Fill, Padding = new Padding(24, 18, 24, 28), Radio = 30, MostrarSombra = false, ColorBorde = Color.FromArgb(247, 247, 247) };
             panel.Controls.Add(contenido);
             return panel;
         }
@@ -68,7 +68,7 @@ namespace Sistema_ERP
                 ForeColor = ProductoEstilo.Texto,
                 SelectionBackColor = ProductoEstilo.Suave,
                 SelectionForeColor = ProductoEstilo.Texto,
-                Font = new Font("Segoe UI", 11F, FontStyle.Bold),
+                Font = new Font("Segoe UI", 10F, FontStyle.Bold),
                 Padding = new Padding(8)
             };
             tabla.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
@@ -77,12 +77,12 @@ namespace Sistema_ERP
             {
                 BackColor = Color.White,
                 ForeColor = ProductoEstilo.Texto,
-                SelectionBackColor = Color.FromArgb(228, 232, 237),
+                SelectionBackColor = ProductoEstilo.Suave,
                 SelectionForeColor = ProductoEstilo.Texto,
                 Padding = new Padding(8, 4, 8, 4),
                 NullValue = ""
             };
-            tabla.RowTemplate.Height = 44;
+            tabla.RowTemplate.Height = 42;
             tabla.AllowUserToResizeRows = false;
             tabla.DataBindingComplete += (_, _) =>
             {

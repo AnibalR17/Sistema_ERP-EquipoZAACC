@@ -9,6 +9,30 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Formularios/Inventario/Inventario.Funcional.Designer.cs">
+      <DependentUpon>Inventario.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Inventario/AjusteInventario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Inventario/AjusteInventario.Designer.cs">
+      <DependentUpon>AjusteInventario.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios/Inventario/AjusteInventario.resx">
+      <DependentUpon>AjusteInventario.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Formularios/Administracion/UsuariosRolesPermisos.Designer.cs">
+      <DependentUpon>UsuariosRolesPermisos.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Administracion/UsuariosRolesPermisos.Presentacion.cs">
+      <DependentUpon>UsuariosRolesPermisos.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios/Administracion/UsuariosRolesPermisos.resx">
+      <DependentUpon>UsuariosRolesPermisos.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Update="Formularios/Administracion/UsuariosRolesPermisos.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Formularios/Inventario/FlujoTraspasos.Sucursales.cs">
       <DependentUpon>FlujoTraspasos.cs</DependentUpon>
     </Compile>

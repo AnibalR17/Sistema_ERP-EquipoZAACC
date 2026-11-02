@@ -7,7 +7,8 @@ namespace Sistema_ERP
     internal sealed partial class FlujoTraspasos : UserControl
     {
         private readonly DataGridView lista = Tabla();
-        private readonly ComboBox usuario = new() { Width = 180, DropDownStyle = ComboBoxStyle.DropDownList };
+        private readonly TextBox usuario = new() { Width = 240, ReadOnly = true };
+        private readonly Dictionary<string, Button> botones = new();
         private readonly ComboBox filtro = new() { Width = 150, DropDownStyle = ComboBoxStyle.DropDownList };
         private bool cargado;
         private readonly bool crearSolicitud;
@@ -22,6 +23,7 @@ namespace Sistema_ERP
                 ConfigurarPresentacion();
             filtro.SelectedIndexChanged += (_, _) => Ejecutar(Cargar);
             Load += FlujoTraspasos_Load;
+            lista.SelectionChanged += (_, _) => ActualizarAcciones();
         }
 
         private void ConfigurarSolicitud()
@@ -54,6 +56,7 @@ namespace Sistema_ERP
                 var boton = new Button { Text = texto, AutoSize = true };
                 TraspasoEstilo.Boton(boton, texto is "Solicitar" or "Aprobar");
                 boton.Click += (_, _) => Ejecutar(accion);
+                botones[texto] = boton;
                 barra.Controls.Add(boton);
             }
             Boton("Actualizar", Cargar);
@@ -62,6 +65,9 @@ namespace Sistema_ERP
             Boton("Rechazar", () => Resolver("RECHAZADO"));
             Boton("Editar pendiente", () => Abrir(true));
             Boton("Cancelar solicitud", () => Resolver("CANCELADO"));
+            Boton("Enviar", () => Resolver("EN_TRANSITO"));
+            Boton("Confirmar recepción", () => Resolver("RECIBIDO"));
+            ActualizarAcciones();
             Controls.Add(TraspasoEstilo.Tarjeta(lista));
             Controls.Add(barra);
             Controls.Add(filtros);
@@ -75,7 +81,7 @@ namespace Sistema_ERP
 
             Ejecutar(() =>
             {
-                Enlazar(usuario, TraspasoDatos.Usuarios(), "id_usuario", "nombre_usuario");
+                usuario.Text = SesionActual.Exigir().Nombre;
                 if (!crearSolicitud)
                 {
                     Cargar();
@@ -124,10 +130,22 @@ namespace Sistema_ERP
 
         private int Usuario()
         {
-            if (usuario.SelectedValue is not int id)
-                throw new ArgumentException("Seleccione el usuario que realiza la operación.");
+            return SesionActual.Exigir().Id;
+        }
 
-            return id;
+        private void ActualizarAcciones()
+        {
+            string? estado = (lista.CurrentRow?.DataBoundItem as DataRowView)?["estado"] as string;
+            foreach (var (texto, boton) in botones)
+                boton.Enabled = texto switch
+                {
+                    "Actualizar" => true,
+                    "Detalle / historial" => estado != null,
+                    "Cancelar solicitud" => estado is "PENDIENTE" or "APROBADO",
+                    "Enviar" => estado == "APROBADO",
+                    "Confirmar recepción" => estado == "EN_TRANSITO",
+                    _ => estado == "PENDIENTE"
+                };
         }
 
         private DataRow Fila()
@@ -146,6 +164,8 @@ namespace Sistema_ERP
 
         private void Cargar()
         {
+            lista.DataSource = null;
+            ActualizarAcciones();
             var datos = TraspasoDatos.Listar();
             var vista = datos.DefaultView;
             if (filtro.SelectedIndex > 0)
@@ -154,6 +174,7 @@ namespace Sistema_ERP
             foreach (string columna in new[] { "id_tienda_origen", "id_tienda_destino", "version_fila" })
                 if (lista.Columns[columna] is DataGridViewColumn encontrada)
                     encontrada.Visible = false;
+            ActualizarAcciones();
         }
 
         private void Abrir(bool editar)
@@ -205,7 +226,15 @@ namespace Sistema_ERP
         private void Resolver(string estado)
         {
             var fila = Fila();
-            Pendiente(fila);
+            string anterior = (string)fila["estado"];
+            bool permitido = estado switch
+            {
+                "EN_TRANSITO" => anterior == "APROBADO",
+                "RECIBIDO" => anterior == "EN_TRANSITO",
+                "CANCELADO" => anterior is "PENDIENTE" or "APROBADO",
+                _ => anterior == "PENDIENTE"
+            };
+            if (!permitido) throw new InvalidOperationException("El estado actual no permite esta operación.");
             int actor = Usuario();
             using var dialogo = new Form { Text = $"{estado}: traspaso #{fila["id_traspaso"]}", Size = new Size(680, 450), StartPosition = FormStartPosition.CenterParent };
             TraspasoEstilo.Superficie(dialogo);
@@ -222,10 +251,18 @@ namespace Sistema_ERP
             {
                 "APROBADO" => "Aprobar traspaso",
                 "RECHAZADO" => "Rechazar traspaso",
+                "EN_TRANSITO" => "Enviar traspaso",
+                "RECIBIDO" => "Confirmar recepción",
                 _ => "Cancelar traspaso"
             },
                 $"Solicitud #{fila["id_traspaso"]} · {fila["Origen"]} → {fila["Destino"]}\n" +
-                (estado == "APROBADO" ? "Se reservarán las unidades en origen. Motivo opcional." : "Indica el motivo de la decisión.")));
+                (estado switch
+                {
+                    "APROBADO" => "Se reservarán las unidades en origen. Motivo opcional.",
+                    "EN_TRANSITO" => "Se descontarán las unidades del origen y se liberará su reserva. Motivo opcional.",
+                    "RECIBIDO" => "Se ingresarán las unidades en la tienda de destino. Motivo opcional.",
+                    _ => "Indica el motivo de la decisión. Cancelar un aprobado libera su reserva."
+                })));
             dialogo.Controls.Add(TraspasoEstilo.Pie(dialogo, aceptar));
             if (dialogo.ShowDialog(this) == DialogResult.OK)
                 Cargar();
