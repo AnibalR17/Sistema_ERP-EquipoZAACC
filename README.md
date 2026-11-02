@@ -34,6 +34,8 @@ Configure la variable de entorno `SISTEMA_ERP_CONNECTION_STRING` o cree `connect
 
 En Inicio, haga clic en **Probar conexion** para comprobar el acceso a la base de datos. Se mostrara un mensaje de exito o error sin bloquear la interfaz.
 
+Los traspasos requieren el esquema 3FN y `Base de Datos/Triggers2.sql`, basado en la base proporcionada. Ejecute los triggers en la misma base configurada para la aplicacion. La base genera el historial y reserva inventario al aprobar; las tiendas de una solicitud creada no se cambian. La preparacion y las pruebas se describen en [Datos/Traspasos-verificacion.md](Datos/Traspasos-verificacion.md).
+
 Aplicacion de escritorio desarrollada con C# y Windows Forms sobre .NET 10 para Windows.
 
 ## Estandar grafico
@@ -161,6 +163,38 @@ Estas reglas se proponen a partir de los patrones existentes:
 En **Directorio y roles**, las pestanas Clientes, Proveedores y Empleados permiten crear, consultar, actualizar, desactivar y reactivar registros. Seleccionar una fila carga sus campos; **Nuevo** limpia la seleccion para crear otro registro. Los inactivos se muestran como solo lectura y pueden reactivarse. Se validan los campos obligatorios, las longitudes y el correo; SQL Server conserva las restricciones de unicidad de documentos, RTN y codigos.
 
 En **Configuracion y auditoria**, el CRUD de tiendas usa el mismo flujo, con codigo y nombre obligatorios, direccion y telefono opcionales. Las tiendas activas alimentan el selector de empleados. Un empleado requiere codigo y tienda; no se permiten nuevas asignaciones a una tienda inactiva, pero se puede conservar una asignacion previa al editar sus otros datos. Registrar un empleado no crea una cuenta de usuario ni asigna roles de acceso.
+
+## Inventario, movimientos y traspasos
+
+**Inventario y movimientos** abre ahora su propia pantalla; **Compras** conserva una opcion independiente. Selecciona una tienda y pulsa Consultar o Enter en el buscador para actualizar. Existencias muestra productos, cantidades fisicas, reservas, disponibilidad y stock minimo, incluyendo productos activos sin saldo y productos inactivos que conservan inventario. Movimientos muestra el libro de esa tienda, filtrado por texto y fechas UTC (ultimos 30 dias por defecto). El intervalo de fechas solo afecta al historial; las existencias siempre son actuales.
+
+Seleccionar un producto activo de una tienda activa habilita **Registrar ajuste** y **Guardar minimo**. Un ajuste positivo ingresa unidades y uno negativo las retira; requiere motivo y confirmacion. Se registra un movimiento AJUSTE y el trigger actualiza la existencia sin tocar las reservas. No se permite retirar stock reservado ni dejar saldos negativos. Cambiar el minimo no genera movimientos de unidades. Ambos guardados verifican la version del saldo; ante cambios simultaneos hay que consultar otra vez.
+
+En la pestana Movimientos, **Revertir ajuste** permite corregir exclusivamente un AJUSTE manual no revertido, con motivo. Inserta un REVERSO, conserva el original y no permite revertirlo dos veces. Las compras, ventas y traspasos se corrigen desde sus documentos, no desde este boton. Los movimientos no se editan ni eliminan.
+
+**Traspaso entre tiendas** crea solicitudes PENDIENTE con tiendas distintas, productos sin repetir, cantidades enteras positivas y precios de referencia. **Validacion de traspasos** consulta por estado, muestra detalle e historial, edita pendientes, aprueba, rechaza, cancela, envia y confirma recepcion. Las acciones se habilitan segun el estado: aprobar reserva en origen; enviar un APROBADO libera la reserva y registra la salida, pasando a EN_TRANSITO; recibir registra la entrada en destino y pasa a RECIBIDO. Cancelar un PENDIENTE no mueve inventario y cancelar un APROBADO libera su reserva. No se cancela un traspaso en transito ni se vuelve a recibir uno finalizado.
+
+Estas pantallas usan el usuario autenticado sin selector de operador. Cada escritura verifica en la misma transaccion la sesion, su vigencia, version de seguridad y estados de usuario y empleado; cambiar el identificador del operador no permite atribuir traspasos a otra cuenta. Se establece SESSION_CONTEXT para los triggers. Las operaciones requieren los triggers de Triggers2.sql habilitados: la aplicacion no duplica reservas, movimientos ni eventos y no instala scripts automaticamente. La autorizacion granular por rol/permiso y tienda sigue pendiente. Las comprobaciones locales y la integracion pendiente se detallan en [Datos/Traspasos-verificacion.md](Datos/Traspasos-verificacion.md).
+
+## Usuarios, roles y permisos
+
+La opcion **Usuarios, roles y permisos** del menu abre tres pestanas con captura en tres columnas, listado, buscador, inclusion de inactivos y las acciones Guardar, Actualizar, Desactivar, Reactivar y Nuevo. **Recargar** vuelve a consultar los datos. La pantalla reutiliza la navegacion MDI, ProductoEstilo, la tabla de filas de 42 y el panel de radio 30. Sus controles estan en `UsuariosRolesPermisos.Designer.cs`, sus variantes en `.Presentacion.cs` y su comportamiento en `.cs`, con `.resx` y relaciones `DependentUpon`.
+
+- **Usuarios:** nombre de hasta 50 caracteres y empleado obligatorios. Cada empleado solo puede tener una cuenta, incluso si esta inactiva. Una nueva asignacion requiere un empleado activo; se puede conservar el empleado anterior si fue desactivado. La contrasena inicial requiere entre 12 y 128 caracteres y confirmacion; al actualizar, dejar ambos campos vacios conserva la clave. Se almacena un hash PBKDF2-SHA256 con 600000 iteraciones, sal aleatoria de 16 bytes y resultado de 32 bytes, en formato `PBKDF2-SHA256$iteraciones$salBase64$hashBase64`. No se consulta ni muestra el hash. Una clave nueva establece `debe_cambiar_contrasena=1`.
+- **Roles:** codigo ASCII de hasta 30 caracteres, nombre obligatorio de hasta 80 y descripcion opcional de hasta 300. Las casillas permiten asignar o retirar permisos.
+- **Permisos:** modulo ASCII de hasta 50 caracteres, accion ASCII de hasta 30 y descripcion obligatoria de hasta 300. El esquema calcula el codigo `modulo.accion` y exige una combinacion unica.
+
+Las casillas de Usuarios asignan roles. Las asignaciones existentes a entidades inactivas aparecen identificadas y se pueden conservar o retirar; no se permiten nuevas asignaciones a entidades inactivas. Retirar una asignacion cambia su `activo` almacenado, sin borrar la relacion. Guardar los datos y sus asignaciones es una sola transaccion; las actualizaciones y cambios de estado comprueban `version_fila` para detectar cambios simultaneos. Un conflicto requiere **Recargar** antes de reintentar.
+
+Desactivar requiere motivo y confirmacion mediante MotivoDesactivacion. Los inactivos son de solo lectura y conservan sus relaciones. Reactivar limpia fecha, usuario y motivo de desactivacion; no se escribe en el `activo` calculado de Usuario, Rol ni Permiso. Se utilizan las tablas del esquema 3FN existente, sin migraciones ni modificaciones automaticas. SQL Server conserva las restricciones de unicidad y claves foraneas.
+
+La aplicacion inicia en **Iniciar sesion** y abre la ventana principal solo despues de validar usuario y contrasena contra SQL Server. Los roles se obtienen de las asignaciones activas; no se eligen en el login. Se rechazan cuentas y empleados inactivos. Cinco fallos bloquean la cuenta durante 15 minutos; se registra cada intento en EventoAcceso. Una clave temporal exige cambiarla y confirmarla antes de entrar. Los hashes demo o de formatos distintos de PBKDF2-SHA256 no se aceptan.
+
+Cada entrada completa crea una SesionUsuario de ocho horas y muestra el nombre del empleado y sus roles. Cada minuto se verifica vigencia, revocacion, estado del empleado y version de seguridad; si falla la verificacion se vuelve al acceso. **Cerrar sesion** revoca la sesion y permite ingresar otra cuenta. Cerrar la ventana principal termina la aplicacion. `Base de Datos/Triggers2.sql`, cuando esta instalado, invalida sesiones al cambiar claves, estados o asignaciones. La autorizacion por permiso de cada operacion y la atribucion de actores en los otros CRUD siguen pendientes; autenticar no restringe aun las pantallas por rol.
+
+En una base con el esquema instalado y **sin usuarios**, el primer intento de ingreso crea automaticamente la cuenta temporal **usuario: `admin` / contrasena: `admin`**, con el rol ADMINISTRADOR. No se necesita un script de PowerShell. La clave se almacena con hash y **debe cambiarse antes de entrar** por una nueva de 12 a 128 caracteres, confirmada y diferente de `admin`.
+
+El arranque crea el empleado `ADMIN-INICIAL` si no existe, asociado a la primera tienda activa; si no hay tiendas activas crea `INICIAL`. Tambien crea el rol ADMINISTRADOR si falta. No reactiva registros iniciales desactivados. Todo se realiza en una sola transaccion con bloqueo para evitar cuentas duplicadas al iniciar varias instancias. Si ya existe cualquier usuario, incluso inactivo, **no crea ni restablece** `admin` ni cambia sus claves. Las cuentas posteriores se crean con el CRUD. La aplicacion no instala el esquema automaticamente. La preparacion y las pruebas pendientes se describen en [Datos/Seguridad-verificacion.md](Datos/Seguridad-verificacion.md).
 
 ## Desactivacion de registros y esquema requerido
 

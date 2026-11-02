@@ -5,6 +5,41 @@ namespace Sistema_ERP.Clases
 {
     public static class Modificar
     {
+        public static int Traspaso(int id, byte[] version, int origen, int destino, int usuario,
+            string observaciones, IReadOnlyCollection<LineaTraspaso> lineas)
+        {
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException(nameof(id));
+            ArgumentNullException.ThrowIfNull(version);
+            return TraspasoDatos.Guardar(id, version, origen, destino, usuario, observaciones, lineas);
+        }
+
+        public static void ResolverTraspaso(int id, byte[] version, int usuario, string estado, string motivo)
+        {
+            if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
+            ArgumentNullException.ThrowIfNull(version);
+            if (estado is not ("CANCELADO" or "APROBADO" or "RECHAZADO" or "EN_TRANSITO" or "RECIBIDO"))
+                throw new ArgumentException("Estado inválido.");
+            if (motivo.Length > 500 || (estado is "CANCELADO" or "RECHAZADO" && string.IsNullOrWhiteSpace(motivo)))
+                throw new ArgumentException("Indique un motivo de hasta 500 caracteres.");
+            if (SesionActual.Exigir().Id != usuario) throw new InvalidOperationException("El operador debe ser el usuario autenticado.");
+            using var conexion = Conexion.AbrirConexion();
+            using var transaccion = conexion.BeginTransaction();
+            TraspasoDatos.PrepararOperacion(conexion, transaccion, usuario, motivo.Trim());
+            using var comando = new SqlCommand(@"UPDATE dbo.Traspaso SET estado=@estado
+                WHERE id_traspaso=@id AND version_fila=@version AND
+                ((estado='PENDIENTE' AND @estado IN ('APROBADO','RECHAZADO','CANCELADO'))
+                 OR (estado='APROBADO' AND @estado IN ('EN_TRANSITO','CANCELADO'))
+                 OR (estado='EN_TRANSITO' AND @estado='RECIBIDO'));
+                IF @@ROWCOUNT=0 THROW 50003, 'La solicitud cambió o no permite esta transición. Actualice la lista.', 1;", conexion, transaccion);
+            comando.Parameters.AddWithValue("@id", id);
+            comando.Parameters.AddWithValue("@estado", estado);
+            comando.Parameters.Add("@version", SqlDbType.Timestamp).Value = version;
+            comando.ExecuteNonQuery();
+            // El trigger reserva el inventario al aprobar y registra la decisión.
+            transaccion.Commit();
+        }
+
         public static bool ReactivarProducto(int idProducto)
             => Reactivar("Producto", "id_producto", idProducto);
 
@@ -16,7 +51,8 @@ namespace Sistema_ERP.Clases
 
         private static bool Reactivar(string tabla, string columnaId, int id)
         {
-            if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
+            if (id <= 0)
+                throw new ArgumentOutOfRangeException(nameof(id));
 
             // Los identificadores provienen exclusivamente de los métodos de esta clase.
             string sql = $@"UPDATE dbo.{tabla}
@@ -34,7 +70,8 @@ namespace Sistema_ERP.Clases
         public static bool Proveedor(Proveedor proveedor)
         {
             proveedor.Validar();
-            if (proveedor.IdProveedor <= 0) throw new ArgumentOutOfRangeException(nameof(proveedor.IdProveedor));
+            if (proveedor.IdProveedor <= 0)
+                throw new ArgumentOutOfRangeException(nameof(proveedor.IdProveedor));
             const string sql = @"UPDATE dbo.Proveedor
                                  SET nombre_empresa = @nombre, rtn = @rtn, contacto = @contacto,
                                      telefono = @telefono, correo = @correo, direccion = @direccion,
@@ -51,9 +88,12 @@ namespace Sistema_ERP.Clases
         public static bool Categoria(int idCategoria, string nombre, string? descripcion)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(nombre);
-            if (idCategoria <= 0) throw new ArgumentOutOfRangeException(nameof(idCategoria));
-            if (nombre.Trim().Length > 100) throw new ArgumentException("El nombre admite hasta 100 caracteres.", nameof(nombre));
-            if (descripcion?.Trim().Length > 300) throw new ArgumentException("La descripción admite hasta 300 caracteres.", nameof(descripcion));
+            if (idCategoria <= 0)
+                throw new ArgumentOutOfRangeException(nameof(idCategoria));
+            if (nombre.Trim().Length > 100)
+                throw new ArgumentException("El nombre admite hasta 100 caracteres.", nameof(nombre));
+            if (descripcion?.Trim().Length > 300)
+                throw new ArgumentException("La descripción admite hasta 300 caracteres.", nameof(descripcion));
 
             const string sql = @"UPDATE dbo.Categoria SET nombre = @nombre, descripcion = @descripcion,
                                  actualizado_en = SYSUTCDATETIME()

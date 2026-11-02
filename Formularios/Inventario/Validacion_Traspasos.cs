@@ -12,6 +12,8 @@ namespace Sistema_ERP
             InitializeComponent();
             if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             UsarNavegacionPrincipal();
+            content.Controls.Clear();
+            content.Controls.Add(new FlujoTraspasos(true));
         }
     }
 }

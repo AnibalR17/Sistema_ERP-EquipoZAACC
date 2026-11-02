@@ -57,6 +57,8 @@ namespace Sistema_ERP
             settingsButton = new System.Windows.Forms.Button();
             investorsButton = new System.Windows.Forms.Button();
             rolesButton = new System.Windows.Forms.Button();
+            seguridadButton = new System.Windows.Forms.Button();
+            comprasButton = new System.Windows.Forms.Button();
             returnsButton = new System.Windows.Forms.Button();
             catalogButton = new System.Windows.Forms.Button();
             bulkButton = new System.Windows.Forms.Button();
@@ -557,7 +559,7 @@ namespace Sistema_ERP
             settingsButton.FlatAppearance.BorderSize = 0;
             settingsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
             settingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            settingsButton.Location = new System.Drawing.Point(14, 556);
+            settingsButton.Location = new System.Drawing.Point(14, 596);
             settingsButton.Name = "settingsButton";
             settingsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             settingsButton.Size = new System.Drawing.Size(236, 40);
@@ -574,7 +576,7 @@ namespace Sistema_ERP
             investorsButton.FlatAppearance.BorderSize = 0;
             investorsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
             investorsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            investorsButton.Location = new System.Drawing.Point(14, 516);
+            investorsButton.Location = new System.Drawing.Point(14, 556);
             investorsButton.Name = "investorsButton";
             investorsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             investorsButton.Size = new System.Drawing.Size(236, 40);
@@ -600,6 +602,20 @@ namespace Sistema_ERP
             rolesButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             rolesButton.UseVisualStyleBackColor = false;
             rolesButton.Click += rolesButton_Click;
+            seguridadButton.BackColor = System.Drawing.Color.White;
+            seguridadButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            seguridadButton.FlatAppearance.BorderSize = 0;
+            seguridadButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            seguridadButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            seguridadButton.Location = new System.Drawing.Point(14, 516);
+            seguridadButton.Name = "seguridadButton";
+            seguridadButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            seguridadButton.Size = new System.Drawing.Size(236, 40);
+            seguridadButton.TabIndex = 12;
+            seguridadButton.Text = "Usuarios, roles y permisos";
+            seguridadButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            seguridadButton.UseVisualStyleBackColor = false;
+            seguridadButton.Click += seguridadButton_Click;
             // 
             // returnsButton
             // 
@@ -696,6 +712,18 @@ namespace Sistema_ERP
             inventoryButton.Size = new System.Drawing.Size(236, 40);
             inventoryButton.TabIndex = 5;
             inventoryButton.Text = "Inventario y movimientos";
+            comprasButton.Name = "comprasButton";
+            comprasButton.Text = "Compras";
+            comprasButton.Location = new System.Drawing.Point(14, 276);
+            comprasButton.Size = new System.Drawing.Size(236, 40);
+            comprasButton.BackColor = System.Drawing.Color.White;
+            comprasButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            comprasButton.FlatAppearance.BorderSize = 0;
+            comprasButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            comprasButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            comprasButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            comprasButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            comprasButton.Click += comprasButton_Click;
             inventoryButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             inventoryButton.UseVisualStyleBackColor = false;
             // 
@@ -781,6 +809,8 @@ namespace Sistema_ERP
             panelContenedor.Controls.Add(catalogButton);
             panelContenedor.Controls.Add(returnsButton);
             panelContenedor.Controls.Add(rolesButton);
+            panelContenedor.Controls.Add(seguridadButton);
+            panelContenedor.Controls.Add(comprasButton);
             panelContenedor.Controls.Add(investorsButton);
             panelContenedor.Controls.Add(settingsButton);
             panelContenedor.Controls.Add(userLabel);
@@ -864,6 +894,8 @@ namespace Sistema_ERP
         private System.Windows.Forms.Button settingsButton = null!;
         private System.Windows.Forms.Button investorsButton = null!;
         private System.Windows.Forms.Button rolesButton = null!;
+        private System.Windows.Forms.Button seguridadButton = null!;
+        private System.Windows.Forms.Button comprasButton = null!;
         private System.Windows.Forms.Button returnsButton = null!;
         private System.Windows.Forms.Button catalogButton = null!;
         private System.Windows.Forms.Button bulkButton = null!;

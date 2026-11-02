@@ -5,6 +5,9 @@ namespace Sistema_ERP.Clases
 {
     public static class Ingresar
     {
+        public static int Traspaso(int origen, int destino, int usuario,
+            string observaciones, IReadOnlyCollection<LineaTraspaso> lineas)
+            => TraspasoDatos.Guardar(null, null, origen, destino, usuario, observaciones, lineas);
         public static int Proveedor(Proveedor proveedor)
         {
             proveedor.Validar();
@@ -23,8 +26,10 @@ namespace Sistema_ERP.Clases
         public static int Categoria(string nombre, string? descripcion = null)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(nombre);
-            if (nombre.Trim().Length > 100) throw new ArgumentException("El nombre admite hasta 100 caracteres.", nameof(nombre));
-            if (descripcion?.Trim().Length > 300) throw new ArgumentException("La descripción admite hasta 300 caracteres.", nameof(descripcion));
+            if (nombre.Trim().Length > 100)
+                throw new ArgumentException("El nombre admite hasta 100 caracteres.", nameof(nombre));
+            if (descripcion?.Trim().Length > 300)
+                throw new ArgumentException("La descripción admite hasta 300 caracteres.", nameof(descripcion));
 
             // OUTPUT debe usar INTO cuando la tabla tiene triggers habilitados.
             const string sql = @"DECLARE @categoriasInsertadas TABLE (id_categoria int);

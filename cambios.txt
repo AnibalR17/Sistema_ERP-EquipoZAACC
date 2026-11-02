@@ -1,0 +1,188 @@
+RESUMEN DE CAMBIOS
+Fecha: 01/11/2026
+Módulos: Traspaso entre Tiendas y Validación de Traspasos
+
+ESTANDARIZACIÓN DE AGREGAR SUCURSAL
+
+- Diálogo ajustado al formato de AgregarDirectorio: ventana fija centrada,
+  fondo blanco, Segoe UI 11, título de 16 puntos y margen de 24 puntos.
+- Campos del mismo ancho, etiquetas superiores y distribución en tabla.
+- Guardar sucursal y Cancelar usan ProductoEstilo, tamaño 170 x 44,
+  con acción principal negra y acción secundaria blanca.
+- Errores mostrados dentro del formulario, sin cerrarlo ni perder datos.
+- Enter guarda, Escape cancela y el foco inicial está en Código.
+- Agregar sucursal utiliza el botón secundario estándar y se alinea con
+  los campos de origen y destino bajo la etiqueta Sucursales.
+
+REGISTRO DE SUCURSALES
+
+- Se agregó el botón Agregar sucursal en la creación de traspasos.
+- Abre un formulario con código, nombre, dirección y teléfono, con el
+  mismo estilo visual del proyecto. Código y nombre son obligatorios.
+- Guardar sucursal reutiliza TiendaDatos.Agregar e inserta el registro
+  en dbo.Tienda mediante parámetros SQL y las validaciones existentes.
+- Se informa cuando el código ya está registrado. La ventana solo se
+  confirma después de completar la inserción en SQL Server.
+- Al guardar se actualizan los selectores de origen y destino sin
+  eliminar los productos ni cambiar las tiendas ya seleccionadas.
+- Nuevo archivo parcial FlujoTraspasos.Sucursales.cs para el diálogo.
+
+CORRECCIÓN DE CONSULTA Y GUARDADO
+
+- Se eliminó Consultar solicitudes de la pantalla de creación.
+- El listado, detalle, historial, edición y cancelación de pendientes
+  quedan centralizados en Validación, junto con aprobar y rechazar.
+- Se agregó una fila fija de acciones con Guardar solicitud, separada
+  de la tabla de productos para mantener visible el botón.
+- El formulario se construye antes de consultar SQL Server. Si falla la
+  carga, el botón sigue visible y permanece deshabilitado hasta cargar
+  los datos necesarios; el error de conexión se informa al operador.
+- Guardar crea la solicitud PENDIENTE y limpia los campos al terminar.
+
+ADAPTACIÓN A LA BASE DE DATOS DEL ZIP
+
+- Se revisaron 01_esquema_erp_3fn.sql y Triggers2.sql de files (1).zip.
+  Las definiciones del esquema coinciden con las existentes del proyecto.
+- Se agregó Base de Datos/Triggers2.sql con las reglas proporcionadas,
+  conservando la base seleccionada en lugar de forzar Inventario.
+  No se ejecutaron scripts de creación, instalación ni reinicio.
+- Las escrituras establecen usuario y motivo en SESSION_CONTEXT.
+  La base registra historial y auditoría; se eliminaron las inserciones
+  manuales de eventos para evitar duplicados.
+- Aprobar reserva inventario mediante el trigger y falla si no hay
+  disponibilidad suficiente. El código no duplica reservas ni movimientos.
+- Editar conserva tiendas y solicitante; solo modifica observaciones y
+  productos de solicitudes pendientes, con comprobación de versión.
+- Los formularios muestran disponibilidad por tienda y proponen el precio
+  actual al elegir un producto; conservan precios históricos al editar.
+- Se documentaron instalación, pruebas y responsabilidades de los triggers.
+- Diez comprobaciones de validación aprobadas. La consulta de verificación
+  a SQL Server falló con código 20; falta probar la integración y la interfaz.
+
+AJUSTE DE RESPONSABILIDAD DE LAS PANTALLAS
+
+- Traspaso entre Tiendas muestra directamente el formulario de creación:
+  usuario solicitante, tienda de origen, destino, observaciones y productos.
+- Guardar crea el traspaso como PENDIENTE, muestra su número y limpia los
+  campos para permitir una nueva solicitud.
+- Validación de Traspasos lista las solicitudes y permite revisar su
+  detalle e historial, aprobarlas o rechazarlas.
+- La consulta y gestión de solicitudes se realiza desde Validación.
+- El editor compartido es ahora un UserControl, utilizado directamente
+  en creación y dentro de una ventana al editar una solicitud pendiente.
+- Compilación verificada sin errores ni advertencias; pruebas con SQL
+  Server pendientes.
+
+ACTUALIZACIÓN DE ORGANIZACIÓN DEL CÓDIGO
+
+- Se comparó el código nuevo con ProveedorDatos, PantallaProveedores,
+  Ingresar, Modificar y las clases de presentación existentes.
+- Se unificaron los espacios de nombres con llaves, la sangría y los
+  bloques de instrucciones; se separaron las operaciones comprimidas.
+- FlujoTraspasos separa la configuración visual del evento de carga.
+- El editor de solicitudes se organizó en FlujoTraspasos.Editor.cs,
+  como archivo parcial anidado en Visual Studio.
+- Las consultas de lectura usan constantes SQL con formato legible.
+- Se conservan las validaciones, transacciones y controles de versión.
+
+ACTUALIZACIÓN DE FORMATO VISUAL
+
+- Las pantallas de solicitud y validación y los diálogos de creación,
+  edición, detalle, historial y confirmación ahora siguen el estilo
+  existente del proyecto: Segoe UI, títulos de 27 puntos, fondo claro,
+  texto oscuro, botones planos y acción principal en negro.
+- Se reutilizan ProductoEstilo y PanelDisenoInventario para conservar
+  los colores, botones y tarjetas con esquinas redondeadas.
+- Los filtros y las acciones se presentan en filas separadas; los campos
+  muestran sus etiquetas encima y las ventanas incluyen un botón Cerrar.
+- Las tablas usan cabeceras claras, filas de 44 puntos, selección gris
+  y títulos de columnas legibles.
+- Nuevo archivo Formularios/Inventario/TraspasoEstilo.cs: centraliza
+  la presentación compartida de las interfaces de traspasos.
+- Compilación verificada sin errores ni advertencias. Queda pendiente
+  la comprobación visual en ejecución con una conexión SQL Server.
+
+1. CAMBIOS A FORMULARIOS
+
+- Traspaso_Tiendas.cs:
+  Se reemplazó el contenido de la maqueta en tiempo de ejecución por el
+  flujo de solicitudes: solicitar, listar, consultar detalle, editar
+  solicitudes pendientes y cancelar con motivo.
+  Responsable del módulo: Alejandro Rovelo.
+
+- Validacion_Traspasos.cs:
+  Se integró la revisión de solicitudes, aprobación, rechazo con motivo
+  y consulta del historial, utilizando las solicitudes del primer módulo.
+  Responsable del módulo: Anibal Rovelo.
+
+2. CAMBIOS AL CÓDIGO DE PRESENTACIÓN
+
+- Nuevo archivo Formularios/Inventario/FlujoTraspasos.cs:
+  Contiene la interfaz compartida de ambos módulos, con listado,
+  filtros por estado, actualización y selección del usuario operador.
+  Incluye ventanas para consultar productos e historial, crear o editar
+  solicitudes y confirmar aprobaciones, rechazos o cancelaciones.
+  Permite seleccionar tiendas, productos, cantidades, precios de
+  referencia y observaciones; muestra los errores de validación.
+
+3. CAMBIOS A CLASES Y ACCESO A DATOS
+
+- Nuevo archivo Datos/TraspasoDatos.cs:
+  Se agregó la clase TraspasoDatos para consultar solicitudes, detalles,
+  historial y usuarios activos, y compartir el guardado transaccional
+  entre la creación y la edición de solicitudes.
+  Se agregó el registro LineaTraspaso para representar cada producto,
+  su cantidad y su precio de referencia.
+  Las escrituras utilizan transacciones y consultas parametrizadas.
+  Se comprueba la versión de la solicitud para impedir que una edición
+  o decisión sobrescriba cambios realizados desde otra ventana.
+  Se validan tiendas distintas y activas, usuario activo, productos
+  activos y sin repetir, cantidades positivas y precios válidos.
+  Solo se permite editar, cancelar, aprobar o rechazar solicitudes
+  que continúen pendientes.
+
+- Clases/Ingresar.cs:
+  Se agregó Traspaso como punto de entrada para crear solicitudes.
+
+- Clases/Modificar.cs:
+  Se agregó Traspaso para editar pendientes y se trasladó aquí el código
+  de ResolverTraspaso para aprobar, rechazar o cancelar con historial.
+  FlujoTraspasos utiliza estas operaciones de las clases existentes.
+
+- Revisión de las clases agregadas:
+  TraspasoDatos conserva consultas y auxiliares transaccionales comunes,
+  siguiendo el patrón de los archivos existentes de Datos.
+  LineaTraspaso conserva su función de representar un producto solicitado;
+  no corresponde a las entidades Proveedor o TipoDirectorio existentes.
+  FlujoTraspasos, su editor y TraspasoEstilo permanecen en presentación
+  por su responsabilidad sobre controles e interfaces.
+  La cancelación se incluye en Modificar porque cambia el estado de una
+  solicitud y conserva sus registros e historial.
+
+4. BASE DE DATOS E HISTORIAL
+
+- Se utilizan las tablas existentes Traspaso, DetalleTraspaso y
+  EventoTraspaso; no se agregaron tablas ni migraciones.
+- Los triggers registran usuario, fecha, estado y motivo de creación y decisiones.
+- Las ediciones pendientes no generan eventos adicionales debido al
+  índice único existente por solicitud y estado.
+- Solicitar no reserva inventario; aprobar incrementa lo reservado sin
+  modificar existencias físicas ni generar movimientos. El envío y la
+  recepción quedan fuera de este alcance.
+
+5. DOCUMENTACIÓN
+
+- Nuevo archivo Datos/Traspasos-verificacion.md:
+  Describe los requisitos, las pruebas funcionales con SQL Server,
+  los casos de validación, los cambios simultáneos y los límites
+  de integración con el inicio de sesión.
+
+6. VERIFICACIÓN Y PENDIENTES
+
+- Compilación con dotnet build --no-restore: correcta, sin errores
+  ni advertencias.
+- Revisión con git diff --check: sin problemas de espacios.
+- Quedan pendientes las pruebas funcionales contra SQL Server.
+- El inicio de sesión existente es una maqueta. Por ahora se selecciona
+  manualmente el usuario para atribuir las operaciones; falta integrar
+  la identidad autenticada y los permisos por rol y tienda.

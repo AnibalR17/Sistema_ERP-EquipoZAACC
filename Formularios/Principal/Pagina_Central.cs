@@ -8,11 +8,40 @@ namespace Sistema_ERP
         private readonly Dictionary<string, Form> pantallas = new();
         private readonly Dictionary<Form, Button> navegacion = new();
         private Form? inicio;
+        private AccesoUsuario? acceso;
+        private readonly System.Windows.Forms.Timer comprobarSesion = new() { Interval = 60000 };
+        internal bool VolverAlAcceso { get; private set; }
+
+        internal Pagina_Central(AccesoUsuario usuario) : this()
+        {
+            acceso = usuario;
+            userLabel.Text = usuario.Nombre;
+            accountLabel.Text = usuario.Nombre;
+            roleLabel.Text = usuario.Roles;
+            comprobarSesion.Tick += async (_, _) =>
+            {
+                comprobarSesion.Stop();
+                bool vigente;
+                try { vigente = await Task.Run(() => AccesoDatos.Vigente(usuario)); }
+                catch (Exception) { vigente = false; }
+                if (IsDisposed) return;
+                if (!vigente)
+                {
+                    MessageBox.Show(this, "La sesión terminó o no pudo verificarse. Inicia sesión nuevamente.", "Sesión", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    VolverAlAcceso = true;
+                    Close();
+                }
+                else comprobarSesion.Start();
+            };
+            comprobarSesion.Start();
+        }
 
         public Pagina_Central()
         {
             InitializeComponent();
             if (Sistema_ERP.ModoDiseno.Activo(this)) return;
+            Shown += (_, _) => { if (acceso is null) Close(); };
+            FormClosed += (_, _) => comprobarSesion.Dispose();
             ConfigurarMdi();
             homeButton.Click += (_, _) => MostrarInicio();
             inventoryButton.Click += (_, _) => MostrarInventario();
@@ -167,7 +196,7 @@ namespace Sistema_ERP
             {
                 Name = "proveedoresButton",
                 Text = "Proveedores",
-                Location = new Point(inventoryButton.Left, inventoryButton.Bottom),
+                Location = new Point(inventoryButton.Left, comprasButton.Bottom),
                 Size = catalogButton.Size,
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.White,
@@ -182,9 +211,9 @@ namespace Sistema_ERP
                 () => new Vistas.PantallaProveedores());
             panelContenedor.Controls.Add(proveedoresButton);
             foreach (var boton in new[] { transferButton, validationButton, bulkButton, catalogButton,
-                returnsButton, rolesButton, investorsButton, settingsButton })
+                returnsButton, rolesButton, seguridadButton, investorsButton, settingsButton })
             {
-                boton.Top += proveedoresButton.Height;
+                boton.Top += proveedoresButton.Height + comprasButton.Height;
                 boton.TabIndex++;
             }
 
@@ -265,7 +294,10 @@ namespace Sistema_ERP
             MostrarPantalla("Inicio", homeButton, () => inicio!);
 
         private void MostrarInventario() =>
-            MostrarPantalla("Compras", inventoryButton, () => new Vistas.PantallaCompras());
+            MostrarPantalla("Inventario y movimientos", inventoryButton, () => CrearPantalla(new Inventario(), "Inventario y movimientos"));
+
+        private void comprasButton_Click(object? sender, EventArgs e) =>
+            MostrarPantalla("Compras", comprasButton, () => new Vistas.PantallaCompras());
 
         private void MostrarTraspaso() =>
             MostrarPantalla("Traspasos", transferButton, () => CrearPantalla(new Traspaso_Tiendas(), "Traspasos"));
@@ -279,6 +311,9 @@ namespace Sistema_ERP
         private void rolesButton_Click(object? sender, EventArgs e) =>
             MostrarPantalla("Directorio y roles", rolesButton, () => new DirectorioRoles());
 
+        private void seguridadButton_Click(object? sender, EventArgs e) =>
+            MostrarPantalla("Usuarios, roles y permisos", seguridadButton, () => new UsuariosRolesPermisos());
+
         private void investorsButton_Click(object? sender, EventArgs e) =>
             MostrarPantalla("Control de inversores", investorsButton, () => new ControlInversores());
 
@@ -287,17 +322,8 @@ namespace Sistema_ERP
 
         private void logoutButton_Click(object? sender, EventArgs e)
         {
-            logoutButton.Enabled = false;
-            using var login = new LoginERP.FrmLogin();
-            Hide();
-            try
-            {
-                login.ShowDialog();
-            }
-            finally
-            {
-                Close();
-            }
+            VolverAlAcceso = true;
+            Close();
         }
 
         private void salesButton_Click(object? sender, EventArgs e) =>

@@ -55,6 +55,8 @@
             this.lblRol = new System.Windows.Forms.Label();
             this.cmbRol = new System.Windows.Forms.ComboBox();
             this.btnIngresar = new System.Windows.Forms.Button();
+            this.txtConfirmacion = new System.Windows.Forms.TextBox();
+            this.lblEstado = new System.Windows.Forms.Label();
             this.pnlIzquierdo.SuspendLayout();
             this.pnlTarjeta1.SuspendLayout();
             this.pnlTarjeta2.SuspendLayout();
@@ -334,7 +336,7 @@
             this.lblRol.Name = "lblRol";
             this.lblRol.Size = new System.Drawing.Size(73, 17);
             this.lblRol.TabIndex = 8;
-            this.lblRol.Text = "Rol (demo)";
+            this.lblRol.Text = "Confirmar nueva contraseña";
             // 
             // cmbRol
             // 
@@ -342,11 +344,6 @@
             this.cmbRol.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmbRol.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cmbRol.FormattingEnabled = true;
-            this.cmbRol.Items.AddRange(new object[] {
-            "Administrador",
-            "Gerente ",
-            "Cajero",
-            ""});
             this.cmbRol.Location = new System.Drawing.Point(32, 264);
             this.cmbRol.Name = "cmbRol";
             this.cmbRol.Size = new System.Drawing.Size(336, 33);
@@ -372,6 +369,25 @@
             // FrmLogin
             // 
             this.AcceptButton = this.btnIngresar;
+            this.txtUsuario.MaxLength = 50;
+            this.txtClave.MaxLength = 128;
+            this.cmbRol.Visible = false;
+            this.lblRol.Visible = false;
+            this.lineaRol.Visible = false;
+            this.txtConfirmacion.Location = new System.Drawing.Point(32, 264);
+            this.txtConfirmacion.Size = new System.Drawing.Size(336, 28);
+            this.txtConfirmacion.Font = new System.Drawing.Font("Segoe UI", 11F);
+            this.txtConfirmacion.UseSystemPasswordChar = true;
+            this.txtConfirmacion.MaxLength = 128;
+            this.txtConfirmacion.TabIndex = 9;
+            this.txtConfirmacion.Visible = false;
+            this.lblEstado.Location = new System.Drawing.Point(32, 382);
+            this.lblEstado.Size = new System.Drawing.Size(336, 90);
+            this.lblEstado.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblEstado.ForeColor = Sistema_ERP.ProductoEstilo.Error;
+            this.pnlLogin.Height = 490;
+            this.pnlLogin.Controls.Add(this.txtConfirmacion);
+            this.pnlLogin.Controls.Add(this.lblEstado);
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
@@ -427,6 +443,8 @@
         private System.Windows.Forms.Label lblRol;
         private System.Windows.Forms.ComboBox cmbRol;
         private System.Windows.Forms.Button btnIngresar;
+        private System.Windows.Forms.TextBox txtConfirmacion;
+        private System.Windows.Forms.Label lblEstado;
     }
 }
 
