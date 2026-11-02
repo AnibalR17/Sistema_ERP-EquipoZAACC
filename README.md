@@ -34,6 +34,8 @@ Configure la variable de entorno `SISTEMA_ERP_CONNECTION_STRING` o cree `connect
 
 En Inicio, haga clic en **Probar conexion** para comprobar el acceso a la base de datos. Se mostrara un mensaje de exito o error sin bloquear la interfaz.
 
+Los traspasos requieren el esquema 3FN y `Base de Datos/Triggers2.sql`, basado en la base proporcionada. Ejecute los triggers en la misma base configurada para la aplicacion. La base genera el historial y reserva inventario al aprobar; las tiendas de una solicitud creada no se cambian. La preparacion y las pruebas se describen en [Datos/Traspasos-verificacion.md](Datos/Traspasos-verificacion.md).
+
 Aplicacion de escritorio desarrollada con C# y Windows Forms sobre .NET 10 para Windows.
 
 ## Estandar grafico

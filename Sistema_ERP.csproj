@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Formularios/Inventario/FlujoTraspasos.Sucursales.cs">
+      <DependentUpon>FlujoTraspasos.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Inventario/FlujoTraspasos.Editor.cs">
+      <DependentUpon>FlujoTraspasos.cs</DependentUpon>
+    </Compile>
     <Compile Update="Formularios/Dialogos/MotivoDesactivacion.Presentacion.cs">
       <DependentUpon>MotivoDesactivacion.cs</DependentUpon>
     </Compile>
