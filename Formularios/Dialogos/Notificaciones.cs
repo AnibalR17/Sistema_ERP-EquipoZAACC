@@ -1,21 +1,68 @@
-﻿using System.Drawing.Drawing2D;
+using System.Data;
 
 namespace Sistema_ERP
 {
-    public sealed class Notificaciones : DialogoMaqueta
+    public sealed partial class Notificaciones : Form
     {
-        public Notificaciones() : base("Notificaciones", 260)
+        private readonly Func<Task<DataTable>> cargar;
+        private bool cargando;
+
+        internal event Action<DataTable>? Actualizadas;
+        internal event Action? ErrorCarga;
+
+        public Notificaciones() : this(
+            () => Task.Run(() => InventarioDatos.AlertasStock()), InventarioDatos.DescripcionAlerta) { }
+
+        internal Notificaciones(Func<Task<DataTable>> cargar, string criterio)
         {
-            var avisos = PantallaMaqueta.Filas(50, 50);
-            foreach (var (texto, color, fila) in new[] { ("⚠ Alerta de stock", Color.DarkOrange, 0), ("● Inversion proxima a vencer", Color.Firebrick, 1) })
+            this.cargar = cargar ?? throw new ArgumentNullException(nameof(cargar));
+            InitializeComponent();
+            descripcion.Text = criterio;
+            if (ModoDiseno.Activo(this)) return;
+            ProductoEstilo.Boton(actualizar);
+            ProductoEstilo.Boton(cerrar, true);
+            actualizar.Width = cerrar.Width = 120;
+            actualizar.Click += async (_, _) => await CargarAlertas();
+            Shown += async (_, _) => await CargarAlertas();
+        }
+
+        private async Task CargarAlertas()
+        {
+            if (cargando || ModoDiseno.Activo(this)) return;
+            cargando = true;
+            actualizar.Enabled = false;
+            estado.ForeColor = ProductoEstilo.TextoSecundario;
+            estado.Text = "Consultando existencias por tienda...";
+            resumen.Text = "Consultando alertas...";
+            tablaAlertas.DataSource = null;
+            try
             {
-                var aviso = new PanelDisenoInventario { Dock = DockStyle.Fill, MostrarSombra = false, Radio = 16, BackColor = ProductoEstilo.Suave, Padding = new Padding(16, 0, 8, 0), Margin = new Padding(0, 0, 0, 8) };
-                aviso.Controls.Add(PantallaMaqueta.Etiqueta(texto)); aviso.Paint += (_, e) => { using var borde = new Pen(color, 4); e.Graphics.DrawLine(borde, 2, 10, 2, aviso.Height - 10); }; avisos.Controls.Add(aviso, 0, fila);
+                DataTable datos = await cargar();
+                if (IsDisposed || Disposing) return;
+                tablaAlertas.DataSource = datos;
+                resumen.Text = datos.Rows.Count == 0
+                    ? "No hay alertas de stock con el criterio indicado."
+                    : $"{datos.Rows.Count} {(datos.Rows.Count == 1 ? "producto por tienda requiere" : "productos por tienda requieren")} revisión.";
+                estado.Text = $"Datos consultados: {DateTime.Now:dd/MM/yyyy HH:mm:ss}. Actualizar vuelve a consultar las existencias actuales.";
+                Actualizadas?.Invoke(datos);
             }
-            Contenido.Controls.Add(avisos, 0, 1);
-            var acciones = new FlowLayoutPanel { Dock = DockStyle.Fill, FlowDirection = FlowDirection.RightToLeft };
-            var cerrar = PantallaMaqueta.Boton("Cerrar", true); cerrar.Width = 100; cerrar.DialogResult = DialogResult.Cancel;
-            acciones.Controls.Add(cerrar); Contenido.Controls.Add(acciones, 0, 2); CancelButton = cerrar;
+            catch (Exception ex)
+            {
+                if (IsDisposed || Disposing) return;
+                tablaAlertas.DataSource = null;
+                resumen.Text = "No se pudieron consultar las alertas.";
+                estado.ForeColor = ProductoEstilo.Error;
+                estado.Text = ex.Message;
+                ErrorCarga?.Invoke();
+            }
+            finally
+            {
+                if (!IsDisposed && !Disposing)
+                {
+                    cargando = false;
+                    actualizar.Enabled = true;
+                }
+            }
         }
     }
 }

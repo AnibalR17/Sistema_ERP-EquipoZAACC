@@ -6,6 +6,31 @@ namespace Sistema_ERP
 {
     public static class InventarioDatos
     {
+        public const string DescripcionAlerta = "Stock disponible igual o inferior al mínimo (existencia menos reservas).";
+
+        public static DataTable AlertasStock()
+        {
+            SesionActual.Exigir();
+            using var conexion = Conexion.AbrirConexion();
+            using var transaccion = conexion.BeginTransaction();
+            SesionActual.Validar(conexion, transaccion);
+            using var adaptador = new SqlDataAdapter("""
+                SELECT i.id_tienda, i.id_producto, t.nombre AS Tienda, p.codigo_barras AS Codigo,
+                       p.nombre AS Producto, i.existencia AS Existencia, i.reservado AS Reservado,
+                       i.existencia-i.reservado AS Disponible, i.stock_minimo AS Minimo
+                FROM dbo.InventarioTienda i
+                JOIN dbo.Tienda t ON t.id_tienda=i.id_tienda
+                JOIN dbo.Producto p ON p.id_producto=i.id_producto
+                WHERE t.activo=1 AND p.activo=1 AND i.existencia-i.reservado<=i.stock_minimo
+                ORDER BY t.nombre, p.nombre, i.id_producto
+                """, conexion);
+            adaptador.SelectCommand.Transaction = transaccion;
+            var alertas = new DataTable();
+            adaptador.Fill(alertas);
+            transaccion.Commit();
+            return alertas;
+        }
+
         public static DataTable Existencias(int tienda, string buscar)
         {
             using var conexion = Conexion.AbrirConexion();
@@ -55,31 +80,6 @@ namespace Sistema_ERP
             return tabla;
         }
 
-        public static void Ajustar(int tienda, int producto, int cantidad, string motivo, byte[]? version)
-        {
-            if (tienda <= 0 || producto <= 0 || cantidad == 0 || cantidad == int.MinValue)
-                throw new ArgumentException("Selecciona tienda y producto e indica una cantidad distinta de cero dentro del rango permitido.");
-            ValidarMotivo(motivo);
-            using var conexion = Conexion.AbrirConexion();
-            using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
-            int usuario = Preparar(conexion, transaccion, motivo.Trim());
-            ComprobarVersion(conexion, transaccion, tienda, producto, version);
-            using var comando = new SqlCommand("""
-                IF NOT EXISTS(SELECT 1 FROM dbo.Tienda WITH(HOLDLOCK) WHERE id_tienda=@tienda AND activo=1)
-                    OR NOT EXISTS(SELECT 1 FROM dbo.Producto WITH(HOLDLOCK) WHERE id_producto=@producto AND activo=1)
-                    THROW 50001, 'La tienda y el producto deben estar activos.', 1;
-                INSERT dbo.MovimientoInventario(id_tienda,id_producto,tipo,cantidad_delta,id_usuario,motivo)
-                VALUES(@tienda,@producto,'AJUSTE',@cantidad,@usuario,@motivo);
-                """, conexion, transaccion);
-            comando.Parameters.Add("@tienda", SqlDbType.Int).Value = tienda;
-            comando.Parameters.Add("@producto", SqlDbType.Int).Value = producto;
-            comando.Parameters.Add("@cantidad", SqlDbType.Int).Value = cantidad;
-            comando.Parameters.Add("@usuario", SqlDbType.Int).Value = usuario;
-            comando.Parameters.Add("@motivo", SqlDbType.NVarChar, 500).Value = motivo.Trim();
-            comando.ExecuteNonQuery();
-            transaccion.Commit();
-        }
-
         public static void GuardarMinimo(int tienda, int producto, int minimo, byte[]? version)
         {
             if (tienda <= 0 || producto <= 0 || minimo < 0) throw new ArgumentException("Selecciona tienda y producto e indica un mínimo no negativo.");
@@ -102,35 +102,6 @@ namespace Sistema_ERP
             transaccion.Commit();
         }
 
-        public static void RevertirAjuste(long movimiento, string motivo)
-        {
-            if (movimiento <= 0) throw new ArgumentException("Selecciona un ajuste.");
-            ValidarMotivo(motivo);
-            using var conexion = Conexion.AbrirConexion();
-            using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
-            int usuario = Preparar(conexion, transaccion, motivo.Trim());
-            using var comando = new SqlCommand("""
-                IF NOT EXISTS(SELECT 1 FROM dbo.MovimientoInventario WITH(UPDLOCK,HOLDLOCK) WHERE id_movimiento=@id AND tipo='AJUSTE')
-                    THROW 50001, 'Solo se pueden revertir ajustes manuales.', 1;
-                IF EXISTS(SELECT 1 FROM dbo.MovimientoInventario WITH(UPDLOCK,HOLDLOCK) WHERE id_movimiento_revertido=@id)
-                    THROW 50001, 'El ajuste ya fue revertido. Actualiza el listado.', 1;
-                INSERT dbo.MovimientoInventario(id_tienda,id_producto,tipo,cantidad_delta,id_usuario,motivo,id_movimiento_revertido)
-                SELECT id_tienda,id_producto,'REVERSO',-cantidad_delta,@usuario,@motivo,id_movimiento
-                FROM dbo.MovimientoInventario WHERE id_movimiento=@id;
-                """, conexion, transaccion);
-            comando.Parameters.Add("@id", SqlDbType.BigInt).Value = movimiento;
-            comando.Parameters.Add("@usuario", SqlDbType.Int).Value = usuario;
-            comando.Parameters.Add("@motivo", SqlDbType.NVarChar, 500).Value = motivo.Trim();
-            comando.ExecuteNonQuery();
-            transaccion.Commit();
-        }
-
-        private static void ValidarMotivo(string motivo)
-        {
-            if (string.IsNullOrWhiteSpace(motivo) || motivo.Trim().Length > 500)
-                throw new ArgumentException("Introduce un motivo de hasta 500 caracteres.");
-        }
-
         private static void ComprobarVersion(SqlConnection conexion, SqlTransaction transaccion, int tienda, int producto, byte[]? version)
         {
             using var comando = new SqlCommand("SELECT version_fila FROM dbo.InventarioTienda WITH(UPDLOCK,HOLDLOCK) WHERE id_tienda=@tienda AND id_producto=@producto", conexion, transaccion);
@@ -148,7 +119,7 @@ namespace Sistema_ERP
                 IF EXISTS(SELECT requerido.nombre FROM (VALUES (N'trg_MovimientoInventario_aplicar'),
                     (N'trg_MovimientoInventario_validar'),(N'trg_MovimientoInventario_inmutable')) requerido(nombre)
                     WHERE NOT EXISTS(SELECT 1 FROM sys.triggers t WHERE t.object_id=OBJECT_ID(N'dbo.'+requerido.nombre) AND t.is_disabled=0))
-                    THROW 50004, 'Instale Triggers2.sql antes de registrar movimientos.', 1;
+                    THROW 50004, 'Instale Triggers2.sql antes de guardar el mínimo.', 1;
                 EXEC sys.sp_set_session_context @key=N'id_usuario',@value=@usuario;
                 EXEC sys.sp_set_session_context @key=N'motivo',@value=@motivo;
                 """, conexion, transaccion);

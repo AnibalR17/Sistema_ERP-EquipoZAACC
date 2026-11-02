@@ -7,7 +7,7 @@ namespace Sistema_ERP
         private ComboBox tiendaInventario = null!;
         private TextBox buscarInventario = null!;
         private DateTimePicker desdeInventario = null!, hastaInventario = null!;
-        private Button consultarInventario = null!, ajustarInventario = null!, guardarMinimo = null!, revertirAjuste = null!;
+        private Button consultarInventario = null!, guardarMinimo = null!;
         private NumericUpDown minimoInventario = null!;
         private Label estadoInventario = null!, resumenInventario = null!;
         private DataGridView existenciasInventario = null!, historialInventario = null!;
@@ -18,7 +18,7 @@ namespace Sistema_ERP
             contenidoInventario = new TableLayoutPanel();
             tiendaInventario = new ComboBox(); buscarInventario = new TextBox();
             desdeInventario = new DateTimePicker(); hastaInventario = new DateTimePicker();
-            consultarInventario = new Button(); ajustarInventario = new Button(); guardarMinimo = new Button(); revertirAjuste = new Button();
+            consultarInventario = new Button(); guardarMinimo = new Button();
             minimoInventario = new NumericUpDown(); estadoInventario = new Label(); resumenInventario = new Label();
             existenciasInventario = new DataGridView(); historialInventario = new DataGridView(); pestanasInventario = new TabControl();
             contenidoInventario.Dock = DockStyle.Fill;
@@ -43,12 +43,11 @@ namespace Sistema_ERP
             filtrosInventario.Controls.Add(TraspasoEstilo.Campo("Actualizar datos", consultarInventario));
             contenidoInventario.Controls.Add(filtrosInventario, 0, 1);
             var accionesInventario = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoSize = true };
-            ajustarInventario.Text = "Registrar ajuste"; guardarMinimo.Text = "Guardar mínimo"; revertirAjuste.Text = "Revertir ajuste";
-            foreach (var boton in new[] { ajustarInventario, guardarMinimo, revertirAjuste }) ProductoEstilo.Boton(boton, boton == ajustarInventario);
+            guardarMinimo.Text = "Guardar mínimo";
+            ProductoEstilo.Boton(guardarMinimo);
             minimoInventario.Maximum = int.MaxValue; minimoInventario.Width = 130;
-            accionesInventario.Controls.Add(ajustarInventario);
-            accionesInventario.Controls.Add(TraspasoEstilo.Campo("Stock mínimo", minimoInventario));
-            accionesInventario.Controls.Add(guardarMinimo); accionesInventario.Controls.Add(revertirAjuste);
+            accionesInventario.Controls.Add(TraspasoEstilo.Campo("Umbral de stock mínimo", minimoInventario));
+            accionesInventario.Controls.Add(guardarMinimo);
             contenidoInventario.Controls.Add(accionesInventario, 0, 2);
             estadoInventario.AutoSize = true; estadoInventario.Margin = new Padding(0, 6, 0, 10);
             contenidoInventario.Controls.Add(estadoInventario, 0, 3);
