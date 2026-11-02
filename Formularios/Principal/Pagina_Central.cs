@@ -43,6 +43,7 @@ namespace Sistema_ERP
             Shown += (_, _) => { if (acceso is null) Close(); };
             FormClosed += (_, _) => comprobarSesion.Dispose();
             ConfigurarMdi();
+            ConfigurarNotificaciones();
             homeButton.Click += (_, _) => MostrarInicio();
             inventoryButton.Click += (_, _) => MostrarInventario();
             transferButton.Click += (_, _) => MostrarTraspaso();
@@ -329,7 +330,5 @@ namespace Sistema_ERP
         private void salesButton_Click(object? sender, EventArgs e) =>
             MostrarPantalla("Punto de Venta", salesButton, () => new PuntoVenta());
 
-        private void notificationButton_Click(object? sender, EventArgs e) =>
-            DialogosMaqueta.Mostrar(this, new Notificaciones());
     }
 }

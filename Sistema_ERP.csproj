@@ -9,18 +9,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Formularios/Principal/Pagina_Central.Notificaciones.cs">
+      <DependentUpon>Pagina_Central.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Dialogos/Notificaciones.Designer.cs">
+      <DependentUpon>Notificaciones.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="Formularios/Dialogos/Notificaciones.resx">
+      <DependentUpon>Notificaciones.cs</DependentUpon>
+    </EmbeddedResource>
     <Compile Update="Formularios/Inventario/Inventario.Funcional.Designer.cs">
       <DependentUpon>Inventario.cs</DependentUpon>
     </Compile>
-    <Compile Update="Formularios/Inventario/AjusteInventario.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Update="Formularios/Inventario/AjusteInventario.Designer.cs">
-      <DependentUpon>AjusteInventario.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Update="Formularios/Inventario/AjusteInventario.resx">
-      <DependentUpon>AjusteInventario.cs</DependentUpon>
-    </EmbeddedResource>
     <Compile Update="Formularios/Administracion/UsuariosRolesPermisos.Designer.cs">
       <DependentUpon>UsuariosRolesPermisos.cs</DependentUpon>
     </Compile>

@@ -503,7 +503,7 @@ namespace Sistema_ERP
             notificationButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             notificationButton.Location = new System.Drawing.Point(680, 18);
             notificationButton.Name = "notificationButton";
-            notificationButton.Size = new System.Drawing.Size(54, 30);
+            notificationButton.Size = new System.Drawing.Size(64, 30);
             notificationButton.TabIndex = 3;
             notificationButton.Text = "🔔";
             notificationButton.UseVisualStyleBackColor = false;
