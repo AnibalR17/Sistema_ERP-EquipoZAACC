@@ -29,6 +29,8 @@ namespace Sistema_ERP
 
         private DataRowView? ExistenciaSeleccionada => existenciasInventario.CurrentRow?.DataBoundItem as DataRowView;
 
+        internal Task ActualizarExistencias() => CargarInventario(true);
+
         private async Task CargarInventario(bool recargarTiendas)
         {
             if (cargandoInventario || ModoDiseno.Activo(this)) return;

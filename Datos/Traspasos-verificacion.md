@@ -41,6 +41,10 @@ Iniciar sesion con una cuenta activa ligada a un empleado activo. Preparar dos t
 
 ## Verificacion realizada
 
+El 2026-11-03 se verifico en SQL Server local el flujo de compra y traspaso dentro de una transaccion revertida al finalizar: guardar el borrador no cambia existencias; confirmar ingresa 20 unidades; aprobar un traspaso reserva 6; enviar deja 14 unidades en origen y libera la reserva; recibir ingresa 6 en destino. Repetir el estado confirmado o recibido no duplica movimientos: se comprobaron exactamente un movimiento COMPRA, una salida y una entrada. No quedaron registros de prueba (los contadores IDENTITY pueden avanzar).
+
+Inventario recarga tiendas, existencias y movimientos al activar su ventana, incluyendo el regreso desde Compras o Validacion, conservando la tienda seleccionada y los filtros. La compilacion de este cambio termino sin errores ni advertencias. La comprobacion visual del regreso entre ventanas sigue pendiente.
+
 Tras retirar los ajustes manuales, la compilacion termino sin errores ni advertencias y git diff --check no encontro errores de espacios. La revision de referencias C# confirmo la eliminacion de las acciones, el dialogo y los metodos de datos de ajuste y reversion manual. No se ejecutaron cambios contra SQL Server.
 
 En la version anterior, antes de retirar los ajustes manuales de Inventario, se verificaron compilacion sin errores ni advertencias y git diff --check sin errores de espacios. Un ejecutable temporal realizo 41 comprobaciones de construccion de controles, estados de botones para las seis etapas, validaciones de ajustes/minimos/reversiones/fechas/traspasos y exigencia de sesion antes de enviar: todas aprobadas. Esta evidencia es historica y no valida las acciones de ajuste o reversion en la version actual, donde fueron eliminadas.

@@ -243,6 +243,8 @@ namespace Sistema_ERP
             var pantalla = new Form { Text = titulo, AutoScaleMode = AutoScaleMode.None };
             contenido.Dock = DockStyle.Fill;
             pantalla.Controls.Add(contenido);
+            if (contenido is Inventario inventario)
+                pantalla.Activated += async (_, _) => await inventario.ActualizarExistencias();
             return pantalla;
         }
 
