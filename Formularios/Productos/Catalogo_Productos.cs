@@ -8,6 +8,7 @@ namespace Sistema_ERP
     public partial class Catalogo_Productos : UserControl
     {
         private DataView? vistaProductos;
+        private Pagina_Central? principal;
 
         public event EventHandler? HomeRequested;
 
@@ -36,8 +37,16 @@ namespace Sistema_ERP
         {
             if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarGrid();
+            principal = FindForm()?.MdiParent as Pagina_Central;
+            if (principal is not null)
+            {
+                principal.TiendaSeleccionadaChanged += TiendaSeleccionadaChanged;
+                Disposed += (_, _) => principal.TiendaSeleccionadaChanged -= TiendaSeleccionadaChanged;
+            }
             CargarProductos();
         }
+
+        private void TiendaSeleccionadaChanged(object? sender, EventArgs e) => CargarProductos();
 
         private void ConfigurarGrid()
         {
@@ -86,7 +95,10 @@ namespace Sistema_ERP
         {
             try
             {
-                vistaProductos = ProductoDatos.Listar(chkProductosInactivos.Checked).DefaultView;
+                int? idTienda = principal?.IdTiendaSeleccionada;
+                vistaProductos = ProductoDatos.Listar(chkProductosInactivos.Checked, idTienda).DefaultView;
+                if (dgvProductos.Columns["stock_actual"] is DataGridViewColumn stock)
+                    stock.HeaderText = idTienda.HasValue ? "Stock en tienda" : "Stock total";
                 dgvProductos.DataSource = vistaProductos;
                 AplicarFiltro();
                 dgvProductos.ClearSelection();

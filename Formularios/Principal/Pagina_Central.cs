@@ -43,6 +43,7 @@ namespace Sistema_ERP
             Shown += (_, _) => { if (acceso is null) Close(); };
             FormClosed += (_, _) => comprobarSesion.Dispose();
             ConfigurarMdi();
+            ConfigurarSelectorTienda();
             ConfigurarNotificaciones();
             homeButton.Click += (_, _) => MostrarInicio();
             inventoryButton.Click += (_, _) => MostrarInventario();
@@ -66,8 +67,10 @@ namespace Sistema_ERP
         {
             // El diseno puede generar este evento antes de que termine InitializeComponent.
             if (searchBox == null || accountLabel == null || notificationButton == null) return;
-            searchBox.Width = Math.Max(160, Math.Min(420, header.Width - 390));
-            accountLabel.Left = searchBox.Right + 18;
+            searchBox.Width = Math.Max(100, Math.Min(420, header.Width - 700));
+            selectorTienda.Left = searchBox.Right + 18;
+            selectorTienda.Width = Math.Max(150, Math.Min(300, header.Width - selectorTienda.Left - 235));
+            accountLabel.Left = selectorTienda.Right + 18;
             notificationButton.Left = accountLabel.Right + 12;
         }
 

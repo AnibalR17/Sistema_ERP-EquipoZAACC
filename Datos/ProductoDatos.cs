@@ -19,19 +19,24 @@ namespace Sistema_ERP
     public static class ProductoDatos
     {
 
-        public static DataTable Listar(bool incluirInactivos = false)
+        public static DataTable Listar(bool incluirInactivos = false, int? idTienda = null)
         {
             const string sql = @"SELECT p.id_producto, p.codigo_barras, p.nombre,
-                                        c.nombre AS categoria, p.stock_actual, p.precio_unitario,
+                                        c.nombre AS categoria,
+                                        CASE WHEN @idTienda IS NULL THEN p.stock_actual
+                                             ELSE ISNULL(i.existencia, 0) END AS stock_actual,
+                                        p.precio_unitario,
                                         p.id_categoria, p.id_proveedor, p.activo, p.motivo_desactivacion
                                  FROM dbo.vw_ProductoStock p
                                  INNER JOIN dbo.Categoria c ON c.id_categoria = p.id_categoria
+                                 LEFT JOIN dbo.InventarioTienda i ON i.id_producto = p.id_producto AND i.id_tienda = @idTienda
                                  WHERE p.activo = 1 OR @incluirInactivos = 1
                                  ORDER BY p.nombre";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
             using var adaptador = new SqlDataAdapter(sql, conexion);
             adaptador.SelectCommand.Parameters.Add("@incluirInactivos", SqlDbType.Bit).Value = incluirInactivos;
+            adaptador.SelectCommand.Parameters.Add("@idTienda", SqlDbType.Int).Value = (object?)idTienda ?? DBNull.Value;
             var tabla = new DataTable();
             adaptador.Fill(tabla);
             return tabla;

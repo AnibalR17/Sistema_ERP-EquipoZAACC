@@ -80,6 +80,39 @@ namespace Sistema_ERP
                     MessageBox.Show("Revise el producto, la cantidad entera y el precio numérico.");
                 };
                 lineas.DataSource = datos;
+                bool limpiandoFilas = false;
+                void QuitarFilasVacias()
+                {
+                    if (cargandoDatos || limpiandoFilas || lineas.IsDisposed) return;
+                    limpiandoFilas = true;
+                    try
+                    {
+                        // Si hay un valor inválido en edición, se conserva para corregirlo.
+                        if (!lineas.EndEdit()) return;
+                        if (BindingContext?[datos] is CurrencyManager administrador)
+                            administrador.EndCurrentEdit();
+                        foreach (DataRow renglon in datos.Rows.Cast<DataRow>()
+                            .Where(r => r.RowState != DataRowState.Deleted &&
+                                datos.Columns.Cast<DataColumn>().All(c =>
+                                    r.IsNull(c) || r[c] is string texto && string.IsNullOrWhiteSpace(texto)))
+                            .ToArray())
+                            datos.Rows.Remove(renglon);
+                    }
+                    finally { limpiandoFilas = false; }
+                }
+                lineas.RowLeave += (_, _) =>
+                {
+                    // Se espera a que el grid termine de cambiar de fila antes de eliminarla.
+                    if (!limpiandoFilas && !cargandoDatos && IsHandleCreated)
+                        BeginInvoke(new Action(QuitarFilasVacias));
+                };
+                lineas.Leave += (_, _) =>
+                {
+                    QuitarFilasVacias();
+                    if (!lineas.IsCurrentCellInEditMode)
+                        lineas.AllowUserToAddRows = false;
+                };
+                lineas.Enter += (_, _) => lineas.AllowUserToAddRows = true;
                 if (fila != null)
                 {
                     notas.Text = Convert.ToString(fila["observaciones"]);
@@ -90,38 +123,27 @@ namespace Sistema_ERP
                     Text = fila == null ? "Guardar solicitud" : "Guardar cambios",
                     Enabled = false
                 };
-                if (fila == null)
+                // Consulta las tiendas administradas en Configuración y auditoría.
+                // Al abrir un selector se incorporan los cambios sin borrar el detalle.
+                void ActualizarTiendas()
                 {
-                    var agregarSucursal = new Button { Text = "+ Agregar sucursal", Name = "btnAgregarSucursal" };
-                    ProductoEstilo.Boton(agregarSucursal);
-                    agregarSucursal.Click += (_, _) => Ejecutar(() =>
+                    if (cargandoDatos || fila != null) return;
+                    object? origenAnterior = origen.SelectedValue;
+                    object? destinoAnterior = destino.SelectedValue;
+                    var tiendas = TiendaDatos.Listar();
+                    cargandoDatos = true;
+                    try
                     {
-                        if (!AgregarSucursal(this)) return;
-
-                        object? origenAnterior = origen.SelectedValue;
-                        object? destinoAnterior = destino.SelectedValue;
-                        var tiendas = TiendaDatos.Listar();
-                        cargandoDatos = true;
-                        try
-                        {
-                            Enlazar(origen, tiendas, "id_tienda", "Nombre");
-                            Enlazar(destino, tiendas.Copy(), "id_tienda", "Nombre");
-                            if (origenAnterior != null) origen.SelectedValue = origenAnterior;
-                            if (destinoAnterior != null) destino.SelectedValue = destinoAnterior;
-                            if (!guardar.Enabled)
-                            {
-                                productos.Clear();
-                                productos.Merge(TraspasoDatos.Productos(origen.SelectedValue is int tienda ? tienda : 0));
-                                guardar.Enabled = true;
-                            }
-                        }
-                        finally
-                        {
-                            cargandoDatos = false;
-                        }
-                    });
-                    cabecera.Controls.Add(TraspasoEstilo.Campo("Sucursales", agregarSucursal));
+                        Enlazar(origen, tiendas, "id_tienda", "Nombre");
+                        Enlazar(destino, tiendas.Copy(), "id_tienda", "Nombre");
+                        origen.SelectedIndex = destino.SelectedIndex = -1;
+                        if (origenAnterior is int o) origen.SelectedValue = o;
+                        if (destinoAnterior is int d) destino.SelectedValue = d;
+                    }
+                    finally { cargandoDatos = false; }
                 }
+                origen.DropDown += (_, _) => Ejecutar(ActualizarTiendas);
+                destino.DropDown += (_, _) => Ejecutar(ActualizarTiendas);
                 guardar.Click += (_, _) => Ejecutar(() =>
                 {
                     int usuario = obtenerUsuario();
@@ -130,6 +152,7 @@ namespace Sistema_ERP
                         return;
                     if (BindingContext?[datos] is CurrencyManager administrador)
                         administrador.EndCurrentEdit();
+                    QuitarFilasVacias();
                     var detalle = datos.Rows.Cast<DataRow>().Where(r => r.RowState != DataRowState.Deleted)
                         .Select(r => new LineaTraspaso(Convert.ToInt32(r["id_producto"]), Convert.ToInt32(r["cantidad"]), Convert.ToDecimal(r["precio_referencia"]))).ToArray();
                     int tiendaOrigen = origen.SelectedValue is int o ? o : 0;

@@ -34,6 +34,29 @@ Configure la variable de entorno `SISTEMA_ERP_CONNECTION_STRING` o cree `connect
 
 En Inicio, haga clic en **Probar conexion** para comprobar el acceso a la base de datos. Se mostrara un mensaje de exito o error sin bloquear la interfaz.
 
+### Como obtener el connection string
+
+Puede obtener la cadena desde Visual Studio y guardarla en la configuracion local del proyecto:
+
+1. Abra **Ver > Explorador de servidores** y, en **Conexiones de datos**, seleccione **Agregar conexion**.
+2. Seleccione Microsoft SQL Server como origen de datos. Ingrese el nombre del servidor y su instancia, tal como los utiliza para conectarse desde SQL Server Management Studio (por ejemplo, `localhost\SQLEXPRESS`).
+3. Seleccione la autenticacion correspondiente: Windows o SQL Server. Si utiliza SQL Server, ingrese el usuario y la contrasena de su entorno.
+4. Seleccione la base de datos del ERP. El script `Base de Datos/01_esquema_erp_3fn.sql` crea la base `EquipoZAACC`; use ese nombre si preparo la base con dicho script.
+5. Pulse **Probar conexion** y acepte. Seleccione la conexion creada y abra **Propiedades** para copiar el valor de **Cadena de conexion / Connection String**. Si la contrasena no aparece, debera completarla localmente cuando use autenticacion SQL Server.
+6. Pegue la cadena completa en `connection.local.txt`, ubicado junto a `Sistema_ERP.csproj`, en una sola linea, sin comillas externas ni prefijos como `ConnectionString=`. Vuelva a compilar para copiar el archivo al directorio de salida.
+
+Ejemplo con autenticacion de Windows (reemplace el servidor por el suyo):
+
+```text
+Server=localhost\SQLEXPRESS;Database=EquipoZAACC;Integrated Security=True;Encrypt=True;
+```
+
+Con autenticacion de SQL Server, sustituya `Integrated Security=True` por `User ID=TU_USUARIO;Password=TU_CONTRASENA`. Si el servidor local de desarrollo usa un certificado autofirmado y aparece un error de confianza del certificado, puede agregar `TrustServerCertificate=True` para ese entorno; en produccion utilice un certificado valido.
+
+Tambien puede guardar la cadena en la variable de entorno `SISTEMA_ERP_CONNECTION_STRING`. Si la define desde Windows, reinicie Visual Studio o la terminal desde donde ejecuta la aplicacion para que reciba el nuevo valor. Esta variable tiene prioridad sobre el archivo local.
+
+`Datos/Conexion.cs` obtiene primero la variable de entorno y, si esta vacia o no existe, lee `connection.local.txt` desde el directorio del ejecutable. No publique cadenas con credenciales en el README ni en archivos versionados; el archivo local ya esta excluido de Git.
+
 Los traspasos requieren el esquema 3FN y `Base de Datos/Triggers2.sql`, basado en la base proporcionada. Ejecute los triggers en la misma base configurada para la aplicacion. La base genera el historial y reserva inventario al aprobar; las tiendas de una solicitud creada no se cambian. La preparacion y las pruebas se describen en [Datos/Traspasos-verificacion.md](Datos/Traspasos-verificacion.md).
 
 Aplicacion de escritorio desarrollada con C# y Windows Forms sobre .NET 10 para Windows.
