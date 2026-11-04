@@ -30,7 +30,7 @@ namespace Sistema_ERP
         {
             if (IsDisposed || Disposing || acceso == null || notificacionesAbiertas || consultaAlertas != null) return;
             try { await ConsultarAlertas(); }
-            catch (Exception) { /* El indicador muestra la consulta fallida; el diálogo permite reintentar. */ }
+            catch (Exception) {  }
         }
 
         private async Task<DataTable> ConsultarAlertas()

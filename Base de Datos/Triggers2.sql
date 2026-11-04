@@ -1,17 +1,17 @@
-/* VERSION AMPLIADA - 25/10/2026
-   Ejecutar con SSMS o sqlcmd en Inventario, despues del esquema 3FN.
-   Incluye el original y ampliaciones al final; las definiciones posteriores prevalecen.
-   Requiere SQL Server 2016 SP1+, nested triggers habilitado y RECURSIVE_TRIGGERS OFF.
-   No ejecutar sobre movimientos ya contabilizados sin reconciliar primero inventario.
-   Desde esta version los movimientos actualizan InventarioTienda automaticamente:
-   la aplicacion NO debe actualizar existencias por segunda vez.
-   Identidad del operador: EXEC sys.sp_set_session_context N'id_usuario', <id real>;
-   Las operaciones con documentos requieren ese contexto de sesion.
-   El script instala objetos; NO confirma documentos ni procesa vencimientos existentes.
-*/
--- Ejecutar en la misma base de datos configurada en la aplicación.
+
+
+
+
+
+
+
+
+
+
+
+
 GO
--- Se conserva la base de datos seleccionada; no se cambia a Inventario.
+
 IF OBJECT_ID(N'dbo.InventarioTienda', N'U') IS NULL
     THROW 50991, 'Ejecute primero el esquema 01_esquema_erp_3fn.sql.', 1;
 IF (SELECT value_in_use FROM sys.configurations WHERE name = 'nested triggers') <> 1
@@ -19,33 +19,33 @@ IF (SELECT value_in_use FROM sys.configurations WHERE name = 'nested triggers') 
 IF DATABASEPROPERTYEX(DB_NAME(), 'IsRecursiveTriggersEnabled') = 1
     THROW 50993, 'Esta version requiere RECURSIVE_TRIGGERS OFF.', 1;
 GO
-/* =============================================================================
-   atriggers.sql
-   Triggers del esquema Inventario (ejecutar DESPUES de 01_esquema_erp_3fn.sql).
 
-   Requiere SQL Server 2016 SP1 o superior (CREATE OR ALTER) y THROW (2012+).
-   Es re-ejecutable: CREATE OR ALTER reemplaza los triggers existentes.
 
-   Contenido:
-     1. actualizado_en automatico en las 11 tablas maestras y de acceso
-     2. Seguridad de cuentas: cambio de clave, version de seguridad y sesiones
-     3. Tablas inmutables (libro de movimientos, auditoria e historiales)
-     4. Transiciones de estado y reglas de confirmacion de documentos
-     5. Bloqueo de detalles cuando el documento ya no es editable
-     6. Integridad del libro de inventario (MovimientoInventario)
-     7. Devoluciones y reembolsos
 
-   Reglas generales:
-     - Los triggers de validacion hacen ROLLBACK de la transaccion y lanzan un
-       error (THROW 50xxx) con un mensaje en espanol.
-     - actualizado_por NO lo puede llenar un trigger (no sabe quien es el usuario
-       de la aplicacion): lo escribe la aplicacion en cada UPDATE.
-     - Para cargas masivas de prueba: DISABLE TRIGGER ALL ON dbo.<tabla>;
-       y luego ENABLE TRIGGER ALL ON dbo.<tabla>;
-   ============================================================================= */
 
--- USE Inventario;
--- GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 SET NOCOUNT ON;
 SET ANSI_NULLS ON;
@@ -53,12 +53,12 @@ SET QUOTED_IDENTIFIER ON;
 GO
 
 
-/* =============================================================================
-   1. actualizado_en AUTOMATICO (AFTER UPDATE)
-      Un DEFAULT solo actua en el INSERT; este trigger registra la fecha de
-      ultima modificacion. Si la aplicacion ya envia actualizado_en, se respeta.
-      Se generan 11 triggers iguales: trg_<Tabla>_actualizado.
-   ============================================================================= */
+
+
+
+
+
+
 
 DECLARE @maestras TABLE (tabla sysname, pk sysname);
 INSERT INTO @maestras (tabla, pk) VALUES
@@ -95,12 +95,12 @@ DEALLOCATE c;
 GO
 
 
-/* =============================================================================
-   2. SEGURIDAD DE CUENTAS
-      - Cambiar la clave actualiza contrasena_actualizada_en.
-      - Cambiar la clave, desactivar la cuenta o cambiar sus roles, permisos o
-        tiendas genera una nueva version_seguridad y revoca sus sesiones activas.
-   ============================================================================= */
+
+
+
+
+
+
 
 IF TYPE_ID('dbo.tt_IdUsuario') IS NULL
     CREATE TYPE dbo.tt_IdUsuario AS TABLE (id_usuario int NOT NULL PRIMARY KEY);
@@ -134,7 +134,7 @@ BEGIN
     IF TRIGGER_NESTLEVEL(@@PROCID) > 1 RETURN;
     IF NOT (UPDATE(contrasena_hash) OR UPDATE(desactivado_en)) RETURN;
 
-    -- fecha del cambio de clave
+
     UPDATE u
        SET contrasena_actualizada_en = SYSUTCDATETIME()
       FROM dbo.Usuario AS u
@@ -142,7 +142,7 @@ BEGIN
       JOIN deleted  AS d ON d.id_usuario = u.id_usuario
      WHERE i.contrasena_hash <> d.contrasena_hash;
 
-    -- invalidar sesiones: clave cambiada o cuenta recien desactivada
+
     DECLARE @ids dbo.tt_IdUsuario;
     INSERT INTO @ids (id_usuario)
     SELECT DISTINCT i.id_usuario
@@ -181,7 +181,7 @@ BEGIN
 END;
 GO
 
--- Cambiar los permisos de un rol afecta a todos los usuarios que lo tienen
+
 CREATE OR ALTER TRIGGER dbo.trg_RolPermiso_seguridad
 ON dbo.RolPermiso
 AFTER INSERT, UPDATE, DELETE
@@ -198,9 +198,9 @@ END;
 GO
 
 
-/* =============================================================================
-   3. TABLAS INMUTABLES: no se permite UPDATE ni DELETE
-   ============================================================================= */
+
+
+
 
 CREATE OR ALTER TRIGGER dbo.trg_MovimientoInventario_inmutable
 ON dbo.MovimientoInventario
@@ -251,14 +251,14 @@ END;
 GO
 
 
-/* =============================================================================
-   4. TRANSICIONES DE ESTADO Y REGLAS DE CONFIRMACION
-   ============================================================================= */
 
--- Traspaso: PENDIENTE -> APROBADO | RECHAZADO | CANCELADO
---           APROBADO  -> EN_TRANSITO | CANCELADO
---           EN_TRANSITO -> RECIBIDO
---           RECIBIDO, RECHAZADO y CANCELADO son finales.
+
+
+
+
+
+
+
 CREATE OR ALTER TRIGGER dbo.trg_Traspaso_estado
 ON dbo.Traspaso
 AFTER UPDATE
@@ -283,7 +283,7 @@ BEGIN
 END;
 GO
 
--- Apartado: ACTIVO -> ENTREGADO | CANCELADO | VENCIDO (los demas son finales)
+
 CREATE OR ALTER TRIGGER dbo.trg_Apartado_estado
 ON dbo.Apartado
 AFTER UPDATE
@@ -306,8 +306,8 @@ BEGIN
 END;
 GO
 
--- Compra: BORRADOR -> CONFIRMADA | ANULADA ; CONFIRMADA -> ANULADA.
---         Para confirmar debe tener al menos una linea.
+
+
 CREATE OR ALTER TRIGGER dbo.trg_Compra_estado
 ON dbo.Compra
 AFTER UPDATE
@@ -343,8 +343,8 @@ BEGIN
 END;
 GO
 
--- Venta: BORRADOR -> CONFIRMADA | ANULADA ; CONFIRMADA -> ANULADA.
---        Para confirmar: al menos una linea y la suma de pagos igual al total.
+
+
 CREATE OR ALTER TRIGGER dbo.trg_Venta_estado
 ON dbo.Venta
 AFTER UPDATE
@@ -393,8 +393,8 @@ BEGIN
 END;
 GO
 
--- Devolucion: BORRADOR -> CONFIRMADA | ANULADA ; CONFIRMADA -> ANULADA.
---             Para confirmar: al menos una linea y la venta original confirmada.
+
+
 CREATE OR ALTER TRIGGER dbo.trg_Devolucion_estado
 ON dbo.Devolucion
 AFTER UPDATE
@@ -444,13 +444,13 @@ END;
 GO
 
 
-/* =============================================================================
-   5. BLOQUEO DE DETALLES
-      Como el total de cada documento ya no se guarda, se calcula sumando sus
-      lineas: editar una linea de un documento cerrado cambiaria su historial.
-      Los detalles solo se pueden insertar, modificar o borrar mientras la
-      cabecera esta en BORRADOR (Apartado: ACTIVO).
-   ============================================================================= */
+
+
+
+
+
+
+
 
 CREATE OR ALTER TRIGGER dbo.trg_DetalleCompra_bloqueo
 ON dbo.DetalleCompra
@@ -529,12 +529,12 @@ END;
 GO
 
 
-/* =============================================================================
-   6. INTEGRIDAD DEL LIBRO DE INVENTARIO (MovimientoInventario)
-      id_tienda e id_producto se guardan en el movimiento para indexar (excepcion
-      documentada en la normalizacion); este trigger garantiza que coincidan con
-      el documento de origen y que el signo y la cantidad sean coherentes.
-   ============================================================================= */
+
+
+
+
+
+
 
 CREATE OR ALTER TRIGGER dbo.trg_MovimientoInventario_validar
 ON dbo.MovimientoInventario
@@ -543,7 +543,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- signo: entran COMPRA, TRASPASO_ENTRADA y DEVOLUCION; salen VENTA y TRASPASO_SALIDA
+
     IF EXISTS (
         SELECT 1 FROM inserted AS i
          WHERE (i.tipo IN ('COMPRA','TRASPASO_ENTRADA','DEVOLUCION') AND i.cantidad_delta < 0)
@@ -554,7 +554,7 @@ BEGIN
         THROW 50401, 'MovimientoInventario: el signo de cantidad_delta no corresponde al tipo de movimiento.', 1;
     END
 
-    -- tienda, producto y cantidad deben coincidir con el detalle de origen
+
     IF EXISTS (
         SELECT 1
           FROM inserted AS i
@@ -578,7 +578,7 @@ BEGIN
         THROW 50402, 'MovimientoInventario: tienda, producto o cantidad no coinciden con el documento de origen.', 1;
     END
 
-    -- reverso: misma tienda y producto, y cantidad opuesta al movimiento original
+
     IF EXISTS (
         SELECT 1
           FROM inserted AS i
@@ -594,9 +594,9 @@ END;
 GO
 
 
-/* =============================================================================
-   7. DEVOLUCIONES Y REEMBOLSOS
-   ============================================================================= */
+
+
+
 
 CREATE OR ALTER TRIGGER dbo.trg_DetalleDevolucion_validar
 ON dbo.DetalleDevolucion
@@ -605,7 +605,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- la linea debe pertenecer a la venta de la cabecera
+
     IF EXISTS (
         SELECT 1
           FROM inserted AS i
@@ -618,7 +618,7 @@ BEGIN
         THROW 50501, 'DetalleDevolucion: la linea de venta no pertenece a la venta de la devolucion.', 1;
     END
 
-    -- lo devuelto acumulado (sin devoluciones anuladas) no supera lo vendido
+
     IF EXISTS (
         SELECT 1
           FROM (SELECT DISTINCT id_detalle_venta FROM inserted) AS x
@@ -643,7 +643,7 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    -- con devolucion, el reembolso es de un pago de la venta devuelta
+
     IF EXISTS (SELECT 1 FROM inserted AS i WHERE i.id_devolucion IS NOT NULL AND i.id_pago_venta IS NULL)
     BEGIN
         ROLLBACK TRANSACTION;
@@ -662,7 +662,7 @@ BEGIN
         THROW 50602, 'Reembolso: el pago no corresponde a la venta de la devolucion.', 1;
     END
 
-    -- un abono ya aplicado a una venta se reembolsa por su PagoVenta
+
     IF EXISTS (
         SELECT 1
           FROM inserted AS i
@@ -674,7 +674,7 @@ BEGIN
         THROW 50603, 'Reembolso: el abono ya se aplico a una venta; reembolsalo por su PagoVenta.', 1;
     END
 
-    -- no superar el saldo reembolsable del cobro original
+
     IF EXISTS (
         SELECT 1
           FROM (SELECT DISTINCT id_pago_venta FROM inserted WHERE id_pago_venta IS NOT NULL) AS x
@@ -700,9 +700,9 @@ END;
 GO
 
 
-/* =============================================================================
-   8. VERIFICACION DE LOS TRIGGERS ORIGINALES
-   ============================================================================= */
+
+
+
 
 SELECT OBJECT_NAME(parent_id) AS tabla, name AS trigger_nombre, is_disabled
 FROM sys.triggers
@@ -714,11 +714,11 @@ FROM sys.triggers
 WHERE parent_class = 1 AND is_ms_shipped = 0;
 GO
 
-/* AMPLIACIONES: requieren los triggers originales definidos arriba y el esquema 3FN. */
 
-/* 9. Una confirmacion no puede eludirse insertando una cabecera cerrada.
-   Las propiedades que determinan tienda, cliente y origen no se cambian una vez
-   creados los detalles. Se bloquean tambien los DELETE de cabeceras. */
+
+
+
+
 DECLARE @docs TABLE(tabla sysname, pk sysname, inicial varchar(20));
 INSERT @docs VALUES ('Compra','id_compra','BORRADOR'),('Venta','id_venta','BORRADOR'),
  ('Devolucion','id_devolucion','BORRADOR'),('Traspaso','id_traspaso','PENDIENTE'),
@@ -789,8 +789,8 @@ BEGIN
 END;
 GO
 
-/* Bloqueo concurrente del documento padre antes de comprobar detalles o pagos.
-   Evita que otra sesion confirme mientras se alteran lineas o cobros. */
+
+
 DECLARE @detalles TABLE(tabla sysname,padre sysname,fk sysname,editable varchar(20));
 INSERT @detalles VALUES ('DetalleCompra','Compra','id_compra','BORRADOR'),
  ('DetalleVenta','Venta','id_venta','BORRADOR'),
@@ -817,9 +817,9 @@ END
 CLOSE detalles; DEALLOCATE detalles;
 GO
 
-/* 10. El movimiento es la unica fuente de cambios en existencia.
-   Los indices unicos del esquema impiden duplicar un movimiento por detalle.
-   Los bloqueos de rango protegen tambien pares tienda/producto aun inexistentes. */
+
+
+
 CREATE OR ALTER TRIGGER dbo.trg_MovimientoInventario_aplicar
 ON dbo.MovimientoInventario AFTER INSERT AS
 BEGIN
@@ -842,8 +842,8 @@ BEGIN
 END;
 GO
 
-/* El trigger original valida signo, origen y cantidades. Este agrega el estado
-   del documento. No permite contabilizar movimientos de borradores. */
+
+
 CREATE OR ALTER TRIGGER dbo.trg_MovimientoInventario_documento
 ON dbo.MovimientoInventario AFTER INSERT AS
 BEGIN
@@ -866,8 +866,8 @@ BEGIN
 END;
 GO
 
-/* 11. Apartados: reservas al cambiar detalles y liberacion al cerrar.
-   Reservar no mueve la existencia fisica; reduce el disponible. */
+
+
 CREATE OR ALTER TRIGGER dbo.trg_DetalleApartado_reservas
 ON dbo.DetalleApartado AFTER INSERT,UPDATE,DELETE AS
 BEGIN
@@ -918,9 +918,9 @@ BEGIN
 END;
 GO
 
-/* 12. Compra y venta: confirmar contabiliza; anular revierte los asientos.
-   Una anulacion con stock insuficiente falla completa, sin dejar datos a medias.
-   Los reembolsos requieren datos reales de pago: no se inventan automaticamente. */
+
+
+
 CREATE OR ALTER TRIGGER dbo.trg_Compra_contabilizar ON dbo.Compra AFTER UPDATE AS
 BEGIN
  SET NOCOUNT ON;
@@ -955,7 +955,7 @@ BEGIN
  JOIN dbo.Devolucion dev WITH(UPDLOCK,HOLDLOCK) ON dev.id_venta=i.id_venta
  WHERE d.estado='CONFIRMADA' AND i.estado='ANULADA' AND dev.estado<>'ANULADA')
  THROW 50715,'Anule las devoluciones antes de anular la venta.',1;
- -- Los detalles de la venta que entrega un apartado deben coincidir exactamente.
+
  IF EXISTS(SELECT 1 FROM inserted i JOIN deleted d ON d.id_venta=i.id_venta
  JOIN dbo.Apartado a WITH(UPDLOCK,HOLDLOCK) ON a.id_venta=i.id_venta
  WHERE d.estado='BORRADOR' AND i.estado='CONFIRMADA' AND
@@ -975,7 +975,7 @@ BEGIN
  WHERE d.estado='BORRADOR' AND i.estado='CONFIRMADA'
  AND(p.id_pago_venta IS NULL OR p.id_venta<>i.id_venta OR p.monto<>ab.monto OR p.id_metodo_pago<>ab.id_metodo_pago))
  THROW 50717,'Aplique cada abono a un pago de la venta antes de confirmar.',1;
- -- La cabecera ya esta confirmada dentro de esta transaccion; cerrar libera la reserva.
+
  UPDATE a SET estado='ENTREGADO' FROM dbo.Apartado a
  JOIN inserted i ON i.id_venta=a.id_venta JOIN deleted d ON d.id_venta=i.id_venta
  WHERE d.estado='BORRADOR' AND i.estado='CONFIRMADA' AND a.estado='ACTIVO';
@@ -992,8 +992,8 @@ BEGIN
 END;
 GO
 
-/* 13. Traspasos: aprobar reserva; enviar libera reserva y descuenta origen;
-   recibir ingresa en destino; cancelar aprobado libera lo reservado. */
+
+
 CREATE OR ALTER TRIGGER dbo.trg_Traspaso_operar ON dbo.Traspaso AFTER INSERT,UPDATE AS
 BEGIN
  SET NOCOUNT ON;
@@ -1037,7 +1037,7 @@ BEGIN
 END;
 GO
 
-/* 14. Devoluciones: serializar por detalle vendido para proteger el acumulado. */
+
 CREATE OR ALTER TRIGGER dbo.trg_DetalleDevolucion_validar
 ON dbo.DetalleDevolucion AFTER INSERT,UPDATE AS
 BEGIN
@@ -1084,8 +1084,8 @@ BEGIN
 END;
 GO
 
-/* 15. Refuerzo financiero: conservar cobros historicos y limitar devoluciones
-   por importe, no solo por el valor del pago original. */
+
+
 CREATE OR ALTER TRIGGER dbo.trg_Reembolso_concurrencia ON dbo.Reembolso AFTER INSERT,UPDATE,DELETE AS
 BEGIN
  SET NOCOUNT ON;
@@ -1147,12 +1147,12 @@ BEGIN
 END;
 GO
 
-/* 16. Auditoria de Categoria: valores antes/despues sin inventar un usuario.
-   Para atribuirlo, la aplicacion debe establecer SESSION_CONTEXT id_usuario. */
+
+
 CREATE OR ALTER TRIGGER dbo.trg_Categoria_auditoria ON dbo.Categoria AFTER INSERT,UPDATE,DELETE AS
 BEGIN
  SET NOCOUNT ON;
- -- Evita duplicar el registro por el UPDATE interno del trigger de fecha.
+
  IF TRIGGER_NESTLEVEL()>1 RETURN;
  INSERT dbo.Auditoria(id_usuario,modulo,accion,entidad,id_registro,descripcion,valores_antes_json,valores_despues_json,equipo)
  SELECT TRY_CONVERT(int,SESSION_CONTEXT(N'id_usuario')),'CATALOGO',
@@ -1166,9 +1166,9 @@ BEGIN
 END;
 GO
 
-/* 17. Tarea periodica explicita. Programar con SQL Server Agent o el programador
-   externo: EXEC dbo.usp_ProcesarVencimientos @id_usuario=<usuario de servicio>;
-   No se crea un Job ni se asignan destinatarios sin conocer la politica del ERP. */
+
+
+
 CREATE OR ALTER PROCEDURE dbo.usp_ProcesarVencimientos @id_usuario int AS
 BEGIN
  SET NOCOUNT ON; SET XACT_ABORT ON;
@@ -1197,8 +1197,8 @@ BEGIN
 END;
 GO
 
-/* 18. Avisos de stock y traspasos. Se crean eventos deduplicados; la aplicacion
-   asigna Notificacion a usuarios autorizados por tienda/rol. No se difunden a todos. */
+
+
 CREATE OR ALTER TRIGGER dbo.trg_InventarioTienda_aviso ON dbo.InventarioTienda AFTER INSERT,UPDATE AS
 BEGIN
  SET NOCOUNT ON;
@@ -1222,8 +1222,8 @@ BEGIN
 END;
 GO
 
-/* 19. Auditoria de documentos y cambios de estado, incluidos los automaticos.
-   No se registran hashes de contrasena ni contenido de sesiones. */
+
+
 DECLARE @docs TABLE(tabla sysname,pk sysname);
 INSERT @docs VALUES('Compra','id_compra'),('Venta','id_venta'),('Devolucion','id_devolucion'),
  ('Traspaso','id_traspaso'),('Apartado','id_apartado');
@@ -1248,7 +1248,7 @@ END
 CLOSE auditar; DEALLOCATE auditar;
 GO
 
-/* Desactivar o reactivar Rol/Permiso tambien cambia los privilegios efectivos. */
+
 CREATE OR ALTER TRIGGER dbo.trg_Rol_seguridad ON dbo.Rol AFTER UPDATE AS
 BEGIN
  SET NOCOUNT ON;
@@ -1271,7 +1271,7 @@ BEGIN
 END;
 GO
 
--- Verificacion final: el numero depende de las ampliaciones; no se fija en 31.
+
 SELECT OBJECT_NAME(parent_id) tabla,name trigger_nombre,is_disabled
 FROM sys.triggers WHERE parent_class=1 AND is_ms_shipped=0
 ORDER BY OBJECT_NAME(parent_id),name;

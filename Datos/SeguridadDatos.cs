@@ -42,7 +42,6 @@ namespace Sistema_ERP
             return tabla;
         }
 
-        // Incluye asignaciones a entidades inactivas para conservarlas al editar.
         public static DataTable Asignaciones(TipoSeguridad tipo, int? id)
         {
             if (tipo == TipoSeguridad.Permisos) return new DataTable();

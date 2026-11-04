@@ -17,7 +17,6 @@ namespace Sistema_ERP
                 var fila = campos.GetRow(estado);
                 campos.RowCount = fila + 3;
                 campos.SetRow(estado, fila + 2);
-                // El control y su etiqueta estan declarados en el disenador.
                 campos.Controls.Add(lblContacto, 0, fila);
                 campos.Controls.Add(contacto, 0, fila + 1);
             }

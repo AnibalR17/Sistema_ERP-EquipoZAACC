@@ -36,7 +36,6 @@ namespace Sistema_ERP.Clases
             comando.Parameters.AddWithValue("@estado", estado);
             comando.Parameters.Add("@version", SqlDbType.Timestamp).Value = version;
             comando.ExecuteNonQuery();
-            // El trigger reserva el inventario al aprobar y registra la decisión.
             transaccion.Commit();
         }
 
@@ -54,7 +53,6 @@ namespace Sistema_ERP.Clases
             if (id <= 0)
                 throw new ArgumentOutOfRangeException(nameof(id));
 
-            // Los identificadores provienen exclusivamente de los métodos de esta clase.
             string sql = $@"UPDATE dbo.{tabla}
                             SET desactivado_en = NULL, desactivado_por = NULL,
                                 motivo_desactivacion = NULL, actualizado_en = SYSUTCDATETIME()

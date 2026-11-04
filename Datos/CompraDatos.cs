@@ -10,8 +10,6 @@ namespace Sistema_ERP
     {
         private const decimal MaximoImporte = 9999999999999999.99m;
 
-        // Compra no tiene rowversion en el esquema 3FN. La huella incluye la cabecera
-        // y sus líneas ordenadas para detectar también cambios hechos fuera de esta pantalla.
         private const string VersionSql = """
             HASHBYTES('SHA2_256',(
                 SELECT c.id_compra,c.id_proveedor,c.id_tienda,c.numero_factura,c.fecha_factura,
@@ -200,7 +198,6 @@ namespace Sistema_ERP
             }
             using var confirmar = new SqlCommand("UPDATE dbo.Compra SET estado='CONFIRMADA' WHERE id_compra=@id", conexion, transaccion);
             confirmar.Parameters.Add("@id", SqlDbType.Int).Value = id;
-            // Los triggers generan COMPRA y aplican su existencia en esta misma transacción.
             confirmar.ExecuteNonQuery();
             transaccion.Commit();
         }
@@ -222,7 +219,6 @@ namespace Sistema_ERP
             anular.Parameters.Add("@id", SqlDbType.Int).Value = id;
             anular.Parameters.Add("@usuario", SqlDbType.Int).Value = usuario;
             anular.Parameters.Add("@motivo", SqlDbType.NVarChar, 500).Value = motivo.Trim();
-            // Una confirmada genera REVERSO; si el inventario está comprometido, el trigger revierte todo.
             anular.ExecuteNonQuery();
             transaccion.Commit();
         }

@@ -13,7 +13,6 @@ namespace Sistema_ERP
 
     internal static class AccesoDatos
     {
-        // Evita una respuesta inmediata cuando el usuario no existe.
         private static readonly string hashSimulado = ClaveSegura.Crear(Convert.ToBase64String(RandomNumberGenerator.GetBytes(24)));
 
         internal static ResultadoAcceso Ingresar(string usuario, string clave)
@@ -47,7 +46,6 @@ namespace Sistema_ERP
                 }
             }
             bool correcta = ClaveSegura.Verificar(clave, hash);
-            // SQL Server es la referencia de tiempo tanto para bloqueo como para sesiones.
             using var reloj = new SqlCommand("SELECT SYSUTCDATETIME()", conexion, transaccion);
             DateTime ahora = (DateTime)reloj.ExecuteScalar()!;
             string resultado = !id.HasValue || !correcta ? "INVALIDO" : !activo ? "INACTIVO" : bloqueo > ahora ? "BLOQUEADO" : "EXITOSO";

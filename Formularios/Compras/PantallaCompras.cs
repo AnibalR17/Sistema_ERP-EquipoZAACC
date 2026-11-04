@@ -315,7 +315,6 @@ namespace Sistema_ERP.Vistas
                 ocupado = true; ActualizarAcciones();
                 int id = await Task.Run(() => CompraDatos.Guardar(compraId, versionCompra, proveedor, tienda, factura, fecha, notas, lineas));
                 if (IsDisposed) return;
-                // Una lectura fallida posterior no debe permitir repetir un alta ya guardada en SQL.
                 compraId = id; estadoCompra = "BORRADOR"; versionCompra = null; modificado = false;
                 guardada = true;
                 InvalidarHistorial();

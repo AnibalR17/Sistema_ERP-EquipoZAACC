@@ -1,7 +1,7 @@
-﻿-- Datos ficticios: agrega 2 filas en cada una de las 38 tablas.
--- Orden: 01_esquema_erp_3fn.sql -> poblar_bdd.sql -> Triggers2.sql.
--- Los datos iniciales del esquema se conservan, por lo que algunas tablas tendran mas de 2 filas.
--- Ejecutar una sola vez en una base de pruebas. Los hashes de usuario son marcadores sin login real.
+﻿
+
+
+
 USE EquipoZAACC;
 GO
 SET NOCOUNT ON;
@@ -15,14 +15,14 @@ IF EXISTS (SELECT 1 FROM dbo.Tienda WHERE codigo IN ('DEMO-T1','DEMO-T2'))
 BEGIN TRY
     BEGIN TRANSACTION;
 
-    -- Dos tiendas: tambien permiten relacionar los traspasos entre origen y destino.
+
     DECLARE @tienda1 int, @tienda2 int;
     INSERT dbo.Tienda (codigo, nombre) VALUES ('DEMO-T1', N'Tienda demo central');
     SET @tienda1 = SCOPE_IDENTITY();
     INSERT dbo.Tienda (codigo, nombre) VALUES ('DEMO-T2', N'Tienda demo sucursal');
     SET @tienda2 = SCOPE_IDENTITY();
 
-    -- Una vuelta crea un registro por tabla; dos vueltas crean dos registros.
+
     DECLARE @i int = 1, @s varchar(1), @tienda int, @destino int;
     DECLARE @categoria int, @proveedor int, @cliente int, @metodo int,
             @empleado int, @usuario int, @rol int, @permiso int, @producto int,
@@ -36,7 +36,7 @@ BEGIN TRY
         SET @tienda = CASE WHEN @i = 1 THEN @tienda1 ELSE @tienda2 END;
         SET @destino = CASE WHEN @i = 1 THEN @tienda2 ELSE @tienda1 END;
 
-        -- Catalogos y seguridad. Se capturan los ID reales, sin asumir que empiezan en 1.
+
         INSERT dbo.Categoria (nombre, descripcion)
         VALUES (N'Categoria demo ' + @s, N'Categoria de ejemplo');
         SET @categoria = SCOPE_IDENTITY();
@@ -88,7 +88,7 @@ BEGIN TRY
         VALUES (@usuario, HASHBYTES('SHA2_256', 'DEMO-RECUPERACION-' + @s),
                 @ahora, DATEADD(hour, 1, @ahora));
 
-        -- Existencia inicial respaldada por un movimiento de ajuste.
+
         INSERT dbo.Producto (codigo_barras, nombre, precio_unitario, id_categoria, id_proveedor)
         VALUES (N'DEMO-PROD-' + @s, N'Producto demo ' + @s, 100, @categoria, @proveedor);
         SET @producto = SCOPE_IDENTITY();
@@ -98,7 +98,7 @@ BEGIN TRY
         INSERT dbo.MovimientoInventario (id_tienda, id_producto, tipo, cantidad_delta, id_usuario, motivo)
         VALUES (@tienda, @producto, 'AJUSTE', 20, @usuario, N'Existencia inicial demo');
 
-        -- Documentos en borrador: no afectan existencias.
+
         INSERT dbo.Compra (id_proveedor, id_tienda, numero_factura, fecha_factura, id_usuario)
         VALUES (@proveedor, @tienda, N'DEMO-FAC-' + @s, CONVERT(date, @ahora), @usuario);
         SET @compra = SCOPE_IDENTITY();
@@ -122,7 +122,7 @@ BEGIN TRY
         INSERT dbo.EventoTraspaso (id_traspaso, estado_anterior, estado_nuevo, id_usuario)
         VALUES (@traspaso, NULL, 'PENDIENTE', @usuario);
 
-        -- Apartado cancelado con su abono devuelto: no mantiene reservas.
+
         INSERT dbo.Apartado (id_cliente, id_tienda, id_usuario, fecha, vence_en, estado)
         VALUES (@cliente, @tienda, @usuario, @ahora, DATEADD(day, 15, @ahora), 'CANCELADO');
         SET @apartado = SCOPE_IDENTITY();
@@ -140,7 +140,7 @@ BEGIN TRY
         INSERT dbo.DetalleDevolucion (id_devolucion, id_detalle_venta, cantidad, reintegra_stock)
         VALUES (@devolucion, @detalleVenta, 1, 0);
 
-        -- Inversiones, importaciones y registros de ejemplo.
+
         INSERT dbo.Inversion (institucion, tipo, monto, tasa_interes, fecha_inicio, fecha_vencimiento, estado)
         VALUES (N'Banco demo ' + @s, 'PLAZO_FIJO', 1000, 5,
                 CONVERT(date, @ahora), CONVERT(date, DATEADD(year, 1, @ahora)), 'VIGENTE');

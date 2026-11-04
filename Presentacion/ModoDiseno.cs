@@ -4,7 +4,6 @@ namespace Sistema_ERP
 {
     internal static class ModoDiseno
     {
-        // DesignMode alone is false while a designer is constructing the control.
         internal static bool Activo(Control control)
         {
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime) return true;

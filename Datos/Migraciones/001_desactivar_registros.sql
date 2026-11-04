@@ -1,4 +1,4 @@
--- Ejecutar antes de iniciar esta version. Conserva todos los registros existentes.
+
 SET XACT_ABORT ON;
 BEGIN TRANSACTION;
 IF COL_LENGTH('dbo.Producto', 'activo') IS NULL

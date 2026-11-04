@@ -3,7 +3,6 @@ using System.Drawing.Drawing2D;
 
 namespace Sistema_ERP
 {
-    // Visual surface only: rounded corners and the soft card shadow in the mockups.
     public class PanelDisenoInventario : Panel
     {
         private int radio = 30;

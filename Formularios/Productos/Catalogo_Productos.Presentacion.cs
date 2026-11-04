@@ -20,7 +20,6 @@ namespace Sistema_ERP
             Font = new Font("Segoe UI", 11F);
             ForeColor = ProductoEstilo.Texto;
             content.BackColor = ProductoEstilo.Fondo;
-            // El disenador contiene dos copias del bloque de usuario.
             label2.Visible = label3.Visible = button2.Visible = false;
             homeButton.Font = new Font(Font, FontStyle.Regular);
             catalogButton.Font = new Font(Font, FontStyle.Bold);

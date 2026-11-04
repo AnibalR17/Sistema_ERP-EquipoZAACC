@@ -1,4 +1,4 @@
--- Instalacion inicial. No ejecutar sobre tablas existentes.
+
 IF DB_ID(N'EquipoZAACC') IS NULL
     EXEC(N'CREATE DATABASE [EquipoZAACC]');
 GO
@@ -275,7 +275,7 @@ CREATE TABLE dbo.RecuperacionAcceso (
     CONSTRAINT CK_RecuperacionAcceso_expira CHECK (expira_en > creado_en)
 );
 GO
-CREATE TABLE dbo.Producto ( -- H4: sin stock_actual
+CREATE TABLE dbo.Producto (
     id_producto          int IDENTITY(1,1) NOT NULL,
     codigo_barras        nvarchar(50) NOT NULL,
     nombre               nvarchar(150) NOT NULL,
@@ -314,7 +314,7 @@ CREATE TABLE dbo.InventarioTienda (
     CONSTRAINT CK_InventarioTienda_minimo CHECK (stock_minimo >= 0)
 );
 GO
-CREATE TABLE dbo.Compra ( -- H5: sin total
+CREATE TABLE dbo.Compra (
     id_compra          int IDENTITY(1,1) NOT NULL,
     id_proveedor       int NOT NULL,
     id_tienda          int NOT NULL,
@@ -351,7 +351,7 @@ CREATE TABLE dbo.DetalleCompra (
     CONSTRAINT CK_DetalleCompra_costo CHECK (costo_unitario > 0)
 );
 GO
-CREATE TABLE dbo.Venta ( -- H5: sin total
+CREATE TABLE dbo.Venta (
     id_venta         int IDENTITY(1,1) NOT NULL,
     numero           varchar(40) NOT NULL,
     id_tienda        int NOT NULL,
@@ -403,7 +403,7 @@ CREATE TABLE dbo.PagoVenta (
     CONSTRAINT CK_PagoVenta_recibido CHECK (monto_recibido IS NULL OR monto_recibido >= monto)
 );
 GO
-CREATE TABLE dbo.Traspaso ( -- H1: sin columnas de pasos
+CREATE TABLE dbo.Traspaso (
     id_traspaso       int IDENTITY(1,1) NOT NULL,
     id_tienda_origen  int NOT NULL,
     id_tienda_destino int NOT NULL,
@@ -450,8 +450,8 @@ CREATE TABLE dbo.EventoTraspaso (
     CONSTRAINT CK_EventoTraspaso_motivo CHECK (estado_nuevo NOT IN ('RECHAZADO','CANCELADO') OR motivo IS NOT NULL)
 );
 GO
-  -- 6. APARTADOS, DEVOLUCIONES Y REEMBOLSOS
-CREATE TABLE dbo.Apartado ( -- H5: sin total
+
+CREATE TABLE dbo.Apartado (
     id_apartado  int IDENTITY(1,1) NOT NULL,
     id_cliente   int NOT NULL,
     id_tienda    int NOT NULL,
@@ -502,7 +502,7 @@ CREATE TABLE dbo.AbonoApartado (
     CONSTRAINT CK_AbonoApartado_monto CHECK (monto > 0)
 );
 GO
-CREATE TABLE dbo.Devolucion ( -- H5: sin total
+CREATE TABLE dbo.Devolucion (
     id_devolucion    int IDENTITY(1,1) NOT NULL,
     id_venta         int NOT NULL,
     id_tienda        int NOT NULL,
@@ -522,7 +522,7 @@ CREATE TABLE dbo.Devolucion ( -- H5: sin total
     CONSTRAINT CK_Devolucion_anulacion CHECK (estado <> 'ANULADA' OR (anulado_en IS NOT NULL AND anulado_por IS NOT NULL AND motivo_anulacion IS NOT NULL))
 );
 GO
-CREATE TABLE dbo.DetalleDevolucion ( -- H6: sin precio_unitario ni subtotal
+CREATE TABLE dbo.DetalleDevolucion (
     id_detalle_devolucion int IDENTITY(1,1) NOT NULL,
     id_devolucion         int NOT NULL,
     id_detalle_venta      int NOT NULL,
@@ -590,7 +590,7 @@ CREATE TABLE dbo.MovimientoInventario (
     )
 );
 GO
--- 8. INVERSIONES, IMPORTACIONES, AUDITORIA Y AVISOS
+
 CREATE TABLE dbo.Inversion (
     id_inversion         int IDENTITY(1,1) NOT NULL,
     institucion          nvarchar(150) NOT NULL,
@@ -665,7 +665,7 @@ CREATE TABLE dbo.Auditoria (
     CONSTRAINT CK_Auditoria_despues_json CHECK (valores_despues_json IS NULL OR ISJSON(valores_despues_json) = 1)
 );
 GO
-CREATE TABLE dbo.EventoNotificacion ( -- H3
+CREATE TABLE dbo.EventoNotificacion (
     id_evento_notificacion bigint IDENTITY(1,1) NOT NULL,
     clave_evento           varchar(150) NOT NULL,
     tipo                   varchar(40) NOT NULL,
@@ -677,7 +677,7 @@ CREATE TABLE dbo.EventoNotificacion ( -- H3
     CONSTRAINT CK_EventoNotificacion_tipo CHECK (tipo IN ('STOCK_BAJO','TRASPASO_PENDIENTE','INVERSION_VENCIMIENTO'))
 );
 GO
-CREATE TABLE dbo.Notificacion ( -- H3
+CREATE TABLE dbo.Notificacion (
     id_notificacion        bigint IDENTITY(1,1) NOT NULL,
     id_evento_notificacion bigint NOT NULL,
     id_usuario             int NOT NULL,
@@ -688,7 +688,7 @@ CREATE TABLE dbo.Notificacion ( -- H3
     CONSTRAINT FK_Notificacion_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario (id_usuario)
 );
 GO
--- (se agregan al final para resolver la dependencia circular con Usuario)
+
 ALTER TABLE dbo.Categoria  ADD CONSTRAINT FK_Categoria_creado_por       FOREIGN KEY (creado_por)      REFERENCES dbo.Usuario (id_usuario),
                                CONSTRAINT FK_Categoria_actualizado_por  FOREIGN KEY (actualizado_por) REFERENCES dbo.Usuario (id_usuario),
                                CONSTRAINT FK_Categoria_desactivado_por  FOREIGN KEY (desactivado_por) REFERENCES dbo.Usuario (id_usuario);
@@ -788,7 +788,7 @@ CREATE INDEX IX_Auditoria_fecha_usuario       ON dbo.Auditoria (fecha, id_usuari
 CREATE INDEX IX_Auditoria_usuario             ON dbo.Auditoria (id_usuario);
 CREATE INDEX IX_Notificacion_usuario          ON dbo.Notificacion (id_usuario);
 GO
--- 11. VISTAS (reemplazan los datos derivados eliminados en la normalizacion)
+
 CREATE VIEW dbo.vw_ProductoStock AS
 SELECT p.id_producto, p.codigo_barras, p.nombre, p.precio_unitario,
        p.id_categoria, p.id_proveedor,
@@ -849,10 +849,10 @@ FROM dbo.Traspaso t
 LEFT JOIN dbo.EventoTraspaso e ON e.id_traspaso = t.id_traspaso
 GROUP BY t.id_traspaso;
 GO
--- 12. DATOS INICIALES (opcional, se puede ejecutar varias veces)
-       -- No se siembran claves ni usuarios: el primer administrador se crea con la
-       -- herramienta de arranque. Tampoco se siembran permisos ni tienda inicial,
-       -- porque dependen de los modulos que implemente la aplicacion.
+
+
+
+
 INSERT INTO dbo.Rol (codigo, nombre, descripcion)
 SELECT v.codigo, v.nombre, v.descripcion
 FROM (VALUES
@@ -872,7 +872,7 @@ WHERE NOT EXISTS (SELECT 1 FROM dbo.MetodoPago m WHERE m.codigo = v.codigo);
 IF NOT EXISTS (SELECT 1 FROM dbo.Cliente WHERE nombre = N'Cliente general')
     INSERT INTO dbo.Cliente (nombre) VALUES (N'Cliente general');
 GO
--- 13. VERIFICACION (esperado: 38 tablas y 7 vistas)
+
 SELECT (SELECT COUNT(*) FROM sys.tables  WHERE schema_id = SCHEMA_ID('dbo')) AS tablas,
        (SELECT COUNT(*) FROM sys.views   WHERE schema_id = SCHEMA_ID('dbo')) AS vistas,
        (SELECT COUNT(*) FROM sys.foreign_keys WHERE schema_id = SCHEMA_ID('dbo')) AS llaves_foraneas;

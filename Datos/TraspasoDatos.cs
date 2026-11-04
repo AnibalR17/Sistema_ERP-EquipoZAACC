@@ -145,7 +145,6 @@ namespace Sistema_ERP
                 precio.Value = linea.Precio;
                 detalle.ExecuteNonQuery();
             }
-            // Los triggers registran el historial y la auditoría dentro de esta transacción.
             transaccion.Commit();
             return numero;
         }

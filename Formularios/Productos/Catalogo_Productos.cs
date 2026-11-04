@@ -124,7 +124,6 @@ namespace Sistema_ERP
                 return;
             }
 
-            // Escapa caracteres especiales de LIKE y comillas para que RowFilter no falle.
             string seguro = Regex.Replace(texto, @"[%*\[\]]", "[$0]").Replace("'", "''");
             vistaProductos.RowFilter = $"nombre LIKE '%{seguro}%' OR codigo_barras LIKE '%{seguro}%'";
         }

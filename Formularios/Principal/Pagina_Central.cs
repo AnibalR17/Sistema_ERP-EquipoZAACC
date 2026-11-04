@@ -65,7 +65,6 @@ namespace Sistema_ERP
 
         private void Header_Resize(object? sender, EventArgs e)
         {
-            // El diseno puede generar este evento antes de que termine InitializeComponent.
             if (searchBox == null || accountLabel == null || notificationButton == null) return;
             searchBox.Width = Math.Max(100, Math.Min(420, header.Width - 700));
             selectorTienda.Left = searchBox.Right + 18;
@@ -188,7 +187,6 @@ namespace Sistema_ERP
             main.Controls.Remove(content);
             Controls.Remove(main);
             main.Dispose();
-            // El area MDI ocupa el espacio disponible junto al encabezado y al menu lateral compartidos.
             Controls.SetChildIndex(header, 1);
             panelContenedor.BringToFront();
             inicio = CrearPantalla(content, "Inicio");
@@ -221,7 +219,6 @@ namespace Sistema_ERP
                 boton.TabIndex++;
             }
 
-            // Permite desplazar el menu de forma independiente para acceder a todas las opciones en ventanas pequenas.
             var menu = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
             var pie = new Panel { Dock = DockStyle.Bottom, Height = 130 };
             foreach (Control control in panelContenedor.Controls.Cast<Control>().ToArray())

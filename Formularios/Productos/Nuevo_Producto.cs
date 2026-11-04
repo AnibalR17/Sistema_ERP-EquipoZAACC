@@ -25,7 +25,6 @@ namespace Sistema_ERP
         private void FormProducto_Load(object? sender, EventArgs e)
         {
             if (Sistema_ERP.ModoDiseno.Activo(this)) return;
-            // Stock: solo lectura, valor por defecto 0
             txtStock.ReadOnly = true;
             txtStock.TabStop = false;
             txtStock.Text = "0";

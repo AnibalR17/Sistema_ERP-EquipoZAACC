@@ -7,7 +7,6 @@ namespace Sistema_ERP
 {
     public static class DirectorioDatos
     {
-        // Los identificadores SQL provienen exclusivamente de esta lista fija.
         private static (string Tabla, string Id, string Nombre, string Identificador) Entidad(TipoDirectorio tipo) => tipo switch
         {
             TipoDirectorio.Clientes => ("Cliente", "id_cliente", "nombre", "documento_fiscal"),
@@ -93,7 +92,6 @@ namespace Sistema_ERP
                     WHERE {e.Id}=@id AND activo=1; SELECT CONVERT(int, @@ROWCOUNT);"
                 : $@"INSERT INTO dbo.{e.Tabla}({e.Nombre},telefono,correo,{e.Identificador},{extraColumna})
                     VALUES(@nombre,@telefono,@correo,@identificador,{extraParametro}); SELECT CONVERT(int, @@ROWCOUNT);";
-            // Permite conservar la tienda anterior aunque haya sido desactivada; las nuevas asignaciones requieren una activa.
             if (tipo == TipoDirectorio.Empleados)
                 sql = @"IF NOT EXISTS(SELECT 1 FROM dbo.Tienda WHERE id_tienda=@tienda AND activo=1)
                     AND NOT EXISTS(SELECT 1 FROM dbo.Empleado WHERE id_empleado=@id AND id_tienda=@tienda)

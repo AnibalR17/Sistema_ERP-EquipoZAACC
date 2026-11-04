@@ -3,7 +3,6 @@ using Sistema_ERP.Clases;
 
 namespace Sistema_ERP
 {
-    // Presentación compartida por solicitud (Alejandro Rovelo) y validación (Anibal Rovelo).
     internal sealed partial class FlujoTraspasos : UserControl
     {
         private readonly DataGridView lista = Tabla();

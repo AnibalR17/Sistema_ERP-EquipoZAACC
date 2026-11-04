@@ -10,7 +10,6 @@ namespace Sistema_ERP
             return Derivar(clave);
         }
 
-        // La clave corta solo se permite para el arranque; exige cambio antes de crear una sesion.
         internal static string CrearTemporalAdministrador() => Derivar("admin");
 
         private static string Derivar(string clave)

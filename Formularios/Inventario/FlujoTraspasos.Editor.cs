@@ -87,7 +87,6 @@ namespace Sistema_ERP
                     limpiandoFilas = true;
                     try
                     {
-                        // Si hay un valor inválido en edición, se conserva para corregirlo.
                         if (!lineas.EndEdit()) return;
                         if (BindingContext?[datos] is CurrencyManager administrador)
                             administrador.EndCurrentEdit();
@@ -102,7 +101,6 @@ namespace Sistema_ERP
                 }
                 lineas.RowLeave += (_, _) =>
                 {
-                    // Se espera a que el grid termine de cambiar de fila antes de eliminarla.
                     if (!limpiandoFilas && !cargandoDatos && IsHandleCreated)
                         BeginInvoke(new Action(QuitarFilasVacias));
                 };
@@ -123,8 +121,6 @@ namespace Sistema_ERP
                     Text = fila == null ? "Guardar solicitud" : "Guardar cambios",
                     Enabled = false
                 };
-                // Consulta las tiendas administradas en Configuración y auditoría.
-                // Al abrir un selector se incorporan los cambios sin borrar el detalle.
                 void ActualizarTiendas()
                 {
                     if (cargandoDatos || fila != null) return;

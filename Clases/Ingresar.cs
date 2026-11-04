@@ -31,7 +31,6 @@ namespace Sistema_ERP.Clases
             if (descripcion?.Trim().Length > 300)
                 throw new ArgumentException("La descripción admite hasta 300 caracteres.", nameof(descripcion));
 
-            // OUTPUT debe usar INTO cuando la tabla tiene triggers habilitados.
             const string sql = @"DECLARE @categoriasInsertadas TABLE (id_categoria int);
                                  INSERT INTO dbo.Categoria (nombre, descripcion)
                                  OUTPUT INSERTED.id_categoria INTO @categoriasInsertadas

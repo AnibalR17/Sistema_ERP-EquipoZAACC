@@ -5,7 +5,6 @@
         public ControlInversores() : base("Control de inversores", "Solo Administradores",
             "Rojo: vencida o vence en menos de 30 dias. Amarillo: menos de 60 dias.")
         {
-            // Mantiene accesibles todos los campos mediante desplazamiento en ventanas pequenas.
             Pagina.MinimumSize = new Size(680, 810);
             var contenido = Filas(120, 360, 174);
             var resumen = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty };
@@ -54,7 +53,6 @@
             Campo("Inicio", new DateTimePicker { Format = DateTimePickerFormat.Short }, 0, 5);
             Campo("Vencimiento", new DateTimePicker { Format = DateTimePickerFormat.Short }, 1, 5);
             var guardar = Boton("Guardar", true); guardar.Name = "guardarInversion"; guardar.Width = 120;
-            // Esta pantalla conserva el alcance de diseno, sin guardar inversiones reales.
             guardar.Click += (_, _) => MessageBox.Show(this, "El registro de inversiones aun no esta disponible.",
                 "Control de inversores", MessageBoxButtons.OK, MessageBoxIcon.Information);
             campos.Controls.Add(guardar, 0, 7); registro.Controls.Add(campos);

@@ -24,7 +24,6 @@ namespace Sistema_ERP.Clases
             if (motivo.Trim().Length > 300)
                 throw new ArgumentException("El motivo admite hasta 300 caracteres.", nameof(motivo));
 
-            // Los identificadores provienen exclusivamente de los métodos de esta clase.
             string sql = $@"UPDATE dbo.{tabla}
                             SET desactivado_en = SYSUTCDATETIME(), motivo_desactivacion = @motivo,
                                 actualizado_en = SYSUTCDATETIME()
