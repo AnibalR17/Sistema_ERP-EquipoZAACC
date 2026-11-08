@@ -122,7 +122,6 @@ namespace Sistema_ERP
             layoutAuditoria.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)tablaAuditoria).BeginInit();
             tablaAuditoria.SuspendLayout();
-            // codigo
             codigo.Name = "codigoTienda";
             codigo.Text = "";
             codigo.Location = new System.Drawing.Point(0, 33);
@@ -149,7 +148,6 @@ namespace Sistema_ERP
             codigo.PlaceholderText = "";
             codigo.ReadOnly = false;
             codigo.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            // nombre
             nombre.Name = "nombreTienda";
             nombre.Text = "";
             nombre.Location = new System.Drawing.Point(0, 33);
@@ -176,7 +174,6 @@ namespace Sistema_ERP
             nombre.PlaceholderText = "";
             nombre.ReadOnly = false;
             nombre.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            // direccion
             direccion.Name = "direccionTienda";
             direccion.Text = "";
             direccion.Location = new System.Drawing.Point(0, 33);
@@ -203,7 +200,6 @@ namespace Sistema_ERP
             direccion.PlaceholderText = "";
             direccion.ReadOnly = false;
             direccion.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            // telefono
             telefono.Name = "telefonoTienda";
             telefono.Text = "";
             telefono.Location = new System.Drawing.Point(0, 33);
@@ -230,7 +226,6 @@ namespace Sistema_ERP
             telefono.PlaceholderText = "";
             telefono.ReadOnly = false;
             telefono.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            // buscar
             buscar.Name = "buscarTienda";
             buscar.Text = "";
             buscar.Location = new System.Drawing.Point(0, 380);
@@ -257,7 +252,6 @@ namespace Sistema_ERP
             buscar.PlaceholderText = "Buscar tienda por nombre o c\u00F3digo...";
             buscar.ReadOnly = false;
             buscar.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            // inactivas
             inactivas.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             inactivas.UseVisualStyleBackColor = false;
             inactivas.Name = "mostrarTiendasInactivas";
@@ -281,7 +275,6 @@ namespace Sistema_ERP
             inactivas.Checked = false;
             inactivas.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             inactivas.AutoEllipsis = false;
-            // tiendas
             tiendas.Name = "tablaTiendas";
             tiendas.Text = "";
             tiendas.Location = new System.Drawing.Point(16, 16);
@@ -369,7 +362,6 @@ namespace Sistema_ERP
             tiendasColumna5.FillWeight = 24F;
             tiendasColumna5.Visible = true;
             tiendas.Columns.Add(tiendasColumna5);
-            // estado
             estado.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             estado.Name = "estado";
             estado.Text = "";
@@ -392,7 +384,6 @@ namespace Sistema_ERP
             estado.BorderStyle = System.Windows.Forms.BorderStyle.None;
             estado.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             estado.AutoEllipsis = true;
-            // estadoLista
             estadoLista.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             estadoLista.Name = "estadoLista";
             estadoLista.Text = "Mostrando 0 registros";
@@ -415,7 +406,6 @@ namespace Sistema_ERP
             estadoLista.BorderStyle = System.Windows.Forms.BorderStyle.None;
             estadoLista.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             estadoLista.AutoEllipsis = false;
-            // guardar
             guardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             guardar.UseVisualStyleBackColor = false;
             guardar.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -443,7 +433,6 @@ namespace Sistema_ERP
             guardar.FlatAppearance.BorderSize = 0;
             guardar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             guardar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 55, 55, 55);
-            // actualizar
             actualizar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             actualizar.UseVisualStyleBackColor = false;
             actualizar.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -471,7 +460,6 @@ namespace Sistema_ERP
             actualizar.FlatAppearance.BorderSize = 1;
             actualizar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             actualizar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 243, 243, 243);
-            // desactivar
             desactivar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             desactivar.UseVisualStyleBackColor = false;
             desactivar.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -499,7 +487,6 @@ namespace Sistema_ERP
             desactivar.FlatAppearance.BorderSize = 1;
             desactivar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             desactivar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 243, 243, 243);
-            // reactivar
             reactivar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             reactivar.UseVisualStyleBackColor = false;
             reactivar.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -527,7 +514,6 @@ namespace Sistema_ERP
             reactivar.FlatAppearance.BorderSize = 1;
             reactivar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             reactivar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 243, 243, 243);
-            // Cuerpo
             Cuerpo.Name = "contenidoConfiguracion";
             Cuerpo.Text = "";
             Cuerpo.Location = new System.Drawing.Point(32, 34);
@@ -548,7 +534,6 @@ namespace Sistema_ERP
             Cuerpo.MaximumSize = new System.Drawing.Size(0, 0);
             Cuerpo.AutoScroll = true;
             Cuerpo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            // layoutConfiguracion
             layoutConfiguracion.Name = "layoutConfiguracion";
             layoutConfiguracion.Text = "";
             layoutConfiguracion.Location = new System.Drawing.Point(0, 0);
@@ -582,7 +567,6 @@ namespace Sistema_ERP
             layoutConfiguracion.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             layoutConfiguracion.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 230F));
             layoutConfiguracion.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            // lblTitulo
             lblTitulo.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblTitulo.Name = "lblTitulo";
             lblTitulo.Text = "Tiendas";
@@ -605,7 +589,6 @@ namespace Sistema_ERP
             lblTitulo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblTitulo.AutoEllipsis = false;
-            // lblAviso
             lblAviso.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblAviso.Name = "lblAviso";
             lblAviso.Text = "El c\u00F3digo y el nombre son obligatorios. Selecciona una fila para actualizar sus datos.";
@@ -628,7 +611,6 @@ namespace Sistema_ERP
             lblAviso.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblAviso.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblAviso.AutoEllipsis = false;
-            // camposTienda
             camposTienda.Name = "camposTienda";
             camposTienda.Text = "";
             camposTienda.Location = new System.Drawing.Point(0, 112);
@@ -657,7 +639,6 @@ namespace Sistema_ERP
             camposTienda.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.333332F));
             camposTienda.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.333332F));
             camposTienda.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.333332F));
-            // bloqueCodigo
             bloqueCodigo.Name = "bloqueCodigo";
             bloqueCodigo.Text = "";
             bloqueCodigo.Location = new System.Drawing.Point(0, 0);
@@ -684,7 +665,6 @@ namespace Sistema_ERP
             bloqueCodigo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             bloqueCodigo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             bloqueCodigo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            // lblCodigo
             lblCodigo.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblCodigo.Name = "lblCodigo";
             lblCodigo.Text = "C\u00F3digo *";
@@ -707,7 +687,6 @@ namespace Sistema_ERP
             lblCodigo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblCodigo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblCodigo.AutoEllipsis = false;
-            // bloqueNombre
             bloqueNombre.Name = "bloqueNombre";
             bloqueNombre.Text = "";
             bloqueNombre.Location = new System.Drawing.Point(473, 0);
@@ -734,7 +713,6 @@ namespace Sistema_ERP
             bloqueNombre.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             bloqueNombre.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             bloqueNombre.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            // lblNombre
             lblNombre.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblNombre.Name = "lblNombre";
             lblNombre.Text = "Nombre *";
@@ -757,7 +735,6 @@ namespace Sistema_ERP
             lblNombre.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblNombre.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblNombre.AutoEllipsis = false;
-            // bloqueTelefono
             bloqueTelefono.Name = "bloqueTelefono";
             bloqueTelefono.Text = "";
             bloqueTelefono.Location = new System.Drawing.Point(946, 0);
@@ -784,7 +761,6 @@ namespace Sistema_ERP
             bloqueTelefono.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             bloqueTelefono.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             bloqueTelefono.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            // lblTelefono
             lblTelefono.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblTelefono.Name = "lblTelefono";
             lblTelefono.Text = "Tel\u00E9fono";
@@ -807,7 +783,6 @@ namespace Sistema_ERP
             lblTelefono.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblTelefono.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblTelefono.AutoEllipsis = false;
-            // bloqueDireccion
             bloqueDireccion.Name = "bloqueDireccion";
             bloqueDireccion.Text = "";
             bloqueDireccion.Location = new System.Drawing.Point(0, 78);
@@ -834,7 +809,6 @@ namespace Sistema_ERP
             bloqueDireccion.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             bloqueDireccion.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             bloqueDireccion.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            // lblDireccion
             lblDireccion.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblDireccion.Name = "lblDireccion";
             lblDireccion.Text = "Direcci\u00F3n";
@@ -857,7 +831,6 @@ namespace Sistema_ERP
             lblDireccion.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblDireccion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblDireccion.AutoEllipsis = false;
-            // accionesTienda
             accionesTienda.Name = "accionesTienda";
             accionesTienda.Text = "";
             accionesTienda.Location = new System.Drawing.Point(0, 268);
@@ -880,7 +853,6 @@ namespace Sistema_ERP
             accionesTienda.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
             accionesTienda.WrapContents = false;
             accionesTienda.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            // nuevo
             nuevo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             nuevo.UseVisualStyleBackColor = false;
             nuevo.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -908,7 +880,6 @@ namespace Sistema_ERP
             nuevo.FlatAppearance.BorderSize = 1;
             nuevo.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             nuevo.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 243, 243, 243);
-            // tarjetaTiendas
             tarjetaTiendas.Name = "tarjetaTiendas";
             tarjetaTiendas.Text = "";
             tarjetaTiendas.Location = new System.Drawing.Point(0, 416);
@@ -932,7 +903,6 @@ namespace Sistema_ERP
             tarjetaTiendas.Radio = 30;
             tarjetaTiendas.ColorBorde = System.Drawing.Color.FromArgb(247, 247, 247);
             tarjetaTiendas.MostrarSombra = false;
-            // mensajes
             mensajes.Name = "mensajes";
             mensajes.Text = "";
             mensajes.Location = new System.Drawing.Point(0, 756);
@@ -958,7 +928,6 @@ namespace Sistema_ERP
             mensajes.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.None;
             mensajes.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70F));
             mensajes.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            // layoutAuditoria
             layoutAuditoria.Name = "layoutAuditoria";
             layoutAuditoria.Text = "";
             layoutAuditoria.Location = new System.Drawing.Point(0, 792);
@@ -987,7 +956,6 @@ namespace Sistema_ERP
             layoutAuditoria.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             layoutAuditoria.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 24F));
             layoutAuditoria.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            // lblAuditoria
             lblAuditoria.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblAuditoria.Name = "lblAuditoria";
             lblAuditoria.Text = "Bit\u00E1cora del sistema";
@@ -1010,7 +978,6 @@ namespace Sistema_ERP
             lblAuditoria.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblAuditoria.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblAuditoria.AutoEllipsis = false;
-            // buscarAuditoria
             buscarAuditoria.Name = "buscarAuditoria";
             buscarAuditoria.Text = "";
             buscarAuditoria.Location = new System.Drawing.Point(0, 52);
@@ -1037,7 +1004,6 @@ namespace Sistema_ERP
             buscarAuditoria.PlaceholderText = "Buscar...";
             buscarAuditoria.ReadOnly = false;
             buscarAuditoria.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            // tablaAuditoria
             tablaAuditoria.Name = "tablaAuditoria";
             tablaAuditoria.Text = "";
             tablaAuditoria.Location = new System.Drawing.Point(3, 89);
@@ -1111,7 +1077,6 @@ namespace Sistema_ERP
             tablaAuditoriaColumna3.FillWeight = 100F;
             tablaAuditoriaColumna3.Visible = true;
             tablaAuditoria.Columns.Add(tablaAuditoriaColumna3);
-            // contadorAuditoria
             contadorAuditoria.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             contadorAuditoria.Name = "contadorAuditoria";
             contadorAuditoria.Text = "Mostrando 0 registros";

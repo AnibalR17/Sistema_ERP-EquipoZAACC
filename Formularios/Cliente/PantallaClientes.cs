@@ -30,7 +30,6 @@ namespace Sistema_ERP.Vistas
             dgvClientes.RowHeadersVisible = false;
             dgvClientes.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
-            // Estilo igual al resto del ERP (paleta del README)
             dgvClientes.EnableHeadersVisualStyles = false;
             dgvClientes.BorderStyle = BorderStyle.None;
             dgvClientes.BackgroundColor = Color.White;
@@ -50,7 +49,6 @@ namespace Sistema_ERP.Vistas
             dgvClientes.DefaultCellStyle.SelectionForeColor = Color.FromArgb(18, 18, 18);
             dgvClientes.RowTemplate.Height = 38;
 
-            // Columnas que coinciden con el modelo Cliente
             dgvClientes.Columns.Clear();
             dgvClientes.Columns.Add(Columna("id_cliente", "Id", 0, visible: false));
             dgvClientes.Columns.Add(Columna("nombre", "Nombre", 30));
@@ -104,7 +102,6 @@ namespace Sistema_ERP.Vistas
             dgvClientes.SelectionChanged += (_, _) => ActualizarBotones();
             dgvClientes.CellDoubleClick += (_, e) => { if (e.RowIndex >= 0) Editar(); };
 
-            // Los clientes inactivos se ven en gris.
             dgvClientes.CellFormatting += (_, e) =>
             {
                 if (e.RowIndex < 0 || dgvClientes.Rows[e.RowIndex].DataBoundItem is not DataRowView fila) return;
@@ -159,7 +156,7 @@ namespace Sistema_ERP.Vistas
                 MostrarError(ex.Message);
                 txtNombreCliente.Focus();
             }
-            catch (InvalidOperationException ex) // correo duplicado
+            catch (InvalidOperationException ex)
             {
                 MostrarError(ex.Message);
                 txtCorreoCliente.Focus();
@@ -179,7 +176,6 @@ namespace Sistema_ERP.Vistas
             int id = Convert.ToInt32(fila["id_cliente"]);
             string nombre = Convert.ToString(fila["nombre"]) ?? "";
 
-            // MotivoDesactivacion es el diálogo existente del sistema; se asume la propiedad "Motivo".
             using var dialogo = new MotivoDesactivacion(nombre, "cliente");
             if (dialogo.ShowDialog(this) != DialogResult.OK) return;
 

@@ -8,7 +8,6 @@
         public string? Telefono { get; set; }
         public string? Correo { get; set; }
 
-        // Auditoria de baja logica
         public DateTime? DesactivadoEn { get; set; }
         public int? DesactivadoPor { get; set; }
         public string? MotivoDesactivacion { get; set; }

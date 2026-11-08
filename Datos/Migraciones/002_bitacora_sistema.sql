@@ -1,5 +1,4 @@
-﻿-- Complementa Triggers2.sql. No guarda contraseñas, tokens ni datos sensibles.
-SET XACT_ABORT ON;
+﻿SET XACT_ABORT ON;
 BEGIN TRANSACTION;
 DECLARE @tabla sysname,@obj int,@sql nvarchar(max),@clave nvarchar(max),@actor nvarchar(300),@descripcion nvarchar(max),@modulo varchar(50);
 DECLARE tablas CURSOR LOCAL FAST_FORWARD FOR
@@ -32,7 +31,6 @@ BEGIN
  WHEN @tabla IN ('Notificacion','EventoNotificacion') THEN 'NOTIFICACIONES'
  WHEN @tabla IN ('Tienda','MetodoPago','ConfiguracionFacturacion') THEN 'CONFIGURACION'
  ELSE 'SISTEMA' END;
- -- En seguridad el usuario afectado puede ser distinto del administrador responsable.
  SET @actor=CASE WHEN @tabla IN ('SesionUsuario','EventoAcceso')
  THEN N'COALESCE(TRY_CONVERT(int,SESSION_CONTEXT(N''id_usuario'')),r.id_usuario)' ELSE N'TRY_CONVERT(int,SESSION_CONTEXT(N''id_usuario''))' END;
  SET @descripcion=CASE @tabla

@@ -1,5 +1,3 @@
--- Ejecutar después de Triggers2.sql y Migraciones/002_bitacora_sistema.sql.
--- Todas las operaciones usan registros temporales y se revierten al terminar.
 SET NOCOUNT ON;
 SET XACT_ABORT ON;
 DECLARE @contexto sql_variant=SESSION_CONTEXT(N'id_usuario'),@motivo sql_variant=SESSION_CONTEXT(N'motivo');
@@ -69,7 +67,6 @@ BEGIN TRY
     INSERT dbo.Notificacion(id_evento_notificacion,id_usuario) VALUES(@evento,@usuario);
     UPDATE dbo.Notificacion SET leida_en=SYSUTCDATETIME() WHERE id_evento_notificacion=@evento AND id_usuario=@usuario;
 
-    -- El administrador responsable debe conservarse aunque el registro afecte a otro usuario.
     UPDATE dbo.Usuario SET desactivado_en=SYSUTCDATETIME(),motivo_desactivacion=N'Prueba' WHERE id_usuario=@usuario;
     IF NOT EXISTS(SELECT 1 FROM dbo.Auditoria WHERE id_auditoria>@inicio AND entidad='Usuario' AND accion='MODIFICAR'
         AND id_registro=CONCAT('{"id_usuario":',@usuario,'}') AND id_usuario=@actor)
@@ -77,7 +74,6 @@ BEGIN TRY
     IF NOT EXISTS(SELECT 1 FROM dbo.Auditoria WHERE id_auditoria>@inicio AND entidad='SesionUsuario'
         AND descripcion=N'Sesión cerrada o revocada' AND id_usuario=@actor)
         THROW 51000,'La revocación de sesión no se auditó.',1;
-    -- Alta, modificación y eliminación de una entidad sin referencias.
     INSERT dbo.Categoria(nombre) VALUES(CONCAT(@tag,'-BORRAR'));
     DELETE dbo.Categoria WHERE nombre=CONCAT(@tag,'-BORRAR');
     UPDATE dbo.Proveedor SET telefono=N'0000' WHERE id_proveedor=@proveedor;
@@ -87,7 +83,6 @@ BEGIN TRY
         OR NOT EXISTS(SELECT 1 FROM dbo.Auditoria WHERE id_auditoria>@inicio AND entidad='Proveedor' AND accion='MODIFICAR')
         THROW 51000,'Falta auditoría de modificaciones o eliminaciones fuera de ventas.',1;
 
-    -- Cada tabla operativa debe haber generado un evento real, incluidos efectos de triggers anidados.
     IF EXISTS(SELECT 1 FROM sys.tables t WHERE t.schema_id=SCHEMA_ID('dbo') AND t.name<>'Auditoria'
         AND NOT EXISTS(SELECT 1 FROM dbo.Auditoria a WHERE a.id_auditoria>@inicio AND a.entidad=t.name AND a.id_usuario=@actor))
     BEGIN

@@ -1,5 +1,4 @@
-﻿-- ISV adicional a precios base y CAI por tienda. Las líneas anteriores conservan impuesto cero.
-SET XACT_ABORT ON;
+﻿SET XACT_ABORT ON;
 BEGIN TRANSACTION;
 IF COL_LENGTH('dbo.Venta','cai') IS NULL EXEC(N'ALTER TABLE dbo.Venta ADD cai varchar(37) NULL;');
 DECLARE @tabla sysname,@sql nvarchar(max);

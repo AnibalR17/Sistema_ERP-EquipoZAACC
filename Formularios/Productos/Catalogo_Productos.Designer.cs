@@ -2,15 +2,8 @@
 {
     partial class Catalogo_Productos
     {
-        /// <summary>
-        /// Required designer variable.
-        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -22,10 +15,6 @@
 
         #region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
         private void InitializeComponent()
         {
             sidebar = new System.Windows.Forms.Panel();
@@ -71,9 +60,6 @@
             content.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvProductos).BeginInit();
             SuspendLayout();
-            // 
-            // sidebar
-            // 
             sidebar.BackColor = System.Drawing.Color.White;
             sidebar.Controls.Add(label2);
             sidebar.Controls.Add(label3);
@@ -99,9 +85,6 @@
             sidebar.Name = "sidebar";
             sidebar.Size = new System.Drawing.Size(265, 796);
             sidebar.TabIndex = 2;
-            // 
-            // brandLabel
-            // 
             brandLabel.BackColor = System.Drawing.Color.Transparent;
             brandLabel.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             brandLabel.Location = new System.Drawing.Point(24, 16);
@@ -110,9 +93,6 @@
             brandLabel.TabIndex = 0;
             brandLabel.Text = "Sistema ERP";
             brandLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // discoverLabel
-            // 
             discoverLabel.BackColor = System.Drawing.Color.Transparent;
             discoverLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             discoverLabel.Location = new System.Drawing.Point(24, 80);
@@ -121,9 +101,6 @@
             discoverLabel.TabIndex = 1;
             discoverLabel.Text = "Descubrir";
             discoverLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // homeButton
-            // 
             homeButton.BackColor = System.Drawing.Color.White;
             homeButton.Cursor = System.Windows.Forms.Cursors.Hand;
             homeButton.FlatAppearance.BorderSize = 0;
@@ -138,9 +115,6 @@
             homeButton.Text = "Inicio";
             homeButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             homeButton.UseVisualStyleBackColor = false;
-            // 
-            // salesButton
-            // 
             salesButton.BackColor = System.Drawing.Color.White;
             salesButton.Cursor = System.Windows.Forms.Cursors.Hand;
             salesButton.FlatAppearance.BorderSize = 0;
@@ -154,9 +128,6 @@
             salesButton.Text = "Punto de Venta";
             salesButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             salesButton.UseVisualStyleBackColor = false;
-            // 
-            // adminLabel
-            // 
             adminLabel.BackColor = System.Drawing.Color.Transparent;
             adminLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             adminLabel.Location = new System.Drawing.Point(24, 205);
@@ -165,9 +136,6 @@
             adminLabel.TabIndex = 4;
             adminLabel.Text = "Administracion";
             adminLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // inventoryButton
-            // 
             inventoryButton.BackColor = System.Drawing.Color.White;
             inventoryButton.Cursor = System.Windows.Forms.Cursors.Hand;
             inventoryButton.FlatAppearance.BorderSize = 0;
@@ -181,9 +149,6 @@
             inventoryButton.Text = "Inventario y movimientos";
             inventoryButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             inventoryButton.UseVisualStyleBackColor = false;
-            // 
-            // transferButton
-            // 
             transferButton.BackColor = System.Drawing.Color.White;
             transferButton.Cursor = System.Windows.Forms.Cursors.Hand;
             transferButton.FlatAppearance.BorderSize = 0;
@@ -197,9 +162,6 @@
             transferButton.Text = "Traspaso entre Tiendas";
             transferButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             transferButton.UseVisualStyleBackColor = false;
-            // 
-            // validationButton
-            // 
             validationButton.BackColor = System.Drawing.Color.White;
             validationButton.Cursor = System.Windows.Forms.Cursors.Hand;
             validationButton.FlatAppearance.BorderSize = 0;
@@ -213,9 +175,6 @@
             validationButton.Text = "Validacion traspaso";
             validationButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             validationButton.UseVisualStyleBackColor = false;
-            // 
-            // bulkButton
-            // 
             bulkButton.BackColor = System.Drawing.Color.White;
             bulkButton.Cursor = System.Windows.Forms.Cursors.Hand;
             bulkButton.FlatAppearance.BorderSize = 0;
@@ -229,9 +188,6 @@
             bulkButton.Text = "Carga masiva";
             bulkButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             bulkButton.UseVisualStyleBackColor = false;
-            // 
-            // catalogButton
-            // 
             catalogButton.BackColor = System.Drawing.Color.White;
             catalogButton.Cursor = System.Windows.Forms.Cursors.Hand;
             catalogButton.FlatAppearance.BorderSize = 0;
@@ -245,9 +201,6 @@
             catalogButton.Text = "Catalogo de productos";
             catalogButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             catalogButton.UseVisualStyleBackColor = false;
-            // 
-            // returnsButton
-            // 
             returnsButton.BackColor = System.Drawing.Color.White;
             returnsButton.Cursor = System.Windows.Forms.Cursors.Hand;
             returnsButton.FlatAppearance.BorderSize = 0;
@@ -261,9 +214,6 @@
             returnsButton.Text = "Apartados y devoluciones";
             returnsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             returnsButton.UseVisualStyleBackColor = false;
-            // 
-            // rolesButton
-            // 
             rolesButton.BackColor = System.Drawing.Color.White;
             rolesButton.Cursor = System.Windows.Forms.Cursors.Hand;
             rolesButton.FlatAppearance.BorderSize = 0;
@@ -277,9 +227,6 @@
             rolesButton.Text = "Directorio y roles";
             rolesButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             rolesButton.UseVisualStyleBackColor = false;
-            // 
-            // settingsButton
-            // 
             settingsButton.BackColor = System.Drawing.Color.White;
             settingsButton.Cursor = System.Windows.Forms.Cursors.Hand;
             settingsButton.FlatAppearance.BorderSize = 0;
@@ -293,9 +240,6 @@
             settingsButton.Text = "Configuracion y auditoria";
             settingsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             settingsButton.UseVisualStyleBackColor = false;
-            // 
-            // userLabel
-            // 
             userLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             userLabel.BackColor = System.Drawing.Color.Transparent;
             userLabel.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
@@ -305,9 +249,6 @@
             userLabel.TabIndex = 14;
             userLabel.Text = "Usuario Adm-01";
             userLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // roleLabel
-            // 
             roleLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             roleLabel.BackColor = System.Drawing.Color.Transparent;
             roleLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
@@ -318,9 +259,6 @@
             roleLabel.TabIndex = 15;
             roleLabel.Text = "Administrador";
             roleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // logoutButton
-            // 
             logoutButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             logoutButton.BackColor = System.Drawing.Color.FromArgb(242, 242, 242);
             logoutButton.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -335,9 +273,6 @@
             logoutButton.Text = "Cerrar sesion";
             logoutButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             logoutButton.UseVisualStyleBackColor = false;
-            // 
-            // header
-            // 
             header.BackColor = System.Drawing.Color.White;
             header.Controls.Add(toggleButton);
             header.Controls.Add(searchBox);
@@ -348,9 +283,6 @@
             header.Name = "header";
             header.Size = new System.Drawing.Size(1296, 64);
             header.TabIndex = 3;
-            // 
-            // toggleButton
-            // 
             toggleButton.BackColor = System.Drawing.Color.White;
             toggleButton.Cursor = System.Windows.Forms.Cursors.Hand;
             toggleButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
@@ -361,9 +293,6 @@
             toggleButton.TabIndex = 0;
             toggleButton.Text = "☰";
             toggleButton.UseVisualStyleBackColor = false;
-            // 
-            // searchBox
-            // 
             searchBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             searchBox.Font = new System.Drawing.Font("Segoe UI", 12F);
             searchBox.Location = new System.Drawing.Point(82, 23);
@@ -371,9 +300,6 @@
             searchBox.PlaceholderText = "🔍 Buscador global...";
             searchBox.Size = new System.Drawing.Size(420, 27);
             searchBox.TabIndex = 1;
-            // 
-            // accountLabel
-            // 
             accountLabel.BackColor = System.Drawing.Color.Transparent;
             accountLabel.Font = new System.Drawing.Font("Segoe UI", 11F);
             accountLabel.Location = new System.Drawing.Point(520, 16);
@@ -382,9 +308,6 @@
             accountLabel.TabIndex = 2;
             accountLabel.Text = "Administrador ⌄";
             accountLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // notificationButton
-            // 
             notificationButton.BackColor = System.Drawing.Color.White;
             notificationButton.Cursor = System.Windows.Forms.Cursors.Hand;
             notificationButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
@@ -395,9 +318,6 @@
             notificationButton.TabIndex = 3;
             notificationButton.Text = "🔔";
             notificationButton.UseVisualStyleBackColor = false;
-            // 
-            // content
-            // 
             content.Controls.Add(btnDesactivar);
             content.Controls.Add(btnEditar);
             content.Controls.Add(dgvProductos);
@@ -412,9 +332,6 @@
             content.Padding = new System.Windows.Forms.Padding(32, 34, 32, 36);
             content.Size = new System.Drawing.Size(1296, 732);
             content.TabIndex = 4;
-            // 
-            // titleLabel
-            // 
             titleLabel.BackColor = System.Drawing.Color.Transparent;
             titleLabel.Font = new System.Drawing.Font("Segoe UI", 27F, System.Drawing.FontStyle.Bold);
             titleLabel.Location = new System.Drawing.Point(32, 16);
@@ -423,9 +340,6 @@
             titleLabel.TabIndex = 1;
             titleLabel.Text = "Catalogo de productos";
             titleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // subtitleLabel
-            // 
             subtitleLabel.BackColor = System.Drawing.Color.Transparent;
             subtitleLabel.Font = new System.Drawing.Font("Segoe UI", 12F);
             subtitleLabel.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
@@ -435,9 +349,6 @@
             subtitleLabel.TabIndex = 2;
             subtitleLabel.Text = "Producto, Categorias y Proveedores.";
             subtitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label1
-            // 
             label1.BackColor = System.Drawing.Color.Transparent;
             label1.Font = new System.Drawing.Font("Segoe UI", 12F);
             label1.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
@@ -447,9 +358,6 @@
             label1.TabIndex = 3;
             label1.Text = "ℹ El stock actual es solo lectura: Cambia unicamente con moviminentos de inventario.";
             label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // btnNuevoProducto
-            // 
             btnNuevoProducto.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             btnNuevoProducto.ForeColor = System.Drawing.SystemColors.Window;
             btnNuevoProducto.Location = new System.Drawing.Point(35, 183);
@@ -458,9 +366,6 @@
             btnNuevoProducto.TabIndex = 4;
             btnNuevoProducto.Text = "+ Nuevo Producto";
             btnNuevoProducto.UseVisualStyleBackColor = false;
-            // 
-            // txtBuscar
-            // 
             txtBuscar.BorderStyle = System.Windows.Forms.BorderStyle.None;
             txtBuscar.Font = new System.Drawing.Font("Segoe UI", 12F);
             txtBuscar.Location = new System.Drawing.Point(35, 255);
@@ -468,9 +373,6 @@
             txtBuscar.PlaceholderText = "🔍 Buscar...";
             txtBuscar.Size = new System.Drawing.Size(420, 27);
             txtBuscar.TabIndex = 5;
-            // 
-            // dgvProductos
-            // 
             dgvProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             dgvProductos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Column1, Column2, Column3, Column4 });
             dgvProductos.Location = new System.Drawing.Point(35, 304);
@@ -478,37 +380,22 @@
             dgvProductos.RowHeadersWidth = 51;
             dgvProductos.Size = new System.Drawing.Size(540, 188);
             dgvProductos.TabIndex = 6;
-            // 
-            // Column1
-            // 
             Column1.HeaderText = "Codigo";
             Column1.MinimumWidth = 6;
             Column1.Name = "Column1";
             Column1.Width = 125;
-            // 
-            // Column2
-            // 
             Column2.HeaderText = "Nombre";
             Column2.MinimumWidth = 6;
             Column2.Name = "Column2";
             Column2.Width = 125;
-            // 
-            // Column3
-            // 
             Column3.HeaderText = "Stock";
             Column3.MinimumWidth = 6;
             Column3.Name = "Column3";
             Column3.Width = 125;
-            // 
-            // Column4
-            // 
             Column4.HeaderText = "Precio";
             Column4.MinimumWidth = 6;
             Column4.Name = "Column4";
             Column4.Width = 125;
-            // 
-            // label2
-            // 
             label2.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             label2.BackColor = System.Drawing.Color.Transparent;
             label2.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
@@ -518,9 +405,6 @@
             label2.TabIndex = 17;
             label2.Text = "Usuario Adm-01";
             label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label3
-            // 
             label3.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             label3.BackColor = System.Drawing.Color.Transparent;
             label3.Font = new System.Drawing.Font("Segoe UI", 9F);
@@ -531,9 +415,6 @@
             label3.TabIndex = 18;
             label3.Text = "Administrador";
             label3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // button2
-            // 
             button2.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             button2.BackColor = System.Drawing.Color.FromArgb(242, 242, 242);
             button2.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -548,9 +429,6 @@
             button2.Text = "Cerrar sesion";
             button2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             button2.UseVisualStyleBackColor = false;
-            // 
-            // btnEditar
-            // 
             btnEditar.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             btnEditar.ForeColor = System.Drawing.SystemColors.Window;
             btnEditar.Location = new System.Drawing.Point(194, 183);
@@ -559,9 +437,6 @@
             btnEditar.TabIndex = 7;
             btnEditar.Text = "Editar";
             btnEditar.UseVisualStyleBackColor = false;
-            // 
-            // btnDesactivar
-            // 
             btnDesactivar.BackColor = System.Drawing.SystemColors.ActiveCaptionText;
             btnDesactivar.ForeColor = System.Drawing.SystemColors.Window;
             btnDesactivar.Location = new System.Drawing.Point(353, 183);
@@ -570,9 +445,6 @@
             btnDesactivar.TabIndex = 8;
             btnDesactivar.Text = "Desactivar";
             btnDesactivar.UseVisualStyleBackColor = false;
-            // 
-            // Catalogo_Productos
-            // 
             AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.SystemColors.Window;

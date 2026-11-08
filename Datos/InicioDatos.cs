@@ -9,7 +9,6 @@ internal sealed record ResumenInicio(DiaInicio[] Dias, long TraspasosPendientes,
 
 internal static class InicioDatos
 {
-    // Las ventas se guardan en UTC; las fechas del resumen corresponden a Honduras (UTC-6).
     internal static DateTime AhoraHonduras => DateTime.UtcNow.AddHours(-6);
 
     internal static ResumenInicio Obtener(int? tienda, DateTime hoy)

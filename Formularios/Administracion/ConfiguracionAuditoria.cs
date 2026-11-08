@@ -72,7 +72,6 @@ namespace Sistema_ERP
             buscarAuditoria.TextChanged += (_, _) => { filtroAuditoria.Stop(); filtroAuditoria.Start(); };
             filtroAuditoria.Tick += (_, _) => { filtroAuditoria.Stop(); ReiniciarAuditoria(); };
             Disposed += (_, _) => filtroAuditoria.Dispose();
-            // Ambas tablas conservan sus propias barras de desplazamiento.
             layoutConfiguracion.Dock = DockStyle.Fill;
             layoutConfiguracion.RowStyles[2].Height = 120;
             layoutConfiguracion.RowStyles[6].SizeType = SizeType.Percent;

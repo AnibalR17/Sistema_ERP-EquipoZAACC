@@ -27,11 +27,11 @@
             mainLayout.Dock = DockStyle.Fill;
             mainLayout.ColumnCount = 1;
             mainLayout.RowCount = 5;
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 86)); // titulo
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));     // formulario
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 64)); // acciones
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 36)); // filtro inactivos
-            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100)); // tabla
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 86));
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 64));
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 36));
+            mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
 
             lblTitulo.Dock = DockStyle.Fill;
             lblTitulo.TextAlign = ContentAlignment.MiddleLeft;

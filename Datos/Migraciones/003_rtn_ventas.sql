@@ -1,4 +1,3 @@
--- RTN opcional del receptor, conservado por factura.
 SET XACT_ABORT ON;
 IF OBJECT_ID(N'dbo.Venta',N'U') IS NULL
     THROW 50001,'Ejecute primero el esquema de la base de datos.',1;

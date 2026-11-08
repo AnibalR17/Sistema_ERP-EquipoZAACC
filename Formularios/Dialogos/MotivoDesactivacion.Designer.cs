@@ -40,7 +40,6 @@ namespace Sistema_ERP
             contenido.SuspendLayout();
             campos.SuspendLayout();
             acciones.SuspendLayout();
-            // txtMotivo
             txtMotivo.Name = "txtMotivo";
             txtMotivo.Text = "";
             txtMotivo.Location = new System.Drawing.Point(3, 99);
@@ -67,7 +66,6 @@ namespace Sistema_ERP
             txtMotivo.PlaceholderText = "Escribe el motivo de desactivaci\u00F3n...";
             txtMotivo.ReadOnly = false;
             txtMotivo.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
-            // contenido
             contenido.Name = "contenido";
             contenido.Text = "";
             contenido.Location = new System.Drawing.Point(28, 28);
@@ -95,7 +93,6 @@ namespace Sistema_ERP
             contenido.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             contenido.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 54F));
             contenido.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            // lblTitulo
             lblTitulo.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblTitulo.Name = "lblTitulo";
             lblTitulo.Text = "Desactivar categor\u00EDa";
@@ -118,7 +115,6 @@ namespace Sistema_ERP
             lblTitulo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblTitulo.AutoEllipsis = false;
-            // campos
             campos.Name = "campos";
             campos.Text = "";
             campos.Location = new System.Drawing.Point(0, 40);
@@ -147,7 +143,6 @@ namespace Sistema_ERP
             campos.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             campos.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 36F));
             campos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            // descripcion
             descripcion.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             descripcion.Name = "descripcion";
             descripcion.Text = "Se desactivar\u00E1 \u00ABRegistro\u00BB. Se conservar\u00E1n sus registros asociados e historial.";
@@ -170,7 +165,6 @@ namespace Sistema_ERP
             descripcion.BorderStyle = System.Windows.Forms.BorderStyle.None;
             descripcion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             descripcion.AutoEllipsis = true;
-            // lblMotivo
             lblMotivo.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblMotivo.Name = "lblMotivo";
             lblMotivo.Text = "Motivo (obligatorio, m\u00E1ximo 300 caracteres)";
@@ -193,7 +187,6 @@ namespace Sistema_ERP
             lblMotivo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblMotivo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblMotivo.AutoEllipsis = false;
-            // error
             error.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             error.Name = "error";
             error.Text = "";
@@ -216,7 +209,6 @@ namespace Sistema_ERP
             error.BorderStyle = System.Windows.Forms.BorderStyle.None;
             error.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             error.AutoEllipsis = false;
-            // acciones
             acciones.Name = "acciones";
             acciones.Text = "";
             acciones.Location = new System.Drawing.Point(3, 303);
@@ -239,7 +231,6 @@ namespace Sistema_ERP
             acciones.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             acciones.WrapContents = false;
             acciones.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            // confirmar
             confirmar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             confirmar.UseVisualStyleBackColor = false;
             confirmar.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -267,7 +258,6 @@ namespace Sistema_ERP
             confirmar.FlatAppearance.BorderSize = 0;
             confirmar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             confirmar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 55, 55, 55);
-            // cancelar
             cancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             cancelar.UseVisualStyleBackColor = false;
             cancelar.Cursor = System.Windows.Forms.Cursors.Hand;
