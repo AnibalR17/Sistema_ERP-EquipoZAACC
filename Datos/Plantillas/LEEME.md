@@ -1,6 +1,10 @@
 # Formato de carga masiva de productos
 
+Para probar con nombres comunes, usa [Carga_masiva_productos_papeleria.xlsx](Carga_masiva_productos_papeleria.xlsx). Incluye veinte artículos (cuadernos, bolígrafos, papel bond, grapadoras y otros), precios ficticios y 746 unidades de stock inicial. Sus códigos y la categoría se verificaron contra la base local al crearlo. Antes de importarlo, registra el RTN de un proveedor activo y reemplaza `COMPLETAR_RTN_PROVEEDOR` en toda la columna correspondiente; el proveedor disponible no tenía RTN registrado. Las hojas Catalogos e Instrucciones contienen las referencias y los pasos para usarlo.
+
 Usa [Plantilla_carga_masiva.xlsx](Plantilla_carga_masiva.xlsx), o **Descargar plantilla** en la pantalla para obtener ejemplos y catálogos actualizados de tu base. La primera hoja debe contener estos seis encabezados en la fila 1; el orden es libre y el lector ignora diferencias entre mayúsculas y minúsculas:
+
+Dentro de **Carga masiva**, la pestaña **Ejemplo de plantilla** muestra los diez productos del Excel incluido. Permite consultar y copiar filas con sus encabezados. El ejemplo está incluido en la aplicación y puede consultarse sin conexión a la base. Al elegir un archivo, se abre **Vista previa del archivo** para revisar sus datos y realizar la importación. Cambiar entre pestañas conserva la vista previa del archivo seleccionado.
 
 | Columna | Valor esperado |
 | --- | --- |

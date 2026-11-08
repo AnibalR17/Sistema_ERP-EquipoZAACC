@@ -5,7 +5,7 @@ La sección tiene dos pestañas conectadas a SQL Server, con búsqueda, filtro p
 ## Apartados
 
 1. Crear un apartado seleccionando tienda, cliente, vencimiento (hora de Honduras) y productos. Antes de guardar se pueden agregar y quitar líneas. El guardado reserva las unidades disponibles; valida precios y stock nuevamente en la transacción.
-2. Registrar abonos hasta cubrir el saldo. Para métodos distintos de efectivo se solicita una referencia. No se aceptan abonos sobre el total ni sobre apartados vencidos o cerrados.
+2. Registrar abonos hasta cubrir el saldo. En efectivo, la referencia se genera automáticamente al guardar el abono o cobrar el saldo de una entrega. Para métodos distintos de efectivo se solicita una referencia manual. No se aceptan abonos sobre el total ni sobre apartados vencidos o cerrados.
 3. Entregar y facturar cobra el saldo pendiente, transforma cada abono en un pago de la factura y genera el pago final si corresponde. También admite apartados totalmente abonados. La confirmación de la venta libera la reserva y descuenta la existencia una sola vez. La factura aparece en el historial de facturación, donde puede reimprimirse.
 4. Cancelar o marcar vencido libera la reserva. Vencer exige que ya haya llegado la fecha. Se solicita motivo y se registra en auditoría. Los abonos no se eliminan: Reembolsar abonos registra el importe pendiente por cada método original. Un segundo intento no duplica los reembolsos.
 

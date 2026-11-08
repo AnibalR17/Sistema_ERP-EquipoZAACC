@@ -3,6 +3,7 @@ namespace Sistema_ERP
     public partial class Catalogo_Productos
     {
         private readonly Button btnReactivarProducto = new() { Name = "btnReactivarProducto", Text = "Reactivar", Enabled = false };
+        private readonly Button btnExportarExcel = new() { Name = "btnExportarCatalogoExcel", Text = "Exportar a Excel", Enabled = false };
         private readonly CheckBox chkProductosInactivos = new()
         {
             Name = "chkProductosInactivos",
@@ -35,6 +36,7 @@ namespace Sistema_ERP
             ProductoEstilo.Boton(btnEditar);
             ProductoEstilo.Boton(btnDesactivar);
             ProductoEstilo.Boton(btnReactivarProducto);
+            ProductoEstilo.Boton(btnExportarExcel);
             btnEditar.Enabled = btnDesactivar.Enabled = false;
             btnNuevoProducto.Text = "+ Nuevo producto";
 
@@ -78,7 +80,7 @@ namespace Sistema_ERP
                 layout.RowStyles.Add(new RowStyle(SizeType.Absolute, height));
             layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             var acciones = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, AutoScroll = true };
-            acciones.Controls.AddRange(new Control[] { btnNuevoProducto, btnEditar, btnDesactivar, btnReactivarProducto });
+            acciones.Controls.AddRange(new Control[] { btnNuevoProducto, btnEditar, btnDesactivar, btnReactivarProducto, btnExportarExcel });
             foreach (Button boton in acciones.Controls) boton.Margin = new Padding(0, 10, 12, 0);
             var productos = PantallaMaqueta.Filas(76, 36, 48, -100);
             acciones.Dock = txtBuscar.Dock = dgvProductos.Dock = DockStyle.Fill;

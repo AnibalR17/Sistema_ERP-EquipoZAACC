@@ -9,4 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="../../Sistema_ERP.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="PdfPig" Version="0.1.11" PrivateAssets="all" />
+  </ItemGroup>
 </Project>

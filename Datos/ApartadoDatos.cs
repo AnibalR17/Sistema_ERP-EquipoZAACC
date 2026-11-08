@@ -98,7 +98,7 @@ internal static class ApartadoDatos
         Importe(monto);
         using var cn = Conexion.AbrirConexion(); using var tx = cn.BeginTransaction(IsolationLevel.Serializable);
         int usuario = Preparar(cn, tx, "Abono a apartado"); Bloquear(cn, tx, id, version, true); Vigente(cn, tx, id);
-        ValidarPago(cn, tx, metodo, referencia);
+        referencia = ReferenciaPago(ValidarPago(cn, tx, metodo, referencia), referencia);
         Ejecutar(cn, tx, """
             INSERT dbo.AbonoApartado(id_apartado,id_metodo_pago,monto,id_usuario,referencia) VALUES(@id,@metodo,@monto,@usuario,@referencia);
             """, ("@id", id), ("@metodo", metodo), ("@monto", monto), ("@usuario", usuario), ("@referencia", referencia.Trim()));
@@ -134,6 +134,7 @@ internal static class ApartadoDatos
         decimal total = (decimal)totales["total"], saldo = (decimal)totales["saldo"]; Importe(total);
         bool efectivo = saldo > 0 && ValidarPago(cn, tx, metodo, referencia);
         if (efectivo && (recibido < saldo || decimal.Round(recibido, 2) != recibido)) throw new ArgumentException("El monto recibido no cubre el saldo.");
+        if (saldo > 0) referencia = ReferenciaPago(efectivo, referencia);
         string numero = "V-" + Guid.NewGuid().ToString("N");
         int venta = Id(cn, tx, """
             INSERT dbo.Venta(numero,id_tienda,id_cliente,cai,id_usuario,observaciones)

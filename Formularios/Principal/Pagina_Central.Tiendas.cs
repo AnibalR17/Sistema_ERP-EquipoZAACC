@@ -16,6 +16,7 @@ namespace Sistema_ERP
 
         internal int? IdTiendaSeleccionada =>
             selectorTienda.SelectedValue is int id && id > 0 ? id : null;
+        internal string NombreTiendaSeleccionada => IdTiendaSeleccionada.HasValue ? selectorTienda.Text : "Todas las tiendas";
 
         internal event EventHandler? TiendaSeleccionadaChanged;
 

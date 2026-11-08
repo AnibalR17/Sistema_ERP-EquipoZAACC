@@ -138,7 +138,7 @@ public sealed partial class ApartadosDevoluciones
     {
         private readonly ComboBox metodo;
         private readonly NumericUpDown monto, recibido;
-        private readonly TextBox referencia = new() { Dock = DockStyle.Fill, MaxLength = 100 };
+        private readonly TextBox referencia = new() { Name = "referenciaPago", Dock = DockStyle.Fill, MaxLength = 100 };
         internal int Metodo => metodo.SelectedValue is int id ? id : 0;
         internal decimal Monto => monto.Value;
         internal decimal Recibido => recibido.Value;
@@ -163,7 +163,15 @@ public sealed partial class ApartadosDevoluciones
             filas.Controls.Add(Etiqueta("Método de pago"), 0, 3); filas.Controls.Add(metodo, 0, 4);
             filas.Controls.Add(Etiqueta("Referencia"), 0, 5); filas.Controls.Add(referencia, 0, 6);
             filas.Controls.Add(Etiqueta("Recibido (efectivo, solo entrega)"), 0, 7); filas.Controls.Add(recibido, 0, 8); filas.Controls.Add(aceptar, 0, 9); Controls.Add(filas);
-            void Actualizar() { metodo.Enabled = saldo > 0; referencia.Enabled = saldo > 0; recibido.Enabled = !abono && saldo > 0 && Efectivo(); }
+            void Actualizar()
+            {
+                bool efectivo = Efectivo();
+                metodo.Enabled = saldo > 0; referencia.Enabled = saldo > 0;
+                referencia.ReadOnly = efectivo;
+                if (efectivo) referencia.Clear();
+                referencia.PlaceholderText = efectivo ? "Se genera al registrar el pago" : "Introduce la referencia del pago";
+                recibido.Enabled = !abono && saldo > 0 && efectivo;
+            }
             metodo.SelectedIndexChanged += (_, _) => Actualizar(); Actualizar();
         }
     }

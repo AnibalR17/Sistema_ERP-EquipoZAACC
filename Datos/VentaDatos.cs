@@ -122,6 +122,7 @@ internal static class VentaDatos
         preparar.Parameters.AddWithValue("@metodo", metodo);
         bool efectivo = string.Equals(Convert.ToString(preparar.ExecuteScalar()), "EFECTIVO", StringComparison.OrdinalIgnoreCase);
         if (!efectivo && string.IsNullOrWhiteSpace(referencia)) throw new ArgumentException("Introduce la referencia del pago.");
+        referencia = FlujoVentaDatos.ReferenciaPago(efectivo, referencia);
         string numero = "V-" + Guid.NewGuid().ToString("N");
         using var cabecera = new SqlCommand("""
             INSERT dbo.Venta(numero,id_tienda,id_cliente,rtn_cliente,cai,id_usuario,observaciones)

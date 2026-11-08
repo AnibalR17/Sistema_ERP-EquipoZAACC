@@ -8,6 +8,9 @@ public sealed partial class CargaMasiva : PantallaMaqueta
     private DataGridView dgvPrevia = new();
     private Button btnImportar = new();
     private Label lblResumen = new();
+    private readonly TabControl pestanasCarga = new() { Name = "pestanasCargaMasiva", Dock = DockStyle.Fill };
+    private readonly TabPage tabEjemplo = new("Ejemplo de plantilla") { Padding = new Padding(12), BackColor = Color.White };
+    private readonly TabPage tabPrevisualizacion = new("Vista previa del archivo") { BackColor = Color.White };
     private readonly ComboBox cmbTiendaImportacion = new() { Name = "tiendaStockInicial", DropDownStyle = ComboBoxStyle.DropDownList, Width = 300 };
 
     public CargaMasiva() : base("Carga masiva", "Importacion desde Excel", "Sube un .xlsx, revisa la previsualizacion (rojo = error) y resuelve duplicados antes de importar.")
@@ -67,7 +70,7 @@ public sealed partial class CargaMasiva : PantallaMaqueta
             catch (Exception ex) { MessageBox.Show(this, ex.Message, "Plantilla", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
         };
         barra.Controls.Add(plantilla); opciones.Controls.Add(barra, 0, 0);
-        opciones.Controls.Add(Etiqueta("Primera hoja: CodigoBarras, Nombre, Precio, StockInicial, NombreCategoria, RTNProveedor. Códigos y RTN como texto.", 10), 0, 1);
+        opciones.Controls.Add(Etiqueta("Consulta el ejemplo de plantilla. Usa un .xlsx con los encabezados en la primera fila de la primera hoja.", 10), 0, 1);
         var tarjetaTabla = Tarjeta(300); tarjetaTabla.Dock = DockStyle.Fill;
         var layoutTabla = Filas(-100, 40, 40);
 
@@ -85,12 +88,35 @@ public sealed partial class CargaMasiva : PantallaMaqueta
 
         tarjetaTabla.Controls.Add(layoutTabla);
 
+        tabPrevisualizacion.Controls.Add(tarjetaTabla);
+        pestanasCarga.TabPages.AddRange([tabEjemplo, tabPrevisualizacion]);
         filas.Controls.Add(tarjetaArchivo, 0, 0);
         filas.Controls.Add(opciones, 0, 1);
-        filas.Controls.Add(tarjetaTabla, 0, 2);
+        filas.Controls.Add(pestanasCarga, 0, 2);
         Cuerpo.Controls.Add(filas);
 
         ConfigurarPrevisualizacion();
+        MostrarEjemploPlantilla();
+    }
+
+    private void MostrarEjemploPlantilla()
+    {
+        var contenido = Filas(62, -100, 44);
+        var descripcion = Etiqueta("Ejemplo del formato de Excel. Completa NombreCategoria y RTNProveedor con los datos de tu base. Puedes copiar las filas o usar Descargar plantilla.", 10);
+        var ejemplo = Tabla(); ejemplo.Name = "tablaEjemploPlantilla";
+        ejemplo.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+        ejemplo.ScrollBars = ScrollBars.Both;
+        ejemplo.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
+        var ayuda = Etiqueta("Precio: número con hasta dos decimales. StockInicial: entero no negativo. CodigoBarras y RTNProveedor: texto.", 10);
+        contenido.Controls.Add(descripcion, 0, 0); contenido.Controls.Add(ejemplo, 0, 1); contenido.Controls.Add(ayuda, 0, 2);
+        tabEjemplo.Controls.Add(contenido);
+        try
+        {
+            ejemplo.DataSource = CargaMasivaPlantilla.LeerEjemplo();
+            ejemplo.Columns["Precio"]!.DefaultCellStyle.Format = "0.00";
+            foreach (DataGridViewColumn columna in ejemplo.Columns) columna.MinimumWidth = 115;
+        }
+        catch (Exception ex) { descripcion.Text = "No se pudo mostrar el ejemplo. " + ex.Message; }
     }
 
     protected override void OnLoad(EventArgs e)

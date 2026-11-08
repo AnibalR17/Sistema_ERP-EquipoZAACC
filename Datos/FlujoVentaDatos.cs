@@ -78,6 +78,9 @@ internal static class FlujoVentaDatos
         return efectivo;
     }
 
+    internal static string ReferenciaPago(bool efectivo, string referencia)
+        => efectivo ? "EFE-" + Guid.NewGuid().ToString("N") : referencia.Trim();
+
     internal static void Evento(SqlConnection cn, SqlTransaction tx, int usuario, string modulo, string accion, int id, string descripcion)
         => Ejecutar(cn, tx, """
             INSERT dbo.Auditoria(id_usuario,modulo,accion,entidad,id_registro,descripcion,equipo)

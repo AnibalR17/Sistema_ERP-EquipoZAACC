@@ -132,7 +132,7 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
         if (cobro.ShowDialog(this) != DialogResult.OK) return;
         var factura = ApartadoDatos.Entregar(Numero(a), Version(a), cobro.Metodo, cobro.Recibido, cobro.Referencia);
         CargarListas(); mensaje.Text = $"Factura {factura.Numero} · Total L {factura.Total:N2} · Cambio L {factura.Cambio:N2}";
-        MostrarComprobante(VentaDatos.Comprobante(factura.Id), factura.Numero);
+        MostrarComprobante(VentaDatos.Comprobante(factura.Id), factura.Numero, factura.Id);
     }
     private void CerrarApartado(bool vencido)
     {
@@ -165,10 +165,12 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
         decimal total = DevolucionDatos.Reembolsar(Numero(d), Version(d), motivo); CargarListas(); mensaje.Text = $"Reembolso registrado: L {total:N2}, aplicado a los pagos originales de la factura.";
     }
     private static Form Ventana(string titulo) => new() { Text = titulo, Size = new Size(1000, 680), MinimumSize = new Size(760, 540), StartPosition = FormStartPosition.CenterParent, Font = new Font("Segoe UI", 10), Padding = new Padding(16), BackColor = Color.White };
-    private void MostrarComprobante(string texto, string numero)
+    private void MostrarComprobante(string texto, string numero, int venta)
     {
         using var ventana = Ventana("Factura " + numero);
         ventana.Controls.Add(new TextBox { Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Both, Text = texto.Replace("\n", Environment.NewLine) });
+        var pdf = Accion("Guardar PDF", async () => await DialogosExportacion.ReciboPdf(ventana, venta, numero)); pdf.Dock = DockStyle.Bottom;
+        ventana.Controls.Add(pdf);
         ventana.ShowDialog(this);
     }
     private string? PedirMotivo(string titulo)

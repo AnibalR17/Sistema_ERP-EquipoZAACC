@@ -52,7 +52,7 @@ internal static class Program
             categoria = (int)inicial["categoria"]; proveedor = (int)inicial["proveedor"]; efectivo = (int)inicial["efectivo"]; transferencia = (int)inicial["transferencia"];
             var acceso = Activator.CreateInstance(app.GetType("Sistema_ERP.AccesoUsuario")!, [usuario, "Prueba", "Prueba", false, Array.Empty<byte>(), (long)inicial["sesion"]]);
             app.GetType("Sistema_ERP.SesionActual")!.GetProperty("Usuario", estaticos)!.SetValue(null, acceso);
-            ProbarImportacion(); ProbarApartados(); ProbarDevoluciones(); ProbarCasosAdicionales(); ProbarRtn(); ProbarImpuestos(); ProbarPlantilla();
+            ProbarImportacion(); ProbarApartados(); ProbarDevoluciones(); ProbarCasosAdicionales(); ProbarRtn(); ProbarImpuestos(); ProbarExportaciones(); ProbarPlantilla(); ProbarReferenciasPago();
             using var pantalla = new ApartadosDevoluciones(); using var carga = new CargaMasiva(); using var configuracion = new ConfiguracionAuditoria();
             pantalla.Size = new Size(1400, 900); pantalla.CreateControl(); pantalla.PerformLayout();
             carga.Size = new Size(1400, 900); carga.CreateControl(); carga.PerformLayout();
@@ -114,14 +114,25 @@ internal static class Program
     private static void ProbarApartados()
     {
         int id = CrearApartado(2); apartadoEntregado = id; Stock(20, 2);
+        Fallar(() => Invocar("ApartadoDatos", "Abonar", id, VersionApartado(id), transferencia, 5m, ""));
         Invocar("ApartadoDatos", "Abonar", id, VersionApartado(id), efectivo, 5m, "");
+        string referenciaAbono = Convert.ToString(Tabla("SELECT referencia FROM dbo.AbonoApartado WHERE id_apartado=" + id).Rows[0][0])!;
+        Igual(true, Regex.IsMatch(referenciaAbono, "^EFE-[a-f0-9]{32}$"), "Referencia automática del abono en efectivo");
         Fallar(() => Invocar("ApartadoDatos", "Abonar", id, VersionApartado(id), efectivo, 30m, ""));
         Invocar("ApartadoDatos", "Abonar", id, VersionApartado(id), transferencia, 5m, "ABONO-2");
+        Fallar(() => Invocar("ApartadoDatos", "Entregar", id, VersionApartado(id), transferencia, 0m, ""));
         var factura = Invocar("ApartadoDatos", "Entregar", id, VersionApartado(id), efectivo, 20m, "")!;
         Igual(23m, (decimal)Prop(factura, "Total"), "Factura de apartado con ISV"); Igual(7m, (decimal)Prop(factura, "Cambio"), "Cambio");
         ventaEntregada = (int)Prop(factura, "Id"); Stock(18, 0);
         Igual("ENTREGADO", Convert.ToString(Tabla("SELECT estado FROM dbo.Apartado WHERE id_apartado=" + id).Rows[0][0])!, "Entrega de apartado");
         Igual(2, Convert.ToInt32(Tabla("SELECT COUNT(*) FROM dbo.AbonoApartado WHERE id_apartado=" + id + " AND id_pago_venta IS NOT NULL").Rows[0][0]), "Enlace de abonos");
+        var pagos = Tabla($"SELECT p.referencia,m.codigo FROM dbo.PagoVenta p JOIN dbo.MetodoPago m ON m.id_metodo_pago=p.id_metodo_pago WHERE p.id_venta={ventaEntregada}");
+        var efectivoApartado = pagos.AsEnumerable().Where(p => (string)p["codigo"] == "EFECTIVO").Select(p => (string)p["referencia"]).ToArray();
+        Igual(2, efectivoApartado.Length, "Abono y pago final en efectivo");
+        Igual(true, efectivoApartado.Contains(referenciaAbono), "La entrega conserva la referencia original del abono");
+        Igual(true, efectivoApartado.All(r => Regex.IsMatch(r, "^EFE-[a-f0-9]{32}$")), "Referencia automática del saldo en efectivo");
+        Igual(2, efectivoApartado.Distinct().Count(), "Cada cobro de efectivo tiene su referencia");
+        Igual("ABONO-2", (string)pagos.AsEnumerable().Single(p => (string)p["codigo"] == "TRANSFERENCIA")["referencia"], "Se conserva la referencia del abono por transferencia");
         Fallar(() => Invocar("ApartadoDatos", "Entregar", id, VersionApartado(id), efectivo, 20m, ""));
         int cancelar = CrearApartado(1); Invocar("ApartadoDatos", "Abonar", cancelar, VersionApartado(cancelar), efectivo, 3m, "");
         Invocar("ApartadoDatos", "Cerrar", cancelar, VersionApartado(cancelar), false, "Prueba cancelación"); Stock(18, 0);
@@ -220,6 +231,7 @@ internal static class Program
         Invocar("ApartadoDatos", "Abonar", id, VersionApartado(id), efectivo, 11.5m, "");
         var factura = Invocar("ApartadoDatos", "Entregar", id, VersionApartado(id), 0, 0m, "")!;
         Igual(11.5m, (decimal)Prop(factura, "Total"), "Apartado completamente abonado con ISV"); Stock(16, 0);
+        Igual(1, Convert.ToInt32(Tabla("SELECT COUNT(*) FROM dbo.PagoVenta WHERE id_venta=" + (int)Prop(factura, "Id")).Rows[0][0]), "La entrega sin saldo no crea otro pago");
         CargaMasivaDatos.ImportarProductos([new("SIN-STOCK", "Sin stock", 10, 0, categoria, proveedor)]);
         int sinStock = (int)Tabla("SELECT id_producto FROM dbo.Producto WHERE codigo_barras='SIN-STOCK'").Rows[0][0];
         int antes = Convert.ToInt32(Tabla("SELECT COUNT(*) FROM dbo.Apartado").Rows[0][0]);
@@ -289,6 +301,60 @@ internal static class Program
         Console.WriteLine("OK: ISV 15/18/exento, totales, cambio, redondeos, devoluciones con impuesto y CAI por tienda, histórico y auditado.");
     }
 
+    private static void ProbarReferenciasPago()
+    {
+        object Vender(int metodo, string referencia, decimal recibido = 20m)
+            => Invocar("VentaDatos", "Emitir", tienda, cliente, metodo, recibido, referencia, "Referencia de pago", LineasVenta(1))!;
+        var referencias = new HashSet<string>();
+        foreach (string entrada in new[] { "", "REFERENCIA-ANTERIOR" })
+        {
+            int venta = (int)Prop(Vender(efectivo, entrada), "Id");
+            var pago = Tabla("SELECT id_pago_venta,referencia FROM dbo.PagoVenta WHERE id_venta=" + venta).Rows[0];
+            string referencia = (string)pago["referencia"];
+            Igual(true, Regex.IsMatch(referencia, "^EFE-[a-f0-9]{32}$"), "Venta en efectivo genera su referencia");
+            Igual(true, referencias.Add(referencia), "Referencias diferentes entre ventas");
+            Igual(true, ((string)Invocar("VentaDatos", "Comprobante", venta)!).Contains("Referencia: " + referencia), "Recibo incluye la referencia guardada");
+            int eventos = Convert.ToInt32(Tabla($"SELECT COUNT(*) FROM dbo.Auditoria WHERE entidad='PagoVenta' AND accion='CREAR' AND TRY_CONVERT(int,JSON_VALUE(id_registro,'$.id_pago_venta'))={pago["id_pago_venta"]} AND id_usuario={usuario}").Rows[0][0]);
+            Igual(1, eventos, "Pago con referencia automática auditado con su usuario");
+        }
+        int transferenciaId = (int)Prop(Vender(transferencia, "  BANCO-001  "), "Id");
+        Igual("BANCO-001", (string)Tabla("SELECT referencia FROM dbo.PagoVenta WHERE id_venta=" + transferenciaId).Rows[0][0], "Otros métodos conservan la referencia manual");
+        int ventasAntes = Convert.ToInt32(Tabla("SELECT COUNT(*) FROM dbo.Venta").Rows[0][0]);
+        int pagosAntes = Convert.ToInt32(Tabla("SELECT COUNT(*) FROM dbo.PagoVenta").Rows[0][0]);
+        Fallar(() => Vender(transferencia, "")); Fallar(() => Vender(transferencia, "   ")); Fallar(() => Vender(efectivo, "", 0m));
+        Igual(ventasAntes, Convert.ToInt32(Tabla("SELECT COUNT(*) FROM dbo.Venta").Rows[0][0]), "Cobro rechazado no crea una factura");
+        Igual(pagosAntes, Convert.ToInt32(Tabla("SELECT COUNT(*) FROM dbo.PagoVenta").Rows[0][0]), "Cobro rechazado no crea un pago");
+
+        void ProbarSelector(Form ventana, ComboBox metodo)
+        {
+            var campo = ventana.Controls.Find("referenciaPago", true).OfType<TextBox>().Single();
+            metodo.SelectedValue = transferencia; campo.Text = "BANCO-001";
+            metodo.SelectedValue = efectivo;
+            Igual(true, campo.ReadOnly, "Efectivo indica referencia automática");
+            Igual("", campo.Text, "Efectivo limpia una referencia manual anterior");
+            Igual("Se genera al registrar el pago", campo.PlaceholderText, "Ayuda visible para referencia automática");
+            metodo.SelectedValue = transferencia;
+            Igual(false, campo.ReadOnly, "Otros métodos permiten introducir la referencia");
+            campo.Text = "BANCO-002";
+            Igual("BANCO-002", campo.Text, "Referencia manual editable al cambiar de método");
+        }
+        using var pantalla = new PuntoVenta(); pantalla.CreateControl();
+        var selector = (ComboBox)typeof(PuntoVenta).GetField("metodo", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(pantalla)!;
+        selector.ValueMember = "id_metodo_pago"; selector.DisplayMember = "nombre";
+        selector.DataSource = Tabla("SELECT id_metodo_pago,nombre,codigo FROM dbo.MetodoPago WHERE activo=1");
+        ProbarSelector(pantalla, selector);
+        var dialogoTipo = typeof(ApartadosDevoluciones).GetNestedType("CobroDialogo", BindingFlags.NonPublic)!;
+        foreach (bool abono in new[] { true, false })
+        {
+            using var dialogo = (Form)Activator.CreateInstance(dialogoTipo, BindingFlags.Instance | BindingFlags.NonPublic, null, ["Cobro", 10m, abono], null)!;
+            dialogo.ShowInTaskbar = false; dialogo.StartPosition = FormStartPosition.Manual;
+            dialogo.Location = new Point(-5000, -5000); dialogo.Opacity = 0; dialogo.Show();
+            var metodo = (ComboBox)dialogoTipo.GetField("metodo", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(dialogo)!;
+            ProbarSelector(dialogo, metodo);
+        }
+        Console.WriteLine("OK: referencias automáticas en ventas, abonos y entregas; recibo, auditoría, referencias manuales y cambio de método en pantalla.");
+    }
+
     private static object? Invocar(string tipo, string metodo, params object?[] args)
     {
         var funcion = app.GetType("Sistema_ERP." + tipo)!.GetMethod(metodo, estaticos)!;
@@ -297,6 +363,64 @@ internal static class Program
         var completos = parametros.Select((_, i) => i < args.Length ? args[i] : Type.Missing).ToArray();
         try { return funcion.Invoke(null, completos); }
         catch (TargetInvocationException ex) when (ex.InnerException != null) { System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(ex.InnerException).Throw(); throw; }
+    }
+
+    private static void ProbarExportaciones()
+    {
+        string carpeta = Path.Combine(Path.GetTempPath(), "ERP-exportaciones-" + Guid.NewGuid().ToString("N")); Directory.CreateDirectory(carpeta);
+        string excel = Path.Combine(carpeta, "catalogo.xlsx"), pdf = Path.Combine(carpeta, "recibo.pdf"), extenso = Path.Combine(carpeta, "recibo-extenso.pdf");
+        try
+        {
+            using var todos = ProductoDatos.Listar(false, tienda);
+            todos.DefaultView.RowFilter = "codigo_barras='000123456789'";
+            using var seleccion = todos.DefaultView.ToTable();
+            Invocar("ExportacionArchivos", "CatalogoExcel", seleccion, excel, "Tienda prueba", "000123456789", false);
+            using (var libro = new XLWorkbook(excel))
+            {
+                var hoja = libro.Worksheet("Catalogo");
+                Igual(2, hoja.LastRowUsed()!.RowNumber(), "Excel contiene únicamente el catálogo filtrado");
+                Igual("000123456789", hoja.Cell(2, 1).GetString(), "Excel conserva ceros iniciales");
+                Igual(XLDataType.Text, hoja.Cell(2, 1).DataType, "Código exportado como texto");
+                Igual(10m, hoja.Cell(2, 5).GetValue<decimal>(), "Precio exportado como número");
+                Igual((int)seleccion.Rows[0]["stock_actual"], hoja.Cell(2, 4).GetValue<int>(), "Stock de la tienda exportado");
+                Igual("Tienda prueba", libro.Worksheet("Información").Cell(2, 2).GetString(), "Alcance del catálogo exportado");
+            }
+            byte[] anterior = File.ReadAllBytes(excel); bool bloqueado = false;
+            using (var bloqueo = new FileStream(excel, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
+                try { Invocar("ExportacionArchivos", "CatalogoExcel", seleccion, excel, "Tienda prueba", "", false); }
+                catch (Exception ex) when (ex is IOException or UnauthorizedAccessException) { bloqueado = true; }
+            Igual(true, bloqueado, "Archivo abierto no se sobrescribe parcialmente");
+            Igual(true, anterior.SequenceEqual(File.ReadAllBytes(excel)), "El Excel previo se conserva tras un error");
+
+            object factura = Invocar("VentaDatos", "Emitir", tienda, cliente, efectivo, 20m, "", "Exportación de José, devolución y CAI.", LineasVenta(1), "08019999999999")!;
+            int id = (int)Prop(factura, "Id"); string numero = (string)Prop(factura, "Numero");
+            string recibo = (string)Invocar("VentaDatos", "Comprobante", id)!;
+            Task.Run(() => Invocar("ExportacionArchivos", "ReciboPdf", pdf, numero, recibo)).GetAwaiter().GetResult();
+            string Normalizar(string t) => Regex.Replace(t, @"\s", "");
+            using (var documento = UglyToad.PdfPig.PdfDocument.Open(pdf))
+            {
+                string texto = Normalizar(string.Join("\n", documento.GetPages().Select(p => p.Text)));
+                foreach (string dato in new[] { numero, "08019999999999", "DEF456-ABC123-DEF456-ABC123-DEF456-BB", "ISV 15%", "Subtotal:", "Total:", "Cambio:", "Exportación de José, devolución y CAI." })
+                    Igual(true, texto.Contains(Normalizar(dato)), "PDF conserva: " + dato);
+            }
+            string largo = recibo + "\n" + string.Join("\n", Enumerable.Range(1, 220).Select(i => "Detalle " + i + ": devolución, artículos y observaciones."))
+                + "\n" + new string('X', 4000) + "\nMARCADOR_FINAL_DEL_RECIBO";
+            Invocar("ExportacionArchivos", "ReciboPdf", extenso, numero, largo);
+            using (var documento = UglyToad.PdfPig.PdfDocument.Open(extenso))
+            {
+                Igual(true, documento.NumberOfPages > 1, "PDF admite varias páginas");
+                string texto = Normalizar(string.Join("\n", documento.GetPages().Select(p => p.Text)));
+                Igual(true, texto.Contains("MARCADOR_FINAL_DEL_RECIBO"), "El PDF no pierde el final del recibo");
+                Igual(4000, documento.GetPages().SelectMany(p => p.Letters).Count(l => l.Value == "X"), "El PDF ajusta palabras extensas sin perder caracteres");
+                foreach (var pagina in documento.GetPages())
+                    Igual(true, pagina.Letters.All(l => l.GlyphRectangle.Left >= 20 && l.GlyphRectangle.Right <= pagina.Width - 20), "Texto PDF dentro del ancho de página");
+            }
+            Invocar("AuditoriaDatos", "RegistrarExportacion", "PRODUCTOS", "Catalogo", tienda.ToString(), "Catálogo exportado en prueba");
+            Invocar("AuditoriaDatos", "RegistrarExportacion", "VENTAS", "Venta", id.ToString(), "Recibo PDF exportado en prueba");
+            Igual(2, Convert.ToInt32(Tabla("SELECT COUNT(*) FROM dbo.Auditoria WHERE accion='EXPORTAR' AND id_usuario=" + usuario).Rows[0][0]), "Exportaciones auditadas");
+            Console.WriteLine("OK: catálogo Excel filtrado, códigos y números; PDF con RTN/CAI/ISV, acentos, varias páginas, protección de archivos y auditoría.");
+        }
+        finally { foreach (string archivo in Directory.EnumerateFiles(carpeta)) File.Delete(archivo); Directory.Delete(carpeta); }
     }
     private static object Prop(object o, string nombre) => o.GetType().GetProperty(nombre)!.GetValue(o)!;
     private static Array LineasVenta(int cantidad)

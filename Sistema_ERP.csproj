@@ -216,7 +216,9 @@
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.105.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
+    <EmbeddedResource Include="Datos/Plantillas/Plantilla_carga_masiva.xlsx" LogicalName="Sistema_ERP.PlantillaCargaMasiva.xlsx" />
     <None Update="connection.local.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <PackageReference Include="PDFsharp-GDI" Version="6.2.4" />
   </ItemGroup>
 
 </Project>

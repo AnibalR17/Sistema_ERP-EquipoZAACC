@@ -255,6 +255,8 @@ Ventas incluye **RTN del cliente (opcional)**, guardado por factura para imprimi
 
 El ISV se suma al precio base: 15 % por defecto, con opciones de 18 % y exento por producto en ventas. Pantalla, recibo, historial, apartados y devoluciones usan los importes con impuesto. El CAI se guarda por tienda en **Configuración y auditoría → Facturación / CAI** y se conserva en cada nueva factura. Para bases existentes, aplicar [Datos/Migraciones/004_isv_cai.sql](Datos/Migraciones/004_isv_cai.sql). [Detalle y verificaciones de ISV y CAI](Datos/ISV-CAI-verificacion.md).
 
+**Catalogo → Exportar a Excel** guarda los productos de la vista actual, con sus filtros y tienda. Los recibos de venta incluyen **Guardar PDF**, disponible tambien desde la ultima venta, el historial y las entregas de apartados. Las exportaciones se registran en bitacora. [Uso y pruebas de exportaciones](Datos/Exportaciones-verificacion.md).
+
 ## Apartados, devoluciones y carga masiva
 
 Apartados y devoluciones incluye reservas, abonos, entrega con factura, cancelaciones, vencimientos y reembolsos, ademas del flujo de borrador, confirmacion y anulacion de devoluciones. Consulte [Datos/ApartadosDevoluciones-verificacion.md](Datos/ApartadosDevoluciones-verificacion.md) para uso y pruebas de integracion en una base temporal.

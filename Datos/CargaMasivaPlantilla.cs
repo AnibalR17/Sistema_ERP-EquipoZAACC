@@ -1,10 +1,31 @@
 using ClosedXML.Excel;
+using System.Data;
 
 namespace Sistema_ERP;
 
 internal static class CargaMasivaPlantilla
 {
     internal static readonly string[] Columnas = ["CodigoBarras", "Nombre", "Precio", "StockInicial", "NombreCategoria", "RTNProveedor"];
+
+    internal static DataTable LeerEjemplo()
+    {
+        using var recurso = typeof(CargaMasivaPlantilla).Assembly.GetManifestResourceStream("Sistema_ERP.PlantillaCargaMasiva.xlsx")
+            ?? throw new InvalidOperationException("No se encontró la plantilla de ejemplo.");
+        using var libro = new XLWorkbook(recurso);
+        var hoja = libro.Worksheets.First();
+        var tabla = new DataTable();
+        Type[] tipos = [typeof(string), typeof(string), typeof(decimal), typeof(int), typeof(string), typeof(string)];
+        for (int i = 0; i < Columnas.Length; i++)
+        {
+            if (!string.Equals(hoja.Cell(1, i + 1).GetString().Trim(), Columnas[i], StringComparison.OrdinalIgnoreCase))
+                throw new InvalidDataException("Los encabezados de la plantilla de ejemplo no coinciden con el formato de carga.");
+            tabla.Columns.Add(Columnas[i], tipos[i]);
+        }
+        foreach (var fila in hoja.RowsUsed().Skip(1))
+            tabla.Rows.Add(fila.Cell(1).GetString(), fila.Cell(2).GetString(), fila.Cell(3).GetValue<decimal>(),
+                fila.Cell(4).GetValue<int>(), fila.Cell(5).GetString(), fila.Cell(6).GetString());
+        return tabla;
+    }
 
     internal static void Crear(string ruta)
     {

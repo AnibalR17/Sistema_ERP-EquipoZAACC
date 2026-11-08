@@ -9,6 +9,8 @@ namespace Sistema_ERP
     {
         private DataView? vistaProductos;
         private Pagina_Central? principal;
+        private string alcanceCatalogo = "Todas las tiendas";
+        private bool exportandoCatalogo;
 
         public event EventHandler? HomeRequested;
 
@@ -28,6 +30,7 @@ namespace Sistema_ERP
             btnEditar.Click += BtnEditar_Click;
             btnDesactivar.Click += BtnDesactivar_Click;
             btnReactivarProducto.Click += (_, _) => CambiarEstadoProducto(true);
+            btnExportarExcel.Click += async (_, _) => await ExportarCatalogoExcel();
             chkProductosInactivos.CheckedChanged += (_, _) => CargarProductos();
             dgvProductos.SelectionChanged += (_, _) => ActualizarAccionesProducto();
             dgvProductos.CellDoubleClick += (_, e) => { if (e.RowIndex >= 0) BtnEditar_Click(this, EventArgs.Empty); };
@@ -97,6 +100,7 @@ namespace Sistema_ERP
             {
                 int? idTienda = principal?.IdTiendaSeleccionada;
                 vistaProductos = ProductoDatos.Listar(chkProductosInactivos.Checked, idTienda).DefaultView;
+                alcanceCatalogo = principal?.NombreTiendaSeleccionada ?? "Todas las tiendas";
                 if (dgvProductos.Columns["stock_actual"] is DataGridViewColumn stock)
                     stock.HeaderText = idTienda.HasValue ? "Stock en tienda" : "Stock total";
                 dgvProductos.DataSource = vistaProductos;
@@ -106,6 +110,7 @@ namespace Sistema_ERP
             }
             catch (Exception ex)
             {
+                vistaProductos = null; dgvProductos.DataSource = null; ActualizarAccionesProducto();
                 MessageBox.Show(this, "No se pudo cargar el catalogo de productos.\n" + ex.Message,
                     "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -121,11 +126,13 @@ namespace Sistema_ERP
             if (texto.Length == 0)
             {
                 vistaProductos.RowFilter = "";
+                btnExportarExcel.Enabled = vistaProductos.Count > 0 && !exportandoCatalogo;
                 return;
             }
 
             string seguro = Regex.Replace(texto, @"[%*\[\]]", "[$0]").Replace("'", "''");
             vistaProductos.RowFilter = $"nombre LIKE '%{seguro}%' OR codigo_barras LIKE '%{seguro}%'";
+            btnExportarExcel.Enabled = vistaProductos.Count > 0 && !exportandoCatalogo;
         }
 
         private void BtnNuevoProducto_Click(object? sender, EventArgs e)
@@ -153,9 +160,35 @@ namespace Sistema_ERP
 
         private void ActualizarAccionesProducto()
         {
+            btnExportarExcel.Enabled = vistaProductos?.Count > 0 && !exportandoCatalogo;
             Producto? producto = ProductoSeleccionado();
             btnEditar.Enabled = btnDesactivar.Enabled = producto?.Activo == true;
             btnReactivarProducto.Enabled = producto is not null && !producto.Activo;
+        }
+
+        private async Task ExportarCatalogoExcel()
+        {
+            if (exportandoCatalogo || vistaProductos is null || vistaProductos.Count == 0) return;
+            using var guardar = new SaveFileDialog { Filter = "Libro de Excel (*.xlsx)|*.xlsx", DefaultExt = "xlsx", AddExtension = true,
+                FileName = $"Catalogo_productos_{InicioDatos.AhoraHonduras:yyyyMMdd}.xlsx" };
+            if (guardar.ShowDialog(FindForm()) != DialogResult.OK) return;
+            using var datos = vistaProductos.ToTable(false, "codigo_barras", "nombre", "categoria", "stock_actual", "precio_unitario", "activo", "motivo_desactivacion");
+            string alcance = alcanceCatalogo, filtro = txtBuscar.Text.Trim(); bool inactivos = chkProductosInactivos.Checked;
+            string registro = principal?.IdTiendaSeleccionada?.ToString() ?? "TODAS";
+            bool generado = false; exportandoCatalogo = true; ActualizarAccionesProducto();
+            try
+            {
+                await Task.Run(() => ExportacionArchivos.CatalogoExcel(datos, guardar.FileName, alcance, filtro, inactivos)); generado = true;
+                await Task.Run(() => AuditoriaDatos.RegistrarExportacion("PRODUCTOS", "Catalogo", registro,
+                    $"Catálogo exportado a Excel: {datos.Rows.Count} productos. {alcance}. Búsqueda: {filtro}"));
+                if (!IsDisposed) MessageBox.Show(FindForm(), $"Catálogo exportado: {datos.Rows.Count} productos.", "Excel", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                if (!IsDisposed) MessageBox.Show(FindForm(), generado ? "El Excel se guardó, pero no se pudo registrar la exportación en la bitácora. " + ex.Message
+                    : "No se pudo exportar el catálogo. " + ex.Message, "Excel", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            finally { exportandoCatalogo = false; if (!IsDisposed) ActualizarAccionesProducto(); }
         }
 
         private void CambiarEstadoProducto(bool reactivar)

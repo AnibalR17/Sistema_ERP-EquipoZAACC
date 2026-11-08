@@ -87,6 +87,7 @@ namespace Sistema_ERP
                 int conError = tabla.Rows.Count - validas;
                 lblResumen.Text = $"{tabla.Rows.Count} filas: {validas} válidas, {conError} con error.";
                 btnImportar.Enabled = validas > 0;
+                pestanasCarga.SelectedTab = tabPrevisualizacion;
             }
             catch (InvalidDataException ex)
             {

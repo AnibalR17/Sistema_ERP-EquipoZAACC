@@ -6,6 +6,22 @@ namespace Sistema_ERP;
 
 internal static class AuditoriaDatos
 {
+    internal static void RegistrarExportacion(string modulo, string entidad, string id, string descripcion)
+    {
+        using var conexion = Conexion.AbrirConexion(); int usuario = SesionActual.Validar(conexion);
+        using var comando = new SqlCommand("""
+            INSERT dbo.Auditoria(id_usuario,modulo,accion,entidad,id_registro,descripcion,equipo)
+            VALUES(@usuario,@modulo,'EXPORTAR',@entidad,@id,@descripcion,@equipo)
+            """, conexion);
+        comando.Parameters.Add("@usuario", SqlDbType.Int).Value = usuario;
+        comando.Parameters.Add("@modulo", SqlDbType.VarChar, 50).Value = modulo;
+        comando.Parameters.Add("@entidad", SqlDbType.VarChar, 80).Value = entidad;
+        comando.Parameters.Add("@id", SqlDbType.NVarChar, 100).Value = id;
+        comando.Parameters.Add("@descripcion", SqlDbType.NVarChar, 1000).Value = descripcion.Length > 1000 ? descripcion[..1000] : descripcion;
+        comando.Parameters.Add("@equipo", SqlDbType.NVarChar, 150).Value = Environment.MachineName;
+        comando.ExecuteNonQuery();
+    }
+
     internal static void RegistrarNavegacion(string pantalla)
     {
         using var conexion = Conexion.AbrirConexion();

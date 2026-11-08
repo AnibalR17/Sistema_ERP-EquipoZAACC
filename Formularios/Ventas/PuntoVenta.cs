@@ -6,13 +6,14 @@ public sealed class PuntoVenta : PantallaMaqueta
 {
     private readonly ComboBox tienda = Combo(), cliente = Combo(), metodo = Combo();
     private readonly ComboBox tasaIsv = new() { Name = "tasaISV", DropDownStyle = ComboBoxStyle.DropDownList, Width = 120, AccessibleName = "ISV del producto que se agregará" };
-    private readonly TextBox buscar = Buscar("Nombre o código de barras"), referencia = new() { MaxLength = 100 }, observaciones = new() { MaxLength = 500 };
+    private readonly TextBox buscar = Buscar("Nombre o código de barras"), referencia = new() { Name = "referenciaPago", MaxLength = 100 }, observaciones = new() { MaxLength = 500 };
     private readonly TextBox rtnCliente = new() { Name = "rtnCliente", MaxLength = 30, PlaceholderText = "14 dígitos (opcional)", AccessibleName = "RTN del cliente (opcional)" };
     private readonly NumericUpDown cantidad = new() { Minimum = 1, Maximum = 100000, Value = 1 }, recibido = new() { DecimalPlaces = 2, Maximum = 9999999999999999.99m, ThousandsSeparator = true };
     private readonly DataGridView productos = Tabla(), carrito = Tabla();
     private readonly Label resumen = Etiqueta("Total: L 0.00", 12, true), estado = Etiqueta("");
     private readonly Button procesar = Boton("Emitir factura", true);
     private readonly Button refrescarStock = Boton("Refrescar stock");
+    private readonly Button exportarPdf = Boton("Exportar recibo PDF");
     private DataTable? catalogo;
     private readonly DataTable detalle = new();
     private FacturaEmitida? ultima;
@@ -39,14 +40,16 @@ public sealed class PuntoVenta : PantallaMaqueta
         acciones.Controls.AddRange([cantidad, tasaIsv, agregar, quitar, vaciar]); izquierda.Controls.Add(acciones, 0, 2);
         izquierda.Controls.Add(carrito, 0, 3); izquierda.Controls.Add(estado, 0, 4);
         var lateral = new Panel { Dock = DockStyle.Fill, AutoScroll = true, Padding = new Padding(12, 0, 0, 0) };
-        var campos = Filas(26, 36, 26, 36, 26, 36, 26, 36, 26, 36, 26, 36, 26, 36, 112, 42, 42, 42, 42);
-        campos.Dock = DockStyle.Top; campos.Height = 732;
+        var campos = Filas(26, 36, 26, 36, 26, 36, 26, 36, 26, 36, 26, 36, 26, 36, 112, 42, 42, 42, 42, 42);
+        campos.Dock = DockStyle.Top; campos.Height = 774;
         Control[] controles = [Etiqueta("Tienda"), tienda, Etiqueta("Cliente"), cliente, Etiqueta("RTN del cliente (opcional)"), rtnCliente, Etiqueta("Método de pago"), metodo,
             Etiqueta("Monto recibido (efectivo)"), recibido, Etiqueta("Referencia del pago"), referencia, Etiqueta("Observaciones"), observaciones, resumen, procesar];
         for (int i = 0; i < controles.Length; i++) { controles[i].Dock = DockStyle.Fill; campos.Controls.Add(controles[i], 0, i); }
         var recargar = Boton("Actualizar catálogos"); var imprimir = Boton("Ver / imprimir última factura");
         recargar.Dock = imprimir.Dock = DockStyle.Fill; campos.Controls.Add(recargar, 0, 16); campos.Controls.Add(imprimir, 0, 17);
-        var historial = Boton("Facturas registradas"); historial.Dock = DockStyle.Fill; campos.Controls.Add(historial, 0, 18);
+        exportarPdf.Name = "exportarReciboPDF"; exportarPdf.Enabled = false; exportarPdf.Dock = DockStyle.Fill; campos.Controls.Add(exportarPdf, 0, 18);
+        exportarPdf.Click += async (_, _) => { if (ultima is { } f) await DialogosExportacion.ReciboPdf(this, f.Id, f.Numero); };
+        var historial = Boton("Facturas registradas"); historial.Dock = DockStyle.Fill; campos.Controls.Add(historial, 0, 19);
         historial.Click += (_, _) => Historial();
         lateral.Controls.Add(campos); columnas.Controls.Add(izquierda, 0, 0); columnas.Controls.Add(lateral, 1, 0); Cuerpo.Controls.Add(columnas);
         detalle.Columns.Add("Id", typeof(int)); detalle.Columns.Add("Producto", typeof(string)); detalle.Columns.Add("Cantidad", typeof(int)); detalle.Columns.Add("Precio", typeof(decimal));
@@ -62,13 +65,23 @@ public sealed class PuntoVenta : PantallaMaqueta
         buscar.TextChanged += (_, _) => Filtrar(); recibido.ValueChanged += (_, _) => Totales();
         tienda.SelectedIndexChanged += (_, _) => { detalle.Clear(); CargarProductos(); Totales(); };
         cliente.SelectedIndexChanged += (_, _) => rtnCliente.Text = cliente.SelectedItem is DataRowView fila ? VentaDatos.RtnSugerido(fila["documento_fiscal"]) : "";
-        metodo.SelectedIndexChanged += (_, _) => { recibido.Enabled = EsEfectivo; Totales(); };
+        metodo.SelectedIndexChanged += (_, _) => ActualizarPago();
         recargar.Click += (_, _) => Cargar(); procesar.Click += (_, _) => Emitir();
         refrescarStock.Click += (_, _) => CargarProductos(limpiarBusqueda: true);
         imprimir.Click += (_, _) => Imprimir();
+        ActualizarPago();
     }
     private static ComboBox Combo() => new() { DropDownStyle = ComboBoxStyle.DropDownList };
     private bool EsEfectivo => metodo.SelectedItem is DataRowView r && string.Equals(Convert.ToString(r["codigo"]), "EFECTIVO", StringComparison.OrdinalIgnoreCase);
+    private void ActualizarPago()
+    {
+        bool efectivo = EsEfectivo;
+        recibido.Enabled = efectivo;
+        referencia.ReadOnly = efectivo;
+        if (efectivo) referencia.Clear();
+        referencia.PlaceholderText = efectivo ? "Se genera al registrar el pago" : "Introduce la referencia del pago";
+        Totales();
+    }
     protected override void OnLoad(EventArgs e) { base.OnLoad(e); if (!ModoDiseno.Activo(this)) Cargar(); }
     protected override void OnDeactivate(EventArgs e) { base.OnDeactivate(e); refrescarAlActivar = true; }
     protected override void OnActivated(EventArgs e)
@@ -158,6 +171,7 @@ public sealed class PuntoVenta : PantallaMaqueta
             var factura = VentaDatos.Emitir(t, c, m, recibido.Value, referencia.Text, observaciones.Text,
                 detalle.AsEnumerable().Select(r => new LineaVenta(r.Field<int>("Id"), r.Field<int>("Cantidad"), r.Field<decimal>("Precio")) { TasaIsv = r.Field<decimal>("TasaISV") }).ToArray(), rtn);
             ultima = factura;
+            exportarPdf.Enabled = true;
             comprobante = "";
             detalle.Clear(); recibido.Value = 0; referencia.Clear(); observaciones.Clear(); rtnCliente.Clear(); Totales(); CargarProductos();
             estado.Text = $"Factura registrada: {factura.Numero}";
@@ -174,7 +188,8 @@ public sealed class PuntoVenta : PantallaMaqueta
         catch (Exception ex) { estado.Text = "No se pudo cargar el recibo. " + ex.Message; return; }
         using var ventana = new Form { Text = "Factura " + ultima.Numero, Size = new Size(720, 650), StartPosition = FormStartPosition.CenterParent };
         var texto = new TextBox { Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Both, Dock = DockStyle.Fill, Text = comprobante.Replace("\n", Environment.NewLine) };
-        var boton = Boton("Imprimir"); boton.Dock = DockStyle.Bottom;
+        var boton = Boton("Imprimir");
+        var pdf = Boton("Guardar PDF"); pdf.Click += async (_, _) => await DialogosExportacion.ReciboPdf(ventana, ultima.Id, ultima.Numero);
         boton.Click += (_, _) =>
         {
             try
@@ -195,7 +210,8 @@ public sealed class PuntoVenta : PantallaMaqueta
             }
             catch (Exception ex) { MessageBox.Show(ventana, ex.Message, "Impresión"); }
         };
-        ventana.Controls.Add(texto); ventana.Controls.Add(boton); ventana.ShowDialog(this);
+        var botones = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 54 }; botones.Controls.AddRange([boton, pdf]);
+        ventana.Controls.Add(texto); ventana.Controls.Add(botones); ventana.ShowDialog(this);
     }
 
     private void Historial()
@@ -212,13 +228,16 @@ public sealed class PuntoVenta : PantallaMaqueta
                 ORDER BY v.id_venta DESC
                 """);
             tabla.DataSource = datos.DefaultView;
+            tabla.MultiSelect = false;
             var filtro = Buscar("Buscar número, cliente o RTN"); filtro.Dock = DockStyle.Top;
             filtro.TextChanged += (_, _) =>
             {
                 string texto = System.Text.RegularExpressions.Regex.Replace(filtro.Text.Trim(), @"[%*\[\]]", "[$0]").Replace("'", "''");
                 datos.DefaultView.RowFilter = $"Numero LIKE '%{texto}%' OR Cliente LIKE '%{texto}%' OR RTN LIKE '%{texto}%'";
             };
-            var ver = Boton("Ver / imprimir factura"); ver.Dock = DockStyle.Bottom;
+            var ver = Boton("Ver / imprimir factura");
+            var pdf = Boton("Exportar PDF");
+            pdf.Click += async (_, _) => { if (tabla.CurrentRow?.DataBoundItem is DataRowView r) await DialogosExportacion.ReciboPdf(ventana, (int)r["Id"], Convert.ToString(r["Numero"])!); };
             ver.Click += (_, _) =>
             {
                 if (tabla.CurrentRow?.DataBoundItem is not DataRowView r) return;
@@ -226,11 +245,13 @@ public sealed class PuntoVenta : PantallaMaqueta
                 {
                     string contenido = VentaDatos.Comprobante((int)r["Id"]);
                     ultima = new((int)r["Id"], Convert.ToString(r["Numero"])!, Convert.ToDecimal(r["Total"]), 0);
+                    exportarPdf.Enabled = true;
                     comprobante = contenido; Imprimir();
                 }
                 catch (Exception ex) { MessageBox.Show(ventana, ex.Message, "Factura"); }
             };
-            ventana.Controls.Add(tabla); ventana.Controls.Add(filtro); ventana.Controls.Add(ver); ventana.ShowDialog(this);
+            var botones = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 54 }; botones.Controls.AddRange([ver, pdf]);
+            ventana.Controls.Add(tabla); ventana.Controls.Add(filtro); ventana.Controls.Add(botones); ventana.ShowDialog(this);
         }
         catch (Exception ex) { MessageBox.Show(this, ex.Message, "Historial de ventas"); }
     }
