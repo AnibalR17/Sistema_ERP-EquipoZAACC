@@ -5,8 +5,21 @@ namespace Sistema_ERP;
 
 public sealed partial class CargaMasiva : PantallaMaqueta
 {
+    private const string TextoSeleccionArchivo = "Arrastra tu archivo .xlsx aqui o haz clic para seleccionar";
     private DataGridView dgvPrevia = new();
     private Button btnImportar = new();
+    private readonly Button btnCancelarCarga = new() { Name = "cancelarCarga", Text = "Cancelar carga", Enabled = false };
+    private readonly Button archivo = new()
+    {
+        Name = "seleccionarArchivoCarga",
+        Dock = DockStyle.Fill,
+        Text = TextoSeleccionArchivo,
+        FlatStyle = FlatStyle.Flat,
+        ForeColor = Color.Gray,
+        BackColor = Color.White,
+        AllowDrop = true,
+        Cursor = Cursors.Hand
+    };
     private Label lblResumen = new();
     private readonly TabControl pestanasCarga = new() { Name = "pestanasCargaMasiva", Dock = DockStyle.Fill };
     private readonly TabPage tabEjemplo = new("Ejemplo de plantilla") { Padding = new Padding(12), BackColor = Color.White };
@@ -18,16 +31,6 @@ public sealed partial class CargaMasiva : PantallaMaqueta
         var filas = Filas(120, 90, -100);
 
         var tarjetaArchivo = Tarjeta(120);
-        var archivo = new Button
-        {
-            Dock = DockStyle.Fill,
-            Text = "Arrastra tu archivo .xlsx aqui o haz clic para seleccionar",
-            FlatStyle = FlatStyle.Flat,
-            ForeColor = Color.Gray,
-            BackColor = Color.White,
-            AllowDrop = true,
-            Cursor = Cursors.Hand
-        };
         archivo.FlatAppearance.BorderSize = 0;
         archivo.Paint += (_, e) => {
             using var borde = new Pen(Color.LightGray, 2) { DashStyle = DashStyle.Dash };
@@ -38,7 +41,6 @@ public sealed partial class CargaMasiva : PantallaMaqueta
         {
             if (Path.GetExtension(ruta).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
             {
-                archivo.Text = Path.GetFileName(ruta);
                 CargarArchivo(ruta);
             }
         }
@@ -72,7 +74,7 @@ public sealed partial class CargaMasiva : PantallaMaqueta
         barra.Controls.Add(plantilla); opciones.Controls.Add(barra, 0, 0);
         opciones.Controls.Add(Etiqueta("Consulta el ejemplo de plantilla. Usa un .xlsx con los encabezados en la primera fila de la primera hoja.", 10), 0, 1);
         var tarjetaTabla = Tarjeta(300); tarjetaTabla.Dock = DockStyle.Fill;
-        var layoutTabla = Filas(-100, 40, 40);
+        var layoutTabla = Filas(-100, 40, 48);
 
         dgvPrevia.Dock = DockStyle.Fill;
         layoutTabla.Controls.Add(dgvPrevia, 0, 0);
@@ -84,7 +86,18 @@ public sealed partial class CargaMasiva : PantallaMaqueta
 
         btnImportar.Text = "Importar datos válidos";
         ProductoEstilo.Boton(btnImportar, true);
-        layoutTabla.Controls.Add(btnImportar, 0, 2);
+        ProductoEstilo.Boton(btnCancelarCarga);
+        btnImportar.Dock = btnCancelarCarga.Dock = DockStyle.Fill;
+        btnCancelarCarga.Click += (_, _) =>
+        {
+            ReiniciarPrevisualizacion();
+            lblResumen.Text = "Carga cancelada. Selecciona otro archivo para continuar.";
+        };
+        var accionesCarga = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 2, RowCount = 1, Margin = Padding.Empty };
+        accionesCarga.ColumnStyles.Add(new(SizeType.Percent, 100)); accionesCarga.ColumnStyles.Add(new(SizeType.Absolute, 180));
+        accionesCarga.RowStyles.Add(new(SizeType.Percent, 100));
+        accionesCarga.Controls.Add(btnImportar, 0, 0); accionesCarga.Controls.Add(btnCancelarCarga, 1, 0);
+        layoutTabla.Controls.Add(accionesCarga, 0, 2);
 
         tarjetaTabla.Controls.Add(layoutTabla);
 

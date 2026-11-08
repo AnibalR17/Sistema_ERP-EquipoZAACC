@@ -16,6 +16,12 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
 
     public ApartadosDevoluciones() : base("Apartados y devoluciones", "Reservas, abonos, entregas y reembolsos", "Los apartados reservan existencias. Las devoluciones usan la factura original y respetan lo vendido y los pagos recibidos.")
     {
+        foreach (var tabla in new[] { apartados, devoluciones })
+        {
+            tabla.MultiSelect = false;
+            tabla.AutoGenerateColumns = false;
+            tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+        }
         var raiz = Filas(-100, 48); var pestanas = new TabControl { Dock = DockStyle.Fill };
         TabPage Pagina(string titulo, DataGridView tabla, TextBox buscar, ComboBox estados, Dictionary<string, Button> botones, (string Texto, Action Accion)[] opciones)
         {
@@ -63,20 +69,30 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
         void Mostrar(DataGridView tabla, DataTable datos)
         {
             int? seleccionado = Seleccion(tabla) is { } fila ? Numero(fila) : null;
+            ConfigurarColumnas(tabla, datos);
             tabla.DataSource = datos;
-            foreach (DataGridViewColumn col in tabla.Columns)
-            {
-                col.Visible = col.Name is not ("version_fila" or "id_tienda" or "id_cliente" or "id_venta");
-                if (col.ValueType == typeof(decimal)) col.DefaultCellStyle.Format = "'L 'N2";
-                if (col.ValueType == typeof(DateTime)) col.DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
-                col.MinimumWidth = col.ValueType == typeof(DateTime) ? 140 : 80;
-            }
-            tabla.MultiSelect = false; tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
             if (seleccionado.HasValue)
                 foreach (DataGridViewRow r in tabla.Rows) if (r.DataBoundItem is DataRowView f && Numero(f) == seleccionado.Value) { tabla.CurrentCell = r.Cells["Id"]; break; }
         }
         Mostrar(apartados, ApartadoDatos.Listar(buscarApartado.Text, estadoApartado.SelectedIndex == 0 ? "" : estadoApartado.Text));
         Mostrar(devoluciones, DevolucionDatos.Listar(buscarDevolucion.Text, estadoDevolucion.SelectedIndex == 0 ? "" : estadoDevolucion.Text));
+    }
+    private static void ConfigurarColumnas(DataGridView tabla, DataTable datos)
+    {
+        tabla.AutoGenerateColumns = false;
+        if (tabla.Columns.Count > 0) return;
+        foreach (DataColumn dato in datos.Columns)
+        {
+            if (dato.ColumnName is "version_fila" or "id_tienda" or "id_cliente" or "id_venta") continue;
+            var columna = new DataGridViewTextBoxColumn
+            {
+                Name = dato.ColumnName, HeaderText = dato.ColumnName, DataPropertyName = dato.ColumnName,
+                ValueType = dato.DataType, MinimumWidth = dato.DataType == typeof(DateTime) ? 140 : 80
+            };
+            if (dato.DataType == typeof(decimal)) columna.DefaultCellStyle.Format = "'L 'N2";
+            if (dato.DataType == typeof(DateTime)) columna.DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
+            tabla.Columns.Add(columna);
+        }
     }
     private void Ejecutar(Action accion)
     {
@@ -110,8 +126,8 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
         var tabs = new TabControl { Dock = DockStyle.Fill }; string[] nombres = apartado ? ["Resumen", "Productos", "Abonos", "Reembolsos"] : ["Resumen", "Productos", "Reembolsos"];
         for (int i = 0; i < ds.Tables.Count; i++)
         {
-            var tab = new TabPage(nombres[i]); var tabla = Tabla(); tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells; tabla.DataSource = ds.Tables[i];
-            foreach (string c in new[] { "version_fila", "id_tienda", "id_cliente", "id_venta" }) if (tabla.Columns[c] is { } col) col.Visible = false;
+            var tab = new TabPage(nombres[i]); var tabla = Tabla(); tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            ConfigurarColumnas(tabla, ds.Tables[i]); tabla.DataSource = ds.Tables[i];
             tab.Controls.Add(tabla); tabs.TabPages.Add(tab);
         }
         ventana.Controls.Add(tabs); ventana.ShowDialog(this);

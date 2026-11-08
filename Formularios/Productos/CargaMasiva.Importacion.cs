@@ -87,14 +87,18 @@ namespace Sistema_ERP
                 int conError = tabla.Rows.Count - validas;
                 lblResumen.Text = $"{tabla.Rows.Count} filas: {validas} válidas, {conError} con error.";
                 btnImportar.Enabled = validas > 0;
+                archivo.Text = Path.GetFileName(ruta);
+                btnCancelarCarga.Enabled = true;
                 pestanasCarga.SelectedTab = tabPrevisualizacion;
             }
             catch (InvalidDataException ex)
             {
+                ReiniciarPrevisualizacion();
                 MessageBox.Show(this, ex.Message, "Archivo no válido", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception ex)
             {
+                ReiniciarPrevisualizacion();
                 MessageBox.Show(this, "No se pudo leer el archivo.\n" + ex.Message, "Error",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -260,6 +264,8 @@ namespace Sistema_ERP
             dgvPrevia.DataSource = null;
             lblResumen.Text = "";
             btnImportar.Enabled = false;
+            btnCancelarCarga.Enabled = false;
+            archivo.Text = TextoSeleccionArchivo;
         }
     }
 }

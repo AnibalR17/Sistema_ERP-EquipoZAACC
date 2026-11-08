@@ -36,6 +36,8 @@ Verificado:
 - Cancelación, vencimiento, rechazo de abonos vencidos y reembolso de los abonos una sola vez.
 - Entrega con saldo cero y reversión de una reserva con varios productos cuando uno carece de stock.
 - Devoluciones parciales, reintegro opcional, edición del borrador y rechazo de versiones desactualizadas.
+- Listados completos de apartados y devoluciones, búsqueda por cliente, filtros por cada estado y búsquedas sin coincidencias. Se añadió un salto de línea entre la consulta base y `WHERE` para corregir `Incorrect syntax near '@estado'`, provocado por la concatenación `reWHERE`.
 - Límite acumulado de unidades devueltas, reembolsos distribuidos entre pagos, rechazo de doble reembolso y anulación con reverso de stock.
 - Atribución de auditoría, lectura y validación de los diez ejemplos XLSX por el importador real y carga de sus 35 unidades de stock en la base temporal.
 - Construcción y disposición de las pantallas. Compilación sin errores ni advertencias.
+- Apertura real en un contenedor MDI, cambio de pestañas, recarga conservando selección y búsquedas vacías. Las columnas de presentación se crean antes de enlazar los datos: `version_fila` permanece en el origen para comprobar concurrencia y no se genera como columna de imagen. Esto evita la referencia nula al ajustar anchos y el intento de convertir la versión binaria en una imagen, también en el resumen de los detalles.

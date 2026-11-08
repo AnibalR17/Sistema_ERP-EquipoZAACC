@@ -20,7 +20,7 @@ internal static class ApartadoDatos
     internal static DataTable Listar(string buscar = "", string estado = "")
     {
         using var cn = Conexion.AbrirConexion(); SesionActual.Validar(cn);
-        return Tabla(cn, null, Consulta + """
+        return Tabla(cn, null, Consulta + "\n" + """
             WHERE (@estado='' OR a.estado=@estado) AND (@buscar='' OR CHARINDEX(@buscar,c.nombre)>0
                 OR CHARINDEX(@buscar,t.nombre)>0 OR CHARINDEX(@buscar,CONVERT(nvarchar(20),a.id_apartado))>0)
             ORDER BY a.id_apartado DESC

@@ -6,6 +6,8 @@ Usa [Plantilla_carga_masiva.xlsx](Plantilla_carga_masiva.xlsx), o **Descargar pl
 
 Dentro de **Carga masiva**, la pestaña **Ejemplo de plantilla** muestra los diez productos del Excel incluido. Permite consultar y copiar filas con sus encabezados. El ejemplo está incluido en la aplicación y puede consultarse sin conexión a la base. Al elegir un archivo, se abre **Vista previa del archivo** para revisar sus datos y realizar la importación. Cambiar entre pestañas conserva la vista previa del archivo seleccionado.
 
+**Cancelar carga**, junto a **Importar datos válidos**, descarta el archivo seleccionado y limpia su vista previa para elegir otro Excel. También está disponible cuando todas las filas tienen errores. Conserva la tienda seleccionada y el ejemplo de plantilla. Se deshabilita al limpiar la carga o completar la importación.
+
 | Columna | Valor esperado |
 | --- | --- |
 | CodigoBarras | Texto obligatorio y único, hasta 50 caracteres. Guardar como texto para conservar los ceros iniciales. |

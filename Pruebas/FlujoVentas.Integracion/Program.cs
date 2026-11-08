@@ -52,7 +52,7 @@ internal static class Program
             categoria = (int)inicial["categoria"]; proveedor = (int)inicial["proveedor"]; efectivo = (int)inicial["efectivo"]; transferencia = (int)inicial["transferencia"];
             var acceso = Activator.CreateInstance(app.GetType("Sistema_ERP.AccesoUsuario")!, [usuario, "Prueba", "Prueba", false, Array.Empty<byte>(), (long)inicial["sesion"]]);
             app.GetType("Sistema_ERP.SesionActual")!.GetProperty("Usuario", estaticos)!.SetValue(null, acceso);
-            ProbarImportacion(); ProbarApartados(); ProbarDevoluciones(); ProbarCasosAdicionales(); ProbarRtn(); ProbarImpuestos(); ProbarExportaciones(); ProbarPlantilla(); ProbarReferenciasPago();
+            ProbarImportacion(); ProbarApartados(); ProbarDevoluciones(); ProbarCasosAdicionales(); ProbarRtn(); ProbarImpuestos(); ProbarExportaciones(); ProbarPlantilla(); ProbarReferenciasPago(); ProbarListados(); ProbarPantallaApartados();
             using var pantalla = new ApartadosDevoluciones(); using var carga = new CargaMasiva(); using var configuracion = new ConfiguracionAuditoria();
             pantalla.Size = new Size(1400, 900); pantalla.CreateControl(); pantalla.PerformLayout();
             carga.Size = new Size(1400, 900); carga.CreateControl(); carga.PerformLayout();
@@ -353,6 +353,67 @@ internal static class Program
             ProbarSelector(dialogo, metodo);
         }
         Console.WriteLine("OK: referencias automáticas en ventas, abonos y entregas; recibo, auditoría, referencias manuales y cambio de método en pantalla.");
+    }
+
+    private static void ProbarListados()
+    {
+        foreach (var (tipo, tabla, estados) in new[]
+        {
+            ("ApartadoDatos", "Apartado", new[] { "ACTIVO", "ENTREGADO", "CANCELADO", "VENCIDO" }),
+            ("DevolucionDatos", "Devolucion", new[] { "BORRADOR", "CONFIRMADA", "ANULADA" })
+        })
+        {
+            using var todos = (DataTable)Invocar(tipo, "Listar")!;
+            Igual(Convert.ToInt32(Tabla("SELECT COUNT(*) FROM dbo." + tabla).Rows[0][0]), todos.Rows.Count, "Listado completo de " + tabla);
+            foreach (string estado in estados)
+            {
+                using var filtrados = (DataTable)Invocar(tipo, "Listar", "  Cliente prueba  ", estado)!;
+                int esperados = todos.AsEnumerable().Count(f => (string)f["Estado"] == estado);
+                Igual(esperados, filtrados.Rows.Count, "Búsqueda y filtro de " + tabla + ": " + estado);
+                Igual(true, filtrados.AsEnumerable().All(f => (string)f["Estado"] == estado), "El listado respeta el estado seleccionado");
+            }
+            using var vacio = (DataTable)Invocar(tipo, "Listar", "CLIENTE_INEXISTENTE_12345", "")!;
+            Igual(0, vacio.Rows.Count, "Búsqueda sin coincidencias en " + tabla);
+            using var literal = (DataTable)Invocar(tipo, "Listar", "' OR 1=1--", "")!;
+            Igual(0, literal.Rows.Count, "La búsqueda conserva su tratamiento como parámetro");
+        }
+        Console.WriteLine("OK: listados de apartados y devoluciones, filtros por estado, búsqueda y resultados vacíos.");
+    }
+
+    private static void ProbarPantallaApartados()
+    {
+        using var contenedor = new Form { IsMdiContainer = true, ShowInTaskbar = false, StartPosition = FormStartPosition.Manual, Location = new Point(-5000, -5000), Opacity = 0, Size = new Size(1400, 900) };
+        using var pantalla = new ApartadosDevoluciones { MdiParent = contenedor, FormBorderStyle = FormBorderStyle.None, Dock = DockStyle.Fill };
+        var ocupado = typeof(ApartadosDevoluciones).GetField("ocupado", BindingFlags.Instance | BindingFlags.NonPublic)!;
+        ocupado.SetValue(pantalla, true);
+        var cargar = typeof(ApartadosDevoluciones).GetMethod("CargarListas", BindingFlags.Instance | BindingFlags.NonPublic)!;
+        var apartados = (DataGridView)typeof(ApartadosDevoluciones).GetField("apartados", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(pantalla)!;
+        var devoluciones = (DataGridView)typeof(ApartadosDevoluciones).GetField("devoluciones", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(pantalla)!;
+        foreach (var tabla in new[] { apartados, devoluciones }) tabla.DataError += (_, e) => e.ThrowException = true;
+        contenedor.Show(); pantalla.Show(); ocupado.SetValue(pantalla, false);
+        cargar.Invoke(pantalla, null);
+        Igual(true, apartados.Rows.Count > 0, "Pantalla muestra apartados cargados");
+        var pestanas = pantalla.Controls.OfType<Control>().SelectMany(Descendientes).OfType<TabControl>().Single();
+        pestanas.SelectedIndex = 1; cargar.Invoke(pantalla, null);
+        Igual(true, devoluciones.Rows.Count > 0, "Pantalla muestra devoluciones cargadas");
+        foreach (var tabla in new[] { apartados, devoluciones })
+        {
+            Igual(false, tabla.Columns.Contains("version_fila"), "La versión binaria no genera una columna visible");
+            Igual(false, tabla.Columns.OfType<DataGridViewImageColumn>().Any(), "Las columnas técnicas no se interpretan como imágenes");
+            Igual(true, ((DataTable)tabla.DataSource!).Rows[0]["version_fila"] is byte[], "La versión sigue disponible para validar operaciones");
+        }
+        pestanas.SelectedIndex = 0; cargar.Invoke(pantalla, null);
+        apartados.CurrentCell = apartados.Rows[^1].Cells["Id"];
+        int seleccionado = (int)apartados.CurrentCell.Value!;
+        cargar.Invoke(pantalla, null);
+        Igual(seleccionado, (int)apartados.CurrentRow!.Cells["Id"].Value!, "La recarga conserva la selección");
+        var buscar = (TextBox)typeof(ApartadosDevoluciones).GetField("buscarApartado", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(pantalla)!;
+        buscar.Text = "CLIENTE_INEXISTENTE_12345"; cargar.Invoke(pantalla, null);
+        Igual(0, apartados.Rows.Count, "La pantalla admite resultados vacíos");
+        buscar.Clear(); cargar.Invoke(pantalla, null);
+        Igual(true, apartados.Rows.Count > 0, "La pantalla recupera las filas al limpiar la búsqueda");
+        Console.WriteLine("OK: apertura MDI, carga, pestañas, selección, resultados vacíos y versiones binarias en apartados/devoluciones.");
+        static IEnumerable<Control> Descendientes(Control c) => new[] { c }.Concat(c.Controls.Cast<Control>().SelectMany(Descendientes));
     }
 
     private static object? Invocar(string tipo, string metodo, params object?[] args)

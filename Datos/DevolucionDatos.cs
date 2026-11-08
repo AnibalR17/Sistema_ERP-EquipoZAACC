@@ -28,7 +28,7 @@ internal static class DevolucionDatos
     internal static DataTable Listar(string buscar = "", string estado = "")
     {
         using var cn = Conexion.AbrirConexion(); SesionActual.Validar(cn);
-        return Tabla(cn, null, Consulta + """
+        return Tabla(cn, null, Consulta + "\n" + """
             WHERE (@estado='' OR d.estado=@estado) AND (@buscar='' OR CHARINDEX(@buscar,v.numero)>0
                 OR CHARINDEX(@buscar,c.nombre)>0 OR CHARINDEX(@buscar,CONVERT(nvarchar(20),d.id_devolucion))>0)
             ORDER BY d.id_devolucion DESC
