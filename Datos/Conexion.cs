@@ -29,6 +29,9 @@ namespace Sistema_ERP.Clases
             try
             {
                 conexion.Open();
+                using var contexto = new SqlCommand("EXEC sys.sp_set_session_context @key=N'id_usuario',@value=@usuario; EXEC sys.sp_set_session_context @key=N'motivo',@value=NULL;", conexion);
+                contexto.Parameters.Add("@usuario", System.Data.SqlDbType.Int).Value = (object?)SesionActual.Usuario?.Id ?? DBNull.Value;
+                contexto.ExecuteNonQuery();
                 return conexion;
             }
             catch

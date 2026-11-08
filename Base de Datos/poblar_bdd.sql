@@ -112,7 +112,7 @@ BEGIN TRY
         VALUES (@venta, @producto, 1, 100, N'Producto demo ' + @s);
         SET @detalleVenta = SCOPE_IDENTITY();
         INSERT dbo.PagoVenta (id_venta, id_metodo_pago, monto, monto_recibido)
-        VALUES (@venta, @metodo, 100, 100);
+        VALUES (@venta, @metodo, 115, 115);
 
         INSERT dbo.Traspaso (id_tienda_origen, id_tienda_destino, solicitado_por)
         VALUES (@tienda, @destino, @usuario);

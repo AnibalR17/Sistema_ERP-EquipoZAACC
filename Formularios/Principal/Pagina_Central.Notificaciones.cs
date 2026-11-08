@@ -74,7 +74,13 @@ namespace Sistema_ERP
             notificacionesAbiertas = true;
             try
             {
+                AuditoriaDatos.RegistrarNavegacion("Notificaciones");
                 DialogosMaqueta.Mostrar(this, new Notificaciones(ConsultarAlertas, InventarioDatos.DescripcionAlerta));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "No se pudo abrir Notificaciones. " + ex.Message,
+                    "Notificaciones", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally { notificacionesAbiertas = false; }
         }

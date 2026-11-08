@@ -28,7 +28,6 @@ namespace Sistema_ERP
             catalogButton = new System.Windows.Forms.Button();
             returnsButton = new System.Windows.Forms.Button();
             rolesButton = new System.Windows.Forms.Button();
-            investorsButton = new System.Windows.Forms.Button();
             settingsButton = new System.Windows.Forms.Button();
             userLabel = new System.Windows.Forms.Label();
             roleLabel = new System.Windows.Forms.Label();
@@ -241,22 +240,9 @@ namespace Sistema_ERP
             rolesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             sidebar.Controls.Add(rolesButton);
             rolesButton.FlatAppearance.BorderSize = 0;
-            // investorsButton
-            investorsButton.Name = "investorsButton";
-            investorsButton.Location = new System.Drawing.Point(14, 510);
-            investorsButton.Size = new System.Drawing.Size(236, 40);
-            investorsButton.BackColor = System.Drawing.Color.White;
-            investorsButton.Font = new System.Drawing.Font("Segoe UI", 11F);
-            investorsButton.Text = "Control de inversores";
-            investorsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            investorsButton.UseVisualStyleBackColor = false;
-            investorsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            investorsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            sidebar.Controls.Add(investorsButton);
-            investorsButton.FlatAppearance.BorderSize = 0;
             // settingsButton
             settingsButton.Name = "settingsButton";
-            settingsButton.Location = new System.Drawing.Point(14, 550);
+            settingsButton.Location = new System.Drawing.Point(14, 510);
             settingsButton.Size = new System.Drawing.Size(236, 40);
             settingsButton.BackColor = System.Drawing.Color.White;
             settingsButton.Font = new System.Drawing.Font("Segoe UI", 11F);
@@ -645,7 +631,6 @@ namespace Sistema_ERP
         private System.Windows.Forms.Button catalogButton = null!;
         private System.Windows.Forms.Button returnsButton = null!;
         private System.Windows.Forms.Button rolesButton = null!;
-        private System.Windows.Forms.Button investorsButton = null!;
         private System.Windows.Forms.Button settingsButton = null!;
         private System.Windows.Forms.Label userLabel = null!;
         private System.Windows.Forms.Label roleLabel = null!;

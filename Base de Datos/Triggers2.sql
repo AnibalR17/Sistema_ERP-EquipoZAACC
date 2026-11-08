@@ -960,14 +960,14 @@ BEGIN
  JOIN dbo.Apartado a WITH(UPDLOCK,HOLDLOCK) ON a.id_venta=i.id_venta
  WHERE d.estado='BORRADOR' AND i.estado='CONFIRMADA' AND
  (a.estado<>'ACTIVO' OR a.id_tienda<>i.id_tienda OR a.id_cliente<>i.id_cliente
- OR EXISTS(SELECT id_producto,precio_unitario,SUM(CONVERT(bigint,cantidad)) FROM dbo.DetalleApartado
- WHERE id_apartado=a.id_apartado GROUP BY id_producto,precio_unitario
- EXCEPT SELECT id_producto,precio_unitario,SUM(CONVERT(bigint,cantidad)) FROM dbo.DetalleVenta
- WHERE id_venta=i.id_venta GROUP BY id_producto,precio_unitario)
- OR EXISTS(SELECT id_producto,precio_unitario,SUM(CONVERT(bigint,cantidad)) FROM dbo.DetalleVenta
- WHERE id_venta=i.id_venta GROUP BY id_producto,precio_unitario
- EXCEPT SELECT id_producto,precio_unitario,SUM(CONVERT(bigint,cantidad)) FROM dbo.DetalleApartado
- WHERE id_apartado=a.id_apartado GROUP BY id_producto,precio_unitario)))
+ OR EXISTS(SELECT id_producto,precio_unitario,tasa_isv,SUM(CONVERT(bigint,cantidad)) FROM dbo.DetalleApartado
+ WHERE id_apartado=a.id_apartado GROUP BY id_producto,precio_unitario,tasa_isv
+ EXCEPT SELECT id_producto,precio_unitario,tasa_isv,SUM(CONVERT(bigint,cantidad)) FROM dbo.DetalleVenta
+ WHERE id_venta=i.id_venta GROUP BY id_producto,precio_unitario,tasa_isv)
+ OR EXISTS(SELECT id_producto,precio_unitario,tasa_isv,SUM(CONVERT(bigint,cantidad)) FROM dbo.DetalleVenta
+ WHERE id_venta=i.id_venta GROUP BY id_producto,precio_unitario,tasa_isv
+ EXCEPT SELECT id_producto,precio_unitario,tasa_isv,SUM(CONVERT(bigint,cantidad)) FROM dbo.DetalleApartado
+ WHERE id_apartado=a.id_apartado GROUP BY id_producto,precio_unitario,tasa_isv)))
  THROW 50716,'Los datos de venta no coinciden con el apartado enlazado.',1;
  IF EXISTS(SELECT 1 FROM inserted i JOIN deleted d ON d.id_venta=i.id_venta
  JOIN dbo.Apartado a ON a.id_venta=i.id_venta JOIN dbo.AbonoApartado ab ON ab.id_apartado=a.id_apartado

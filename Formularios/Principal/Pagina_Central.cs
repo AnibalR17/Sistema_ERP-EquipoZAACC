@@ -45,6 +45,7 @@ namespace Sistema_ERP
             ConfigurarMdi();
             ConfigurarSelectorTienda();
             ConfigurarNotificaciones();
+            ConfigurarInicio();
             homeButton.Click += (_, _) => MostrarInicio();
             inventoryButton.Click += (_, _) => MostrarInventario();
             transferButton.Click += (_, _) => MostrarTraspaso();
@@ -125,25 +126,7 @@ namespace Sistema_ERP
         private void ChartPanel_Paint(object? sender, PaintEventArgs e)
         {
             RoundedPanel_Paint(sender, e);
-            if (chartPanel.Width < 120 || chartPanel.Height < 160) return;
-            var g = e.Graphics;
-            g.SmoothingMode = SmoothingMode.AntiAlias;
-            using var dayFont = new Font("Segoe UI", 18F);
-            using var ink = new SolidBrush(Color.FromArgb(18, 18, 18));
-            float left = 54, right = chartPanel.Width - 54, baseline = chartPanel.Height - 110;
-            float plotHeight = Math.Max(30, baseline - 95);
-            using var line = new Pen(Color.FromArgb(18, 18, 18), 8);
-            g.DrawLine(line, left, baseline, right, baseline);
-            float[] levels = { 0, .30f, .15f, .60f, .45f, .80f, .70f };
-            string[] days = { "L", "M", "X", "J", "V", "S", "D" };
-            using var centered = new StringFormat { Alignment = StringAlignment.Center };
-            for (int i = 0; i < days.Length; i++)
-            {
-                float x = left + (right - left) * i / 6;
-                float y = baseline - plotHeight * levels[i];
-                g.FillEllipse(ink, x - 11, y - 11, 22, 22);
-                g.DrawString(days[i], dayFont, ink, new PointF(x, baseline + 42), centered);
-            }
+            DibujarResumenInicio(e.Graphics);
         }
 
         private async void btnprobarconexion_Click(object? sender, System.EventArgs e)
@@ -213,7 +196,7 @@ namespace Sistema_ERP
                 () => new Vistas.PantallaProveedores());
             panelContenedor.Controls.Add(proveedoresButton);
             foreach (var boton in new[] { transferButton, validationButton, bulkButton, catalogButton,
-                returnsButton, rolesButton, seguridadButton, investorsButton, settingsButton })
+                returnsButton, rolesButton, seguridadButton, settingsButton })
             {
                 boton.Top += proveedoresButton.Height + comprasButton.Height;
                 boton.TabIndex++;
@@ -250,6 +233,13 @@ namespace Sistema_ERP
 
         private void MostrarPantalla(string clave, Button boton, Func<Form> crear)
         {
+            try { AuditoriaDatos.RegistrarNavegacion(clave); }
+            catch (Exception ex)
+            {
+                MessageBox.Show(this, "No se pudo registrar el acceso en la bitácora. " + ex.Message,
+                    "Auditoría", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             if (!pantallas.TryGetValue(clave, out var pantalla) || pantalla.IsDisposed)
             {
                 pantalla = crear();
@@ -316,9 +306,6 @@ namespace Sistema_ERP
 
         private void seguridadButton_Click(object? sender, EventArgs e) =>
             MostrarPantalla("Usuarios, roles y permisos", seguridadButton, () => new UsuariosRolesPermisos());
-
-        private void investorsButton_Click(object? sender, EventArgs e) =>
-            MostrarPantalla("Control de inversores", investorsButton, () => new ControlInversores());
 
         private void settingsButton_Click(object? sender, EventArgs e) =>
             MostrarPantalla("Configuraci\u00f3n y auditor\u00eda", settingsButton, () => new ConfiguracionAuditoria());

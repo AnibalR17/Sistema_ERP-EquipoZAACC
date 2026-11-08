@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 namespace Sistema_ERP
 {
     partial class Pagina_Central
@@ -55,7 +55,6 @@ namespace Sistema_ERP
             roleLabel = new System.Windows.Forms.Label();
             userLabel = new System.Windows.Forms.Label();
             settingsButton = new System.Windows.Forms.Button();
-            investorsButton = new System.Windows.Forms.Button();
             rolesButton = new System.Windows.Forms.Button();
             seguridadButton = new System.Windows.Forms.Button();
             comprasButton = new System.Windows.Forms.Button();
@@ -198,7 +197,7 @@ namespace Sistema_ERP
             infoLabel.Padding = new System.Windows.Forms.Padding(16, 0, 8, 0);
             infoLabel.Size = new System.Drawing.Size(1171, 42);
             infoLabel.TabIndex = 0;
-            infoLabel.Text = "ℹ Vista rapida de ventas, traspasos, stock e inversiones. Los datos son de ejemplo.";
+            infoLabel.Text = "Resumen de ventas y compras confirmadas. Selecciona una tienda para filtrar.";
             infoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             infoLabel.Click += infoLabel_Click;
             // 
@@ -246,7 +245,7 @@ namespace Sistema_ERP
             cardTitle0.Name = "cardTitle0";
             cardTitle0.Size = new System.Drawing.Size(234, 26);
             cardTitle0.TabIndex = 0;
-            cardTitle0.Text = "Ventas del dia";
+            cardTitle0.Text = "Ventas del día";
             cardTitle0.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardValue0
@@ -257,7 +256,7 @@ namespace Sistema_ERP
             cardValue0.Name = "cardValue0";
             cardValue0.Size = new System.Drawing.Size(220, 38);
             cardValue0.TabIndex = 1;
-            cardValue0.Text = "L. 0.00";
+            cardValue0.Text = "—";
             cardValue0.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardDetail0
@@ -269,7 +268,7 @@ namespace Sistema_ERP
             cardDetail0.Name = "cardDetail0";
             cardDetail0.Size = new System.Drawing.Size(220, 24);
             cardDetail0.TabIndex = 2;
-            cardDetail0.Text = "—";
+            cardDetail0.Text = "Facturas confirmadas";
             cardDetail0.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardPanel1
@@ -296,7 +295,7 @@ namespace Sistema_ERP
             cardTitle1.Name = "cardTitle1";
             cardTitle1.Size = new System.Drawing.Size(224, 26);
             cardTitle1.TabIndex = 0;
-            cardTitle1.Text = "Traspasos pendientes";
+            cardTitle1.Text = "Compras del día";
             cardTitle1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardValue1
@@ -307,7 +306,7 @@ namespace Sistema_ERP
             cardValue1.Name = "cardValue1";
             cardValue1.Size = new System.Drawing.Size(220, 38);
             cardValue1.TabIndex = 1;
-            cardValue1.Text = "0";
+            cardValue1.Text = "—";
             cardValue1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardDetail1
@@ -319,7 +318,7 @@ namespace Sistema_ERP
             cardDetail1.Name = "cardDetail1";
             cardDetail1.Size = new System.Drawing.Size(220, 24);
             cardDetail1.TabIndex = 2;
-            cardDetail1.Text = "Esperan aprobacion";
+            cardDetail1.Text = "Facturas confirmadas";
             cardDetail1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardPanel2
@@ -346,7 +345,7 @@ namespace Sistema_ERP
             cardTitle2.Name = "cardTitle2";
             cardTitle2.Size = new System.Drawing.Size(224, 26);
             cardTitle2.TabIndex = 0;
-            cardTitle2.Text = "Alertas de stock";
+            cardTitle2.Text = "Traspasos pendientes";
             cardTitle2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardValue2
@@ -357,7 +356,7 @@ namespace Sistema_ERP
             cardValue2.Name = "cardValue2";
             cardValue2.Size = new System.Drawing.Size(220, 38);
             cardValue2.TabIndex = 1;
-            cardValue2.Text = "0";
+            cardValue2.Text = "—";
             cardValue2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardDetail2
@@ -369,7 +368,7 @@ namespace Sistema_ERP
             cardDetail2.Name = "cardDetail2";
             cardDetail2.Size = new System.Drawing.Size(220, 24);
             cardDetail2.TabIndex = 2;
-            cardDetail2.Text = "Bajo minimo";
+            cardDetail2.Text = "Esperan aprobación";
             cardDetail2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardPanel3
@@ -396,7 +395,7 @@ namespace Sistema_ERP
             cardTitle3.Name = "cardTitle3";
             cardTitle3.Size = new System.Drawing.Size(237, 26);
             cardTitle3.TabIndex = 0;
-            cardTitle3.Text = "Inversiones por vencer";
+            cardTitle3.Text = "Alertas de stock";
             cardTitle3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardValue3
@@ -407,7 +406,7 @@ namespace Sistema_ERP
             cardValue3.Name = "cardValue3";
             cardValue3.Size = new System.Drawing.Size(220, 38);
             cardValue3.TabIndex = 1;
-            cardValue3.Text = "0";
+            cardValue3.Text = "—";
             cardValue3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cardDetail3
@@ -419,7 +418,7 @@ namespace Sistema_ERP
             cardDetail3.Name = "cardDetail3";
             cardDetail3.Size = new System.Drawing.Size(220, 24);
             cardDetail3.TabIndex = 2;
-            cardDetail3.Text = "En 30 dias";
+            cardDetail3.Text = "Disponible bajo mínimo";
             cardDetail3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // chartPanel
@@ -442,7 +441,7 @@ namespace Sistema_ERP
             chartTitleLabel.Name = "chartTitleLabel";
             chartTitleLabel.Size = new System.Drawing.Size(300, 32);
             chartTitleLabel.TabIndex = 0;
-            chartTitleLabel.Text = "Ventas de la semana";
+            chartTitleLabel.Text = "Ventas y compras · últimos 7 días";
             chartTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // header
@@ -559,7 +558,7 @@ namespace Sistema_ERP
             settingsButton.FlatAppearance.BorderSize = 0;
             settingsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
             settingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            settingsButton.Location = new System.Drawing.Point(14, 596);
+            settingsButton.Location = new System.Drawing.Point(14, 556);
             settingsButton.Name = "settingsButton";
             settingsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             settingsButton.Size = new System.Drawing.Size(236, 40);
@@ -568,23 +567,6 @@ namespace Sistema_ERP
             settingsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             settingsButton.UseVisualStyleBackColor = false;
             settingsButton.Click += settingsButton_Click;
-            // 
-            // investorsButton
-            // 
-            investorsButton.BackColor = System.Drawing.Color.White;
-            investorsButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            investorsButton.FlatAppearance.BorderSize = 0;
-            investorsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            investorsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            investorsButton.Location = new System.Drawing.Point(14, 556);
-            investorsButton.Name = "investorsButton";
-            investorsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            investorsButton.Size = new System.Drawing.Size(236, 40);
-            investorsButton.TabIndex = 12;
-            investorsButton.Text = "Control de inversores";
-            investorsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            investorsButton.UseVisualStyleBackColor = false;
-            investorsButton.Click += investorsButton_Click;
             // 
             // rolesButton
             // 
@@ -811,7 +793,6 @@ namespace Sistema_ERP
             panelContenedor.Controls.Add(rolesButton);
             panelContenedor.Controls.Add(seguridadButton);
             panelContenedor.Controls.Add(comprasButton);
-            panelContenedor.Controls.Add(investorsButton);
             panelContenedor.Controls.Add(settingsButton);
             panelContenedor.Controls.Add(userLabel);
             panelContenedor.Controls.Add(roleLabel);
@@ -892,7 +873,6 @@ namespace Sistema_ERP
         private System.Windows.Forms.Label roleLabel = null!;
         private System.Windows.Forms.Label userLabel = null!;
         private System.Windows.Forms.Button settingsButton = null!;
-        private System.Windows.Forms.Button investorsButton = null!;
         private System.Windows.Forms.Button rolesButton = null!;
         private System.Windows.Forms.Button seguridadButton = null!;
         private System.Windows.Forms.Button comprasButton = null!;

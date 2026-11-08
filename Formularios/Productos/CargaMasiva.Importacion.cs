@@ -8,12 +8,14 @@ namespace Sistema_ERP
     public partial class CargaMasiva
     {
         private static readonly string[] ColumnasEsperadas =
-            { "CodigoBarras", "Nombre", "Precio", "StockInicial", "NombreCategoria", "RTNProveedor" };
+            CargaMasivaPlantilla.Columnas;
 
         private const string ColObservacion = "Observacion";
 
         private DataTable? _tablaPrevia;
         private Catalogos? _catalogos;
+        private string? rutaOriginal;
+        private byte[]? hashOriginal;
 
         private sealed class Catalogos
         {
@@ -63,6 +65,7 @@ namespace Sistema_ERP
 
             try
             {
+                ReiniciarPrevisualizacion();
                 DataTable tabla = LeerArchivo(ruta);
                 _catalogos = new Catalogos
                 {
@@ -76,6 +79,8 @@ namespace Sistema_ERP
                     if (ValidarFila(fila, _catalogos)) validas++;
 
                 _tablaPrevia = tabla;
+                rutaOriginal = ruta;
+                using (var original = File.OpenRead(ruta)) hashOriginal = System.Security.Cryptography.SHA256.HashData(original);
                 dgvPrevia.DataSource = tabla;
                 dgvPrevia.Columns[ColObservacion]!.FillWeight = 200;
 
@@ -105,7 +110,10 @@ namespace Sistema_ERP
 
             var columnas = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
             foreach (IXLCell celda in encabezado.CellsUsed())
-                columnas[celda.GetString().Trim()] = celda.Address.ColumnNumber;
+            {
+                string nombre = celda.GetString().Trim();
+                if (!columnas.TryAdd(nombre, celda.Address.ColumnNumber)) throw new InvalidDataException("Hay columnas repetidas: " + nombre);
+            }
 
             string[] faltantes = ColumnasEsperadas.Where(c => !columnas.ContainsKey(c)).ToArray();
             if (faltantes.Length > 0)
@@ -143,11 +151,14 @@ namespace Sistema_ERP
             string[] obligatorios = { "CodigoBarras", "Nombre", "Precio", "NombreCategoria", "RTNProveedor" };
             string[] vacios = obligatorios.Where(c => Texto(c).Length == 0).ToArray();
             if (vacios.Length > 0) errores.Add("Falta: " + string.Join(", ", vacios));
+            if (Texto("CodigoBarras").Length > 50) errores.Add("El código admite hasta 50 caracteres");
+            if (Texto("Nombre").Length > 150) errores.Add("El nombre admite hasta 150 caracteres");
 
             if (Texto("Precio").Length > 0)
             {
                 if (!TryParseDecimal(Texto("Precio"), out decimal precio)) errores.Add("El precio no es un número válido");
                 else if (precio <= 0) errores.Add("El precio debe ser mayor a cero");
+                else if (precio > 99999999.99m || decimal.Round(precio, 2) != precio) errores.Add("El precio admite hasta 99999999.99 y dos decimales");
             }
 
             if (Texto("StockInicial").Length > 0 &&
@@ -172,8 +183,8 @@ namespace Sistema_ERP
         }
 
         private static bool TryParseDecimal(string texto, out decimal valor) =>
-            decimal.TryParse(texto, NumberStyles.Number, CultureInfo.InvariantCulture, out valor) ||
-            decimal.TryParse(texto, NumberStyles.Number, CultureInfo.CurrentCulture, out valor);
+            decimal.TryParse(texto.Replace(',', '.'), NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint,
+                CultureInfo.InvariantCulture, out valor);
 
         private void ImportarDatos()
         {
@@ -195,7 +206,13 @@ namespace Sistema_ERP
 
             try
             {
-                int insertados = CargaMasivaDatos.ImportarProductos(validos);
+                if (validos.Any(p => p.StockInicial > 0) && cmbTiendaImportacion.SelectedValue is not int)
+                    throw new InvalidOperationException("Selecciona la tienda para el stock inicial.");
+                using (var original = File.OpenRead(rutaOriginal!))
+                    if (hashOriginal is null || !System.Security.Cryptography.SHA256.HashData(original).SequenceEqual(hashOriginal))
+                        throw new InvalidOperationException("El archivo cambió desde la previsualización. Vuelve a seleccionarlo.");
+                int insertados = CargaMasivaDatos.ImportarProductos(validos,
+                    cmbTiendaImportacion.SelectedValue is int tienda ? tienda : null, Path.GetFileName(rutaOriginal), hashOriginal);
                 MessageBox.Show(this, $"Importación completada: {insertados} productos registrados.", "Carga masiva",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ReiniciarPrevisualizacion();
@@ -228,7 +245,7 @@ namespace Sistema_ERP
                     Math.Round(precio, 2),
                     stock,
                     cat.Categorias[Texto("NombreCategoria")],
-                    cat.Proveedores[CargaMasivaDatos.NormalizarRtn(Texto("RTNProveedor"))]));
+                    cat.Proveedores[CargaMasivaDatos.NormalizarRtn(Texto("RTNProveedor"))], tabla.Rows.IndexOf(fila) + 2));
             }
             return lista;
         }
@@ -237,6 +254,8 @@ namespace Sistema_ERP
         {
             _tablaPrevia = null;
             _catalogos = null;
+            rutaOriginal = null;
+            hashOriginal = null;
             dgvPrevia.DataSource = null;
             lblResumen.Text = "";
             btnImportar.Enabled = false;

@@ -148,6 +148,7 @@ namespace Sistema_ERP
             string hash = ClaveSegura.Crear(nueva);
             using var conexion = Conexion.AbrirConexion();
             using var comando = new SqlCommand("""
+                EXEC sys.sp_set_session_context @key=N'id_usuario',@value=@id;
                 UPDATE u SET contrasena_hash=@hash,debe_cambiar_contrasena=0,intentos_fallidos=0,bloqueado_hasta=NULL,
                 contrasena_actualizada_en=SYSUTCDATETIME(),actualizado_en=SYSUTCDATETIME()
                 FROM dbo.Usuario u JOIN dbo.Empleado e ON e.id_empleado=u.id_empleado
@@ -177,7 +178,11 @@ namespace Sistema_ERP
         internal static void Cerrar(AccesoUsuario acceso)
         {
             using var conexion = Conexion.AbrirConexion();
-            using var comando = new SqlCommand("UPDATE dbo.SesionUsuario SET revocada_en=SYSUTCDATETIME() WHERE id_sesion=@sesion AND id_usuario=@id AND revocada_en IS NULL", conexion);
+            using var comando = new SqlCommand("""
+                EXEC sys.sp_set_session_context @key=N'id_usuario',@value=@id;
+                UPDATE dbo.SesionUsuario SET revocada_en=SYSUTCDATETIME()
+                WHERE id_sesion=@sesion AND id_usuario=@id AND revocada_en IS NULL;
+                """, conexion);
             comando.Parameters.Add("@sesion", SqlDbType.BigInt).Value = (object?)acceso.Sesion ?? DBNull.Value;
             comando.Parameters.Add("@id", SqlDbType.Int).Value = acceso.Id;
             comando.ExecuteNonQuery();

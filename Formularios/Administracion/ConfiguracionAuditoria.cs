@@ -1,4 +1,4 @@
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using System.Data;
 
 namespace Sistema_ERP
@@ -8,10 +8,16 @@ namespace Sistema_ERP
         private DataView? vista;
         private int? idSeleccionado;
         private bool seleccionActiva;
+        private DataTable? eventos;
+        private readonly Stack<long> paginas = new();
+        private long antes = long.MaxValue;
+        private readonly System.Windows.Forms.Timer filtroAuditoria = new() { Interval = 350 };
 
         public ConfiguracionAuditoria()
         {
             InitializeComponent();
+            PrepararAuditoria();
+            PrepararFacturacion();
             ConectarEventos();
             ActualizarBotones();
         }
@@ -32,6 +38,63 @@ namespace Sistema_ERP
         {
             base.OnLoad(e);
             if (!ModoDiseno.Activo(this)) CargarTiendas();
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            base.OnActivated(e);
+            if (!ModoDiseno.Activo(this)) ReiniciarAuditoria();
+        }
+
+        private void PrepararAuditoria()
+        {
+            tablaAuditoria.Columns.Clear();
+            tablaAuditoria.AutoGenerateColumns = true;
+            tablaAuditoria.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+            tablaAuditoria.ScrollBars = ScrollBars.Both;
+            buscarAuditoria.MaxLength = 150;
+            var acciones = new FlowLayoutPanel { Dock = DockStyle.Fill };
+            var refrescar = new Button { Text = "Actualizar", AutoSize = true };
+            var anterior = new Button { Text = "Anteriores", AutoSize = true };
+            var siguiente = new Button { Text = "Siguientes", AutoSize = true };
+            layoutAuditoria.Controls.Remove(contadorAuditoria);
+            contadorAuditoria.AutoSize = true;
+            acciones.Controls.AddRange([refrescar, anterior, siguiente, contadorAuditoria]);
+            layoutAuditoria.RowStyles[3].Height = 38;
+            layoutAuditoria.Controls.Add(acciones, 0, 3);
+            refrescar.Click += (_, _) => ReiniciarAuditoria();
+            anterior.Click += (_, _) => { if (paginas.Count > 0) { antes = paginas.Pop(); CargarAuditoria(); } };
+            siguiente.Click += (_, _) =>
+            {
+                if (eventos?.Rows.Count != 200) return;
+                paginas.Push(antes); antes = Convert.ToInt64(eventos.Rows[^1]["Id"]); CargarAuditoria();
+            };
+            buscarAuditoria.TextChanged += (_, _) => { filtroAuditoria.Stop(); filtroAuditoria.Start(); };
+            filtroAuditoria.Tick += (_, _) => { filtroAuditoria.Stop(); ReiniciarAuditoria(); };
+            Disposed += (_, _) => filtroAuditoria.Dispose();
+            // Ambas tablas conservan sus propias barras de desplazamiento.
+            layoutConfiguracion.Dock = DockStyle.Fill;
+            layoutConfiguracion.RowStyles[2].Height = 120;
+            layoutConfiguracion.RowStyles[6].SizeType = SizeType.Percent;
+            layoutConfiguracion.RowStyles[6].Height = 45;
+            layoutConfiguracion.RowStyles[8].SizeType = SizeType.Percent;
+            layoutConfiguracion.RowStyles[8].Height = 55;
+            layoutConfiguracion.MinimumSize = new Size(0, 690);
+        }
+
+        private void ReiniciarAuditoria() { paginas.Clear(); antes = long.MaxValue; CargarAuditoria(); }
+        private void CargarAuditoria()
+        {
+            if (ModoDiseno.Activo(this)) return;
+            try
+            {
+                eventos = AuditoriaDatos.Listar(buscarAuditoria.Text, antes);
+                tablaAuditoria.DataSource = eventos;
+                tablaAuditoria.Columns["Id"]!.Visible = false;
+                tablaAuditoria.Columns["Fecha UTC"]!.DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
+                contadorAuditoria.Text = $"Página {paginas.Count + 1}: {eventos.Rows.Count} eventos (máximo 200)";
+            }
+            catch (Exception ex) { eventos = null; tablaAuditoria.DataSource = null; contadorAuditoria.Text = "No se pudo cargar la bitácora: " + ex.Message; }
         }
 
         private void ActualizarBotones()
@@ -70,7 +133,7 @@ namespace Sistema_ERP
                     { CargarTiendas(); Mensaje("La tienda ya no esta disponible para actualizar.", true); return; }
                 }
                 else TiendaDatos.Agregar(codigo.Text, nombre.Text, direccion.Text, telefono.Text);
-                CargarTiendas(); Mensaje(editar ? "Tienda actualizada correctamente." : "Tienda guardada correctamente.");
+                CargarTiendas(); ReiniciarAuditoria(); Mensaje(editar ? "Tienda actualizada correctamente." : "Tienda guardada correctamente.");
             }
             catch (SqlException ex) when (ex.Number is 2601 or 2627) { Mensaje("Ya existe una tienda con ese codigo, incluso si esta inactiva.", true); codigo.Focus(); }
             catch (ArgumentException ex) { Mensaje(ex.Message, true); }
@@ -97,7 +160,7 @@ namespace Sistema_ERP
             try
             {
                 bool cambiado = activar ? TiendaDatos.Reactivar(id) : TiendaDatos.Desactivar(id, motivo);
-                CargarTiendas(); Mensaje(cambiado ? (activar ? "Tienda reactivada correctamente." : "Tienda desactivada correctamente.") : "La tienda ya cambio de estado.");
+                CargarTiendas(); ReiniciarAuditoria(); Mensaje(cambiado ? (activar ? "Tienda reactivada correctamente." : "Tienda desactivada correctamente.") : "La tienda ya cambio de estado.");
             }
             catch (Exception ex) { Mensaje("No se pudo cambiar el estado. " + ex.Message, true); }
             finally { ActualizarBotones(); }

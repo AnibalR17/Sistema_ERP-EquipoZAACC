@@ -12,7 +12,7 @@ Formularios/
   Compras/         Registro de compras
   Inventario/      Inventario, traspasos y validacion
   Ventas/          Punto de venta, apartados y devoluciones
-  Administracion/  Inversiones, directorio, tiendas y auditoria
+  Administracion/  Usuarios, permisos, directorio, tiendas y auditoria
   Dialogos/        Confirmacion de venta y notificaciones
   Base/            Clases compartidas de pantallas y dialogos
 Clases/            Modelos, tipos de dominio y operaciones compartidas
@@ -33,6 +33,8 @@ Los namespaces originales (`Sistema_ERP`, `Sistema_ERP.Vistas` y `LoginERP`) se 
 Configure la variable de entorno `SISTEMA_ERP_CONNECTION_STRING` o cree `connection.local.txt` en la raiz del proyecto con la cadena de conexion de SQL Server. La variable de entorno tiene prioridad. El archivo local se copia al directorio de salida y esta excluido de Git para proteger las credenciales.
 
 En Inicio, haga clic en **Probar conexion** para comprobar el acceso a la base de datos. Se mostrara un mensaje de exito o error sin bloquear la interfaz.
+
+Inicio muestra las ventas y compras confirmadas del dia y un grafico de los ultimos siete dias, filtrados por el selector de tienda de la cabecera. Las tarjetas abren los modulos correspondientes. El resumen se actualiza al regresar, al cambiar de tienda, con **Actualizar resumen** y cada minuto mientras Inicio esta visible. Consulte [Datos/Inicio-verificacion.md](Datos/Inicio-verificacion.md) para criterios y pruebas.
 
 ### Como obtener el connection string
 
@@ -141,7 +143,7 @@ La fila de tarjetas conserva cuatro columnas al reducir la ventana: no hay una d
 - **Buscador:** ancho entre 160 y 420, ajustado al espacio disponible; texto de ayuda «🔍 Buscador global...».
 - **Franja informativa:** texto secundario, simbolo ℹ y relleno horizontal de 16 a la izquierda y 8 a la derecha.
 - **Indicadores:** titulo gris, valor grande en negrita y detalle gris. El ejemplo monetario usa `L. 0.00`; no hay formateador monetario centralizado.
-- **Grafico semanal:** panel blanco, titulo a la izquierda, dias L, M, X, J, V, S y D; puntos de 22 de diametro y linea horizontal de grosor 8, ambos `#121212`. No hay ejes numericos, leyenda ni cuadricula. Los datos son de ejemplo.
+- **Grafico de Inicio:** ventas y compras confirmadas de los ultimos siete dias, con fechas, importes en lempiras, cuadricula y leyenda. Las ventas usan linea oscura continua y las compras una linea azul discontinua. Los valores se consultan en SQL Server para la tienda seleccionada o todas las tiendas.
 
 Los simbolos son caracteres Unicode o emoji, no imagenes de una biblioteca de iconos. Su apariencia puede variar segun las fuentes disponibles.
 
@@ -246,3 +248,15 @@ La version actual espera el esquema normalizado con `desactivado_en`, `desactiva
 El archivo `Datos/Migraciones/001_desactivar_registros.sql` corresponde al esquema anterior: agrega un `activo` almacenado a Producto, Categoria y Proveedor. No es una migracion completa al esquema normalizado ni debe usarse como unico paso para preparar esta version. Una base existente con el esquema anterior requiere una migracion que preserve sus datos; el script de creacion `01_esquema_erp_3fn.sql` esta destinado a una base vacia. La aplicacion no modifica el esquema automaticamente.
 
 **Desactivar** establece fecha y motivo de desactivacion; **Reactivar** limpia fecha, usuario y motivo. No se escribe directamente en la columna calculada `activo`. Se conservan los registros, sus relaciones y los identificadores reservados. Desactivar una entidad no desactiva en cascada sus registros relacionados ni modifica el historial. Los listados muestran activos por defecto; los CRUD de tiendas y directorio permiten incluir inactivos y reactivarlos.
+
+La facturacion y la bitacora requieren tambien [Datos/Migraciones/002_bitacora_sistema.sql](Datos/Migraciones/002_bitacora_sistema.sql), despues de Triggers2.sql. Consulte [Datos/Ventas-verificacion.md](Datos/Ventas-verificacion.md) para uso y verificaciones.
+
+Ventas incluye **RTN del cliente (opcional)**, guardado por factura para imprimirlo y conservarlo al reimprimir. En una base existente, ejecute [Datos/Migraciones/003_rtn_ventas.sql](Datos/Migraciones/003_rtn_ventas.sql). El esquema inicial ya incluye el campo.
+
+El ISV se suma al precio base: 15 % por defecto, con opciones de 18 % y exento por producto en ventas. Pantalla, recibo, historial, apartados y devoluciones usan los importes con impuesto. El CAI se guarda por tienda en **Configuración y auditoría → Facturación / CAI** y se conserva en cada nueva factura. Para bases existentes, aplicar [Datos/Migraciones/004_isv_cai.sql](Datos/Migraciones/004_isv_cai.sql). [Detalle y verificaciones de ISV y CAI](Datos/ISV-CAI-verificacion.md).
+
+## Apartados, devoluciones y carga masiva
+
+Apartados y devoluciones incluye reservas, abonos, entrega con factura, cancelaciones, vencimientos y reembolsos, ademas del flujo de borrador, confirmacion y anulacion de devoluciones. Consulte [Datos/ApartadosDevoluciones-verificacion.md](Datos/ApartadosDevoluciones-verificacion.md) para uso y pruebas de integracion en una base temporal.
+
+La carga masiva acepta un `.xlsx` con las columnas `CodigoBarras`, `Nombre`, `Precio`, `StockInicial`, `NombreCategoria` y `RTNProveedor`. Usa [la plantilla de Excel](Datos/Plantillas/Plantilla_carga_masiva.xlsx) o el boton **Descargar plantilla** para generar ejemplos con los catalogos actuales. [Formato y requisitos](Datos/Plantillas/LEEME.md). El stock inicial se asigna a la tienda seleccionada mediante movimientos de inventario.

@@ -20,7 +20,7 @@ namespace Sistema_ERP.Datos
                                  WHERE (@incluir = 1 OR desactivado_en IS NULL)
                                  ORDER BY nombre";
 
-            using SqlConnection conexion = ConexionDB.AbrirConexion();
+            using SqlConnection conexion = Conexion.AbrirConexion();
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@incluir", SqlDbType.Bit).Value = incluirInactivos;
             using var adaptador = new SqlDataAdapter(comando);
@@ -38,7 +38,7 @@ namespace Sistema_ERP.Datos
                                  VALUES (@nombre, @telefono, @correo)";
             try
             {
-                using SqlConnection conexion = ConexionDB.AbrirConexion();
+                using SqlConnection conexion = Conexion.AbrirConexion();
                 using var comando = new SqlCommand(sql, conexion);
                 AgregarParametros(comando, cliente);
                 return (int)comando.ExecuteScalar();
@@ -58,7 +58,7 @@ namespace Sistema_ERP.Datos
                                  WHERE id_cliente = @id";
             try
             {
-                using SqlConnection conexion = ConexionDB.AbrirConexion();
+                using SqlConnection conexion = Conexion.AbrirConexion();
                 using var comando = new SqlCommand(sql, conexion);
                 AgregarParametros(comando, cliente);
                 comando.Parameters.Add("@id", SqlDbType.Int).Value = cliente.IdCliente;
@@ -81,7 +81,7 @@ namespace Sistema_ERP.Datos
                                      motivo_desactivacion = @motivo, actualizado_en = SYSDATETIME()
                                  WHERE id_cliente = @id AND desactivado_en IS NULL";
 
-            using SqlConnection conexion = ConexionDB.AbrirConexion();
+            using SqlConnection conexion = Conexion.AbrirConexion();
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = idCliente;
             comando.Parameters.Add("@motivo", SqlDbType.NVarChar, 250).Value = motivo.Trim();
@@ -96,7 +96,7 @@ namespace Sistema_ERP.Datos
                                      motivo_desactivacion = NULL, actualizado_en = SYSDATETIME()
                                  WHERE id_cliente = @id AND desactivado_en IS NOT NULL";
 
-            using SqlConnection conexion = ConexionDB.AbrirConexion();
+            using SqlConnection conexion = Conexion.AbrirConexion();
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = idCliente;
             return comando.ExecuteNonQuery() > 0;

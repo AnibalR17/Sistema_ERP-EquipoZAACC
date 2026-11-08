@@ -41,7 +41,6 @@
             catalogButton = new System.Windows.Forms.Button();
             returnsButton = new System.Windows.Forms.Button();
             rolesButton = new System.Windows.Forms.Button();
-            investorsButton = new System.Windows.Forms.Button();
             settingsButton = new System.Windows.Forms.Button();
             userLabel = new System.Windows.Forms.Label();
             roleLabel = new System.Windows.Forms.Label();
@@ -91,7 +90,6 @@
             sidebar.Controls.Add(catalogButton);
             sidebar.Controls.Add(returnsButton);
             sidebar.Controls.Add(rolesButton);
-            sidebar.Controls.Add(investorsButton);
             sidebar.Controls.Add(settingsButton);
             sidebar.Controls.Add(userLabel);
             sidebar.Controls.Add(roleLabel);
@@ -280,22 +278,6 @@
             rolesButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             rolesButton.UseVisualStyleBackColor = false;
             // 
-            // investorsButton
-            // 
-            investorsButton.BackColor = System.Drawing.Color.White;
-            investorsButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            investorsButton.FlatAppearance.BorderSize = 0;
-            investorsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
-            investorsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            investorsButton.Location = new System.Drawing.Point(14, 516);
-            investorsButton.Name = "investorsButton";
-            investorsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            investorsButton.Size = new System.Drawing.Size(236, 40);
-            investorsButton.TabIndex = 12;
-            investorsButton.Text = "Control de inversores";
-            investorsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            investorsButton.UseVisualStyleBackColor = false;
-            // 
             // settingsButton
             // 
             settingsButton.BackColor = System.Drawing.Color.White;
@@ -303,11 +285,11 @@
             settingsButton.FlatAppearance.BorderSize = 0;
             settingsButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
             settingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            settingsButton.Location = new System.Drawing.Point(14, 556);
+            settingsButton.Location = new System.Drawing.Point(14, 516);
             settingsButton.Name = "settingsButton";
             settingsButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
             settingsButton.Size = new System.Drawing.Size(236, 40);
-            settingsButton.TabIndex = 13;
+            settingsButton.TabIndex = 12;
             settingsButton.Text = "Configuracion y auditoria";
             settingsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             settingsButton.UseVisualStyleBackColor = false;
@@ -624,7 +606,6 @@
         private System.Windows.Forms.Button catalogButton;
         private System.Windows.Forms.Button returnsButton;
         private System.Windows.Forms.Button rolesButton;
-        private System.Windows.Forms.Button investorsButton;
         private System.Windows.Forms.Button settingsButton;
         private System.Windows.Forms.Label userLabel;
         private System.Windows.Forms.Label roleLabel;

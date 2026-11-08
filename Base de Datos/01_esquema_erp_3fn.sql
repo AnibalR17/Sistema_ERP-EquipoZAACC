@@ -356,6 +356,8 @@ CREATE TABLE dbo.Venta (
     numero           varchar(40) NOT NULL,
     id_tienda        int NOT NULL,
     id_cliente       int NOT NULL,
+    rtn_cliente      varchar(30) NULL,
+    cai              varchar(37) NULL,
     id_usuario       int NOT NULL,
     fecha            datetime2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
     estado           varchar(20) NOT NULL DEFAULT 'BORRADOR',
@@ -365,6 +367,7 @@ CREATE TABLE dbo.Venta (
     motivo_anulacion nvarchar(500) NULL,
     CONSTRAINT PK_Venta PRIMARY KEY (id_venta),
     CONSTRAINT UQ_Venta_numero UNIQUE (numero),
+    CONSTRAINT CK_Venta_rtn_cliente CHECK (rtn_cliente IS NULL OR (DATALENGTH(rtn_cliente)=14 AND rtn_cliente COLLATE Latin1_General_100_BIN2 NOT LIKE '%[^0-9]%')),
     CONSTRAINT FK_Venta_Tienda FOREIGN KEY (id_tienda) REFERENCES dbo.Tienda (id_tienda),
     CONSTRAINT FK_Venta_Cliente FOREIGN KEY (id_cliente) REFERENCES dbo.Cliente (id_cliente),
     CONSTRAINT FK_Venta_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario (id_usuario),
@@ -380,11 +383,15 @@ CREATE TABLE dbo.DetalleVenta (
     cantidad         int NOT NULL,
     precio_unitario  decimal(18,2) NOT NULL,
     nombre_producto  nvarchar(150) NOT NULL,
+    tasa_isv         decimal(5,2) NOT NULL CONSTRAINT DF_DetalleVenta_tasa_isv DEFAULT 15,
     subtotal         AS (CONVERT(decimal(18,2), cantidad * precio_unitario)),
+    isv              AS (CONVERT(decimal(18,2), ROUND(cantidad * precio_unitario * tasa_isv / 100,2))),
+    total_linea      AS (CONVERT(decimal(18,2), cantidad * precio_unitario + ROUND(cantidad * precio_unitario * tasa_isv / 100,2))),
     CONSTRAINT PK_DetalleVenta PRIMARY KEY (id_detalle_venta),
     CONSTRAINT FK_DetalleVenta_Venta FOREIGN KEY (id_venta) REFERENCES dbo.Venta (id_venta),
     CONSTRAINT FK_DetalleVenta_Producto FOREIGN KEY (id_producto) REFERENCES dbo.Producto (id_producto),
     CONSTRAINT CK_DetalleVenta_cantidad CHECK (cantidad > 0),
+    CONSTRAINT CK_DetalleVenta_tasa_isv CHECK (tasa_isv IN (0,15,18)),
     CONSTRAINT CK_DetalleVenta_precio CHECK (precio_unitario > 0)
 );
 GO
@@ -477,11 +484,15 @@ CREATE TABLE dbo.DetalleApartado (
     id_producto         int NOT NULL,
     cantidad            int NOT NULL,
     precio_unitario     decimal(18,2) NOT NULL,
+    tasa_isv            decimal(5,2) NOT NULL CONSTRAINT DF_DetalleApartado_tasa_isv DEFAULT 15,
     subtotal            AS (CONVERT(decimal(18,2), cantidad * precio_unitario)),
+    isv                 AS (CONVERT(decimal(18,2), ROUND(cantidad * precio_unitario * tasa_isv / 100,2))),
+    total_linea         AS (CONVERT(decimal(18,2), cantidad * precio_unitario + ROUND(cantidad * precio_unitario * tasa_isv / 100,2))),
     CONSTRAINT PK_DetalleApartado PRIMARY KEY (id_detalle_apartado),
     CONSTRAINT FK_DetalleApartado_Apartado FOREIGN KEY (id_apartado) REFERENCES dbo.Apartado (id_apartado),
     CONSTRAINT FK_DetalleApartado_Producto FOREIGN KEY (id_producto) REFERENCES dbo.Producto (id_producto),
     CONSTRAINT CK_DetalleApartado_cantidad CHECK (cantidad > 0),
+    CONSTRAINT CK_DetalleApartado_tasa_isv CHECK (tasa_isv IN (0,15,18)),
     CONSTRAINT CK_DetalleApartado_precio CHECK (precio_unitario > 0)
 );
 GO
@@ -528,10 +539,12 @@ CREATE TABLE dbo.DetalleDevolucion (
     id_detalle_venta      int NOT NULL,
     cantidad              int NOT NULL,
     reintegra_stock       bit NOT NULL,
+    isv                   decimal(18,2) NOT NULL CONSTRAINT DF_DetalleDevolucion_isv DEFAULT 0,
     CONSTRAINT PK_DetalleDevolucion PRIMARY KEY (id_detalle_devolucion),
     CONSTRAINT FK_DetalleDevolucion_Devolucion FOREIGN KEY (id_devolucion) REFERENCES dbo.Devolucion (id_devolucion),
     CONSTRAINT FK_DetalleDevolucion_DetalleVenta FOREIGN KEY (id_detalle_venta) REFERENCES dbo.DetalleVenta (id_detalle_venta),
-    CONSTRAINT CK_DetalleDevolucion_cantidad CHECK (cantidad > 0)
+    CONSTRAINT CK_DetalleDevolucion_cantidad CHECK (cantidad > 0),
+    CONSTRAINT CK_DetalleDevolucion_isv CHECK (isv>=0)
 );
 GO
 CREATE TABLE dbo.Reembolso (
@@ -645,6 +658,17 @@ CREATE TABLE dbo.DetalleImportacion (
     CONSTRAINT CK_DetalleImportacion_fila CHECK (numero_fila > 0),
     CONSTRAINT CK_DetalleImportacion_json CHECK (ISJSON(datos_originales_json) = 1),
     CONSTRAINT CK_DetalleImportacion_estado CHECK (estado IN ('VALIDA','ERROR','DUPLICADA','IMPORTADA','OMITIDA'))
+);
+GO
+CREATE TABLE dbo.ConfiguracionFacturacion (
+    id_tienda int NOT NULL CONSTRAINT PK_ConfiguracionFacturacion PRIMARY KEY,
+    cai varchar(37) NULL,
+    actualizado_en datetime2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
+    actualizado_por int NOT NULL,
+    version_fila rowversion NOT NULL,
+    CONSTRAINT FK_ConfiguracionFacturacion_Tienda FOREIGN KEY(id_tienda) REFERENCES dbo.Tienda(id_tienda),
+    CONSTRAINT FK_ConfiguracionFacturacion_Usuario FOREIGN KEY(actualizado_por) REFERENCES dbo.Usuario(id_usuario),
+    CONSTRAINT CK_ConfiguracionFacturacion_cai CHECK(cai IS NULL OR DATALENGTH(cai)=37)
 );
 GO
 CREATE TABLE dbo.Auditoria (
@@ -810,14 +834,18 @@ GROUP BY c.id_compra;
 GO
 CREATE VIEW dbo.vw_VentaTotal AS
 SELECT v.id_venta,
-       CONVERT(decimal(18,2), ISNULL(SUM(d.cantidad * d.precio_unitario), 0)) AS total
+       CONVERT(decimal(18,2), ISNULL(SUM(d.subtotal),0)) AS subtotal,
+       CONVERT(decimal(18,2), ISNULL(SUM(d.isv),0)) AS isv,
+       CONVERT(decimal(18,2), ISNULL(SUM(d.total_linea),0)) AS total
 FROM dbo.Venta v
 LEFT JOIN dbo.DetalleVenta d ON d.id_venta = v.id_venta
 GROUP BY v.id_venta;
 GO
 CREATE VIEW dbo.vw_ApartadoTotal AS
 SELECT a.id_apartado,
-       CONVERT(decimal(18,2), ISNULL(SUM(d.cantidad * d.precio_unitario), 0)) AS total
+       CONVERT(decimal(18,2), ISNULL(SUM(d.subtotal),0)) AS subtotal,
+       CONVERT(decimal(18,2), ISNULL(SUM(d.isv),0)) AS isv,
+       CONVERT(decimal(18,2), ISNULL(SUM(d.total_linea),0)) AS total
 FROM dbo.Apartado a
 LEFT JOIN dbo.DetalleApartado d ON d.id_apartado = a.id_apartado
 GROUP BY a.id_apartado;
@@ -826,13 +854,16 @@ CREATE VIEW dbo.vw_DevolucionDetalle AS
 SELECT dd.id_detalle_devolucion, dd.id_devolucion, dd.id_detalle_venta,
        dd.cantidad, dv.precio_unitario,
        CONVERT(decimal(18,2), dd.cantidad * dv.precio_unitario) AS subtotal,
+       dd.isv,CONVERT(decimal(18,2),dd.cantidad*dv.precio_unitario+dd.isv) AS total_linea,
        dd.reintegra_stock
 FROM dbo.DetalleDevolucion dd
 JOIN dbo.DetalleVenta dv ON dv.id_detalle_venta = dd.id_detalle_venta;
 GO
 CREATE VIEW dbo.vw_DevolucionTotal AS
 SELECT d.id_devolucion,
-       CONVERT(decimal(18,2), ISNULL(SUM(x.subtotal), 0)) AS total
+       CONVERT(decimal(18,2), ISNULL(SUM(x.subtotal),0)) AS subtotal,
+       CONVERT(decimal(18,2), ISNULL(SUM(x.isv),0)) AS isv,
+       CONVERT(decimal(18,2), ISNULL(SUM(x.total_linea),0)) AS total
 FROM dbo.Devolucion d
 LEFT JOIN dbo.vw_DevolucionDetalle x ON x.id_devolucion = d.id_devolucion
 GROUP BY d.id_devolucion;
