@@ -84,6 +84,9 @@ namespace Sistema_ERP
             header.SuspendLayout();
             panelContenedor.SuspendLayout();
             SuspendLayout();
+            // 
+            // main
+            // 
             main.BackColor = System.Drawing.Color.FromArgb(253, 253, 253);
             main.Controls.Add(content);
             main.Controls.Add(header);
@@ -92,6 +95,9 @@ namespace Sistema_ERP
             main.Name = "main";
             main.Size = new System.Drawing.Size(1235, 900);
             main.TabIndex = 0;
+            // 
+            // content
+            // 
             content.Controls.Add(dashboardLayout);
             content.Dock = System.Windows.Forms.DockStyle.Fill;
             content.Location = new System.Drawing.Point(0, 64);
@@ -99,6 +105,9 @@ namespace Sistema_ERP
             content.Padding = new System.Windows.Forms.Padding(32, 34, 32, 36);
             content.Size = new System.Drawing.Size(1235, 836);
             content.TabIndex = 0;
+            // 
+            // dashboardLayout
+            // 
             dashboardLayout.ColumnCount = 1;
             dashboardLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             dashboardLayout.Controls.Add(headingPanel, 0, 0);
@@ -117,6 +126,9 @@ namespace Sistema_ERP
             dashboardLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             dashboardLayout.Size = new System.Drawing.Size(1171, 766);
             dashboardLayout.TabIndex = 0;
+            // 
+            // headingPanel
+            // 
             headingPanel.Controls.Add(titleLabel);
             headingPanel.Controls.Add(subtitleLabel);
             headingPanel.Controls.Add(btnprobarconexion);
@@ -127,6 +139,9 @@ namespace Sistema_ERP
             headingPanel.Size = new System.Drawing.Size(1171, 86);
             headingPanel.TabIndex = 0;
             headingPanel.Paint += headingPanel_Paint;
+            // 
+            // titleLabel
+            // 
             titleLabel.BackColor = System.Drawing.Color.Transparent;
             titleLabel.Font = new System.Drawing.Font("Segoe UI", 27F, System.Drawing.FontStyle.Bold);
             titleLabel.Location = new System.Drawing.Point(0, -1);
@@ -135,6 +150,9 @@ namespace Sistema_ERP
             titleLabel.TabIndex = 0;
             titleLabel.Text = "Inicio";
             titleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // subtitleLabel
+            // 
             subtitleLabel.BackColor = System.Drawing.Color.Transparent;
             subtitleLabel.Font = new System.Drawing.Font("Segoe UI", 12F);
             subtitleLabel.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
@@ -144,6 +162,9 @@ namespace Sistema_ERP
             subtitleLabel.TabIndex = 1;
             subtitleLabel.Text = "Resumen general del negocio";
             subtitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btnprobarconexion
+            // 
             btnprobarconexion.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right;
             btnprobarconexion.Location = new System.Drawing.Point(971, 16);
             btnprobarconexion.Name = "btnprobarconexion";
@@ -152,6 +173,9 @@ namespace Sistema_ERP
             btnprobarconexion.Text = "Probar conexion";
             btnprobarconexion.UseVisualStyleBackColor = true;
             btnprobarconexion.Click += btnprobarconexion_Click;
+            // 
+            // infoPanel
+            // 
             infoPanel.BackColor = System.Drawing.Color.FromArgb(243, 243, 243);
             infoPanel.Controls.Add(infoLabel);
             infoPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -161,6 +185,9 @@ namespace Sistema_ERP
             infoPanel.Size = new System.Drawing.Size(1171, 42);
             infoPanel.TabIndex = 1;
             infoPanel.Paint += RoundedPanel_Paint;
+            // 
+            // infoLabel
+            // 
             infoLabel.BackColor = System.Drawing.Color.Transparent;
             infoLabel.Dock = System.Windows.Forms.DockStyle.Fill;
             infoLabel.Font = new System.Drawing.Font("Segoe UI", 11F);
@@ -173,6 +200,9 @@ namespace Sistema_ERP
             infoLabel.Text = "Resumen de ventas y compras confirmadas. Selecciona una tienda para filtrar.";
             infoLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             infoLabel.Click += infoLabel_Click;
+            // 
+            // cardsLayout
+            // 
             cardsLayout.ColumnCount = 4;
             cardsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
             cardsLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
@@ -190,6 +220,9 @@ namespace Sistema_ERP
             cardsLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             cardsLayout.Size = new System.Drawing.Size(1171, 144);
             cardsLayout.TabIndex = 2;
+            // 
+            // cardPanel0
+            // 
             cardPanel0.BackColor = System.Drawing.Color.White;
             cardPanel0.Controls.Add(cardTitle0);
             cardPanel0.Controls.Add(cardValue0);
@@ -201,6 +234,9 @@ namespace Sistema_ERP
             cardPanel0.Size = new System.Drawing.Size(282, 124);
             cardPanel0.TabIndex = 0;
             cardPanel0.Paint += RoundedPanel_Paint;
+            // 
+            // cardTitle0
+            // 
             cardTitle0.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             cardTitle0.BackColor = System.Drawing.Color.Transparent;
             cardTitle0.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -211,6 +247,9 @@ namespace Sistema_ERP
             cardTitle0.TabIndex = 0;
             cardTitle0.Text = "Ventas del día";
             cardTitle0.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cardValue0
+            // 
             cardValue0.BackColor = System.Drawing.Color.Transparent;
             cardValue0.Font = new System.Drawing.Font("Segoe UI", 25F, System.Drawing.FontStyle.Bold);
             cardValue0.Location = new System.Drawing.Point(24, 44);
@@ -219,6 +258,9 @@ namespace Sistema_ERP
             cardValue0.TabIndex = 1;
             cardValue0.Text = "—";
             cardValue0.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cardDetail0
+            // 
             cardDetail0.BackColor = System.Drawing.Color.Transparent;
             cardDetail0.Font = new System.Drawing.Font("Segoe UI", 10F);
             cardDetail0.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
@@ -228,6 +270,9 @@ namespace Sistema_ERP
             cardDetail0.TabIndex = 2;
             cardDetail0.Text = "Facturas confirmadas";
             cardDetail0.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cardPanel1
+            // 
             cardPanel1.BackColor = System.Drawing.Color.White;
             cardPanel1.Controls.Add(cardTitle1);
             cardPanel1.Controls.Add(cardValue1);
@@ -239,6 +284,9 @@ namespace Sistema_ERP
             cardPanel1.Size = new System.Drawing.Size(272, 124);
             cardPanel1.TabIndex = 1;
             cardPanel1.Paint += RoundedPanel_Paint;
+            // 
+            // cardTitle1
+            // 
             cardTitle1.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             cardTitle1.BackColor = System.Drawing.Color.Transparent;
             cardTitle1.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -249,6 +297,9 @@ namespace Sistema_ERP
             cardTitle1.TabIndex = 0;
             cardTitle1.Text = "Compras del día";
             cardTitle1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cardValue1
+            // 
             cardValue1.BackColor = System.Drawing.Color.Transparent;
             cardValue1.Font = new System.Drawing.Font("Segoe UI", 25F, System.Drawing.FontStyle.Bold);
             cardValue1.Location = new System.Drawing.Point(24, 44);
@@ -257,6 +308,9 @@ namespace Sistema_ERP
             cardValue1.TabIndex = 1;
             cardValue1.Text = "—";
             cardValue1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cardDetail1
+            // 
             cardDetail1.BackColor = System.Drawing.Color.Transparent;
             cardDetail1.Font = new System.Drawing.Font("Segoe UI", 10F);
             cardDetail1.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
@@ -266,6 +320,9 @@ namespace Sistema_ERP
             cardDetail1.TabIndex = 2;
             cardDetail1.Text = "Facturas confirmadas";
             cardDetail1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cardPanel2
+            // 
             cardPanel2.BackColor = System.Drawing.Color.White;
             cardPanel2.Controls.Add(cardTitle2);
             cardPanel2.Controls.Add(cardValue2);
@@ -277,6 +334,9 @@ namespace Sistema_ERP
             cardPanel2.Size = new System.Drawing.Size(272, 124);
             cardPanel2.TabIndex = 2;
             cardPanel2.Paint += RoundedPanel_Paint;
+            // 
+            // cardTitle2
+            // 
             cardTitle2.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             cardTitle2.BackColor = System.Drawing.Color.Transparent;
             cardTitle2.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -287,6 +347,9 @@ namespace Sistema_ERP
             cardTitle2.TabIndex = 0;
             cardTitle2.Text = "Traspasos pendientes";
             cardTitle2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cardValue2
+            // 
             cardValue2.BackColor = System.Drawing.Color.Transparent;
             cardValue2.Font = new System.Drawing.Font("Segoe UI", 25F, System.Drawing.FontStyle.Bold);
             cardValue2.Location = new System.Drawing.Point(24, 44);
@@ -295,6 +358,9 @@ namespace Sistema_ERP
             cardValue2.TabIndex = 1;
             cardValue2.Text = "—";
             cardValue2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cardDetail2
+            // 
             cardDetail2.BackColor = System.Drawing.Color.Transparent;
             cardDetail2.Font = new System.Drawing.Font("Segoe UI", 10F);
             cardDetail2.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
@@ -304,6 +370,9 @@ namespace Sistema_ERP
             cardDetail2.TabIndex = 2;
             cardDetail2.Text = "Esperan aprobación";
             cardDetail2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cardPanel3
+            // 
             cardPanel3.BackColor = System.Drawing.Color.White;
             cardPanel3.Controls.Add(cardTitle3);
             cardPanel3.Controls.Add(cardValue3);
@@ -315,6 +384,9 @@ namespace Sistema_ERP
             cardPanel3.Size = new System.Drawing.Size(285, 124);
             cardPanel3.TabIndex = 3;
             cardPanel3.Paint += RoundedPanel_Paint;
+            // 
+            // cardTitle3
+            // 
             cardTitle3.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             cardTitle3.BackColor = System.Drawing.Color.Transparent;
             cardTitle3.Font = new System.Drawing.Font("Segoe UI", 10F);
@@ -325,6 +397,9 @@ namespace Sistema_ERP
             cardTitle3.TabIndex = 0;
             cardTitle3.Text = "Alertas de stock";
             cardTitle3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cardValue3
+            // 
             cardValue3.BackColor = System.Drawing.Color.Transparent;
             cardValue3.Font = new System.Drawing.Font("Segoe UI", 25F, System.Drawing.FontStyle.Bold);
             cardValue3.Location = new System.Drawing.Point(24, 44);
@@ -333,6 +408,9 @@ namespace Sistema_ERP
             cardValue3.TabIndex = 1;
             cardValue3.Text = "—";
             cardValue3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // cardDetail3
+            // 
             cardDetail3.BackColor = System.Drawing.Color.Transparent;
             cardDetail3.Font = new System.Drawing.Font("Segoe UI", 10F);
             cardDetail3.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
@@ -342,6 +420,9 @@ namespace Sistema_ERP
             cardDetail3.TabIndex = 2;
             cardDetail3.Text = "Disponible bajo mínimo";
             cardDetail3.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // chartPanel
+            // 
             chartPanel.BackColor = System.Drawing.Color.White;
             chartPanel.Controls.Add(chartTitleLabel);
             chartPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -351,6 +432,9 @@ namespace Sistema_ERP
             chartPanel.Size = new System.Drawing.Size(1171, 474);
             chartPanel.TabIndex = 3;
             chartPanel.Paint += ChartPanel_Paint;
+            // 
+            // chartTitleLabel
+            // 
             chartTitleLabel.BackColor = System.Drawing.Color.Transparent;
             chartTitleLabel.Font = new System.Drawing.Font("Segoe UI", 12F);
             chartTitleLabel.Location = new System.Drawing.Point(26, 14);
@@ -359,6 +443,9 @@ namespace Sistema_ERP
             chartTitleLabel.TabIndex = 0;
             chartTitleLabel.Text = "Ventas y compras · últimos 7 días";
             chartTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // header
+            // 
             header.BackColor = System.Drawing.Color.White;
             header.Controls.Add(toggleButton);
             header.Controls.Add(searchBox);
@@ -371,6 +458,9 @@ namespace Sistema_ERP
             header.TabIndex = 1;
             header.Paint += Header_Paint;
             header.Resize += Header_Resize;
+            // 
+            // toggleButton
+            // 
             toggleButton.BackColor = System.Drawing.Color.White;
             toggleButton.Cursor = System.Windows.Forms.Cursors.Hand;
             toggleButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
@@ -382,6 +472,9 @@ namespace Sistema_ERP
             toggleButton.Text = "☰";
             toggleButton.UseVisualStyleBackColor = false;
             toggleButton.Click += ToggleButton_Click;
+            // 
+            // searchBox
+            // 
             searchBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             searchBox.Font = new System.Drawing.Font("Segoe UI", 12F);
             searchBox.Location = new System.Drawing.Point(82, 23);
@@ -389,6 +482,9 @@ namespace Sistema_ERP
             searchBox.PlaceholderText = "🔍 Buscador global...";
             searchBox.Size = new System.Drawing.Size(420, 22);
             searchBox.TabIndex = 1;
+            // 
+            // accountLabel
+            // 
             accountLabel.BackColor = System.Drawing.Color.Transparent;
             accountLabel.Font = new System.Drawing.Font("Segoe UI", 11F);
             accountLabel.Location = new System.Drawing.Point(520, 16);
@@ -397,6 +493,9 @@ namespace Sistema_ERP
             accountLabel.TabIndex = 2;
             accountLabel.Text = "Administrador ⌄";
             accountLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // notificationButton
+            // 
             notificationButton.BackColor = System.Drawing.Color.White;
             notificationButton.Cursor = System.Windows.Forms.Cursors.Hand;
             notificationButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
@@ -408,6 +507,9 @@ namespace Sistema_ERP
             notificationButton.Text = "🔔";
             notificationButton.UseVisualStyleBackColor = false;
             notificationButton.Click += notificationButton_Click;
+            // 
+            // logoutButton
+            // 
             logoutButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             logoutButton.BackColor = System.Drawing.Color.FromArgb(242, 242, 242);
             logoutButton.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -423,6 +525,9 @@ namespace Sistema_ERP
             logoutButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             logoutButton.UseVisualStyleBackColor = false;
             logoutButton.Click += logoutButton_Click;
+            // 
+            // roleLabel
+            // 
             roleLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             roleLabel.BackColor = System.Drawing.Color.Transparent;
             roleLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
@@ -433,6 +538,9 @@ namespace Sistema_ERP
             roleLabel.TabIndex = 15;
             roleLabel.Text = "Administrador";
             roleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // userLabel
+            // 
             userLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             userLabel.BackColor = System.Drawing.Color.Transparent;
             userLabel.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
@@ -442,6 +550,9 @@ namespace Sistema_ERP
             userLabel.TabIndex = 14;
             userLabel.Text = "Usuario Adm-01";
             userLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // settingsButton
+            // 
             settingsButton.BackColor = System.Drawing.Color.White;
             settingsButton.Cursor = System.Windows.Forms.Cursors.Hand;
             settingsButton.FlatAppearance.BorderSize = 0;
@@ -456,6 +567,9 @@ namespace Sistema_ERP
             settingsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             settingsButton.UseVisualStyleBackColor = false;
             settingsButton.Click += settingsButton_Click;
+            // 
+            // rolesButton
+            // 
             rolesButton.BackColor = System.Drawing.Color.White;
             rolesButton.Cursor = System.Windows.Forms.Cursors.Hand;
             rolesButton.FlatAppearance.BorderSize = 0;
@@ -484,6 +598,9 @@ namespace Sistema_ERP
             seguridadButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             seguridadButton.UseVisualStyleBackColor = false;
             seguridadButton.Click += seguridadButton_Click;
+            // 
+            // returnsButton
+            // 
             returnsButton.BackColor = System.Drawing.Color.White;
             returnsButton.Cursor = System.Windows.Forms.Cursors.Hand;
             returnsButton.FlatAppearance.BorderSize = 0;
@@ -498,6 +615,9 @@ namespace Sistema_ERP
             returnsButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             returnsButton.UseVisualStyleBackColor = false;
             returnsButton.Click += returnsButton_Click;
+            // 
+            // catalogButton
+            // 
             catalogButton.BackColor = System.Drawing.Color.White;
             catalogButton.Cursor = System.Windows.Forms.Cursors.Hand;
             catalogButton.FlatAppearance.BorderSize = 0;
@@ -512,6 +632,9 @@ namespace Sistema_ERP
             catalogButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             catalogButton.UseVisualStyleBackColor = false;
             catalogButton.Click += catalogButton_Click;
+            // 
+            // bulkButton
+            // 
             bulkButton.BackColor = System.Drawing.Color.White;
             bulkButton.Cursor = System.Windows.Forms.Cursors.Hand;
             bulkButton.FlatAppearance.BorderSize = 0;
@@ -525,6 +648,9 @@ namespace Sistema_ERP
             bulkButton.Text = "Carga masiva";
             bulkButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             bulkButton.UseVisualStyleBackColor = false;
+            // 
+            // validationButton
+            // 
             validationButton.BackColor = System.Drawing.Color.White;
             validationButton.Cursor = System.Windows.Forms.Cursors.Hand;
             validationButton.FlatAppearance.BorderSize = 0;
@@ -538,6 +664,9 @@ namespace Sistema_ERP
             validationButton.Text = "Validacion traspaso";
             validationButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             validationButton.UseVisualStyleBackColor = false;
+            // 
+            // transferButton
+            // 
             transferButton.BackColor = System.Drawing.Color.White;
             transferButton.Cursor = System.Windows.Forms.Cursors.Hand;
             transferButton.FlatAppearance.BorderSize = 0;
@@ -551,6 +680,9 @@ namespace Sistema_ERP
             transferButton.Text = "Traspaso entre Tiendas";
             transferButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             transferButton.UseVisualStyleBackColor = false;
+            // 
+            // inventoryButton
+            // 
             inventoryButton.BackColor = System.Drawing.Color.White;
             inventoryButton.Cursor = System.Windows.Forms.Cursors.Hand;
             inventoryButton.FlatAppearance.BorderSize = 0;
@@ -576,6 +708,9 @@ namespace Sistema_ERP
             comprasButton.Click += comprasButton_Click;
             inventoryButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             inventoryButton.UseVisualStyleBackColor = false;
+            // 
+            // adminLabel
+            // 
             adminLabel.BackColor = System.Drawing.Color.Transparent;
             adminLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             adminLabel.Location = new System.Drawing.Point(24, 205);
@@ -584,6 +719,9 @@ namespace Sistema_ERP
             adminLabel.TabIndex = 4;
             adminLabel.Text = "Administracion";
             adminLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // salesButton
+            // 
             salesButton.BackColor = System.Drawing.Color.White;
             salesButton.Cursor = System.Windows.Forms.Cursors.Hand;
             salesButton.FlatAppearance.BorderSize = 0;
@@ -598,6 +736,9 @@ namespace Sistema_ERP
             salesButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             salesButton.UseVisualStyleBackColor = false;
             salesButton.Click += salesButton_Click;
+            // 
+            // homeButton
+            // 
             homeButton.BackColor = System.Drawing.Color.White;
             homeButton.Cursor = System.Windows.Forms.Cursors.Hand;
             homeButton.FlatAppearance.BorderSize = 0;
@@ -612,6 +753,9 @@ namespace Sistema_ERP
             homeButton.Text = "Inicio";
             homeButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             homeButton.UseVisualStyleBackColor = false;
+            // 
+            // discoverLabel
+            // 
             discoverLabel.BackColor = System.Drawing.Color.Transparent;
             discoverLabel.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             discoverLabel.Location = new System.Drawing.Point(24, 80);
@@ -620,6 +764,9 @@ namespace Sistema_ERP
             discoverLabel.TabIndex = 1;
             discoverLabel.Text = "Descubrir";
             discoverLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // brandLabel
+            // 
             brandLabel.BackColor = System.Drawing.Color.Transparent;
             brandLabel.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Bold);
             brandLabel.Location = new System.Drawing.Point(24, 16);
@@ -628,6 +775,9 @@ namespace Sistema_ERP
             brandLabel.TabIndex = 0;
             brandLabel.Text = "Sistema ERP";
             brandLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // panelContenedor
+            // 
             panelContenedor.BackColor = System.Drawing.Color.White;
             panelContenedor.Controls.Add(brandLabel);
             panelContenedor.Controls.Add(discoverLabel);
@@ -653,6 +803,9 @@ namespace Sistema_ERP
             panelContenedor.Size = new System.Drawing.Size(265, 900);
             panelContenedor.TabIndex = 1;
             panelContenedor.Paint += Sidebar_Paint;
+            // 
+            // Pagina_Central
+            // 
             AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.Color.White;

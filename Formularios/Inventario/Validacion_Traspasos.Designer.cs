@@ -65,18 +65,21 @@ namespace Sistema_ERP
             ((System.ComponentModel.ISupportInitialize)traspasos).BeginInit();
             this.SuspendLayout();
             this.Size = new System.Drawing.Size(1500, 944);
+            // sidebar
             sidebar.Name = "sidebar";
             sidebar.Location = new System.Drawing.Point(0, 0);
             sidebar.Size = new System.Drawing.Size(265, 944);
             sidebar.Dock = System.Windows.Forms.DockStyle.Left;
             sidebar.BackColor = System.Drawing.Color.White;
 
+            // sidebarDivider
             sidebarDivider.Name = "sidebarDivider";
             sidebarDivider.Location = new System.Drawing.Point(264, 0);
             sidebarDivider.Size = new System.Drawing.Size(1, 944);
             sidebarDivider.Dock = System.Windows.Forms.DockStyle.Right;
             sidebarDivider.BackColor = System.Drawing.Color.FromArgb(225, 225, 225);
             sidebar.Controls.Add(sidebarDivider);
+            // brandLabel
             brandLabel.Name = "brandLabel";
             brandLabel.Location = new System.Drawing.Point(24, 14);
             brandLabel.Size = new System.Drawing.Size(220, 40);
@@ -86,6 +89,7 @@ namespace Sistema_ERP
             brandLabel.Text = "Sistema ERP";
             brandLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             sidebar.Controls.Add(brandLabel);
+            // discoverLabel
             discoverLabel.Name = "discoverLabel";
             discoverLabel.Location = new System.Drawing.Point(24, 80);
             discoverLabel.Size = new System.Drawing.Size(220, 30);
@@ -95,6 +99,7 @@ namespace Sistema_ERP
             discoverLabel.Text = "Descubrir";
             discoverLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             sidebar.Controls.Add(discoverLabel);
+            // adminLabel
             adminLabel.Name = "adminLabel";
             adminLabel.Location = new System.Drawing.Point(24, 194);
             adminLabel.Size = new System.Drawing.Size(220, 28);
@@ -104,6 +109,7 @@ namespace Sistema_ERP
             adminLabel.Text = "Administracion";
             adminLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             sidebar.Controls.Add(adminLabel);
+            // homeButton
             homeButton.Name = "homeButton";
             homeButton.Location = new System.Drawing.Point(14, 112);
             homeButton.Size = new System.Drawing.Size(236, 40);
@@ -116,6 +122,7 @@ namespace Sistema_ERP
             homeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             sidebar.Controls.Add(homeButton);
             homeButton.FlatAppearance.BorderSize = 0;
+            // salesButton
             salesButton.Name = "salesButton";
             salesButton.Location = new System.Drawing.Point(14, 152);
             salesButton.Size = new System.Drawing.Size(236, 40);
@@ -128,6 +135,7 @@ namespace Sistema_ERP
             salesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             sidebar.Controls.Add(salesButton);
             salesButton.FlatAppearance.BorderSize = 0;
+            // inventoryButton
             inventoryButton.Name = "inventoryButton";
             inventoryButton.Location = new System.Drawing.Point(14, 230);
             inventoryButton.Size = new System.Drawing.Size(236, 40);
@@ -140,6 +148,7 @@ namespace Sistema_ERP
             inventoryButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             sidebar.Controls.Add(inventoryButton);
             inventoryButton.FlatAppearance.BorderSize = 0;
+            // transferButton
             transferButton.Name = "transferButton";
             transferButton.Location = new System.Drawing.Point(14, 270);
             transferButton.Size = new System.Drawing.Size(236, 40);
@@ -152,6 +161,7 @@ namespace Sistema_ERP
             transferButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             sidebar.Controls.Add(transferButton);
             transferButton.FlatAppearance.BorderSize = 0;
+            // validationButton
             validationButton.Name = "validationButton";
             validationButton.Location = new System.Drawing.Point(14, 310);
             validationButton.Size = new System.Drawing.Size(236, 40);
@@ -164,6 +174,7 @@ namespace Sistema_ERP
             validationButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             sidebar.Controls.Add(validationButton);
             validationButton.FlatAppearance.BorderSize = 0;
+            // bulkButton
             bulkButton.Name = "bulkButton";
             bulkButton.Location = new System.Drawing.Point(14, 350);
             bulkButton.Size = new System.Drawing.Size(236, 40);
@@ -176,6 +187,7 @@ namespace Sistema_ERP
             bulkButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             sidebar.Controls.Add(bulkButton);
             bulkButton.FlatAppearance.BorderSize = 0;
+            // catalogButton
             catalogButton.Name = "catalogButton";
             catalogButton.Location = new System.Drawing.Point(14, 390);
             catalogButton.Size = new System.Drawing.Size(236, 40);
@@ -188,6 +200,7 @@ namespace Sistema_ERP
             catalogButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             sidebar.Controls.Add(catalogButton);
             catalogButton.FlatAppearance.BorderSize = 0;
+            // returnsButton
             returnsButton.Name = "returnsButton";
             returnsButton.Location = new System.Drawing.Point(14, 430);
             returnsButton.Size = new System.Drawing.Size(236, 40);
@@ -200,6 +213,7 @@ namespace Sistema_ERP
             returnsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             sidebar.Controls.Add(returnsButton);
             returnsButton.FlatAppearance.BorderSize = 0;
+            // rolesButton
             rolesButton.Name = "rolesButton";
             rolesButton.Location = new System.Drawing.Point(14, 470);
             rolesButton.Size = new System.Drawing.Size(236, 40);
@@ -212,6 +226,7 @@ namespace Sistema_ERP
             rolesButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             sidebar.Controls.Add(rolesButton);
             rolesButton.FlatAppearance.BorderSize = 0;
+            // settingsButton
             settingsButton.Name = "settingsButton";
             settingsButton.Location = new System.Drawing.Point(14, 510);
             settingsButton.Size = new System.Drawing.Size(236, 40);
@@ -224,6 +239,7 @@ namespace Sistema_ERP
             settingsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             sidebar.Controls.Add(settingsButton);
             settingsButton.FlatAppearance.BorderSize = 0;
+            // userLabel
             userLabel.Name = "userLabel";
             userLabel.Location = new System.Drawing.Point(24, 818);
             userLabel.Size = new System.Drawing.Size(220, 28);
@@ -234,6 +250,7 @@ namespace Sistema_ERP
             userLabel.Text = "Usuario Adm-01";
             userLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             sidebar.Controls.Add(userLabel);
+            // roleLabel
             roleLabel.Name = "roleLabel";
             roleLabel.Location = new System.Drawing.Point(24, 846);
             roleLabel.Size = new System.Drawing.Size(220, 22);
@@ -244,6 +261,7 @@ namespace Sistema_ERP
             roleLabel.Text = "Administrador";
             roleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             sidebar.Controls.Add(roleLabel);
+            // logoutButton
             logoutButton.Name = "logoutButton";
             logoutButton.Location = new System.Drawing.Point(24, 876);
             logoutButton.Size = new System.Drawing.Size(216, 38);
@@ -255,24 +273,28 @@ namespace Sistema_ERP
             logoutButton.Text = "Cerrar sesion";
             sidebar.Controls.Add(logoutButton);
             logoutButton.FlatAppearance.BorderSize = 0;
+            // main
             main.Name = "main";
             main.Location = new System.Drawing.Point(265, 0);
             main.Size = new System.Drawing.Size(1235, 944);
             main.Dock = System.Windows.Forms.DockStyle.Fill;
             main.BackColor = System.Drawing.Color.White;
 
+            // header
             header.Name = "header";
             header.Location = new System.Drawing.Point(0, 0);
             header.Size = new System.Drawing.Size(1235, 64);
             header.Dock = System.Windows.Forms.DockStyle.Top;
             header.BackColor = System.Drawing.Color.White;
 
+            // headerDivider
             headerDivider.Name = "headerDivider";
             headerDivider.Location = new System.Drawing.Point(0, 63);
             headerDivider.Size = new System.Drawing.Size(1235, 1);
             headerDivider.Dock = System.Windows.Forms.DockStyle.Bottom;
             headerDivider.BackColor = System.Drawing.Color.FromArgb(225, 225, 225);
             header.Controls.Add(headerDivider);
+            // toggleButton
             toggleButton.Name = "toggleButton";
             toggleButton.Location = new System.Drawing.Point(32, 18);
             toggleButton.Size = new System.Drawing.Size(36, 30);
@@ -281,6 +303,7 @@ namespace Sistema_ERP
             toggleButton.BackColor = System.Drawing.Color.White;
             toggleButton.Text = "≡";
             header.Controls.Add(toggleButton);
+            // searchBox
             searchBox.Name = "searchBox";
             searchBox.Location = new System.Drawing.Point(80, 22);
             searchBox.Size = new System.Drawing.Size(420, 24);
@@ -288,11 +311,13 @@ namespace Sistema_ERP
             searchBox.PlaceholderText = "🔍 Buscador global...";
             searchBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             header.Controls.Add(searchBox);
+            // searchDivider
             searchDivider.Name = "searchDivider";
             searchDivider.Location = new System.Drawing.Point(80, 48);
             searchDivider.Size = new System.Drawing.Size(420, 1);
             searchDivider.BackColor = System.Drawing.Color.FromArgb(220, 220, 220);
             header.Controls.Add(searchDivider);
+            // accountLabel
             accountLabel.Name = "accountLabel";
             accountLabel.Location = new System.Drawing.Point(518, 18);
             accountLabel.Size = new System.Drawing.Size(130, 30);
@@ -302,6 +327,7 @@ namespace Sistema_ERP
             accountLabel.Text = "Administrador⌄";
             accountLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             header.Controls.Add(accountLabel);
+            // notificationButton
             notificationButton.Name = "notificationButton";
             notificationButton.Location = new System.Drawing.Point(660, 18);
             notificationButton.Size = new System.Drawing.Size(54, 30);
@@ -310,6 +336,7 @@ namespace Sistema_ERP
             notificationButton.BackColor = System.Drawing.Color.White;
             notificationButton.Text = "🔔 1";
             header.Controls.Add(notificationButton);
+            // content
             content.Name = "content";
             content.Location = new System.Drawing.Point(0, 64);
             content.Size = new System.Drawing.Size(1235, 880);
@@ -317,6 +344,7 @@ namespace Sistema_ERP
             content.AutoScroll = true;
             content.Dock = System.Windows.Forms.DockStyle.Fill;
 
+            // titulo
             titulo.Name = "titulo";
             titulo.Location = new System.Drawing.Point(32, 36);
             titulo.Size = new System.Drawing.Size(1163, 48);
@@ -327,6 +355,7 @@ namespace Sistema_ERP
             titulo.Text = "Validacion de traspasos";
             titulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             content.Controls.Add(titulo);
+            // subtitulo
             subtitulo.Name = "subtitulo";
             subtitulo.Location = new System.Drawing.Point(32, 84);
             subtitulo.Size = new System.Drawing.Size(1163, 28);
@@ -337,6 +366,7 @@ namespace Sistema_ERP
             subtitulo.Text = "Flujo: Pendiente → Aprobado → En transito → Recibido";
             subtitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             content.Controls.Add(subtitulo);
+            // avisoPanel
             avisoPanel.Name = "avisoPanel";
             avisoPanel.Location = new System.Drawing.Point(24, 122);
             avisoPanel.Size = new System.Drawing.Size(1187, 42);
@@ -345,6 +375,7 @@ namespace Sistema_ERP
             avisoPanel.BackColor = System.Drawing.Color.FromArgb(243, 243, 243);
             avisoPanel.MostrarSombra = false;
             content.Controls.Add(avisoPanel);
+            // aviso
             aviso.Name = "aviso";
             aviso.Location = new System.Drawing.Point(16, 0);
             aviso.Size = new System.Drawing.Size(1155, 42);
@@ -355,12 +386,14 @@ namespace Sistema_ERP
             aviso.Text = "ℹ Solo el Gerente o Admin puede autorizar. Cada accion se guarda en la auditoria.";
             aviso.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             avisoPanel.Controls.Add(aviso);
+            // validacionPanel
             validacionPanel.Name = "validacionPanel";
             validacionPanel.Location = new System.Drawing.Point(24, 180);
             validacionPanel.Size = new System.Drawing.Size(1187, 94);
             validacionPanel.Anchor = System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right;
             validacionPanel.BackColor = System.Drawing.Color.White;
             content.Controls.Add(validacionPanel);
+            // traspasos
             traspasos.Name = "traspasos";
             traspasos.Location = new System.Drawing.Point(28, 24);
             traspasos.Size = new System.Drawing.Size(1131, 42);

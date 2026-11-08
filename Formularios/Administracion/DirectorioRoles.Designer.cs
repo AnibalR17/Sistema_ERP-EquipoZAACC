@@ -134,6 +134,7 @@ namespace Sistema_ERP
             accionesDirectorio.SuspendLayout();
             tarjetaDirectorio.SuspendLayout();
             mensajes.SuspendLayout();
+            // nombre
             nombre.Name = "nombreDirectorio";
             nombre.Text = "";
             nombre.Location = new System.Drawing.Point(0, 33);
@@ -160,6 +161,7 @@ namespace Sistema_ERP
             nombre.PlaceholderText = "";
             nombre.ReadOnly = false;
             nombre.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            // identificador
             identificador.Name = "identificadorDirectorio";
             identificador.Text = "";
             identificador.Location = new System.Drawing.Point(0, 33);
@@ -186,6 +188,7 @@ namespace Sistema_ERP
             identificador.PlaceholderText = "";
             identificador.ReadOnly = false;
             identificador.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            // telefono
             telefono.Name = "telefonoDirectorio";
             telefono.Text = "";
             telefono.Location = new System.Drawing.Point(0, 33);
@@ -212,6 +215,7 @@ namespace Sistema_ERP
             telefono.PlaceholderText = "";
             telefono.ReadOnly = false;
             telefono.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            // correo
             correo.Name = "correoDirectorio";
             correo.Text = "";
             correo.Location = new System.Drawing.Point(0, 33);
@@ -238,6 +242,7 @@ namespace Sistema_ERP
             correo.PlaceholderText = "";
             correo.ReadOnly = false;
             correo.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            // direccion
             direccion.Name = "direccionDirectorio";
             direccion.Text = "";
             direccion.Location = new System.Drawing.Point(0, 33);
@@ -264,6 +269,7 @@ namespace Sistema_ERP
             direccion.PlaceholderText = "";
             direccion.ReadOnly = false;
             direccion.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            // contacto
             contacto.Name = "contactoDirectorio";
             contacto.Text = "";
             contacto.Location = new System.Drawing.Point(0, 33);
@@ -290,6 +296,7 @@ namespace Sistema_ERP
             contacto.PlaceholderText = "";
             contacto.ReadOnly = false;
             contacto.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            // tienda
             tienda.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             tienda.Name = "tiendaDirectorio";
             tienda.Text = "";
@@ -311,6 +318,7 @@ namespace Sistema_ERP
             tienda.MaximumSize = new System.Drawing.Size(0, 0);
             tienda.MaxLength = 0;
             tienda.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            // campos
             campos.Name = "campos";
             campos.Text = "";
             campos.Location = new System.Drawing.Point(0, 170);
@@ -339,6 +347,7 @@ namespace Sistema_ERP
             campos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.333332F));
             campos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.333332F));
             campos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.333332F));
+            // aviso
             aviso.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             aviso.Name = "aviso";
             aviso.Text = "El nombre es obligatorio. Selecciona una fila para actualizar sus datos.";
@@ -361,6 +370,7 @@ namespace Sistema_ERP
             aviso.BorderStyle = System.Windows.Forms.BorderStyle.None;
             aviso.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             aviso.AutoEllipsis = false;
+            // tabla
             tabla.Name = "tablaDirectorio";
             tabla.Text = "";
             tabla.Location = new System.Drawing.Point(16, 16);
@@ -455,6 +465,7 @@ namespace Sistema_ERP
             tablaColumna6.FillWeight = 100F;
             tablaColumna6.Visible = true;
             tabla.Columns.Add(tablaColumna6);
+            // contador
             contador.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             contador.Name = "contador";
             contador.Text = "Mostrando 0 registros";
@@ -477,6 +488,7 @@ namespace Sistema_ERP
             contador.BorderStyle = System.Windows.Forms.BorderStyle.None;
             contador.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             contador.AutoEllipsis = false;
+            // estado
             estado.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             estado.Name = "estado";
             estado.Text = "";
@@ -499,6 +511,7 @@ namespace Sistema_ERP
             estado.BorderStyle = System.Windows.Forms.BorderStyle.None;
             estado.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             estado.AutoEllipsis = true;
+            // buscar
             buscar.Name = "buscarDirectorio";
             buscar.Text = "";
             buscar.Location = new System.Drawing.Point(0, 438);
@@ -525,6 +538,7 @@ namespace Sistema_ERP
             buscar.PlaceholderText = "Buscar cliente por nombre o documento...";
             buscar.ReadOnly = false;
             buscar.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            // inactivos
             inactivos.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             inactivos.UseVisualStyleBackColor = false;
             inactivos.Name = "mostrarDirectorioInactivos";
@@ -548,6 +562,7 @@ namespace Sistema_ERP
             inactivos.Checked = false;
             inactivos.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             inactivos.AutoEllipsis = false;
+            // guardar
             guardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             guardar.UseVisualStyleBackColor = false;
             guardar.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -575,6 +590,7 @@ namespace Sistema_ERP
             guardar.FlatAppearance.BorderSize = 0;
             guardar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             guardar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 55, 55, 55);
+            // actualizar
             actualizar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             actualizar.UseVisualStyleBackColor = false;
             actualizar.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -602,6 +618,7 @@ namespace Sistema_ERP
             actualizar.FlatAppearance.BorderSize = 1;
             actualizar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             actualizar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 243, 243, 243);
+            // desactivar
             desactivar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             desactivar.UseVisualStyleBackColor = false;
             desactivar.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -629,6 +646,7 @@ namespace Sistema_ERP
             desactivar.FlatAppearance.BorderSize = 1;
             desactivar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             desactivar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 243, 243, 243);
+            // reactivar
             reactivar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             reactivar.UseVisualStyleBackColor = false;
             reactivar.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -656,6 +674,7 @@ namespace Sistema_ERP
             reactivar.FlatAppearance.BorderSize = 1;
             reactivar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             reactivar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 243, 243, 243);
+            // bloqueNombre
             bloqueNombre.Name = "bloqueNombre";
             bloqueNombre.Text = "";
             bloqueNombre.Location = new System.Drawing.Point(0, 0);
@@ -682,6 +701,7 @@ namespace Sistema_ERP
             bloqueNombre.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             bloqueNombre.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             bloqueNombre.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            // lblNombre
             lblNombre.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblNombre.Name = "lblNombre";
             lblNombre.Text = "Nombre *";
@@ -704,6 +724,7 @@ namespace Sistema_ERP
             lblNombre.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblNombre.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblNombre.AutoEllipsis = false;
+            // bloqueIdentificador
             bloqueIdentificador.Name = "bloqueIdentificador";
             bloqueIdentificador.Text = "";
             bloqueIdentificador.Location = new System.Drawing.Point(473, 0);
@@ -730,6 +751,7 @@ namespace Sistema_ERP
             bloqueIdentificador.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             bloqueIdentificador.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             bloqueIdentificador.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            // lblIdentificador
             lblIdentificador.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblIdentificador.Name = "lblIdentificador";
             lblIdentificador.Text = "Documento fiscal (opcional)";
@@ -752,6 +774,7 @@ namespace Sistema_ERP
             lblIdentificador.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblIdentificador.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblIdentificador.AutoEllipsis = false;
+            // bloqueTelefono
             bloqueTelefono.Name = "bloqueTelefono";
             bloqueTelefono.Text = "";
             bloqueTelefono.Location = new System.Drawing.Point(946, 0);
@@ -778,6 +801,7 @@ namespace Sistema_ERP
             bloqueTelefono.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             bloqueTelefono.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             bloqueTelefono.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            // lblTelefono
             lblTelefono.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblTelefono.Name = "lblTelefono";
             lblTelefono.Text = "Tel\u00C3\u00A9fono";
@@ -800,6 +824,7 @@ namespace Sistema_ERP
             lblTelefono.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblTelefono.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblTelefono.AutoEllipsis = false;
+            // bloqueCorreo
             bloqueCorreo.Name = "bloqueCorreo";
             bloqueCorreo.Text = "";
             bloqueCorreo.Location = new System.Drawing.Point(0, 78);
@@ -826,6 +851,7 @@ namespace Sistema_ERP
             bloqueCorreo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             bloqueCorreo.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             bloqueCorreo.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            // lblCorreo
             lblCorreo.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblCorreo.Name = "lblCorreo";
             lblCorreo.Text = "Correo";
@@ -848,6 +874,7 @@ namespace Sistema_ERP
             lblCorreo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblCorreo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblCorreo.AutoEllipsis = false;
+            // bloqueDireccion
             bloqueDireccion.Name = "bloqueDireccion";
             bloqueDireccion.Text = "";
             bloqueDireccion.Location = new System.Drawing.Point(473, 78);
@@ -874,6 +901,7 @@ namespace Sistema_ERP
             bloqueDireccion.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             bloqueDireccion.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             bloqueDireccion.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            // lblDireccion
             lblDireccion.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblDireccion.Name = "lblDireccion";
             lblDireccion.Text = "Direcci\u00C3\u00B3n";
@@ -896,6 +924,7 @@ namespace Sistema_ERP
             lblDireccion.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblDireccion.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblDireccion.AutoEllipsis = false;
+            // bloqueContacto
             bloqueContacto.Name = "bloqueContacto";
             bloqueContacto.Text = "";
             bloqueContacto.Location = new System.Drawing.Point(0, 0);
@@ -922,6 +951,7 @@ namespace Sistema_ERP
             bloqueContacto.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             bloqueContacto.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             bloqueContacto.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            // lblContacto
             lblContacto.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblContacto.Name = "lblContacto";
             lblContacto.Text = "";
@@ -944,6 +974,7 @@ namespace Sistema_ERP
             lblContacto.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblContacto.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblContacto.AutoEllipsis = false;
+            // bloqueTienda
             bloqueTienda.Name = "bloqueTienda";
             bloqueTienda.Text = "";
             bloqueTienda.Location = new System.Drawing.Point(0, 0);
@@ -970,6 +1001,7 @@ namespace Sistema_ERP
             bloqueTienda.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
             bloqueTienda.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             bloqueTienda.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            // lblTienda
             lblTienda.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblTienda.Name = "lblTienda";
             lblTienda.Text = "";
@@ -992,6 +1024,7 @@ namespace Sistema_ERP
             lblTienda.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblTienda.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblTienda.AutoEllipsis = false;
+            // Cuerpo
             Cuerpo.Name = "contenidoDirectorio";
             Cuerpo.Text = "";
             Cuerpo.Location = new System.Drawing.Point(32, 34);
@@ -1012,6 +1045,7 @@ namespace Sistema_ERP
             Cuerpo.MaximumSize = new System.Drawing.Size(0, 0);
             Cuerpo.AutoScroll = true;
             Cuerpo.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            // layoutDirectorio
             layoutDirectorio.Name = "layoutDirectorio";
             layoutDirectorio.Text = "";
             layoutDirectorio.Location = new System.Drawing.Point(0, 0);
@@ -1045,6 +1079,7 @@ namespace Sistema_ERP
             layoutDirectorio.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 340F));
             layoutDirectorio.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 42F));
             layoutDirectorio.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            // lblTitulo
             lblTitulo.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblTitulo.Name = "lblTitulo";
             lblTitulo.Text = "Directorio y roles";
@@ -1067,6 +1102,7 @@ namespace Sistema_ERP
             lblTitulo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             lblTitulo.AutoEllipsis = false;
+            // pestanas
             pestanas.Name = "pestanas";
             pestanas.Text = "";
             pestanas.Location = new System.Drawing.Point(0, 58);
@@ -1089,6 +1125,7 @@ namespace Sistema_ERP
             pestanas.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
             pestanas.WrapContents = false;
             pestanas.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            // tabClientes
             tabClientes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             tabClientes.UseVisualStyleBackColor = false;
             tabClientes.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -1116,6 +1153,7 @@ namespace Sistema_ERP
             tabClientes.FlatAppearance.BorderSize = 0;
             tabClientes.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             tabClientes.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 55, 55, 55);
+            // tabProveedores
             tabProveedores.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             tabProveedores.UseVisualStyleBackColor = false;
             tabProveedores.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -1143,6 +1181,7 @@ namespace Sistema_ERP
             tabProveedores.FlatAppearance.BorderSize = 1;
             tabProveedores.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             tabProveedores.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 243, 243, 243);
+            // tabEmpleados
             tabEmpleados.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             tabEmpleados.UseVisualStyleBackColor = false;
             tabEmpleados.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -1170,6 +1209,7 @@ namespace Sistema_ERP
             tabEmpleados.FlatAppearance.BorderSize = 1;
             tabEmpleados.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             tabEmpleados.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 243, 243, 243);
+            // accionesDirectorio
             accionesDirectorio.Name = "accionesDirectorio";
             accionesDirectorio.Text = "";
             accionesDirectorio.Location = new System.Drawing.Point(0, 326);
@@ -1192,6 +1232,7 @@ namespace Sistema_ERP
             accionesDirectorio.FlowDirection = System.Windows.Forms.FlowDirection.LeftToRight;
             accionesDirectorio.WrapContents = false;
             accionesDirectorio.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            // nuevo
             nuevo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             nuevo.UseVisualStyleBackColor = false;
             nuevo.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -1219,6 +1260,7 @@ namespace Sistema_ERP
             nuevo.FlatAppearance.BorderSize = 1;
             nuevo.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             nuevo.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 243, 243, 243);
+            // tarjetaDirectorio
             tarjetaDirectorio.Name = "tarjetaDirectorio";
             tarjetaDirectorio.Text = "";
             tarjetaDirectorio.Location = new System.Drawing.Point(0, 474);
@@ -1242,6 +1284,7 @@ namespace Sistema_ERP
             tarjetaDirectorio.Radio = 30;
             tarjetaDirectorio.ColorBorde = System.Drawing.Color.FromArgb(247, 247, 247);
             tarjetaDirectorio.MostrarSombra = false;
+            // mensajes
             mensajes.Name = "mensajes";
             mensajes.Text = "";
             mensajes.Location = new System.Drawing.Point(0, 814);

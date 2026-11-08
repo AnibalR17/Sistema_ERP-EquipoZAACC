@@ -61,6 +61,7 @@ namespace Sistema_ERP
             this.SuspendLayout();
             campos.SuspendLayout();
             acciones.SuspendLayout();
+            // nombre
             nombre.Name = "nombre";
             nombre.Text = "";
             nombre.Location = new System.Drawing.Point(24, 60);
@@ -87,6 +88,7 @@ namespace Sistema_ERP
             nombre.PlaceholderText = "";
             nombre.ReadOnly = false;
             nombre.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            // telefono
             telefono.Name = "telefono";
             telefono.Text = "";
             telefono.Location = new System.Drawing.Point(24, 128);
@@ -113,6 +115,7 @@ namespace Sistema_ERP
             telefono.PlaceholderText = "";
             telefono.ReadOnly = false;
             telefono.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            // correo
             correo.Name = "correo";
             correo.Text = "";
             correo.Location = new System.Drawing.Point(24, 196);
@@ -139,6 +142,7 @@ namespace Sistema_ERP
             correo.PlaceholderText = "";
             correo.ReadOnly = false;
             correo.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            // identificador
             identificador.Name = "identificador";
             identificador.Text = "";
             identificador.Location = new System.Drawing.Point(24, 264);
@@ -165,6 +169,7 @@ namespace Sistema_ERP
             identificador.PlaceholderText = "";
             identificador.ReadOnly = false;
             identificador.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            // direccion
             direccion.Name = "direccion";
             direccion.Text = "";
             direccion.Location = new System.Drawing.Point(24, 332);
@@ -191,6 +196,7 @@ namespace Sistema_ERP
             direccion.PlaceholderText = "";
             direccion.ReadOnly = false;
             direccion.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            // contacto
             contacto.Name = "contacto";
             contacto.Text = "";
             contacto.Location = new System.Drawing.Point(0, 0);
@@ -217,6 +223,7 @@ namespace Sistema_ERP
             contacto.PlaceholderText = "";
             contacto.ReadOnly = false;
             contacto.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            // tienda
             tienda.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             tienda.Name = "tienda";
             tienda.Text = "";
@@ -238,6 +245,7 @@ namespace Sistema_ERP
             tienda.MaximumSize = new System.Drawing.Size(0, 0);
             tienda.MaxLength = 0;
             tienda.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            // guardar
             guardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             guardar.UseVisualStyleBackColor = false;
             guardar.Cursor = System.Windows.Forms.Cursors.Hand;
@@ -265,6 +273,7 @@ namespace Sistema_ERP
             guardar.FlatAppearance.BorderSize = 0;
             guardar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(255, 220, 220, 220);
             guardar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(255, 55, 55, 55);
+            // estado
             estado.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             estado.Name = "estado";
             estado.Text = "";
@@ -287,6 +296,7 @@ namespace Sistema_ERP
             estado.BorderStyle = System.Windows.Forms.BorderStyle.None;
             estado.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             estado.AutoEllipsis = false;
+            // campos
             campos.Name = "campos";
             campos.Text = "";
             campos.Location = new System.Drawing.Point(0, 0);
@@ -311,6 +321,7 @@ namespace Sistema_ERP
             campos.BorderStyle = System.Windows.Forms.BorderStyle.None;
             campos.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.None;
             campos.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            // lblNombre
             lblNombre.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblNombre.Name = "lblNombre";
             lblNombre.Text = "Nombre *";
@@ -333,6 +344,7 @@ namespace Sistema_ERP
             lblNombre.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblNombre.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             lblNombre.AutoEllipsis = false;
+            // lblTelefono
             lblTelefono.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblTelefono.Name = "lblTelefono";
             lblTelefono.Text = "Tel\u00E9fono";
@@ -355,6 +367,7 @@ namespace Sistema_ERP
             lblTelefono.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblTelefono.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             lblTelefono.AutoEllipsis = false;
+            // lblCorreo
             lblCorreo.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblCorreo.Name = "lblCorreo";
             lblCorreo.Text = "Correo";
@@ -377,6 +390,7 @@ namespace Sistema_ERP
             lblCorreo.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblCorreo.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             lblCorreo.AutoEllipsis = false;
+            // lblIdentificador
             lblIdentificador.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblIdentificador.Name = "lblIdentificador";
             lblIdentificador.Text = "Documento fiscal";
@@ -399,6 +413,7 @@ namespace Sistema_ERP
             lblIdentificador.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblIdentificador.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             lblIdentificador.AutoEllipsis = false;
+            // lblDireccion
             lblDireccion.FlatStyle = System.Windows.Forms.FlatStyle.Standard;
             lblDireccion.Name = "lblDireccion";
             lblDireccion.Text = "Direcci\u00F3n";
@@ -421,6 +436,7 @@ namespace Sistema_ERP
             lblDireccion.BorderStyle = System.Windows.Forms.BorderStyle.None;
             lblDireccion.TextAlign = System.Drawing.ContentAlignment.TopLeft;
             lblDireccion.AutoEllipsis = false;
+            // acciones
             acciones.Name = "acciones";
             acciones.Text = "";
             acciones.Location = new System.Drawing.Point(0, 545);
@@ -443,6 +459,7 @@ namespace Sistema_ERP
             acciones.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
             acciones.WrapContents = false;
             acciones.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            // cancelar
             cancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             cancelar.UseVisualStyleBackColor = false;
             cancelar.Cursor = System.Windows.Forms.Cursors.Hand;

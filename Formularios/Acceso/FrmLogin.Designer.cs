@@ -2,8 +2,15 @@
 {
     partial class FrmLogin
     {
+        /// <summary>
+        /// Variable del disenador necesaria.
+        /// </summary>
         private System.ComponentModel.IContainer components = null;
 
+        /// <summary>
+        /// Limpiar los recursos que se esten usando.
+        /// </summary>
+        /// <param name="disposing">true si los recursos administrados se deben desechar; false en caso contrario.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -15,6 +22,10 @@
 
         #region Codigo generado por el Disenador de Windows Forms
 
+        /// <summary>
+        /// Metodo necesario para admitir el Disenador. No se puede modificar
+        /// el contenido de este metodo con el editor de codigo.
+        /// </summary>
         private void InitializeComponent()
         {
             this.pnlIzquierdo = new System.Windows.Forms.Panel();
@@ -52,6 +63,9 @@
             this.pnlTarjeta3.SuspendLayout();
             this.pnlLogin.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // pnlIzquierdo
+            // 
             this.pnlIzquierdo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(242)))), ((int)(((byte)(242)))));
             this.pnlIzquierdo.Controls.Add(this.pnlTarjeta3);
             this.pnlIzquierdo.Controls.Add(this.pnlTarjeta2);
@@ -65,6 +79,9 @@
             this.pnlIzquierdo.Name = "pnlIzquierdo";
             this.pnlIzquierdo.Size = new System.Drawing.Size(540, 650);
             this.pnlIzquierdo.TabIndex = 0;
+            // 
+            // lblMarca
+            // 
             this.lblMarca.AutoSize = true;
             this.lblMarca.Font = new System.Drawing.Font("Segoe UI", 13.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMarca.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
@@ -73,6 +90,9 @@
             this.lblMarca.Size = new System.Drawing.Size(145, 31);
             this.lblMarca.TabIndex = 0;
             this.lblMarca.Text = "Sistema ERP";
+            // 
+            // lblTitulo
+            // 
             this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 25.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
             this.lblTitulo.Location = new System.Drawing.Point(40, 150);
@@ -80,6 +100,9 @@
             this.lblTitulo.Size = new System.Drawing.Size(460, 190);
             this.lblTitulo.TabIndex = 1;
             this.lblTitulo.Text = "Ventas, inventario y traspasos en un solo lugar ";
+            // 
+            // lblSubtitulo
+            // 
             this.lblSubtitulo.AutoSize = true;
             this.lblSubtitulo.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblSubtitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
@@ -88,6 +111,9 @@
             this.lblSubtitulo.Size = new System.Drawing.Size(344, 23);
             this.lblSubtitulo.TabIndex = 2;
             this.lblSubtitulo.Text = "Administra todas tus tiendas desde la nube ";
+            // 
+            // lblPie
+            // 
             this.lblPie.AutoSize = true;
             this.lblPie.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPie.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
@@ -96,6 +122,9 @@
             this.lblPie.Size = new System.Drawing.Size(161, 17);
             this.lblPie.TabIndex = 3;
             this.lblPie.Text = "© 2026 Sistema ERP · v1.0";
+            // 
+            // pnlTarjeta1
+            // 
             this.pnlTarjeta1.BackColor = System.Drawing.Color.White;
             this.pnlTarjeta1.Controls.Add(this.lblTarjeta1Desc);
             this.pnlTarjeta1.Controls.Add(this.lblTarjeta1Titulo);
@@ -103,6 +132,9 @@
             this.pnlTarjeta1.Name = "pnlTarjeta1";
             this.pnlTarjeta1.Size = new System.Drawing.Size(400, 54);
             this.pnlTarjeta1.TabIndex = 4;
+            // 
+            // lblTarjeta1Titulo
+            // 
             this.lblTarjeta1Titulo.AutoSize = true;
             this.lblTarjeta1Titulo.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTarjeta1Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
@@ -111,6 +143,9 @@
             this.lblTarjeta1Titulo.Size = new System.Drawing.Size(132, 23);
             this.lblTarjeta1Titulo.TabIndex = 0;
             this.lblTarjeta1Titulo.Text = "Punto de Venta";
+            // 
+            // lblTarjeta1Desc
+            // 
             this.lblTarjeta1Desc.AutoSize = true;
             this.lblTarjeta1Desc.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTarjeta1Desc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
@@ -119,6 +154,9 @@
             this.lblTarjeta1Desc.Size = new System.Drawing.Size(246, 17);
             this.lblTarjeta1Desc.TabIndex = 1;
             this.lblTarjeta1Desc.Text = "Facturacion rapida con control de pagos";
+            // 
+            // pnlTarjeta2
+            // 
             this.pnlTarjeta2.BackColor = System.Drawing.Color.White;
             this.pnlTarjeta2.Controls.Add(this.lblTarjeta2Desc);
             this.pnlTarjeta2.Controls.Add(this.lblTarjeta2Titulo);
@@ -126,6 +164,9 @@
             this.pnlTarjeta2.Name = "pnlTarjeta2";
             this.pnlTarjeta2.Size = new System.Drawing.Size(400, 54);
             this.pnlTarjeta2.TabIndex = 5;
+            // 
+            // lblTarjeta2Desc
+            // 
             this.lblTarjeta2Desc.AutoSize = true;
             this.lblTarjeta2Desc.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTarjeta2Desc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
@@ -134,6 +175,9 @@
             this.lblTarjeta2Desc.Size = new System.Drawing.Size(216, 17);
             this.lblTarjeta2Desc.TabIndex = 1;
             this.lblTarjeta2Desc.Text = "Solicitud, aprobacion y seguimiento";
+            // 
+            // lblTarjeta2Titulo
+            // 
             this.lblTarjeta2Titulo.AutoSize = true;
             this.lblTarjeta2Titulo.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTarjeta2Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
@@ -142,6 +186,9 @@
             this.lblTarjeta2Titulo.Size = new System.Drawing.Size(196, 23);
             this.lblTarjeta2Titulo.TabIndex = 0;
             this.lblTarjeta2Titulo.Text = "Traspasos entre tiendas";
+            // 
+            // pnlTarjeta3
+            // 
             this.pnlTarjeta3.BackColor = System.Drawing.Color.White;
             this.pnlTarjeta3.Controls.Add(this.lblTarjeta3Desc);
             this.pnlTarjeta3.Controls.Add(this.lblTarjeta3Titulo);
@@ -149,6 +196,9 @@
             this.pnlTarjeta3.Name = "pnlTarjeta3";
             this.pnlTarjeta3.Size = new System.Drawing.Size(400, 54);
             this.pnlTarjeta3.TabIndex = 5;
+            // 
+            // lblTarjeta3Desc
+            // 
             this.lblTarjeta3Desc.AutoSize = true;
             this.lblTarjeta3Desc.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTarjeta3Desc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
@@ -157,6 +207,9 @@
             this.lblTarjeta3Desc.Size = new System.Drawing.Size(196, 17);
             this.lblTarjeta3Desc.TabIndex = 1;
             this.lblTarjeta3Desc.Text = "Cajero, Gerente y Administrador";
+            // 
+            // lblTarjeta3Titulo
+            // 
             this.lblTarjeta3Titulo.AutoSize = true;
             this.lblTarjeta3Titulo.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblTarjeta3Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
@@ -165,6 +218,9 @@
             this.lblTarjeta3Titulo.Size = new System.Drawing.Size(146, 23);
             this.lblTarjeta3Titulo.TabIndex = 0;
             this.lblTarjeta3Titulo.Text = "Control por roles";
+            // 
+            // pnlLogin
+            // 
             this.pnlLogin.BackColor = System.Drawing.Color.White;
             this.pnlLogin.Controls.Add(this.btnIngresar);
             this.pnlLogin.Controls.Add(this.cmbRol);
@@ -183,6 +239,9 @@
             this.pnlLogin.Size = new System.Drawing.Size(400, 400);
             this.pnlLogin.TabIndex = 1;
             this.pnlLogin.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlLogin_Paint);
+            // 
+            // lblLoginTitulo
+            // 
             this.lblLoginTitulo.AutoSize = true;
             this.lblLoginTitulo.Font = new System.Drawing.Font("Segoe UI", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLoginTitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
@@ -191,6 +250,9 @@
             this.lblLoginTitulo.Size = new System.Drawing.Size(229, 46);
             this.lblLoginTitulo.TabIndex = 0;
             this.lblLoginTitulo.Text = "Iniciar sesion";
+            // 
+            // lblLoginSub
+            // 
             this.lblLoginSub.AutoSize = true;
             this.lblLoginSub.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLoginSub.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
@@ -199,6 +261,9 @@
             this.lblLoginSub.Size = new System.Drawing.Size(266, 20);
             this.lblLoginSub.TabIndex = 1;
             this.lblLoginSub.Text = "Ingresa tus credenciales para continuar";
+            // 
+            // lblUsuario
+            // 
             this.lblUsuario.AutoSize = true;
             this.lblUsuario.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
@@ -207,6 +272,9 @@
             this.lblUsuario.Size = new System.Drawing.Size(53, 17);
             this.lblUsuario.TabIndex = 2;
             this.lblUsuario.Text = "Usuario";
+            // 
+            // lblClave
+            // 
             this.lblClave.AutoSize = true;
             this.lblClave.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblClave.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
@@ -215,12 +283,18 @@
             this.lblClave.Size = new System.Drawing.Size(74, 17);
             this.lblClave.TabIndex = 3;
             this.lblClave.Text = "Contrasena";
+            // 
+            // txtUsuario
+            // 
             this.txtUsuario.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtUsuario.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtUsuario.Location = new System.Drawing.Point(32, 130);
             this.txtUsuario.Name = "txtUsuario";
             this.txtUsuario.Size = new System.Drawing.Size(336, 24);
             this.txtUsuario.TabIndex = 2;
+            // 
+            // txtClave
+            // 
             this.txtClave.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtClave.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtClave.Location = new System.Drawing.Point(32, 198);
@@ -228,21 +302,33 @@
             this.txtClave.Size = new System.Drawing.Size(336, 24);
             this.txtClave.TabIndex = 4;
             this.txtClave.UseSystemPasswordChar = true;
+            // 
+            // lineaUsuario
+            // 
             this.lineaUsuario.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
             this.lineaUsuario.Location = new System.Drawing.Point(32, 158);
             this.lineaUsuario.Name = "lineaUsuario";
             this.lineaUsuario.Size = new System.Drawing.Size(336, 1);
             this.lineaUsuario.TabIndex = 5;
+            // 
+            // lineaClave
+            // 
             this.lineaClave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
             this.lineaClave.Location = new System.Drawing.Point(32, 226);
             this.lineaClave.Name = "lineaClave";
             this.lineaClave.Size = new System.Drawing.Size(336, 1);
             this.lineaClave.TabIndex = 6;
+            // 
+            // lineaRol
+            // 
             this.lineaRol.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
             this.lineaRol.Location = new System.Drawing.Point(32, 300);
             this.lineaRol.Name = "lineaRol";
             this.lineaRol.Size = new System.Drawing.Size(336, 1);
             this.lineaRol.TabIndex = 7;
+            // 
+            // lblRol
+            // 
             this.lblRol.AutoSize = true;
             this.lblRol.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblRol.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
@@ -251,6 +337,9 @@
             this.lblRol.Size = new System.Drawing.Size(73, 17);
             this.lblRol.TabIndex = 8;
             this.lblRol.Text = "Confirmar nueva contraseña";
+            // 
+            // cmbRol
+            // 
             this.cmbRol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbRol.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.cmbRol.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -260,6 +349,9 @@
             this.cmbRol.Size = new System.Drawing.Size(336, 33);
             this.cmbRol.TabIndex = 9;
             this.cmbRol.SelectedIndexChanged += new System.EventHandler(this.cmbRol_SelectedIndexChanged);
+            // 
+            // btnIngresar
+            // 
             this.btnIngresar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
             this.btnIngresar.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnIngresar.FlatAppearance.BorderSize = 0;
@@ -273,6 +365,9 @@
             this.btnIngresar.Text = "Ingresar";
             this.btnIngresar.UseVisualStyleBackColor = false;
             this.btnIngresar.Click += new System.EventHandler(this.btnIngresar_Click);
+            // 
+            // FrmLogin
+            // 
             this.AcceptButton = this.btnIngresar;
             this.txtUsuario.MaxLength = 50;
             this.txtClave.MaxLength = 128;

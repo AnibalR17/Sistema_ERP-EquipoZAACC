@@ -38,6 +38,9 @@
             pnlContenedorGrid.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)dgvProveedores).BeginInit();
             SuspendLayout();
+            //
+            // mainLayout
+            //
             mainLayout.ColumnCount = 1;
             mainLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             mainLayout.Controls.Add(lblTitulo, 0, 0);
@@ -54,6 +57,9 @@
             mainLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             mainLayout.Size = new System.Drawing.Size(1436, 830);
             mainLayout.TabIndex = 0;
+            //
+            // lblTitulo
+            //
             lblTitulo.AutoSize = true;
             lblTitulo.Dock = System.Windows.Forms.DockStyle.Fill;
             lblTitulo.Font = new System.Drawing.Font("Segoe UI", 27F, System.Drawing.FontStyle.Bold);
@@ -64,6 +70,9 @@
             lblTitulo.TabIndex = 0;
             lblTitulo.Text = "Proveedores";
             lblTitulo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // pnlInfo
+            //
             pnlInfo.BackColor = System.Drawing.Color.FromArgb(243, 243, 243);
             pnlInfo.Controls.Add(lblInfo);
             pnlInfo.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -73,6 +82,9 @@
             pnlInfo.Size = new System.Drawing.Size(1436, 45);
             pnlInfo.TabIndex = 1;
             pnlInfo.Paint += pnlInfo_Paint;
+            //
+            // lblInfo
+            //
             lblInfo.Dock = System.Windows.Forms.DockStyle.Fill;
             lblInfo.Font = new System.Drawing.Font("Segoe UI", 11F);
             lblInfo.ForeColor = System.Drawing.Color.FromArgb(125, 125, 125);
@@ -83,6 +95,9 @@
             lblInfo.TabIndex = 0;
             lblInfo.Text = "ℹ Gestion centralizada del directorio de proveedores y contactos activos.";
             lblInfo.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            //
+            // pnlAcciones
+            //
             pnlAcciones.Controls.Add(btnNuevo);
             pnlAcciones.Controls.Add(btnEditar);
             pnlAcciones.Controls.Add(txtBuscar);
@@ -92,6 +107,9 @@
             pnlAcciones.Name = "pnlAcciones";
             pnlAcciones.Size = new System.Drawing.Size(1436, 40);
             pnlAcciones.TabIndex = 2;
+            //
+            // btnNuevo
+            //
             btnNuevo.BackColor = System.Drawing.Color.FromArgb(255, 255, 255);
             btnNuevo.Cursor = System.Windows.Forms.Cursors.Hand;
             btnNuevo.FlatAppearance.BorderSize = 0;
@@ -106,6 +124,9 @@
             btnNuevo.UseVisualStyleBackColor = false;
             btnNuevo.MouseEnter += Btn_MouseEnter;
             btnNuevo.MouseLeave += Btn_MouseLeave;
+            //
+            // btnEditar
+            //
             btnEditar.BackColor = System.Drawing.Color.FromArgb(255, 255, 255);
             btnEditar.Cursor = System.Windows.Forms.Cursors.Hand;
             btnEditar.FlatAppearance.BorderSize = 0;
@@ -120,6 +141,9 @@
             btnEditar.UseVisualStyleBackColor = false;
             btnEditar.MouseEnter += Btn_MouseEnter;
             btnEditar.MouseLeave += Btn_MouseLeave;
+            //
+            // txtBuscar
+            //
             txtBuscar.Font = new System.Drawing.Font("Segoe UI", 12F);
             txtBuscar.Location = new System.Drawing.Point(400, 4);
             txtBuscar.Margin = new System.Windows.Forms.Padding(0, 4, 0, 0);
@@ -127,6 +151,9 @@
             txtBuscar.PlaceholderText = "🔍 Buscar proveedor por nombre o RTN...";
             txtBuscar.Size = new System.Drawing.Size(400, 34);
             txtBuscar.TabIndex = 3;
+            //
+            // pnlContenedorGrid
+            //
             pnlContenedorGrid.BackColor = System.Drawing.Color.White;
             pnlContenedorGrid.Controls.Add(dgvProveedores);
             pnlContenedorGrid.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -137,6 +164,9 @@
             pnlContenedorGrid.Size = new System.Drawing.Size(1436, 660);
             pnlContenedorGrid.TabIndex = 3;
             pnlContenedorGrid.Paint += pnlContenedorGrid_Paint;
+            //
+            // dgvProveedores
+            //
             dgvProveedores.BackgroundColor = System.Drawing.Color.White;
             dgvProveedores.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dgvProveedores.ColumnHeadersHeight = 29;
@@ -146,6 +176,9 @@
             dgvProveedores.RowHeadersWidth = 51;
             dgvProveedores.Size = new System.Drawing.Size(1396, 620);
             dgvProveedores.TabIndex = 0;
+            //
+            // PantallaProveedores
+            //
             AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.Color.FromArgb(253, 253, 253);
