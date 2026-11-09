@@ -23,6 +23,10 @@ Crear una tienda y dos empleados activos mediante los CRUD existentes. Abrir **U
 
 ## Verificacion local realizada
 
+El 9 de noviembre de 2026 se verificó la ventana **Generar permisos…** con 23 comprobaciones de integración contra SQL Server: precarga al editar, combinación de roles sin duplicar permisos, acceso total de ADMINISTRADOR, roles y permisos inactivos, relaciones desactivadas, estados vacíos, aceptar/cancelar, persistencia al crear y editar, tamaño mínimo y ocultación de las opciones de asignación para cuentas de consulta al cambiar de pestaña.
+
+La ventana **Permisos por módulo…** superó 23 comprobaciones adicionales: agrupación del catálogo por módulo, selección conservada al navegar, inclusión de CONSULTAR al marcar GESTIONAR, retirada de GESTIONAR al quitar CONSULTAR, selección y retirada de un módulo sin afectar a otros, acciones adicionales, rechazo de GESTIONAR sin consulta activa, aceptar/cancelar, guardado y actualización desde el formulario de roles, permisos inactivos asignados, rol inactivo y catálogo vacío. `dotnet run --project Pruebas/FlujoVentas.Integracion` completó también los flujos existentes, las 41 comprobaciones de autorización y las 87 de búsqueda global. La prueba creó y eliminó su propia base temporal. Compilación sin errores ni advertencias.
+
 Un ejecutable temporal sobre .NET 10 comprobo construccion del formulario sin consultar SQL, columnas de las tres variantes, filtros con caracteres especiales y validaciones previas a persistencia: 17 comprobaciones aprobadas. Compilacion y revision de espacios se verifican por separado. Estas comprobaciones no sustituyen los casos de integracion anteriores.
 
 ## Limites

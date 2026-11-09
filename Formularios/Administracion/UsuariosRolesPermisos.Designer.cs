@@ -5,9 +5,10 @@ namespace Sistema_ERP
     {
         private System.ComponentModel.IContainer? components;
         private TableLayoutPanel contenido = null!, campos = null!;
-        private FlowLayoutPanel pestanas = null!, acciones = null!, filtros = null!;
+        private FlowLayoutPanel pestanas = null!, acciones = null!, filtros = null!, opcionesAsignaciones = null!, accionesAsignaciones = null!;
         private Button usuarios = null!, roles = null!, permisos = null!;
         private Button guardar = null!, actualizar = null!, desactivar = null!, reactivar = null!, nuevo = null!, recargar = null!;
+        private Button generarPermisos = null!, asignarPermisosModulo = null!;
         private TextBox primero = null!, segundo = null!, descripcion = null!, contrasena = null!, confirmar = null!, buscar = null!;
         private ComboBox empleado = null!;
         private CheckedListBox asignaciones = null!;
@@ -28,6 +29,8 @@ namespace Sistema_ERP
             components = new System.ComponentModel.Container();
             contenido = new TableLayoutPanel(); campos = new TableLayoutPanel();
             pestanas = new FlowLayoutPanel(); acciones = new FlowLayoutPanel(); filtros = new FlowLayoutPanel();
+            opcionesAsignaciones = new FlowLayoutPanel(); accionesAsignaciones = new FlowLayoutPanel();
+            generarPermisos = new Button(); asignarPermisosModulo = new Button();
             usuarios = new Button(); roles = new Button(); permisos = new Button();
             guardar = new Button(); actualizar = new Button(); desactivar = new Button(); reactivar = new Button(); nuevo = new Button(); recargar = new Button();
             primero = new TextBox(); segundo = new TextBox(); descripcion = new TextBox(); contrasena = new TextBox(); confirmar = new TextBox(); buscar = new TextBox();
@@ -90,7 +93,21 @@ namespace Sistema_ERP
             contenido.Controls.Add(campos, 0, 3);
             etiquetaAsignaciones.AutoSize = true;
             etiquetaAsignaciones.Font = new Font("Segoe UI", 10F);
-            contenido.Controls.Add(etiquetaAsignaciones, 0, 4);
+            etiquetaAsignaciones.Margin = new Padding(0, 10, 18, 0);
+            opcionesAsignaciones.AutoSize = true; opcionesAsignaciones.Dock = DockStyle.Fill;
+            opcionesAsignaciones.Margin = Padding.Empty;
+            generarPermisos.Name = "generarPermisos";
+            generarPermisos.Text = "Generar permisos…";
+            ProductoEstilo.Boton(generarPermisos);
+            generarPermisos.Size = new Size(200, 36);
+            asignarPermisosModulo.Name = "asignarPermisosModulo";
+            asignarPermisosModulo.Text = "Permisos por módulo…";
+            ProductoEstilo.Boton(asignarPermisosModulo);
+            asignarPermisosModulo.Size = new Size(230, 36);
+            accionesAsignaciones.AutoSize = true; accionesAsignaciones.Margin = Padding.Empty;
+            accionesAsignaciones.Controls.AddRange(new Control[] { generarPermisos, asignarPermisosModulo });
+            opcionesAsignaciones.Controls.AddRange(new Control[] { etiquetaAsignaciones, accionesAsignaciones });
+            contenido.Controls.Add(opcionesAsignaciones, 0, 4);
             asignaciones.Dock = DockStyle.Fill; asignaciones.Height = 90;
             asignaciones.CheckOnClick = true; asignaciones.IntegralHeight = false;
             asignaciones.Margin = new Padding(0, 4, 0, 14);

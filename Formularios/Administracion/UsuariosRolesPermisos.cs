@@ -26,6 +26,8 @@ namespace Sistema_ERP
             actualizar.Click += (_, _) => Guardar(true);
             nuevo.Click += (_, _) => Ejecutar(() => Limpiar());
             recargar.Click += (_, _) => Cargar();
+            generarPermisos.Click += (_, _) => Ejecutar(GenerarPermisos);
+            asignarPermisosModulo.Click += (_, _) => Ejecutar(AsignarPermisosPorModulo);
             desactivar.Click += (_, _) => CambiarEstado(false);
             reactivar.Click += (_, _) => CambiarEstado(true);
             buscar.TextChanged += (_, _) => Filtrar();
@@ -33,7 +35,7 @@ namespace Sistema_ERP
             tabla.SelectionChanged += (_, _) => { if (!cargando) Ejecutar(Seleccionar); };
             ConfigurarCampos();
             Botones();
-            PermisosInterfaz.Configurar(this, Modulos.Seguridad, guardar, actualizar, nuevo, desactivar, reactivar);
+            PermisosInterfaz.Configurar(this, Modulos.Seguridad, guardar, actualizar, nuevo, desactivar, reactivar, accionesAsignaciones);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -143,6 +145,45 @@ namespace Sistema_ERP
             });
         }
 
+        private void GenerarPermisos()
+        {
+            if (tipo != TipoSeguridad.Usuarios || !disponible || (idSeleccionado.HasValue && !activo)) return;
+            AutorizacionDatos.Exigir(Modulos.Seguridad, gestionar: true);
+            int[] seleccionados = asignaciones.CheckedItems.Cast<Opcion>().Select(o => o.Id).ToArray();
+            using var rolesDisponibles = SeguridadDatos.Asignaciones(TipoSeguridad.Usuarios, idSeleccionado);
+            using var permisosPorRol = SeguridadDatos.PermisosPorRol();
+            using var dialogo = new GenerarPermisosUsuario(primero.Text, rolesDisponibles, permisosPorRol, seleccionados);
+            if (dialogo.ShowDialog(this) != DialogResult.OK) return;
+
+            AplicarAsignaciones(rolesDisponibles, dialogo.RolesSeleccionados);
+            Mensaje("Permisos preparados. Pulsa Guardar o Actualizar para conservarlos con el usuario.");
+        }
+
+        private void AsignarPermisosPorModulo()
+        {
+            if (tipo != TipoSeguridad.Roles || !disponible || (idSeleccionado.HasValue && !activo)) return;
+            AutorizacionDatos.Exigir(Modulos.Seguridad, gestionar: true);
+            int[] seleccionados = asignaciones.CheckedItems.Cast<Opcion>().Select(o => o.Id).ToArray();
+            using var catalogo = SeguridadDatos.Asignaciones(TipoSeguridad.Roles, idSeleccionado);
+            using var dialogo = new AsignarPermisosRol(segundo.Text, catalogo, seleccionados);
+            if (dialogo.ShowDialog(this) != DialogResult.OK) return;
+            AplicarAsignaciones(catalogo, dialogo.PermisosSeleccionados);
+            Mensaje("Permisos preparados. Pulsa Guardar o Actualizar para conservarlos con el rol.");
+        }
+
+        private void AplicarAsignaciones(DataTable opciones, IEnumerable<int> seleccionados)
+        {
+            var elegidos = seleccionados.ToHashSet();
+            asignaciones.BeginUpdate();
+            try
+            {
+                asignaciones.Items.Clear();
+                foreach (DataRow fila in opciones.Rows)
+                    asignaciones.Items.Add(new Opcion((int)fila["Id"], (string)fila["Nombre"], (bool)fila["activo"]), elegidos.Contains((int)fila["Id"]));
+            }
+            finally { asignaciones.EndUpdate(); }
+        }
+
         private void CambiarEstado(bool activar)
         {
             if (!disponible || idSeleccionado is null || version is null) return;
@@ -178,6 +219,8 @@ namespace Sistema_ERP
             bool editable = disponible && (!idSeleccionado.HasValue || activo);
             foreach (var campo in new[] { primero, segundo, descripcion, contrasena, confirmar }) campo.ReadOnly = !editable;
             empleado.Enabled = asignaciones.Enabled = editable;
+            generarPermisos.Enabled = editable && tipo == TipoSeguridad.Usuarios;
+            asignarPermisosModulo.Enabled = editable && tipo == TipoSeguridad.Roles;
         }
 
         private void Ejecutar(Action accion)

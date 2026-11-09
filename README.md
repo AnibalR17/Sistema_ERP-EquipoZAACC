@@ -34,6 +34,10 @@ Para una base existente, ejecutar `Datos/Migraciones/005_permisos_contenido.sql`
 
 Desde **Usuarios, roles y permisos**, una cuenta con el rol activo `ADMINISTRADOR` puede asignar a cada rol los permisos `MODULO.CONSULTAR` y `MODULO.GESTIONAR`. Gestionar requiere también consultar. Las cuentas sin permisos solo ven Inicio sin información de negocio. El menú, las acciones, el resumen y las consultas de datos aplican esas asignaciones; el administrador conserva acceso total. El alcance es por módulo, abarcando sus tiendas. Consultar [verificación y alcance de la autorización](Datos/Autorizacion-verificacion.md).
 
+Al crear o editar un usuario, **Generar permisos…** abre una ventana para seleccionar sus roles existentes y consultar los permisos que aportan. **Aceptar** aplica la selección al formulario; **Guardar** o **Actualizar** la conserva junto con el usuario. **Cancelar** conserva la selección anterior. Los roles inactivos no conceden permisos y `ADMINISTRADOR` muestra acceso total. La opción requiere permiso para gestionar seguridad.
+
+Para crear un rol, abre **Roles > Nuevo**, completa código y nombre y pulsa **Permisos por módulo…**. Selecciona cada módulo y marca sus acciones, o usa **Seleccionar módulo** para incluir todos sus permisos activos. **Quitar del módulo** retira solamente los permisos de ese módulo. Marcar `GESTIONAR` incluye `CONSULTAR` del mismo módulo; quitar `CONSULTAR` también retira `GESTIONAR`. **Aceptar** prepara la selección y **Guardar** crea el rol con esos permisos. La misma opción permite editar roles activos con **Actualizar**.
+
 ## Busqueda global
 
 La barra superior del MDI permite buscar en todos los módulos autorizados: nombres, códigos, contactos y números de documentos. Escribe dos caracteres o más; **Enter** busca inmediatamente, **Ctrl+K** enfoca la barra y **Escape** limpia la búsqueda. Los resultados permiten consultar detalles de solo lectura o abrir su módulo. El selector de tienda filtra los documentos y las existencias; los catálogos compartidos conservan su alcance. Ver [búsqueda global y verificación](Datos/BusquedaGlobal-verificacion.md).

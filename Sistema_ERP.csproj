@@ -9,6 +9,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Formularios/Dialogos/AsignarPermisosRol.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Dialogos/AsignarPermisosRol.Designer.cs">
+      <DependentUpon>AsignarPermisosRol.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Dialogos/GenerarPermisosUsuario.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Dialogos/GenerarPermisosUsuario.Designer.cs">
+      <DependentUpon>GenerarPermisosUsuario.cs</DependentUpon>
+    </Compile>
     <Compile Update="Formularios/Administracion/ConfiguracionAuditoria.Facturacion.cs">
       <DependentUpon>ConfiguracionAuditoria.cs</DependentUpon>
     </Compile>

@@ -65,6 +65,8 @@ internal static partial class Program
             var campoCai = configuracion.Controls.Find("valorCAI", true).OfType<TextBox>().Single();
             Igual("DEF456-ABC123-DEF456-ABC123-DEF456-BB", campoCai.Text, "Pantalla carga CAI de la tienda seleccionada");
             Console.WriteLine("OK: construcción de las pantallas y disposición de controles.");
+            ProbarGenerarPermisosUsuario();
+            ProbarPermisosRolPorModulo();
             ProbarAutorizacion();
             ProbarBusquedaGlobal();
             Console.WriteLine("TODAS LAS PRUEBAS COMPLETADAS. La base temporal se elimina al salir.");

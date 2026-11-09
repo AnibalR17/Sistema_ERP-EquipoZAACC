@@ -61,6 +61,7 @@ internal static partial class Program
             Denegado(() => ProductoDatos.Listar());
             Denegado(() => ProveedorDatos.Listar());
             Denegado(() => SeguridadDatos.Listar(TipoSeguridad.Usuarios, false));
+            Denegado(() => SeguridadDatos.PermisosPorRol());
             Denegado(() => TiendaDatos.Listar());
             Denegado(() => TiendaDatos.ListarParaSeleccion());
             Denegado(() => InventarioDatos.AlertasStock());

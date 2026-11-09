@@ -53,15 +53,34 @@ namespace Sistema_ERP
             string relacion = usuario ? "UsuarioRol" : "RolPermiso";
             string propietario = usuario ? "id_usuario" : "id_rol";
             string nombre = usuario ? "e.nombre" : "e.codigo";
+            string detalle = usuario ? "" : ", e.modulo AS Modulo, e.accion AS Accion, e.descripcion AS Descripcion";
             using var conexion = Conexion.AbrirConexion();
             AutorizacionDatos.Exigir(conexion, Modulos.Seguridad);
             using var adaptador = new SqlDataAdapter($"""
                 SELECT e.{clave} AS Id, {nombre} + CASE WHEN e.activo=0 THEN N' (inactivo)' ELSE N'' END AS Nombre,
-                       e.activo, CONVERT(bit,CASE WHEN r.activo=1 THEN 1 ELSE 0 END) AS Asignado
+                       e.activo, CONVERT(bit,CASE WHEN r.activo=1 THEN 1 ELSE 0 END) AS Asignado{detalle}
                 FROM dbo.{entidad} e LEFT JOIN dbo.{relacion} r ON r.{clave}=e.{clave} AND r.{propietario}=@id
                 WHERE e.activo=1 OR r.activo=1 ORDER BY Nombre
                 """, conexion);
             adaptador.SelectCommand.Parameters.Add("@id", SqlDbType.Int).Value = (object?)id ?? DBNull.Value;
+            var tabla = new DataTable();
+            adaptador.Fill(tabla);
+            return tabla;
+        }
+
+        public static DataTable PermisosPorRol()
+        {
+            using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Seguridad);
+            using var adaptador = new SqlDataAdapter("""
+                SELECT r.id_rol AS IdRol, r.codigo AS CodigoRol, p.id_permiso AS IdPermiso,
+                       p.modulo AS Modulo, p.accion AS Accion, p.descripcion AS Descripcion
+                FROM dbo.Rol r
+                LEFT JOIN dbo.RolPermiso rp ON rp.id_rol=r.id_rol AND rp.activo=1
+                LEFT JOIN dbo.Permiso p ON p.id_permiso=rp.id_permiso AND p.activo=1
+                WHERE r.activo=1
+                ORDER BY r.id_rol, p.modulo, p.accion
+                """, conexion);
             var tabla = new DataTable();
             adaptador.Fill(tabla);
             return tabla;
