@@ -62,7 +62,7 @@ namespace Sistema_ERP
             if (desde.HasValue && hasta.HasValue && desde.Value.Date > hasta.Value.Date)
                 throw new ArgumentException("La fecha inicial no puede ser posterior a la final.");
             using var conexion = Conexion.AbrirConexion();
-            SesionActual.Validar(conexion);
+            AutorizacionDatos.Exigir(conexion, Modulos.Compras);
             using var comando = new SqlCommand(CabeceraSql + """
 
                 WHERE (@estado='' OR c.estado=@estado)
@@ -86,7 +86,7 @@ namespace Sistema_ERP
             if (id <= 0) throw new ArgumentException("Selecciona una compra.");
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
-            SesionActual.Validar(conexion, transaccion);
+            AutorizacionDatos.Exigir(conexion, Modulos.Compras, transaccion: transaccion);
             using var cabecera = new SqlCommand(CabeceraSql + " WHERE c.id_compra=@id", conexion, transaccion);
             cabecera.Parameters.Add("@id", SqlDbType.Int).Value = id;
             var datos = new DataSet();
@@ -289,7 +289,7 @@ namespace Sistema_ERP
 
         private static int Preparar(SqlConnection conexion, SqlTransaction transaccion, string motivo)
         {
-            int usuario = SesionActual.Validar(conexion, transaccion);
+            int usuario = AutorizacionDatos.Exigir(conexion, Modulos.Compras, gestionar: true, transaccion: transaccion);
             using var comando = new SqlCommand("""
                 IF (SELECT value_in_use FROM sys.configurations WHERE name='nested triggers')<>1
                     OR DATABASEPROPERTYEX(DB_NAME(),'IsRecursiveTriggersEnabled')=1
@@ -316,7 +316,7 @@ namespace Sistema_ERP
         private static DataTable Consultar(string sql)
         {
             using var conexion = Conexion.AbrirConexion();
-            SesionActual.Validar(conexion);
+            AutorizacionDatos.Exigir(conexion, Modulos.Compras);
             using var comando = new SqlCommand(sql, conexion);
             return Llenar(comando);
         }

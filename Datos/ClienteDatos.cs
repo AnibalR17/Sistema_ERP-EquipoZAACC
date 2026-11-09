@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using Microsoft.Data.SqlClient;
 using Sistema_ERP.Clases;
 
@@ -21,6 +21,7 @@ namespace Sistema_ERP.Datos
                                  ORDER BY nombre";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Directorio);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@incluir", SqlDbType.Bit).Value = incluirInactivos;
             using var adaptador = new SqlDataAdapter(comando);
@@ -39,6 +40,7 @@ namespace Sistema_ERP.Datos
             try
             {
                 using SqlConnection conexion = Conexion.AbrirConexion();
+                AutorizacionDatos.Exigir(conexion, Modulos.Directorio, gestionar: true);
                 using var comando = new SqlCommand(sql, conexion);
                 AgregarParametros(comando, cliente);
                 return (int)comando.ExecuteScalar();
@@ -59,6 +61,7 @@ namespace Sistema_ERP.Datos
             try
             {
                 using SqlConnection conexion = Conexion.AbrirConexion();
+                AutorizacionDatos.Exigir(conexion, Modulos.Directorio, gestionar: true);
                 using var comando = new SqlCommand(sql, conexion);
                 AgregarParametros(comando, cliente);
                 comando.Parameters.Add("@id", SqlDbType.Int).Value = cliente.IdCliente;
@@ -82,6 +85,7 @@ namespace Sistema_ERP.Datos
                                  WHERE id_cliente = @id AND desactivado_en IS NULL";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Directorio, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = idCliente;
             comando.Parameters.Add("@motivo", SqlDbType.NVarChar, 250).Value = motivo.Trim();
@@ -97,6 +101,7 @@ namespace Sistema_ERP.Datos
                                  WHERE id_cliente = @id AND desactivado_en IS NOT NULL";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Directorio, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = idCliente;
             return comando.ExecuteNonQuery() > 0;

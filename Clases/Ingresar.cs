@@ -18,6 +18,7 @@ namespace Sistema_ERP.Clases
                                  VALUES (@nombre, @rtn, @contacto, @telefono, @correo, @direccion);
                                  SELECT id_proveedor FROM @insertados;";
             using SqlConnection conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.ExigirAlguno(conexion, true, Modulos.Proveedores, Modulos.Directorio);
             using var comando = new SqlCommand(sql, conexion);
             ProveedorDatos.AgregarParametros(comando, proveedor);
             return (int)comando.ExecuteScalar();
@@ -38,6 +39,7 @@ namespace Sistema_ERP.Clases
                                  SELECT id_categoria FROM @categoriasInsertadas;";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Productos, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@nombre", SqlDbType.NVarChar, 100).Value = nombre.Trim();
             comando.Parameters.Add("@descripcion", SqlDbType.NVarChar, 300).Value =

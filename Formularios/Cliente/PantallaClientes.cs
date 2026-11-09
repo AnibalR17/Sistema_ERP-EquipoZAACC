@@ -16,6 +16,7 @@ namespace Sistema_ERP.Vistas
             EnlazarEventos();
             CargarClientes();
             ActualizarBotones();
+            PermisosInterfaz.Configurar(this, Modulos.Directorio, btnNuevo, btnEditar, btnGuardarCliente, btnDesactivarCliente, btnReactivarCliente);
         }
 
 

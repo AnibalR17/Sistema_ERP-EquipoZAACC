@@ -31,4 +31,4 @@ Estas comprobaciones usan cargadores y tablas simulados. No ejecutaron el predic
 
 ## Limites
 
-Es una consulta de alertas vigentes, no una bandeja de mensajes leidos/no leidos ni un despachador de EventoNotificacion. La autorizacion granular por tienda y permiso sigue pendiente en el sistema; la consulta usa el mismo alcance general de inventario para la sesion autenticada. Los eventos historicos de los triggers se conservan y no se asignan destinatarios automaticamente desde este flujo.
+Es una consulta de alertas vigentes, no una bandeja de mensajes leidos/no leidos ni un despachador de EventoNotificacion. La consulta exige INVENTARIO.CONSULTAR y una sesion vigente; conserva el alcance general de tiendas del modulo. Los eventos historicos de los triggers se conservan y no se asignan destinatarios automaticamente desde este flujo.

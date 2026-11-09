@@ -28,7 +28,7 @@ Aunque el nombre es ERP, el alcance observado corresponde principalmente a gesti
 
 ## 1.2 Autenticación y permisos
 
-El sistema comprueba la identidad y la vigencia de la sesión en los flujos que invocan SesionActual.Validar. También mantiene usuarios, roles y permisos y puede invalidar sesiones al cambiar asignaciones. Sin embargo, la autorización granular por módulo, acción y tienda todavía no restringe de forma general la navegación y las operaciones. La existencia de RolPermiso o UsuarioTienda no significa que cada botón ya aplique esos permisos.
+El sistema comprueba identidad y sesión, y aplica las asignaciones activas de UsuarioRol, Rol y RolPermiso para autorizar contenido por módulo. CONSULTAR permite leer y GESTIONAR permite modificar si también se dispone de CONSULTAR. ADMINISTRADOR conserva acceso total. El menú, las pantallas, las consultas, el resumen y las notificaciones aplican la autorización. UsuarioTienda todavía no filtra filas por sucursal. Para bases existentes, aplicar Datos/Migraciones/005_permisos_contenido.sql. Ver Datos/Autorizacion-verificacion.md.
 
 # 2. Arquitectura, tecnologías y organización
 
@@ -117,7 +117,7 @@ Cerrar sesión vuelve al login dentro del ciclo principal; cerrar normalmente la
 
 La ventana principal guarda formularios por clave en un diccionario y reutiliza la pantalla abierta al cambiar de módulo. Asocia formularios y botones para mostrar la navegación seleccionada. La apertura de módulos se registra mediante AuditoriaDatos.RegistrarNavegacion.
 
-El encabezado muestra usuario, roles, selector de tienda y campana. La tienda elegida se utiliza expresamente en Inicio y Catálogo. Otros módulos mantienen sus propios selectores o alcances: no hay un filtro universal aplicado a todas las consultas. El buscador global visual no tiene una búsqueda integral implementada identificada.
+El encabezado muestra usuario, roles, selector de tienda y campana. La tienda elegida se utiliza expresamente en Inicio, Catálogo y búsqueda global. Otros módulos mantienen sus propios selectores o alcances. La barra superior busca desde cualquier pantalla en todos los módulos autorizados; sus resultados MDI permiten ver detalles de solo lectura y abrir el módulo correspondiente. Requiere al menos dos caracteres, espera 400 ms al escribir y admite Enter, Ctrl+K y Escape. Consulta `Datos/BusquedaGlobal-verificacion.md` para entidades, filtros y verificación.
 
 ## 3.2 Qué muestra Inicio
 
@@ -163,7 +163,7 @@ UsuariosRolesPermisos mantiene cuentas ligadas a empleados; roles con código, n
 
 Guardar un usuario sin nueva clave mantiene su hash. Proporcionar una nueva genera otro hash y obliga al cambio. Registro y asignaciones se guardan juntos en una transacción. La edición y los cambios de estado usan rowversion.
 
-Desactivar un rol o permiso conserva sus asignaciones. Reactivarlo puede devolver efecto a esas relaciones cuando se aplique su autorización. UsuarioTienda y RecuperacionAcceso están en el modelo, pero esta pantalla no los administra. La autorización granular por permiso y sucursal sigue pendiente de aplicación general.
+Desactivar un rol o permiso conserva sus asignaciones. Reactivarlo puede devolver efecto a esas relaciones cuando se aplique su autorización. UsuarioTienda y RecuperacionAcceso están en el modelo, pero esta pantalla no los administra. La autorización por módulo y consulta/modificación se aplica en navegación y datos; el filtrado por sucursal no está implementado.
 
 # 5. Productos, proveedores, directorio y tiendas
 
@@ -650,9 +650,9 @@ Datos/Pruebas/Bitacora-sistema.sql comprueba cobertura y exclusión de informaci
 
 ## 13.2 Límites observados
 
-- La autorización granular por permiso y tienda todavía no se aplica de forma general.
+- La autorización se aplica por módulo con CONSULTAR/GESTIONAR. El filtrado de filas por UsuarioTienda no está implementado.
 - Los CRUD antiguos no comprueban sesión y versión de manera uniforme.
-- El buscador global no tiene un flujo integral identificado.
+- La búsqueda global limita las coincidencias a diez registros por tipo; afinar el texto permite encontrar otros. Los documentos respetan la tienda seleccionada y los catálogos compartidos conservan su alcance por módulo.
 - La campana consulta stock vigente; no gestiona destinatarios ni mensajes leídos.
 - No existe recepción parcial de traspasos ni conciliación de diferencias.
 - Inventario no ofrece ajustes manuales; sus unidades vienen de documentos e importación inicial.
@@ -8472,7 +8472,7 @@ Estas comprobaciones no ejecutaron transacciones, triggers ni cambios de inventa
 
 #### Limites
 
-La autorizacion granular por permiso y tienda sigue pendiente en el sistema. Las compras usan la identidad de la sesion autenticada; no hay selector manual de operador. No se implementan recepciones parciales, impuestos ni pagos a proveedores porque no forman parte del flujo de Compra del esquema actual.
+Las compras exigen COMPRAS.CONSULTAR para leer y COMPRAS.GESTIONAR para modificar; no se filtran las filas por UsuarioTienda. Las compras usan la identidad de la sesion autenticada; no hay selector manual de operador. No se implementan recepciones parciales, impuestos ni pagos a proveedores porque no forman parte del flujo de Compra del esquema actual.
 
 
 ## C. Datos/Exportaciones-verificacion.md
@@ -8621,7 +8621,7 @@ Estas comprobaciones usan cargadores y tablas simulados. No ejecutaron el predic
 
 #### Limites
 
-Es una consulta de alertas vigentes, no una bandeja de mensajes leidos/no leidos ni un despachador de EventoNotificacion. La autorizacion granular por tienda y permiso sigue pendiente en el sistema; la consulta usa el mismo alcance general de inventario para la sesion autenticada. Los eventos historicos de los triggers se conservan y no se asignan destinatarios automaticamente desde este flujo.
+Es una consulta de alertas vigentes, no una bandeja de mensajes leidos/no leidos ni un despachador de EventoNotificacion. La consulta exige INVENTARIO.CONSULTAR y una sesion vigente; conserva el alcance general de tiendas del modulo. Los eventos historicos de los triggers se conservan y no se asignan destinatarios automaticamente desde este flujo.
 
 
 ## C. Datos/Seguridad-verificacion.md
@@ -8655,7 +8655,7 @@ Un ejecutable temporal sobre .NET 10 comprobo construccion del formulario sin co
 
 #### Limites
 
-El login autentica y obliga a cambiar claves temporales; las asignaciones todavia no restringen la navegacion ni las operaciones del ERP. Los actores de creacion, modificacion, desactivacion y asignacion de los CRUD quedan nulos. No se gestionan UsuarioTienda ni recuperacion de acceso en esta pantalla. Desactivar conserva las relaciones: reactivar un rol o permiso puede restaurar privilegios de sus asignaciones vigentes.
+El login autentica y obliga a cambiar claves temporales. Las asignaciones activas restringen la navegacion y las operaciones mediante MODULO.CONSULTAR y MODULO.GESTIONAR; gestionar requiere consultar. ADMINISTRADOR conserva acceso total. Ver Datos/Autorizacion-verificacion.md. Los actores de creacion, modificacion, desactivacion y asignacion de los CRUD quedan nulos. No se gestionan UsuarioTienda ni recuperacion de acceso en esta pantalla. Desactivar conserva las relaciones: reactivar un rol o permiso puede restaurar privilegios de sus asignaciones vigentes.
 
 #### Login: integracion pendiente contra SQL Server
 
@@ -8729,7 +8729,7 @@ Se intento una conexion de solo lectura a la base configurada para verificar los
 
 #### Limites
 
-La autorizacion granular por permiso y tienda todavia no se aplica; las operaciones se atribuyen a la identidad autenticada y requieren una sesion vigente. No se implementa recepcion parcial ni diferencias de cantidades: cada envio y recepcion procesa todas las lineas del documento.
+La consulta exige TRASPASOS.CONSULTAR o VALIDACION_TRASPASOS.CONSULTAR y las modificaciones exigen GESTIONAR del modulo correspondiente; no se filtran las filas por UsuarioTienda; las operaciones se atribuyen a la identidad autenticada y requieren una sesion vigente. No se implementa recepcion parcial ni diferencias de cantidades: cada envio y recepcion procesa todas las lineas del documento.
 
 El indice unico de EventoTraspaso permite un evento por solicitud y estado. Las ediciones pendientes se protegen con rowversion, pero no generan eventos PENDIENTE adicionales. Las fechas se muestran y filtran en UTC para coincidir con el almacenamiento de SQL Server.
 

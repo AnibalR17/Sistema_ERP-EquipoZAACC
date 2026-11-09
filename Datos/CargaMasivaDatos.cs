@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Sistema_ERP.Clases;
 using System.Data;
 
@@ -22,6 +22,7 @@ public static class CargaMasivaDatos
     {
         var codigos = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         using SqlConnection conexion = Conexion.AbrirConexion();
+        AutorizacionDatos.Exigir(conexion, Modulos.CargaMasiva);
         using var comando = new SqlCommand("SELECT codigo_barras FROM Producto", conexion);
         using SqlDataReader lector = comando.ExecuteReader();
         while (lector.Read()) codigos.Add(lector.GetString(0).Trim());
@@ -33,6 +34,7 @@ public static class CargaMasivaDatos
     {
         var mapa = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         using SqlConnection conexion = Conexion.AbrirConexion();
+        AutorizacionDatos.Exigir(conexion, Modulos.CargaMasiva);
         using var comando = new SqlCommand("SELECT id_categoria, nombre FROM dbo.Categoria WHERE activo=1", conexion);
         using SqlDataReader lector = comando.ExecuteReader();
         while (lector.Read()) mapa[lector.GetString(1).Trim()] = lector.GetInt32(0);
@@ -44,6 +46,7 @@ public static class CargaMasivaDatos
     {
         var mapa = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         using SqlConnection conexion = Conexion.AbrirConexion();
+        AutorizacionDatos.Exigir(conexion, Modulos.CargaMasiva);
         using var comando = new SqlCommand("SELECT id_proveedor, rtn FROM dbo.Proveedor WHERE activo=1 AND rtn IS NOT NULL", conexion);
         using SqlDataReader lector = comando.ExecuteReader();
         while (lector.Read())
@@ -79,7 +82,7 @@ public static class CargaMasivaDatos
         using SqlTransaction transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
         try
         {
-            int usuario = SesionActual.Validar(conexion, transaccion);
+            int usuario = AutorizacionDatos.Exigir(conexion, Modulos.CargaMasiva, gestionar: true, transaccion: transaccion);
             FlujoVentaDatos.Ejecutar(conexion, transaccion, """
                 EXEC sys.sp_set_session_context @key=N'id_usuario',@value=@usuario;
                 EXEC sys.sp_set_session_context @key=N'motivo',@value=N'Importación de productos desde Excel';

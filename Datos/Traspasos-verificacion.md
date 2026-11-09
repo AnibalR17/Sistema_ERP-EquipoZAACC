@@ -53,6 +53,6 @@ Se intento una conexion de solo lectura a la base configurada para verificar los
 
 ## Limites
 
-La autorizacion granular por permiso y tienda todavia no se aplica; las operaciones se atribuyen a la identidad autenticada y requieren una sesion vigente. No se implementa recepcion parcial ni diferencias de cantidades: cada envio y recepcion procesa todas las lineas del documento.
+La consulta exige TRASPASOS.CONSULTAR o VALIDACION_TRASPASOS.CONSULTAR y las modificaciones exigen GESTIONAR del modulo correspondiente; no se filtran las filas por UsuarioTienda; las operaciones se atribuyen a la identidad autenticada y requieren una sesion vigente. No se implementa recepcion parcial ni diferencias de cantidades: cada envio y recepcion procesa todas las lineas del documento.
 
 El indice unico de EventoTraspaso permite un evento por solicitud y estado. Las ediciones pendientes se protegen con rowversion, pero no generan eventos PENDIENTE adicionales. Las fechas se muestran y filtran en UTC para coincidir con el almacenamiento de SQL Server.

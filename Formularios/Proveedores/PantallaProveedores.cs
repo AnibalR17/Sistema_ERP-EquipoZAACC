@@ -19,6 +19,7 @@ namespace Sistema_ERP.Vistas
             InitializeComponent();
             if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
+            PermisosInterfaz.Configurar(this, Modulos.Proveedores, btnNuevo, btnGuardarProveedor, btnEditar, btnDesactivarProveedor, btnReactivarProveedor);
             btnNuevo.Click += (_, _) => LimpiarProveedor();
             btnGuardarProveedor.Click += (_, _) => GuardarProveedor(false);
             btnEditar.Click += (_, _) => GuardarProveedor(true);

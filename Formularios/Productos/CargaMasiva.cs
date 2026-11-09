@@ -1,4 +1,4 @@
-﻿using System.Drawing.Drawing2D;
+using System.Drawing.Drawing2D;
 using System.Data;
 
 namespace Sistema_ERP;
@@ -109,6 +109,7 @@ public sealed partial class CargaMasiva : PantallaMaqueta
         Cuerpo.Controls.Add(filas);
 
         ConfigurarPrevisualizacion();
+        PermisosInterfaz.Configurar(this, Modulos.CargaMasiva, btnImportar);
         MostrarEjemploPlantilla();
     }
 
@@ -139,7 +140,7 @@ public sealed partial class CargaMasiva : PantallaMaqueta
         try
         {
             cmbTiendaImportacion.DisplayMember = "nombre"; cmbTiendaImportacion.ValueMember = "id_tienda";
-            cmbTiendaImportacion.DataSource = VentaDatos.Consultar("SELECT id_tienda,nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre");
+            cmbTiendaImportacion.DataSource = VentaDatos.Consultar("SELECT id_tienda,nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre", modulo: Modulos.CargaMasiva);
             cmbTiendaImportacion.SelectedIndex = -1;
         }
         catch (Exception ex) { lblResumen.Text = "No se pudieron cargar las tiendas. " + ex.Message; }

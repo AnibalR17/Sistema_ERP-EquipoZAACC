@@ -9,6 +9,7 @@ internal static class ExportacionArchivos
 {
     internal static void CatalogoExcel(DataTable productos, string ruta, string tienda, string filtro, bool incluirInactivos)
     {
+        AutorizacionDatos.Exigir(Modulos.Productos);
         if (productos.Rows.Count == 0) throw new ArgumentException("No hay productos para exportar con los filtros actuales.");
         GuardarArchivo(ruta, temporal =>
         {
@@ -48,6 +49,8 @@ internal static class ExportacionArchivos
 
     internal static void ReciboPdf(string ruta, string numero, string contenido)
     {
+        using var conexion = Clases.Conexion.AbrirConexion();
+        AutorizacionDatos.ExigirAlguno(conexion, Modulos.Ventas, Modulos.Apartados);
         if (string.IsNullOrWhiteSpace(contenido)) throw new ArgumentException("El recibo no tiene contenido para exportar.");
         GuardarArchivo(ruta, temporal =>
         {

@@ -19,7 +19,7 @@ internal static class ConfiguracionFacturacionDatos
 
     internal static DataTable Obtener(int tienda)
     {
-        using var cn = Conexion.AbrirConexion(); SesionActual.Validar(cn);
+        using var cn = Conexion.AbrirConexion(); AutorizacionDatos.Exigir(cn, Modulos.Configuracion);
         return Tabla(cn, null, "SELECT cai,version_fila FROM dbo.ConfiguracionFacturacion WHERE id_tienda=@tienda", ("@tienda", tienda));
     }
 
@@ -27,7 +27,7 @@ internal static class ConfiguracionFacturacionDatos
     {
         cai = NormalizarCai(cai);
         using var cn = Conexion.AbrirConexion(); using var tx = cn.BeginTransaction(IsolationLevel.Serializable);
-        int usuario = SesionActual.Validar(cn, tx);
+        int usuario = AutorizacionDatos.Exigir(cn, Modulos.Configuracion, gestionar: true, transaccion: tx);
         var anterior = Tabla(cn, tx, "SELECT version_fila FROM dbo.ConfiguracionFacturacion WITH(UPDLOCK,HOLDLOCK) WHERE id_tienda=@tienda", ("@tienda", tienda));
         if ((anterior.Rows.Count == 0 && version != null) || (anterior.Rows.Count == 1 && (version is null || !((byte[])anterior.Rows[0][0]).SequenceEqual(version))))
             throw new InvalidOperationException("El CAI cambió en otra ventana. Actualiza la configuración antes de guardar.");

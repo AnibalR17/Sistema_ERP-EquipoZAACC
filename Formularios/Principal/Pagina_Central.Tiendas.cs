@@ -31,6 +31,7 @@ namespace Sistema_ERP
 
         private void CargarTiendasCabecera()
         {
+            if (!selectorTienda.Visible) return;
             int? seleccionAnterior = IdTiendaSeleccionada;
             var tiendas = new DataTable();
             tiendas.Columns.Add("id_tienda", typeof(int));
@@ -38,7 +39,7 @@ namespace Sistema_ERP
             tiendas.Rows.Add(0, "Todas las tiendas (stock total)");
             try
             {
-                foreach (DataRow tienda in TiendaDatos.Listar().Rows)
+                foreach (DataRow tienda in TiendaDatos.ListarParaSeleccion().Rows)
                     tiendas.Rows.Add(tienda["id_tienda"], tienda["Nombre"]);
             }
             catch (Exception ex)

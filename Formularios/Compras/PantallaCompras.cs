@@ -19,6 +19,7 @@ namespace Sistema_ERP.Vistas
             InitializeComponent();
             if (ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
+            PermisosInterfaz.Configurar(this, Modulos.Compras, btnGuardar, btnConfirmar, btnAnular, btnAgregarCarrito, btnActualizarLinea, btnQuitarLinea);
             dgvDetalleCompra.DataBindingComplete += (_, _) =>
             {
                 if (dgvDetalleCompra.Columns["id_producto"] is DataGridViewColumn columna) columna.Visible = false;

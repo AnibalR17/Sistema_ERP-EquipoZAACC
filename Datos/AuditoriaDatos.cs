@@ -24,6 +24,7 @@ internal static class AuditoriaDatos
 
     internal static void RegistrarNavegacion(string pantalla)
     {
+        AutorizacionDatos.ExigirPantalla(pantalla);
         using var conexion = Conexion.AbrirConexion();
         int usuario = SesionActual.Validar(conexion);
         using var comando = new SqlCommand("""
@@ -40,7 +41,7 @@ internal static class AuditoriaDatos
     internal static DataTable Listar(string filtro, long antes = long.MaxValue)
     {
         using var conexion = Conexion.AbrirConexion();
-        SesionActual.Validar(conexion);
+        AutorizacionDatos.Exigir(conexion, Modulos.Configuracion);
         using var comando = new SqlCommand("""
             SELECT TOP(200) a.id_auditoria AS Id,a.fecha AS [Fecha UTC],
             COALESCE(u.nombre_usuario,N'Sistema / acceso sin autenticar') AS Usuario,

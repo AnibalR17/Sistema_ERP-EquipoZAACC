@@ -49,6 +49,8 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
         apartados.CellDoubleClick += (_, e) => { if (e.RowIndex >= 0) Ejecutar(() => VerDetalle(true)); };
         devoluciones.CellDoubleClick += (_, e) => { if (e.RowIndex >= 0) Ejecutar(() => VerDetalle(false)); };
         ActualizarAcciones();
+        PermisosInterfaz.Configurar(this, Modulos.Apartados, accionesApartado.Concat(accionesDevolucion)
+            .Where(a => a.Key != "Ver detalle").Select(a => (Control)a.Value).ToArray());
     }
 
     private static ComboBox Estados(params string[] estados)

@@ -33,6 +33,7 @@ namespace Sistema_ERP
             tabla.SelectionChanged += (_, _) => { if (!cargando) Ejecutar(Seleccionar); };
             ConfigurarCampos();
             Botones();
+            PermisosInterfaz.Configurar(this, Modulos.Seguridad, guardar, actualizar, nuevo, desactivar, reactivar);
         }
 
         protected override void OnLoad(EventArgs e)

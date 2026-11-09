@@ -27,7 +27,7 @@ internal static class DevolucionDatos
 
     internal static DataTable Listar(string buscar = "", string estado = "")
     {
-        using var cn = Conexion.AbrirConexion(); SesionActual.Validar(cn);
+        using var cn = Conexion.AbrirConexion(); AutorizacionDatos.Exigir(cn, Modulos.Apartados);
         return Tabla(cn, null, Consulta + "\n" + """
             WHERE (@estado='' OR d.estado=@estado) AND (@buscar='' OR CHARINDEX(@buscar,v.numero)>0
                 OR CHARINDEX(@buscar,c.nombre)>0 OR CHARINDEX(@buscar,CONVERT(nvarchar(20),d.id_devolucion))>0)
@@ -39,11 +39,11 @@ internal static class DevolucionDatos
         SELECT v.id_venta,CONCAT(v.numero,N' · ',c.nombre,N' · ',t.nombre) AS nombre
         FROM dbo.Venta v JOIN dbo.Cliente c ON c.id_cliente=v.id_cliente JOIN dbo.Tienda t ON t.id_tienda=v.id_tienda
         WHERE v.estado='CONFIRMADA' ORDER BY v.id_venta DESC
-        """);
+        """, modulo: Modulos.Apartados);
 
     internal static DataTable LineasVenta(int venta, int? devolucion = null)
     {
-        using var cn = Conexion.AbrirConexion(); SesionActual.Validar(cn);
+        using var cn = Conexion.AbrirConexion(); AutorizacionDatos.Exigir(cn, Modulos.Apartados);
         return Tabla(cn, null, """
             SELECT dv.id_detalle_venta AS Id,dv.nombre_producto AS Producto,dv.cantidad AS Vendido,dv.precio_unitario AS Precio,dv.tasa_isv AS TasaISV,
                 CONVERT(int,dv.cantidad-ISNULL(dev.cantidad,0)) AS Disponible,
@@ -59,7 +59,7 @@ internal static class DevolucionDatos
 
     internal static DataSet Obtener(int id)
     {
-        using var cn = Conexion.AbrirConexion(); SesionActual.Validar(cn);
+        using var cn = Conexion.AbrirConexion(); AutorizacionDatos.Exigir(cn, Modulos.Apartados);
         var ds = new DataSet();
         ds.Tables.Add(Tabla(cn, null, Consulta + " WHERE d.id_devolucion=@id", ("@id", id)));
         ds.Tables.Add(Tabla(cn, null, """

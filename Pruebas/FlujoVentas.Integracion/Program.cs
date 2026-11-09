@@ -5,7 +5,7 @@ using ClosedXML.Excel;
 using Microsoft.Data.SqlClient;
 using Sistema_ERP;
 
-internal static class Program
+internal static partial class Program
 {
     private static readonly Assembly app = typeof(PuntoVenta).Assembly;
     private const BindingFlags estaticos = BindingFlags.Static | BindingFlags.NonPublic;
@@ -28,7 +28,7 @@ internal static class Program
             { cn.Open(); using var cmd = new SqlCommand("CREATE DATABASE [" + bd + "]", cn); cmd.ExecuteNonQuery(); creada = true; }
             cadena = new SqlConnectionStringBuilder(original) { InitialCatalog = bd }.ConnectionString;
             Environment.SetEnvironmentVariable("SISTEMA_ERP_CONNECTION_STRING", cadena);
-            foreach (string archivo in new[] { "Base de Datos/01_esquema_erp_3fn.sql", "Base de Datos/Triggers2.sql", "Datos/Migraciones/002_bitacora_sistema.sql", "Datos/Migraciones/003_rtn_ventas.sql", "Datos/Migraciones/004_isv_cai.sql" })
+            foreach (string archivo in new[] { "Base de Datos/01_esquema_erp_3fn.sql", "Base de Datos/Triggers2.sql", "Datos/Migraciones/002_bitacora_sistema.sql", "Datos/Migraciones/003_rtn_ventas.sql", "Datos/Migraciones/004_isv_cai.sql", "Datos/Migraciones/005_permisos_contenido.sql" })
             {
                 if (archivo.EndsWith("004_isv_cai.sql")) SimularEsquemaAnterior();
                 string sql = File.ReadAllText(Path.Combine(raiz, archivo)).Replace("EquipoZAACC", bd);
@@ -42,6 +42,7 @@ internal static class Program
                 INSERT dbo.Cliente(nombre) VALUES(N'Cliente prueba'); DECLARE @cliente int=SCOPE_IDENTITY();
                 INSERT dbo.Empleado(codigo,nombre,id_tienda) VALUES('PRUEBA',N'Empleado prueba',@t); DECLARE @e int=SCOPE_IDENTITY();
                 INSERT dbo.Usuario(id_empleado,nombre_usuario,contrasena_hash,debe_cambiar_contrasena) VALUES(@e,N'prueba',N'NO-AUTENTICABLE',0); DECLARE @u int=SCOPE_IDENTITY();
+                INSERT dbo.UsuarioRol(id_usuario,id_rol) SELECT @u,id_rol FROM dbo.Rol WHERE codigo='ADMINISTRADOR';
                 INSERT dbo.SesionUsuario(id_usuario,token_hash,version_seguridad,expira_en)
                     SELECT @u,CRYPT_GEN_RANDOM(32),version_seguridad,DATEADD(hour,1,SYSUTCDATETIME()) FROM dbo.Usuario WHERE id_usuario=@u;
                 SELECT @t AS tienda,@cliente AS cliente,@u AS usuario,@c AS categoria,@p AS proveedor,CONVERT(bigint,SCOPE_IDENTITY()) AS sesion,
@@ -64,6 +65,8 @@ internal static class Program
             var campoCai = configuracion.Controls.Find("valorCAI", true).OfType<TextBox>().Single();
             Igual("DEF456-ABC123-DEF456-ABC123-DEF456-BB", campoCai.Text, "Pantalla carga CAI de la tienda seleccionada");
             Console.WriteLine("OK: construcción de las pantallas y disposición de controles.");
+            ProbarAutorizacion();
+            ProbarBusquedaGlobal();
             Console.WriteLine("TODAS LAS PRUEBAS COMPLETADAS. La base temporal se elimina al salir.");
             return 0;
         }

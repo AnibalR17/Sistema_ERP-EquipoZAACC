@@ -14,6 +14,7 @@ namespace Sistema_ERP
             if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
             _editando = producto;
+            PermisosInterfaz.Configurar(this, Modulos.Productos, btnGuardar);
 
             Load += FormProducto_Load;
             btnGuardar.Click += BtnGuardar_Click;

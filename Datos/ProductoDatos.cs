@@ -34,6 +34,7 @@ namespace Sistema_ERP
                                  ORDER BY p.nombre";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Productos);
             using var adaptador = new SqlDataAdapter(sql, conexion);
             adaptador.SelectCommand.Parameters.Add("@incluirInactivos", SqlDbType.Bit).Value = incluirInactivos;
             adaptador.SelectCommand.Parameters.Add("@idTienda", SqlDbType.Int).Value = (object?)idTienda ?? DBNull.Value;
@@ -49,6 +50,7 @@ namespace Sistema_ERP
                                    AND (@excluirId IS NULL OR id_producto <> @excluirId)";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Productos);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@codigo", SqlDbType.NVarChar, 50).Value = codigoBarras.Trim();
             comando.Parameters.Add("@excluirId", SqlDbType.Int).Value = (object?)excluirId ?? DBNull.Value;
@@ -65,6 +67,7 @@ namespace Sistema_ERP
                                  SELECT id_producto FROM @insertados;";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Productos, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             AgregarParametros(comando, producto);
             return (int)comando.ExecuteScalar();
@@ -79,6 +82,7 @@ namespace Sistema_ERP
                                  SELECT CONVERT(int, @@ROWCOUNT);";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Productos, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             AgregarParametros(comando, producto);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = producto.IdProducto;

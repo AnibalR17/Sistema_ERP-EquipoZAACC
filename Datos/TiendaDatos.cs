@@ -6,9 +6,21 @@ namespace Sistema_ERP
 {
     public static class TiendaDatos
     {
+        public static DataTable ListarParaSeleccion(bool incluirInactivas = false)
+        {
+            using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.ExigirAlguno(conexion, Modulos.Ventas, Modulos.Apartados, Modulos.Compras,
+                Modulos.Inventario, Modulos.Traspasos, Modulos.Validacion, Modulos.Productos,
+                Modulos.CargaMasiva, Modulos.Directorio, Modulos.Configuracion);
+            using var adaptador = new SqlDataAdapter("SELECT id_tienda,nombre AS Nombre,activo FROM dbo.Tienda WHERE activo=1 OR @incluir=1 ORDER BY nombre", conexion);
+            adaptador.SelectCommand.Parameters.Add("@incluir", SqlDbType.Bit).Value = incluirInactivas;
+            var tabla = new DataTable(); adaptador.Fill(tabla); return tabla;
+        }
+
         public static DataTable Listar(bool incluirInactivas = false)
         {
             using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Configuracion);
             using var adaptador = new SqlDataAdapter("SELECT id_tienda, codigo AS Codigo, nombre AS Nombre, direccion AS Direccion, telefono AS Telefono, activo, motivo_desactivacion FROM dbo.Tienda WHERE activo=1 OR @incluirInactivas=1 ORDER BY nombre", conexion);
             adaptador.SelectCommand.Parameters.Add("@incluirInactivas", SqlDbType.Bit).Value = incluirInactivas;
             var tabla = new DataTable(); adaptador.Fill(tabla); return tabla;
@@ -20,6 +32,7 @@ namespace Sistema_ERP
         {
             if (idTienda <= 0) throw new ArgumentOutOfRangeException(nameof(idTienda));
             using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Configuracion, gestionar: true);
             using var comando = new SqlCommand(@"UPDATE dbo.Tienda SET desactivado_en=NULL, desactivado_por=NULL,
                 motivo_desactivacion=NULL, actualizado_en=SYSUTCDATETIME() WHERE id_tienda=@id AND activo=0;
                 SELECT CONVERT(int, @@ROWCOUNT);", conexion);
@@ -31,6 +44,7 @@ namespace Sistema_ERP
         {
             Validar(codigo, nombre, direccion, telefono);
             using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Configuracion, gestionar: true);
             using var comando = new SqlCommand("INSERT INTO dbo.Tienda(codigo,nombre,direccion,telefono) VALUES(@codigo,@nombre,@direccion,@telefono)", conexion);
             Parametros(comando, codigo, nombre, direccion, telefono);
             comando.ExecuteNonQuery();
@@ -41,6 +55,7 @@ namespace Sistema_ERP
             if (idTienda <= 0) throw new ArgumentOutOfRangeException(nameof(idTienda));
             Validar(codigo, nombre, direccion, telefono);
             using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Configuracion, gestionar: true);
             using var comando = new SqlCommand(@"UPDATE dbo.Tienda SET codigo=@codigo, nombre=@nombre,
                 direccion=@direccion, telefono=@telefono, actualizado_en=SYSUTCDATETIME()
                 WHERE id_tienda=@id AND activo=1; SELECT CONVERT(int, @@ROWCOUNT);", conexion);

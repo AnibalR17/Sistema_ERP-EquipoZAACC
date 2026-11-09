@@ -30,7 +30,7 @@ internal static class VentaDatos
     internal static string Comprobante(int id)
     {
         using var cn = Conexion.AbrirConexion();
-        SesionActual.Validar(cn);
+        AutorizacionDatos.ExigirAlguno(cn, Modulos.Ventas, Modulos.Apartados);
         using var cmd = new SqlCommand("""
             SELECT v.numero,v.fecha,v.estado,t.nombre AS tienda,c.nombre AS cliente,v.rtn_cliente,v.cai,u.nombre_usuario,v.observaciones,
                 p.monto,p.monto_recibido,p.referencia,m.nombre AS metodo
@@ -68,23 +68,23 @@ internal static class VentaDatos
         return texto.ToString().Replace("\r\n", "\n");
     }
 
-    internal static DataTable Consultar(string sql, int? tienda = null)
+    internal static DataTable Consultar(string sql, int? tienda = null, string modulo = Modulos.Ventas)
     {
         using var cn = Conexion.AbrirConexion();
-        SesionActual.Validar(cn);
+        AutorizacionDatos.Exigir(cn, modulo);
         using var cmd = new SqlCommand(sql, cn);
         if (tienda.HasValue) cmd.Parameters.Add("@tienda", SqlDbType.Int).Value = tienda.Value;
         using var adapter = new SqlDataAdapter(cmd);
         var tabla = new DataTable(); adapter.Fill(tabla); return tabla;
     }
 
-    internal static DataTable Productos(int tienda) => Consultar("""
+    internal static DataTable Productos(int tienda, string modulo = Modulos.Ventas) => Consultar("""
         SELECT p.id_producto,p.codigo_barras AS Codigo,p.nombre AS Producto,p.precio_unitario AS Precio,
         ISNULL(i.existencia,0) AS Existencia,ISNULL(i.reservado,0) AS Reservado,
         ISNULL(i.existencia-i.reservado,0) AS Disponible
         FROM dbo.Producto p LEFT JOIN dbo.InventarioTienda i ON i.id_producto=p.id_producto AND i.id_tienda=@tienda
         WHERE p.activo=1 ORDER BY p.nombre
-        """, tienda);
+        """, tienda, modulo);
 
     internal static FacturaEmitida Emitir(int tienda, int cliente, int metodo, decimal recibido,
         string referencia, string observaciones, IReadOnlyCollection<LineaVenta> lineas, string? rtn = null)
@@ -98,7 +98,7 @@ internal static class VentaDatos
             throw new ArgumentException("Revisa el monto, la referencia y las observaciones.");
         using var cn = Conexion.AbrirConexion();
         using var tx = cn.BeginTransaction(IsolationLevel.Serializable);
-        int usuario = SesionActual.Validar(cn, tx);
+        int usuario = AutorizacionDatos.Exigir(cn, Modulos.Ventas, gestionar: true, transaccion: tx);
         using var preparar = new SqlCommand("""
             IF (SELECT value_in_use FROM sys.configurations WHERE name='nested triggers')<>1
                 OR DATABASEPROPERTYEX(DB_NAME(),'IsRecursiveTriggersEnabled')=1

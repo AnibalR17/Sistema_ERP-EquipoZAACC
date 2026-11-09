@@ -33,7 +33,7 @@ internal static class FlujoVentaDatos
 
     internal static int Preparar(SqlConnection cn, SqlTransaction tx, string motivo)
     {
-        int usuario = SesionActual.Validar(cn, tx);
+        int usuario = AutorizacionDatos.Exigir(cn, Modulos.Apartados, gestionar: true, transaccion: tx);
         Ejecutar(cn, tx, """
             IF (SELECT value_in_use FROM sys.configurations WHERE name='nested triggers')<>1
                 OR DATABASEPROPERTYEX(DB_NAME(),'IsRecursiveTriggersEnabled')=1

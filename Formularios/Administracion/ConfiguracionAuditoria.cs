@@ -20,6 +20,7 @@ namespace Sistema_ERP
             PrepararFacturacion();
             ConectarEventos();
             ActualizarBotones();
+            PermisosInterfaz.Configurar(this, Modulos.Configuracion, guardar, actualizar, nuevo, desactivar, reactivar);
         }
 
         private void ConectarEventos()

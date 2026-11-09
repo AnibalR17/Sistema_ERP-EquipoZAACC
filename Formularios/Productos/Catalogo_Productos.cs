@@ -20,6 +20,8 @@ namespace Sistema_ERP
             if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
             UsarNavegacionPrincipal();
+            PermisosInterfaz.Configurar(this, Modulos.Productos, btnNuevoProducto, btnEditar, btnDesactivar, btnReactivarProducto,
+                btnGuardarCategoria, btnActualizarCategoria, btnDesactivarCategoria, btnReactivarCategoria);
 
             homeButton.Click += (_, _) => HomeRequested?.Invoke(this, EventArgs.Empty);
             toggleButton.Click += (_, _) => sidebar.Visible = !sidebar.Visible;

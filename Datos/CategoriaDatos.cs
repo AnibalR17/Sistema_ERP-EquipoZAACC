@@ -13,6 +13,7 @@ namespace Sistema_ERP
                                  WHERE activo = 1 OR @incluirInactivas = 1 ORDER BY nombre";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Productos);
             using var adaptador = new SqlDataAdapter(sql, conexion);
             adaptador.SelectCommand.Parameters.Add("@incluirInactivas", SqlDbType.Bit).Value = incluirInactivas;
             var tabla = new DataTable();
@@ -27,6 +28,7 @@ namespace Sistema_ERP
                                    AND (@excluirId IS NULL OR id_categoria <> @excluirId)";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Productos);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@nombre", SqlDbType.NVarChar, 100).Value = nombre.Trim();
             comando.Parameters.Add("@excluirId", SqlDbType.Int).Value = (object?)excluirId ?? DBNull.Value;

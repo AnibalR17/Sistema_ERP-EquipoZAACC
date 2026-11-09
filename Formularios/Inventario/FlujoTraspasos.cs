@@ -23,6 +23,9 @@ namespace Sistema_ERP
             filtro.SelectedIndexChanged += (_, _) => Ejecutar(Cargar);
             Load += FlujoTraspasos_Load;
             lista.SelectionChanged += (_, _) => ActualizarAcciones();
+            PermisosInterfaz.Configurar(this, validacion ? Modulos.Validacion : Modulos.Traspasos);
+            PermisosInterfaz.ConfigurarAcciones(this, botones.Where(b => b.Key is not ("Actualizar" or "Detalle / historial"))
+                .Select(b => ((Control)b.Value, b.Key is "Aprobar" or "Rechazar" ? Modulos.Validacion : Modulos.Traspasos)).ToArray());
         }
 
         private void ConfigurarSolicitud()

@@ -31,6 +31,8 @@ namespace Sistema_ERP.Clases
                             SELECT CONVERT(int, @@ROWCOUNT);";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
+            if (tabla == "Proveedor") AutorizacionDatos.ExigirAlguno(conexion, true, Modulos.Proveedores, Modulos.Directorio);
+            else AutorizacionDatos.Exigir(conexion, tabla == "Tienda" ? Modulos.Configuracion : Modulos.Productos, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = id;
             comando.Parameters.Add("@motivo", SqlDbType.NVarChar, 300).Value = motivo.Trim();

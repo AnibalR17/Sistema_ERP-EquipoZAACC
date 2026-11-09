@@ -25,6 +25,8 @@ namespace Sistema_ERP.Clases
             if (SesionActual.Exigir().Id != usuario) throw new InvalidOperationException("El operador debe ser el usuario autenticado.");
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction();
+            AutorizacionDatos.Exigir(conexion, estado is "APROBADO" or "RECHAZADO" ? Modulos.Validacion : Modulos.Traspasos,
+                gestionar: true, transaccion: transaccion);
             TraspasoDatos.PrepararOperacion(conexion, transaccion, usuario, motivo.Trim());
             using var comando = new SqlCommand(@"UPDATE dbo.Traspaso SET estado=@estado
                 WHERE id_traspaso=@id AND version_fila=@version AND
@@ -60,6 +62,8 @@ namespace Sistema_ERP.Clases
                             SELECT CONVERT(int, @@ROWCOUNT);";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
+            if (tabla == "Proveedor") AutorizacionDatos.ExigirAlguno(conexion, true, Modulos.Proveedores, Modulos.Directorio);
+            else AutorizacionDatos.Exigir(conexion, Modulos.Productos, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = id;
             return (int)comando.ExecuteScalar() > 0;
@@ -77,6 +81,7 @@ namespace Sistema_ERP.Clases
                                  WHERE id_proveedor = @id AND activo = 1;
                                  SELECT CONVERT(int, @@ROWCOUNT);";
             using SqlConnection conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.ExigirAlguno(conexion, true, Modulos.Proveedores, Modulos.Directorio);
             using var comando = new SqlCommand(sql, conexion);
             ProveedorDatos.AgregarParametros(comando, proveedor);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = proveedor.IdProveedor;
@@ -99,6 +104,7 @@ namespace Sistema_ERP.Clases
                                  SELECT CONVERT(int, @@ROWCOUNT);";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Productos, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@nombre", SqlDbType.NVarChar, 100).Value = nombre.Trim();
             comando.Parameters.Add("@id", SqlDbType.Int).Value = idCategoria;

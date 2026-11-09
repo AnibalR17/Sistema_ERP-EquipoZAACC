@@ -17,6 +17,7 @@ namespace Sistema_ERP
             UsarNavegacionPrincipal();
             foreach (Control control in content.Controls.Cast<Control>().ToArray()) control.Dispose();
             InitializeInventarioFuncional();
+            PermisosInterfaz.Configurar(this, Modulos.Inventario, guardarMinimo);
             consultarInventario.Click += async (_, _) => await CargarInventario(true);
             tiendaInventario.SelectedIndexChanged += async (_, _) => { if (!cargandoInventario) await CargarInventario(false); };
             buscarInventario.KeyDown += async (_, e) => { if (e.KeyCode == Keys.Enter) { e.SuppressKeyPress = true; await CargarInventario(false); } };
@@ -43,7 +44,7 @@ namespace Sistema_ERP
                 if (recargarTiendas)
                 {
                     object? anterior = tiendaInventario.SelectedValue;
-                    var tiendas = await Task.Run(() => TiendaDatos.Listar(true));
+                    var tiendas = await Task.Run(() => TiendaDatos.ListarParaSeleccion(true));
                     if (IsDisposed) return;
                     tiendaInventario.DisplayMember = "Nombre"; tiendaInventario.ValueMember = "id_tienda";
                     tiendaInventario.DataSource = tiendas;

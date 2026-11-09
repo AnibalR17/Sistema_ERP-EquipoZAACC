@@ -36,7 +36,7 @@ public partial class Pagina_Central
         }
         EnlazarTarjeta(cardPanel0, () => salesButton_Click(this, EventArgs.Empty));
         EnlazarTarjeta(cardPanel1, () => comprasButton_Click(this, EventArgs.Empty));
-        EnlazarTarjeta(cardPanel2, MostrarValidacion);
+        EnlazarTarjeta(cardPanel2, () => { if (permisos.Puede(Modulos.Validacion)) MostrarValidacion(); else MostrarTraspaso(); });
         EnlazarTarjeta(cardPanel3, () => notificationButton_Click(this, EventArgs.Empty));
     }
 
@@ -60,6 +60,7 @@ public partial class Pagina_Central
                     if (IsDisposed || Disposing) return;
                     if (tienda != IdTiendaSeleccionada || hoy != InicioDatos.AhoraHonduras.Date)
                     { repetirConsultaInicio = true; continue; }
+                    AplicarPermisos(resumen.Permisos);
                     diasInicio = resumen.Dias;
                     var dia = diasInicio[^1];
                     cardValue0.Text = $"L {dia.Ventas:N2}"; cardDetail0.Text = $"{dia.FacturasVenta:N0} facturas confirmadas";
@@ -101,8 +102,8 @@ public partial class Pagina_Central
         using var fuente = new Font("Segoe UI", 9F);
         using var ventas = new Pen(ProductoEstilo.Texto, 2.5f);
         using var compras = new Pen(Color.SteelBlue, 2.5f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash };
-        g.DrawLine(ventas, 28, 62, 53, 62); g.DrawString("Ventas", fuente, Brushes.Black, 59, 53);
-        g.DrawLine(compras, 143, 62, 168, 62); g.DrawString("Compras", fuente, Brushes.SteelBlue, 174, 53);
+        if (permisos.Puede(Modulos.Ventas)) { g.DrawLine(ventas, 28, 62, 53, 62); g.DrawString("Ventas", fuente, Brushes.Black, 59, 53); }
+        if (permisos.Puede(Modulos.Compras)) { g.DrawLine(compras, 143, 62, 168, 62); g.DrawString("Compras", fuente, Brushes.SteelBlue, 174, 53); }
         if (diasInicio.Length == 0)
         { g.DrawString("El gráfico se mostrará al cargar el resumen.", fuente, Brushes.Gray, 28, 95); return; }
         float izquierda = 100, derecha = chartPanel.Width - 30, arriba = 95, abajo = chartPanel.Height - 50;
@@ -119,11 +120,12 @@ public partial class Pagina_Central
             izquierda + (derecha - izquierda) * i / (diasInicio.Length - 1),
             abajo - (abajo - arriba) * (float)(importe(dia) / maximo))).ToArray();
         var puntosVentas = Puntos(d => d.Ventas); var puntosCompras = Puntos(d => d.Compras);
-        g.DrawLines(compras, puntosCompras); g.DrawLines(ventas, puntosVentas);
+        if (permisos.Puede(Modulos.Compras)) g.DrawLines(compras, puntosCompras);
+        if (permisos.Puede(Modulos.Ventas)) g.DrawLines(ventas, puntosVentas);
         for (int i = 0; i < diasInicio.Length; i++)
         {
-            g.FillEllipse(Brushes.SteelBlue, puntosCompras[i].X - 3, puntosCompras[i].Y - 3, 6, 6);
-            g.FillEllipse(Brushes.Black, puntosVentas[i].X - 3, puntosVentas[i].Y - 3, 6, 6);
+            if (permisos.Puede(Modulos.Compras)) g.FillEllipse(Brushes.SteelBlue, puntosCompras[i].X - 3, puntosCompras[i].Y - 3, 6, 6);
+            if (permisos.Puede(Modulos.Ventas)) g.FillEllipse(Brushes.Black, puntosVentas[i].X - 3, puntosVentas[i].Y - 3, 6, 6);
             g.DrawString(diasInicio[i].Fecha.ToString("dd/MM", CultureInfo.InvariantCulture), fuente, Brushes.Gray,
                 new PointF(puntosVentas[i].X, abajo + 12), centrado);
         }

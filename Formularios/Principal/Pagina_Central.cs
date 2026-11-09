@@ -9,6 +9,9 @@ namespace Sistema_ERP
         private readonly Dictionary<Form, Button> navegacion = new();
         private Form? inicio;
         private AccesoUsuario? acceso;
+        private PermisosUsuario permisos = new(false, []);
+        private Button proveedoresButton = null!;
+        private Panel menuNavegacion = null!;
         private readonly System.Windows.Forms.Timer comprobarSesion = new() { Interval = 60000 };
         internal bool VolverAlAcceso { get; private set; }
 
@@ -18,11 +21,25 @@ namespace Sistema_ERP
             userLabel.Text = usuario.Nombre;
             accountLabel.Text = usuario.Nombre;
             roleLabel.Text = usuario.Roles;
+            try { AplicarPermisos(AutorizacionDatos.Obtener()); }
+            catch (Exception ex)
+            {
+                acceso = null;
+                VolverAlAcceso = true;
+                MessageBox.Show(this, "No se pudieron verificar los permisos. " + ex.Message, "Acceso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             comprobarSesion.Tick += async (_, _) =>
             {
                 comprobarSesion.Stop();
                 bool vigente;
-                try { vigente = await Task.Run(() => AccesoDatos.Vigente(usuario)); }
+                try
+                {
+                    var actuales = await Task.Run(AutorizacionDatos.Obtener);
+                    if (IsDisposed) return;
+                    AplicarPermisos(actuales);
+                    vigente = true;
+                }
                 catch (Exception) { vigente = false; }
                 if (IsDisposed) return;
                 if (!vigente)
@@ -46,6 +63,7 @@ namespace Sistema_ERP
             ConfigurarSelectorTienda();
             ConfigurarNotificaciones();
             ConfigurarInicio();
+            ConfigurarBusquedaGlobal();
             homeButton.Click += (_, _) => MostrarInicio();
             inventoryButton.Click += (_, _) => MostrarInventario();
             transferButton.Click += (_, _) => MostrarTraspaso();
@@ -175,9 +193,9 @@ namespace Sistema_ERP
             inicio = CrearPantalla(content, "Inicio");
             pantallas.Add("Inicio", inicio);
             navegacion.Add(inicio, homeButton);
-            MdiChildActivate += (_, _) => ActualizarNavegacion();
+            MdiChildActivate += (_, _) => { ValidarPantallaActiva(); ActualizarNavegacion(); };
 
-            var proveedoresButton = new Button
+            proveedoresButton = new Button
             {
                 Name = "proveedoresButton",
                 Text = "Proveedores",
@@ -203,6 +221,7 @@ namespace Sistema_ERP
             }
 
             var menu = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
+            menuNavegacion = menu;
             var pie = new Panel { Dock = DockStyle.Bottom, Height = 130 };
             foreach (Control control in panelContenedor.Controls.Cast<Control>().ToArray())
             {
@@ -231,9 +250,14 @@ namespace Sistema_ERP
             return pantalla;
         }
 
-        private void MostrarPantalla(string clave, Button boton, Func<Form> crear)
+        private void MostrarPantalla(string clave, Button? boton, Func<Form> crear)
         {
             try { AuditoriaDatos.RegistrarNavegacion(clave); }
+            catch (UnauthorizedAccessException ex)
+            {
+                MessageBox.Show(this, ex.Message, "Acceso denegado", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(this, "No se pudo registrar el acceso en la bitácora. " + ex.Message,
@@ -244,7 +268,7 @@ namespace Sistema_ERP
             {
                 pantalla = crear();
                 pantallas[clave] = pantalla;
-                navegacion[pantalla] = boton;
+                if (boton is not null) navegacion[pantalla] = boton;
                 pantalla.FormClosed += (_, _) =>
                 {
                     pantallas.Remove(clave);
@@ -262,7 +286,9 @@ namespace Sistema_ERP
                 pantalla.Dock = DockStyle.Fill;
             }
             pantalla.Show();
+            if (pantalla.IsDisposed) return;
             pantalla.BringToFront();
+            if (pantalla.IsDisposed) return;
             pantalla.Activate();
             ActualizarNavegacion();
         }

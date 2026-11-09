@@ -28,6 +28,7 @@ public sealed partial class ConfiguracionAuditoria
         campos.Controls.Add(PantallaMaqueta.Etiqueta("Ingresa el CAI entregado por el SAR para esta tienda. Se guardará en cada nueva factura y se mostrará en el recibo y sus reimpresiones.", 10), 0, 5);
         var botones = new FlowLayoutPanel { Dock = DockStyle.Fill };
         var guardarCai = PantallaMaqueta.Boton("Guardar CAI", true); var recargarCai = PantallaMaqueta.Boton("Actualizar");
+        PermisosInterfaz.ConfigurarAcciones(this, (guardarCai, Modulos.Configuracion));
         botones.Controls.AddRange([guardarCai, recargarCai]); campos.Controls.Add(botones, 0, 6); campos.Controls.Add(mensajeCai, 0, 7); tabFiscal.Controls.Add(campos);
         tiendaCai.SelectedIndexChanged += (_, _) => CargarCai();
         recargarCai.Click += (_, _) => CargarTiendasCai();
@@ -53,7 +54,7 @@ public sealed partial class ConfiguracionAuditoria
         {
             object? seleccion = tiendaCai.SelectedValue;
             tiendaCai.DisplayMember = "nombre"; tiendaCai.ValueMember = "id_tienda";
-            var tiendas = VentaDatos.Consultar("SELECT id_tienda,nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre");
+            var tiendas = VentaDatos.Consultar("SELECT id_tienda,nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre", modulo: Modulos.Configuracion);
             tiendaCai.DataSource = tiendas;
             if (seleccion is int id && tiendas.AsEnumerable().Any(t => t.Field<int>("id_tienda") == id)) tiendaCai.SelectedValue = id;
             CargarCai();

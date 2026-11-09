@@ -28,6 +28,16 @@ Los namespaces originales (`Sistema_ERP`, `Sistema_ERP.Vistas` y `LoginERP`) se 
 
 `connection.local.txt` permanece en la raiz y se copia al directorio de salida. No debe incluirse en Git.
 
+## Acceso por roles y permisos
+
+Para una base existente, ejecutar `Datos/Migraciones/005_permisos_contenido.sql`. Las bases nuevas incluyen ese catálogo en el esquema. El script conserva las asignaciones y no otorga privilegios automáticamente.
+
+Desde **Usuarios, roles y permisos**, una cuenta con el rol activo `ADMINISTRADOR` puede asignar a cada rol los permisos `MODULO.CONSULTAR` y `MODULO.GESTIONAR`. Gestionar requiere también consultar. Las cuentas sin permisos solo ven Inicio sin información de negocio. El menú, las acciones, el resumen y las consultas de datos aplican esas asignaciones; el administrador conserva acceso total. El alcance es por módulo, abarcando sus tiendas. Consultar [verificación y alcance de la autorización](Datos/Autorizacion-verificacion.md).
+
+## Busqueda global
+
+La barra superior del MDI permite buscar en todos los módulos autorizados: nombres, códigos, contactos y números de documentos. Escribe dos caracteres o más; **Enter** busca inmediatamente, **Ctrl+K** enfoca la barra y **Escape** limpia la búsqueda. Los resultados permiten consultar detalles de solo lectura o abrir su módulo. El selector de tienda filtra los documentos y las existencias; los catálogos compartidos conservan su alcance. Ver [búsqueda global y verificación](Datos/BusquedaGlobal-verificacion.md).
+
 ## Conexion a la base de datos
 
 Configure la variable de entorno `SISTEMA_ERP_CONNECTION_STRING` o cree `connection.local.txt` en la raiz del proyecto con la cadena de conexion de SQL Server. La variable de entorno tiene prioridad. El archivo local se copia al directorio de salida y esta excluido de Git para proteger las credenciales.
@@ -140,7 +150,7 @@ La fila de tarjetas conserva cuatro columnas al reducir la ventana: no hay una d
 - **Grupos de navegacion:** Descubrir y Administracion, con encabezados en negrita.
 - **Sesion:** nombre de usuario, rol en gris y boton Cerrar sesion de 216 × 38 con fondo `#F2F2F2`.
 - **Barra superior:** boton ☰ de 36 × 30, buscador sin borde, nombre de cuenta con simbolo ⌄ y boton de notificaciones de 64 × 30 para mostrar campana y contador. Los botones de simbolos tienen borde de 1.
-- **Buscador:** ancho entre 160 y 420, ajustado al espacio disponible; texto de ayuda «🔍 Buscador global...».
+- **Buscador:** ancho ajustado al espacio disponible; texto de ayuda «Buscar en todo el ERP… (Ctrl+K)».
 - **Franja informativa:** texto secundario, simbolo ℹ y relleno horizontal de 16 a la izquierda y 8 a la derecha.
 - **Indicadores:** titulo gris, valor grande en negrita y detalle gris. El ejemplo monetario usa `L. 0.00`; no hay formateador monetario centralizado.
 - **Grafico de Inicio:** ventas y compras confirmadas de los ultimos siete dias, con fechas, importes en lempiras, cuadricula y leyenda. Las ventas usan linea oscura continua y las compras una linea azul discontinua. Los valores se consultan en SQL Server para la tienda seleccionada o todas las tiendas.
@@ -165,7 +175,7 @@ Estas reglas se proponen a partir de los patrones existentes:
 - Las esquinas redondeadas y el grafico se dibujan durante la ejecucion y pueden no aparecer completos en el disenador.
 - La implementacion no dibuja las sombras de la imagen de referencia.
 - Las variantes de tablas, captura, dialogos, validacion y acciones principales se describen en la seccion 8. No se ha definido modo oscuro.
-- Este documento describe y propone reglas visuales; no confirma que las opciones de navegacion o el buscador tengan funcionalidad de negocio implementada.
+- Las reglas visuales de esta sección acompañan los flujos implementados; la búsqueda global se describe en `Datos/BusquedaGlobal-verificacion.md`.
 
 ### 8. Variantes de captura y CRUD
 

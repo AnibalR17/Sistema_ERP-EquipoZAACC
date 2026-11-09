@@ -13,7 +13,7 @@ namespace Sistema_ERP
             SesionActual.Exigir();
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction();
-            SesionActual.Validar(conexion, transaccion);
+            AutorizacionDatos.Exigir(conexion, Modulos.Inventario, transaccion: transaccion);
             using var adaptador = new SqlDataAdapter("""
                 SELECT i.id_tienda, i.id_producto, t.nombre AS Tienda, p.codigo_barras AS Codigo,
                        p.nombre AS Producto, i.existencia AS Existencia, i.reservado AS Reservado,
@@ -34,7 +34,7 @@ namespace Sistema_ERP
         public static DataTable Existencias(int tienda, string buscar)
         {
             using var conexion = Conexion.AbrirConexion();
-            SesionActual.Validar(conexion);
+            AutorizacionDatos.Exigir(conexion, Modulos.Inventario);
             using var adaptador = new SqlDataAdapter("""
                 SELECT p.id_producto, p.codigo_barras AS Codigo, p.nombre AS Producto,
                        ISNULL(i.existencia,0) AS Existencia, ISNULL(i.reservado,0) AS Reservado,
@@ -56,7 +56,7 @@ namespace Sistema_ERP
         {
             if (desde.Date > hasta.Date || hasta.Date == DateTime.MaxValue.Date) throw new ArgumentException("Revisa el intervalo de fechas.");
             using var conexion = Conexion.AbrirConexion();
-            SesionActual.Validar(conexion);
+            AutorizacionDatos.Exigir(conexion, Modulos.Inventario);
             using var adaptador = new SqlDataAdapter("""
                 SELECT m.id_movimiento AS Id, m.fecha AS FechaUTC, p.nombre AS Producto, m.tipo AS Tipo,
                        m.cantidad_delta AS Cantidad, u.nombre_usuario AS Usuario, m.motivo AS Motivo,
@@ -114,7 +114,7 @@ namespace Sistema_ERP
 
         private static int Preparar(SqlConnection conexion, SqlTransaction transaccion, string motivo)
         {
-            int usuario = SesionActual.Validar(conexion, transaccion);
+            int usuario = AutorizacionDatos.Exigir(conexion, Modulos.Inventario, gestionar: true, transaccion: transaccion);
             using var comando = new SqlCommand("""
                 IF EXISTS(SELECT requerido.nombre FROM (VALUES (N'trg_MovimientoInventario_aplicar'),
                     (N'trg_MovimientoInventario_validar'),(N'trg_MovimientoInventario_inmutable')) requerido(nombre)

@@ -27,7 +27,7 @@ Un ejecutable temporal sobre .NET 10 comprobo construccion del formulario sin co
 
 ## Limites
 
-El login autentica y obliga a cambiar claves temporales; las asignaciones todavia no restringen la navegacion ni las operaciones del ERP. Los actores de creacion, modificacion, desactivacion y asignacion de los CRUD quedan nulos. No se gestionan UsuarioTienda ni recuperacion de acceso en esta pantalla. Desactivar conserva las relaciones: reactivar un rol o permiso puede restaurar privilegios de sus asignaciones vigentes.
+El login autentica y obliga a cambiar claves temporales. Las asignaciones activas restringen la navegacion y las operaciones mediante MODULO.CONSULTAR y MODULO.GESTIONAR; gestionar requiere consultar. ADMINISTRADOR conserva acceso total. Ver Datos/Autorizacion-verificacion.md. Los actores de creacion, modificacion, desactivacion y asignacion de los CRUD quedan nulos. No se gestionan UsuarioTienda ni recuperacion de acceso en esta pantalla. Desactivar conserva las relaciones: reactivar un rol o permiso puede restaurar privilegios de sus asignaciones vigentes.
 
 ## Login: integracion pendiente contra SQL Server
 

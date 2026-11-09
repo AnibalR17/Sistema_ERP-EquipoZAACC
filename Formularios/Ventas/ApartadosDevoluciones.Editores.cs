@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 
 namespace Sistema_ERP;
 
@@ -14,8 +14,8 @@ public sealed partial class ApartadosDevoluciones
     private void NuevoApartado()
     {
         using var ventana = Ventana("Nuevo apartado");
-        var tienda = Combo(VentaDatos.Consultar("SELECT id_tienda,nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre"), "id_tienda");
-        var cliente = Combo(VentaDatos.Consultar("SELECT id_cliente,nombre FROM dbo.Cliente WHERE activo=1 ORDER BY nombre"), "id_cliente");
+        var tienda = Combo(VentaDatos.Consultar("SELECT id_tienda,nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre", modulo: Modulos.Apartados), "id_tienda");
+        var cliente = Combo(VentaDatos.Consultar("SELECT id_cliente,nombre FROM dbo.Cliente WHERE activo=1 ORDER BY nombre", modulo: Modulos.Apartados), "id_cliente");
         var vence = new DateTimePicker { Value = InicioDatos.AhoraHonduras.AddDays(7), Format = DateTimePickerFormat.Custom, CustomFormat = "dd/MM/yyyy HH:mm", Dock = DockStyle.Fill };
         var campos = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 3, RowCount = 2 };
         for (int i = 0; i < 3; i++) campos.ColumnStyles.Add(new(SizeType.Percent, 100F / 3));
@@ -69,7 +69,7 @@ public sealed partial class ApartadosDevoluciones
             {
                 detalle.Clear(); total.Text = "Total L 0.00"; producto.DataSource = null;
                 if (tienda.SelectedValue is not int id) return;
-                var catalogo = VentaDatos.Productos(id); catalogo.Columns.Add("Mostrar", typeof(string), "Producto + ' · Disponible: ' + Convert(Disponible, 'System.String')"); producto.DataSource = catalogo;
+                var catalogo = VentaDatos.Productos(id, Modulos.Apartados); catalogo.Columns.Add("Mostrar", typeof(string), "Producto + ' · Disponible: ' + Convert(Disponible, 'System.String')"); producto.DataSource = catalogo;
             }
             catch (Exception ex) { Error(ventana, ex); }
         }
@@ -146,7 +146,7 @@ public sealed partial class ApartadosDevoluciones
         internal CobroDialogo(string titulo, decimal saldo, bool abono)
         {
             Text = titulo; Size = new Size(550, 470); MinimumSize = Size; StartPosition = FormStartPosition.CenterParent; Padding = new Padding(20); Font = new Font("Segoe UI", 10);
-            metodo = Combo(VentaDatos.Consultar("SELECT id_metodo_pago,nombre,codigo FROM dbo.MetodoPago WHERE activo=1 ORDER BY nombre"), "id_metodo_pago");
+            metodo = Combo(VentaDatos.Consultar("SELECT id_metodo_pago,nombre,codigo FROM dbo.MetodoPago WHERE activo=1 ORDER BY nombre", modulo: Modulos.Apartados), "id_metodo_pago");
             monto = Dinero(saldo); monto.Value = saldo; monto.Enabled = abono;
             recibido = Dinero(); recibido.Value = saldo;
             bool Efectivo() => metodo.SelectedItem is DataRowView r && string.Equals(Convert.ToString(r["codigo"]), "EFECTIVO", StringComparison.OrdinalIgnoreCase);

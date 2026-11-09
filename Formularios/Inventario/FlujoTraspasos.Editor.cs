@@ -126,7 +126,7 @@ namespace Sistema_ERP
                     if (cargandoDatos || fila != null) return;
                     object? origenAnterior = origen.SelectedValue;
                     object? destinoAnterior = destino.SelectedValue;
-                    var tiendas = TiendaDatos.Listar();
+                    var tiendas = TiendaDatos.ListarParaSeleccion();
                     cargandoDatos = true;
                     try
                     {
@@ -185,6 +185,7 @@ namespace Sistema_ERP
                         ? "Selecciona las tiendas y agrega los productos que deseas traspasar."
                         : "Edita productos y observaciones. Las tiendas y el solicitante se conservan."));
                 TraspasoEstilo.Boton(guardar, true);
+                PermisosInterfaz.ConfigurarAcciones(this, (guardar, Modulos.Traspasos));
                 guardar.Dock = DockStyle.None;
                 var acciones = new FlowLayoutPanel
                 {
@@ -202,8 +203,8 @@ namespace Sistema_ERP
                 layout.Controls.Add(acciones, 0, 2);
                 Load += (_, _) => Ejecutar(() =>
                 {
-                    Enlazar(origen, TiendaDatos.Listar(fila != null), "id_tienda", "Nombre");
-                    Enlazar(destino, TiendaDatos.Listar(fila != null), "id_tienda", "Nombre");
+                    Enlazar(origen, TiendaDatos.ListarParaSeleccion(fila != null), "id_tienda", "Nombre");
+                    Enlazar(destino, TiendaDatos.ListarParaSeleccion(fila != null), "id_tienda", "Nombre");
                     if (fila != null)
                     {
                         origen.SelectedValue = fila["id_tienda_origen"];

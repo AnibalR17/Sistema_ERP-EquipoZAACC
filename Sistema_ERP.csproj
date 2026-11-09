@@ -22,6 +22,15 @@
     <Compile Update="Formularios/Principal/Pagina_Central.Notificaciones.cs">
       <DependentUpon>Pagina_Central.cs</DependentUpon>
     </Compile>
+    <Compile Update="Formularios/Principal/Pagina_Central.Busqueda.cs">
+      <DependentUpon>Pagina_Central.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Principal/Pagina_Central.Permisos.cs">
+      <DependentUpon>Pagina_Central.cs</DependentUpon>
+    </Compile>
+    <Compile Update="Formularios/Principal/PantallaBusquedaGlobal.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Update="Formularios/Dialogos/Notificaciones.Designer.cs">
       <DependentUpon>Notificaciones.cs</DependentUpon>
     </Compile>

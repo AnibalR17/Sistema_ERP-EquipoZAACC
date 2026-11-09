@@ -32,4 +32,4 @@ Estas comprobaciones no ejecutaron transacciones, triggers ni cambios de inventa
 
 ## Limites
 
-La autorizacion granular por permiso y tienda sigue pendiente en el sistema. Las compras usan la identidad de la sesion autenticada; no hay selector manual de operador. No se implementan recepciones parciales, impuestos ni pagos a proveedores porque no forman parte del flujo de Compra del esquema actual.
+Las compras exigen COMPRAS.CONSULTAR para leer y COMPRAS.GESTIONAR para modificar; no se filtran las filas por UsuarioTienda. Las compras usan la identidad de la sesion autenticada; no hay selector manual de operador. No se implementan recepciones parciales, impuestos ni pagos a proveedores porque no forman parte del flujo de Compra del esquema actual.

@@ -29,6 +29,7 @@ namespace Sistema_ERP
                 p.{e.Identificador} AS Identificador, {extras}, p.activo, p.motivo_desactivacion
                 FROM dbo.{e.Tabla} p {join} WHERE p.activo=1 OR @incluir=1 ORDER BY p.{e.Nombre}";
             using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Directorio);
             using var adaptador = new SqlDataAdapter(sql, conexion);
             adaptador.SelectCommand.Parameters.Add("@incluir", SqlDbType.Bit).Value = incluirInactivos;
             var tabla = new DataTable(); adaptador.Fill(tabla); return tabla;
@@ -37,6 +38,7 @@ namespace Sistema_ERP
         public static DataTable Tiendas()
         {
             using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Directorio);
             using var adaptador = new SqlDataAdapter("SELECT id_tienda, nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre", conexion);
             var tabla = new DataTable(); adaptador.Fill(tabla); return tabla;
         }
@@ -97,6 +99,7 @@ namespace Sistema_ERP
                     AND NOT EXISTS(SELECT 1 FROM dbo.Empleado WHERE id_empleado=@id AND id_tienda=@tienda)
                     THROW 50001, 'Selecciona una tienda activa para el empleado.', 1; " + sql;
             using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Directorio, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             foreach (var (campo, largo, valor) in new[] { ("@nombre",150,nombre), ("@telefono",30,telefono),
                 ("@correo",254,correo), ("@identificador",30,identificador), ("@direccion",300,direccion) })
@@ -121,6 +124,7 @@ namespace Sistema_ERP
                 ? "desactivado_en=NULL, desactivado_por=NULL, motivo_desactivacion=NULL"
                 : "desactivado_en=SYSUTCDATETIME(), motivo_desactivacion=@motivo";
             using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Directorio, gestionar: true);
             using var comando = new SqlCommand($@"UPDATE dbo.{e.Tabla} SET {valores}, actualizado_en=SYSUTCDATETIME()
                 WHERE {e.Id}=@id AND activo=@anterior; SELECT CONVERT(int, @@ROWCOUNT);", conexion);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = id;

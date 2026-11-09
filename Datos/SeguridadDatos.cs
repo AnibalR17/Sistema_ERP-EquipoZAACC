@@ -26,6 +26,7 @@ namespace Sistema_ERP
                 _ => "modulo AS Primero, accion AS Segundo, descripcion AS Descripcion"
             };
             using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Seguridad);
             using var adaptador = new SqlDataAdapter($"SELECT {id} AS Id, {campos}, activo, motivo_desactivacion, version_fila FROM dbo.{tabla} WHERE activo=1 OR @inactivos=1 ORDER BY Primero", conexion);
             adaptador.SelectCommand.Parameters.Add("@inactivos", SqlDbType.Bit).Value = inactivos;
             var resultado = new DataTable();
@@ -36,6 +37,7 @@ namespace Sistema_ERP
         public static DataTable Empleados()
         {
             using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Seguridad);
             using var adaptador = new SqlDataAdapter("SELECT id_empleado AS Id, nombre AS Nombre, activo FROM dbo.Empleado ORDER BY nombre", conexion);
             var tabla = new DataTable();
             adaptador.Fill(tabla);
@@ -52,6 +54,7 @@ namespace Sistema_ERP
             string propietario = usuario ? "id_usuario" : "id_rol";
             string nombre = usuario ? "e.nombre" : "e.codigo";
             using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Seguridad);
             using var adaptador = new SqlDataAdapter($"""
                 SELECT e.{clave} AS Id, {nombre} + CASE WHEN e.activo=0 THEN N' (inactivo)' ELSE N'' END AS Nombre,
                        e.activo, CONVERT(bit,CASE WHEN r.activo=1 THEN 1 ELSE 0 END) AS Asignado
@@ -88,6 +91,7 @@ namespace Sistema_ERP
             }
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
+            AutorizacionDatos.Exigir(conexion, Modulos.Seguridad, gestionar: true, transaccion: transaccion);
             if (tipo == TipoSeguridad.Usuarios)
             {
                 using var comprobar = new SqlCommand("""
@@ -172,6 +176,7 @@ namespace Sistema_ERP
             if (!activar) ValidarTexto(motivo.Trim(), 300, "El motivo", true);
             var (tabla, clave) = Entidad(tipo);
             using var conexion = Conexion.AbrirConexion();
+            AutorizacionDatos.Exigir(conexion, Modulos.Seguridad, gestionar: true);
             using var comando = new SqlCommand($"""
                 UPDATE dbo.{tabla} SET desactivado_en=CASE WHEN @activar=1 THEN NULL ELSE SYSUTCDATETIME() END,
                 desactivado_por=NULL,motivo_desactivacion=CASE WHEN @activar=1 THEN NULL ELSE @motivo END,

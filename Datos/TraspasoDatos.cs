@@ -11,7 +11,7 @@ namespace Sistema_ERP
         private static DataTable Consultar(string sql, int? id = null)
         {
             using var conexion = Conexion.AbrirConexion();
-            SesionActual.Validar(conexion);
+            AutorizacionDatos.ExigirAlguno(conexion, Modulos.Traspasos, Modulos.Validacion);
             using var adaptador = new SqlDataAdapter(sql, conexion);
             if (id.HasValue)
                 adaptador.SelectCommand.Parameters.Add("@id", SqlDbType.Int).Value = id.Value;
@@ -67,7 +67,7 @@ namespace Sistema_ERP
                                  WHERE p.activo = 1 OR @incluirInactivos = 1
                                  ORDER BY p.nombre";
             using var conexion = Conexion.AbrirConexion();
-            SesionActual.Validar(conexion);
+            AutorizacionDatos.ExigirAlguno(conexion, Modulos.Traspasos, Modulos.Validacion);
             using var adaptador = new SqlDataAdapter(sql, conexion);
             adaptador.SelectCommand.Parameters.Add("@id", SqlDbType.Int).Value = idTienda;
             adaptador.SelectCommand.Parameters.Add("@incluirInactivos", SqlDbType.Bit).Value = incluirInactivos;
@@ -99,6 +99,7 @@ namespace Sistema_ERP
             if (SesionActual.Exigir().Id != usuario) throw new InvalidOperationException("El operador debe ser el usuario autenticado.");
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
+            AutorizacionDatos.Exigir(conexion, Modulos.Traspasos, gestionar: true, transaccion: transaccion);
             SqlCommand Comando(string sql) => new(sql, conexion, transaccion);
             using (var validar = Comando(@"SELECT COUNT(*) FROM dbo.Tienda WITH (HOLDLOCK) WHERE activo=1 AND id_tienda IN (@origen,@destino)"))
             {

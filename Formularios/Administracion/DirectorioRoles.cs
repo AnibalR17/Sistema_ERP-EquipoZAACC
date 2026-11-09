@@ -17,6 +17,7 @@ namespace Sistema_ERP
             ConfigurarPresentacion();
             ConectarEventos();
             ActualizarBotones();
+            PermisosInterfaz.Configurar(this, Modulos.Directorio, guardar, actualizar, nuevo, desactivar, reactivar);
         }
 
         private void ConectarEventos()
