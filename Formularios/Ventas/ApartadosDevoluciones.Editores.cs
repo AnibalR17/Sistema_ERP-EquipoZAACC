@@ -63,17 +63,28 @@ public sealed partial class ApartadosDevoluciones
         var cancelar = Accion("Cerrar", () => ventana.DialogResult = DialogResult.Cancel); botones.Controls.AddRange([guardar, cancelar]);
         var filas = Filas(72, 76, -100, 32, 44); filas.Controls.Add(campos, 0, 0); filas.Controls.Add(barra, 0, 1); filas.Controls.Add(tabla, 0, 2); filas.Controls.Add(total, 0, 3); filas.Controls.Add(botones, 0, 4); ventana.Controls.Add(filas);
         tabla.DataSource = detalle; ColumnaOculta(tabla, "Id");
-        void CargarProductos()
+        bool cargandoReferencias = false;
+        void CargarProductos(bool limpiarDetalle = true)
         {
             try
             {
-                detalle.Clear(); total.Text = "Total L 0.00"; producto.DataSource = null;
+                if (limpiarDetalle) { detalle.Clear(); total.Text = "Total L 0.00"; }
+                producto.DataSource = null;
                 if (tienda.SelectedValue is not int id) return;
                 var catalogo = VentaDatos.Productos(id, Modulos.Apartados); catalogo.Columns.Add("Mostrar", typeof(string), "Producto + ' · Disponible: ' + Convert(Disponible, 'System.String')"); producto.DataSource = catalogo;
             }
             catch (Exception ex) { Error(ventana, ex); }
         }
-        tienda.SelectedIndexChanged += (_, _) => CargarProductos(); CargarProductos();
+        tienda.SelectedIndexChanged += (_, _) => { if (!cargandoReferencias) CargarProductos(); }; CargarProductos();
+        RecargaManual.Agregar(botones, () =>
+        {
+            var tiendas = VentaDatos.Consultar("SELECT id_tienda,nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre", modulo: Modulos.Apartados);
+            var clientes = VentaDatos.Consultar("SELECT id_cliente,nombre FROM dbo.Cliente WHERE activo=1 ORDER BY nombre", modulo: Modulos.Apartados);
+            cargandoReferencias = true;
+            try { RecargaManual.Actualizar(tienda, tiendas); RecargaManual.Actualizar(cliente, clientes); }
+            finally { cargandoReferencias = false; }
+            CargarProductos(limpiarDetalle: false);
+        });
         if (ventana.ShowDialog(this) == DialogResult.OK) { CargarListas(); mensaje.Text = $"Apartado {creado} creado. Las unidades quedaron reservadas."; }
     }
 
@@ -130,7 +141,21 @@ public sealed partial class ApartadosDevoluciones
             }
             catch (Exception ex) { Error(ventana, ex); }
         }
-        venta.SelectedIndexChanged += (_, _) => Cargar(); Cargar();
+        bool cargandoVentas = false;
+        venta.SelectedIndexChanged += (_, _) => { if (!cargandoVentas) Cargar(); }; Cargar();
+        RecargaManual.Agregar(botones, () =>
+        {
+            cargandoVentas = true;
+            try { RecargaManual.Actualizar(venta, DevolucionDatos.Ventas()); }
+            finally { cargandoVentas = false; }
+            if (editar)
+            {
+                using var actuales = DevolucionDatos.Obtener(id!.Value);
+                var registro = actuales.Tables[0].Rows[0];
+                version = (byte[])registro["version_fila"]; motivo.Text = Convert.ToString(registro["Motivo"]);
+            }
+            Cargar();
+        });
         if (ventana.ShowDialog(this) == DialogResult.OK) { CargarListas(); mensaje.Text = "Borrador guardado. Confirma la devolución para aplicar el inventario."; }
     }
 
@@ -162,7 +187,12 @@ public sealed partial class ApartadosDevoluciones
             filas.Controls.Add(Etiqueta(abono ? "Monto del abono" : "Saldo a cobrar"), 0, 1); filas.Controls.Add(monto, 0, 2);
             filas.Controls.Add(Etiqueta("Método de pago"), 0, 3); filas.Controls.Add(metodo, 0, 4);
             filas.Controls.Add(Etiqueta("Referencia"), 0, 5); filas.Controls.Add(referencia, 0, 6);
-            filas.Controls.Add(Etiqueta("Recibido (efectivo, solo entrega)"), 0, 7); filas.Controls.Add(recibido, 0, 8); filas.Controls.Add(aceptar, 0, 9); Controls.Add(filas);
+            filas.Controls.Add(Etiqueta("Recibido (efectivo, solo entrega)"), 0, 7); filas.Controls.Add(recibido, 0, 8);
+            var acciones = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, AutoScroll = true };
+            acciones.Controls.Add(aceptar);
+            RecargaManual.Agregar(acciones, () => RecargaManual.Actualizar(metodo,
+                VentaDatos.Consultar("SELECT id_metodo_pago,nombre,codigo FROM dbo.MetodoPago WHERE activo=1 ORDER BY nombre", modulo: Modulos.Apartados)));
+            filas.Controls.Add(acciones, 0, 9); Controls.Add(filas);
             void Actualizar()
             {
                 bool efectivo = Efectivo();

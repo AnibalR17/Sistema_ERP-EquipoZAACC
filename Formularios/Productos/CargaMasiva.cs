@@ -72,6 +72,11 @@ public sealed partial class CargaMasiva : PantallaMaqueta
             catch (Exception ex) { MessageBox.Show(this, ex.Message, "Plantilla", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
         };
         barra.Controls.Add(plantilla); opciones.Controls.Add(barra, 0, 0);
+        RecargaManual.Agregar(barra, () =>
+        {
+            CargarTiendas();
+            if (rutaOriginal is string ruta) CargarArchivo(ruta);
+        });
         opciones.Controls.Add(Etiqueta("Consulta el ejemplo de plantilla. Usa un .xlsx con los encabezados en la primera fila de la primera hoja.", 10), 0, 1);
         var tarjetaTabla = Tarjeta(300); tarjetaTabla.Dock = DockStyle.Fill;
         var layoutTabla = Filas(-100, 40, 48);
@@ -136,12 +141,19 @@ public sealed partial class CargaMasiva : PantallaMaqueta
     protected override void OnLoad(EventArgs e)
     {
         base.OnLoad(e);
+        CargarTiendas();
+    }
+
+    private void CargarTiendas()
+    {
         if (ModoDiseno.Activo(this)) return;
         try
         {
+            object? anterior = cmbTiendaImportacion.SelectedValue;
             cmbTiendaImportacion.DisplayMember = "nombre"; cmbTiendaImportacion.ValueMember = "id_tienda";
             cmbTiendaImportacion.DataSource = VentaDatos.Consultar("SELECT id_tienda,nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre", modulo: Modulos.CargaMasiva);
             cmbTiendaImportacion.SelectedIndex = -1;
+            if (anterior is int id) cmbTiendaImportacion.SelectedValue = id;
         }
         catch (Exception ex) { lblResumen.Text = "No se pudieron cargar las tiendas. " + ex.Message; }
     }

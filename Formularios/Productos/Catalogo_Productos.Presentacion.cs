@@ -81,6 +81,7 @@ namespace Sistema_ERP
             layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
             var acciones = new FlowLayoutPanel { Dock = DockStyle.Fill, WrapContents = false, AutoScroll = true };
             acciones.Controls.AddRange(new Control[] { btnNuevoProducto, btnEditar, btnDesactivar, btnReactivarProducto, btnExportarExcel });
+            RecargaManual.Agregar(acciones, CargarProductos);
             foreach (Button boton in acciones.Controls) boton.Margin = new Padding(0, 10, 12, 0);
             var productos = PantallaMaqueta.Filas(76, 36, 48, -100);
             acciones.Dock = txtBuscar.Dock = dgvProductos.Dock = DockStyle.Fill;

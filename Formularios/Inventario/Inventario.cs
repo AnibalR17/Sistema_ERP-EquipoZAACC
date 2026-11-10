@@ -17,6 +17,7 @@ namespace Sistema_ERP
             UsarNavegacionPrincipal();
             foreach (Control control in content.Controls.Cast<Control>().ToArray()) control.Dispose();
             InitializeInventarioFuncional();
+            RecargaManual.Preparar(consultarInventario);
             PermisosInterfaz.Configurar(this, Modulos.Inventario, guardarMinimo);
             consultarInventario.Click += async (_, _) => await CargarInventario(true);
             tiendaInventario.SelectedIndexChanged += async (_, _) => { if (!cargandoInventario) await CargarInventario(false); };

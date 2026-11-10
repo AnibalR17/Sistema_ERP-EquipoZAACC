@@ -12,17 +12,27 @@ namespace Sistema_ERP
             this.tipo = tipo;
             InitializeComponent();
             ConfigurarPresentacion();
+            if (tipo == TipoDirectorio.Empleados) RecargaManual.Agregar(acciones, CargarTiendas);
             guardar.Click += (_, _) => Guardar();
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            CargarTiendas();
+        }
+
+        private void CargarTiendas()
+        {
             if (ModoDiseno.Activo(this) || tipo != TipoDirectorio.Empleados) return;
             try
             {
+                object? anterior = tienda.SelectedValue;
                 tienda.DisplayMember = "nombre"; tienda.ValueMember = "id_tienda";
                 tienda.DataSource = DirectorioDatos.Tiendas(); tienda.SelectedIndex = -1;
+                if (anterior is int id) tienda.SelectedValue = id;
+                guardar.Enabled = tienda.Items.Count > 0;
+                estado.Text = "";
                 if (tienda.Items.Count == 0) { estado.Text = "Registra una tienda activa antes de agregar empleados."; guardar.Enabled = false; }
             }
             catch (Exception ex) { estado.Text = "No se pudieron cargar las tiendas. " + ex.Message; guardar.Enabled = false; }

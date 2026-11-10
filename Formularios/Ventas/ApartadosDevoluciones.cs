@@ -31,6 +31,7 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
             filtros.ColumnStyles.Add(new(SizeType.Percent, 100)); filtros.ColumnStyles.Add(new(SizeType.Absolute, 170)); filtros.ColumnStyles.Add(new(SizeType.Absolute, 110));
             buscar.Dock = estados.Dock = DockStyle.Fill; buscar.Margin = new Padding(0, 0, 10, 4);
             var consultar = Accion("Consultar", Recargar); consultar.Dock = DockStyle.Fill;
+            RecargaManual.Preparar(consultar); consultar.Name = "btnReiniciar";
             filtros.Controls.Add(buscar, 0, 0); filtros.Controls.Add(estados, 1, 0); filtros.Controls.Add(consultar, 2, 0);
             var barra = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoScroll = true };
             foreach (var opcion in opciones) { var boton = Accion(opcion.Texto, () => Ejecutar(opcion.Accion)); botones.Add(opcion.Texto, boton); barra.Controls.Add(boton); }
@@ -123,16 +124,26 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
     private void VerDetalle(bool apartado)
     {
         var fila = Seleccion(apartado ? apartados : devoluciones); if (fila is null) return;
-        using var ds = apartado ? ApartadoDatos.Obtener(Numero(fila)) : DevolucionDatos.Obtener(Numero(fila));
         using var ventana = Ventana((apartado ? "Apartado " : "Devolución ") + Numero(fila));
         var tabs = new TabControl { Dock = DockStyle.Fill }; string[] nombres = apartado ? ["Resumen", "Productos", "Abonos", "Reembolsos"] : ["Resumen", "Productos", "Reembolsos"];
-        for (int i = 0; i < ds.Tables.Count; i++)
+        void CargarDetalle()
         {
-            var tab = new TabPage(nombres[i]); var tabla = Tabla(); tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            ConfigurarColumnas(tabla, ds.Tables[i]); tabla.DataSource = ds.Tables[i];
-            tab.Controls.Add(tabla); tabs.TabPages.Add(tab);
+            using var ds = apartado ? ApartadoDatos.Obtener(Numero(fila)) : DevolucionDatos.Obtener(Numero(fila));
+            int seleccion = tabs.SelectedIndex;
+            foreach (TabPage anterior in tabs.TabPages.Cast<TabPage>().ToArray()) anterior.Dispose();
+            tabs.TabPages.Clear();
+            for (int i = 0; i < ds.Tables.Count; i++)
+            {
+                var tab = new TabPage(nombres[i]); var tabla = Tabla(); tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
+                ConfigurarColumnas(tabla, ds.Tables[i]); tabla.DataSource = ds.Tables[i];
+                tab.Controls.Add(tabla); tabs.TabPages.Add(tab);
+            }
+            if (seleccion >= 0 && seleccion < tabs.TabCount) tabs.SelectedIndex = seleccion;
         }
-        ventana.Controls.Add(tabs); ventana.ShowDialog(this);
+        CargarDetalle();
+        var acciones = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 52 };
+        RecargaManual.Agregar(acciones, CargarDetalle);
+        ventana.Controls.Add(tabs); ventana.Controls.Add(acciones); ventana.ShowDialog(this);
     }
     private void Abonar()
     {
@@ -186,9 +197,13 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
     private void MostrarComprobante(string texto, string numero, int venta)
     {
         using var ventana = Ventana("Factura " + numero);
-        ventana.Controls.Add(new TextBox { Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Both, Text = texto.Replace("\n", Environment.NewLine) });
+        var contenido = new TextBox { Dock = DockStyle.Fill, Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Both, Text = texto.Replace("\n", Environment.NewLine) };
+        ventana.Controls.Add(contenido);
         var pdf = Accion("Guardar PDF", async () => await DialogosExportacion.ReciboPdf(ventana, venta, numero)); pdf.Dock = DockStyle.Bottom;
-        ventana.Controls.Add(pdf);
+        var acciones = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 52 };
+        pdf.Dock = DockStyle.None; acciones.Controls.Add(pdf);
+        RecargaManual.Agregar(acciones, () => contenido.Text = VentaDatos.Comprobante(venta).Replace("\n", Environment.NewLine));
+        ventana.Controls.Add(acciones);
         ventana.ShowDialog(this);
     }
     private string? PedirMotivo(string titulo)

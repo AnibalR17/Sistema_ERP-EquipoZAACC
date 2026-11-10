@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Formularios/Dialogos/EditorPermisosRol.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Formularios/Dialogos/EditorPermisosRol.Designer.cs">
+      <DependentUpon>EditorPermisosRol.cs</DependentUpon>
+    </Compile>
     <Compile Update="Formularios/Dialogos/AsignarPermisosRol.cs">
       <SubType>Form</SubType>
     </Compile>

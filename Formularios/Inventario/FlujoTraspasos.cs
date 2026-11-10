@@ -62,6 +62,8 @@ namespace Sistema_ERP
                 barra.Controls.Add(boton);
             }
             Boton("Actualizar", Cargar);
+            RecargaManual.Preparar(botones["Actualizar"]);
+            botones["Actualizar"].Name = "btnReiniciar";
             Boton("Detalle / historial", () => Abrir(false));
             Boton("Aprobar", () => Resolver("APROBADO"));
             Boton("Rechazar", () => Resolver("RECHAZADO"));
@@ -191,20 +193,29 @@ namespace Sistema_ERP
             using var ventana = new Form { Text = $"Traspaso #{fila["id_traspaso"]} — {fila["estado"]}", Size = new Size(900, 600), StartPosition = FormStartPosition.CenterParent };
             TraspasoEstilo.Superficie(ventana);
             var tabs = new TabControl { Dock = DockStyle.Fill, Padding = new Point(18, 10) };
-            foreach (var par in new[] { ("Productos", TraspasoDatos.Detalle((int)fila["id_traspaso"])), ("Historial", TraspasoDatos.Historial((int)fila["id_traspaso"])) })
+            void CargarDetalle()
             {
-                var pagina = new TabPage(par.Item1) { BackColor = ProductoEstilo.Fondo, Padding = new Padding(8) };
-                var tabla = Tabla();
-                tabla.DataSource = par.Item2;
-                pagina.Controls.Add(TraspasoEstilo.Tarjeta(tabla));
-                tabs.TabPages.Add(pagina);
+                int seleccion = tabs.SelectedIndex;
+                var detalle = TraspasoDatos.Detalle((int)fila["id_traspaso"]);
+                var historial = TraspasoDatos.Historial((int)fila["id_traspaso"]);
+                foreach (TabPage anterior in tabs.TabPages.Cast<TabPage>().ToArray()) anterior.Dispose();
+                tabs.TabPages.Clear();
+                foreach (var par in new[] { ("Productos", detalle), ("Historial", historial) })
+                {
+                    var pagina = new TabPage(par.Item1) { BackColor = ProductoEstilo.Fondo, Padding = new Padding(8) };
+                    var tabla = Tabla(); tabla.DataSource = par.Item2;
+                    pagina.Controls.Add(TraspasoEstilo.Tarjeta(tabla)); tabs.TabPages.Add(pagina);
+                }
+                if (seleccion >= 0 && seleccion < tabs.TabCount) tabs.SelectedIndex = seleccion;
             }
+            CargarDetalle();
             ventana.Controls.Add(tabs);
             ventana.Controls.Add(TraspasoEstilo.Cabecera($"Traspaso #{fila["id_traspaso"]}", $"{fila["Origen"]} → {fila["Destino"]} · {fila["estado"]}\nSolicitante: {fila["Solicitante"]}\nObservaciones: {fila["observaciones"]}"));
             var cerrar = new Button { Text = "Cerrar", DialogResult = DialogResult.OK };
             TraspasoEstilo.Boton(cerrar);
             var pie = new FlowLayoutPanel { Dock = DockStyle.Bottom, AutoSize = true, FlowDirection = FlowDirection.RightToLeft };
             pie.Controls.Add(cerrar);
+            RecargaManual.Agregar(pie, CargarDetalle);
             ventana.Controls.Add(pie);
             ventana.CancelButton = cerrar;
             ventana.ShowDialog(this);

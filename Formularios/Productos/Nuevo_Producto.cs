@@ -14,6 +14,9 @@ namespace Sistema_ERP
             if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
             _editando = producto;
+            var reiniciar = RecargaManual.Agregar(this, CargarReferencias);
+            reiniciar.SetBounds(32, 582, 120, 44);
+            reiniciar.TabIndex = 8;
             PermisosInterfaz.Configurar(this, Modulos.Productos, btnGuardar);
 
             Load += FormProducto_Load;
@@ -37,8 +40,7 @@ namespace Sistema_ERP
 
             try
             {
-                ConfigurarCombo(cmbCategoria, CategoriaDatos.Listar(), "nombre", "id_categoria");
-                ConfigurarCombo(cmbProveedor, ProveedorDatos.ListarParaCombo(), "nombre_empresa", "id_proveedor");
+                CargarReferencias();
             }
             catch (Exception ex)
             {
@@ -64,6 +66,17 @@ namespace Sistema_ERP
             {
                 Text = "Nuevo producto";
             }
+        }
+
+        private void CargarReferencias()
+        {
+            object? categoria = cmbCategoria.SelectedValue, proveedor = cmbProveedor.SelectedValue;
+            var categorias = CategoriaDatos.Listar();
+            var proveedores = ProveedorDatos.ListarParaCombo();
+            ConfigurarCombo(cmbCategoria, categorias, "nombre", "id_categoria");
+            ConfigurarCombo(cmbProveedor, proveedores, "nombre_empresa", "id_proveedor");
+            if (categoria is int c) cmbCategoria.SelectedValue = c;
+            if (proveedor is int p) cmbProveedor.SelectedValue = p;
         }
 
         private static void ConfigurarCombo(ComboBox combo, System.Data.DataTable datos, string mostrar, string valor)

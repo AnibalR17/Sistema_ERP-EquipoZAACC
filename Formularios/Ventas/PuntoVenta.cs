@@ -19,6 +19,7 @@ public sealed class PuntoVenta : PantallaMaqueta
     private FacturaEmitida? ultima;
     private string comprobante = "";
     private bool refrescarAlActivar;
+    private bool cargandoCatalogos;
 
     public PuntoVenta() : base("Facturación de ventas", "Productos, cliente y pago", "Selecciona una tienda, agrega productos y confirma la factura para registrar el pago y descontar inventario.")
     {
@@ -47,6 +48,7 @@ public sealed class PuntoVenta : PantallaMaqueta
             Etiqueta("Monto recibido (efectivo)"), recibido, Etiqueta("Referencia del pago"), referencia, Etiqueta("Observaciones"), observaciones, resumen, procesar];
         for (int i = 0; i < controles.Length; i++) { controles[i].Dock = DockStyle.Fill; campos.Controls.Add(controles[i], 0, i); }
         var recargar = Boton("Actualizar catálogos"); var imprimir = Boton("Ver / imprimir última factura");
+        RecargaManual.Preparar(recargar); recargar.Name = "btnReiniciar";
         recargar.Dock = imprimir.Dock = DockStyle.Fill; campos.Controls.Add(recargar, 0, 16); campos.Controls.Add(imprimir, 0, 17);
         exportarPdf.Name = "exportarReciboPDF"; exportarPdf.Enabled = false; exportarPdf.Dock = DockStyle.Fill; campos.Controls.Add(exportarPdf, 0, 18);
         exportarPdf.Click += async (_, _) => { if (ultima is { } f) await DialogosExportacion.ReciboPdf(this, f.Id, f.Numero); };
@@ -64,9 +66,9 @@ public sealed class PuntoVenta : PantallaMaqueta
         quitar.Click += (_, _) => { if (carrito.CurrentRow?.DataBoundItem is DataRowView r) { detalle.Rows.Remove(r.Row); Totales(); } };
         vaciar.Click += (_, _) => { detalle.Clear(); Totales(); };
         buscar.TextChanged += (_, _) => Filtrar(); recibido.ValueChanged += (_, _) => Totales();
-        tienda.SelectedIndexChanged += (_, _) => { detalle.Clear(); CargarProductos(); Totales(); };
-        cliente.SelectedIndexChanged += (_, _) => rtnCliente.Text = cliente.SelectedItem is DataRowView fila ? VentaDatos.RtnSugerido(fila["documento_fiscal"]) : "";
-        metodo.SelectedIndexChanged += (_, _) => ActualizarPago();
+        tienda.SelectedIndexChanged += (_, _) => { if (!cargandoCatalogos) { detalle.Clear(); CargarProductos(); Totales(); } };
+        cliente.SelectedIndexChanged += (_, _) => { if (!cargandoCatalogos) rtnCliente.Text = cliente.SelectedItem is DataRowView fila ? VentaDatos.RtnSugerido(fila["documento_fiscal"]) : ""; };
+        metodo.SelectedIndexChanged += (_, _) => { if (!cargandoCatalogos) ActualizarPago(); };
         recargar.Click += (_, _) => Cargar(); procesar.Click += (_, _) => Emitir();
         refrescarStock.Click += (_, _) => CargarProductos(limpiarBusqueda: true);
         imprimir.Click += (_, _) => Imprimir();
@@ -95,11 +97,25 @@ public sealed class PuntoVenta : PantallaMaqueta
     {
         try
         {
-            void Enlazar(ComboBox combo, string tabla, string id, string extra = "")
-            { combo.DisplayMember = "nombre"; combo.ValueMember = id; combo.DataSource = VentaDatos.Consultar($"SELECT {id},nombre{extra} FROM dbo.{tabla} WHERE activo=1 ORDER BY nombre"); }
-            Enlazar(cliente, "Cliente", "id_cliente", ",documento_fiscal"); Enlazar(metodo, "MetodoPago", "id_metodo_pago", ",codigo"); Enlazar(tienda, "Tienda", "id_tienda"); CargarProductos();
+            var clientes = VentaDatos.Consultar("SELECT id_cliente,nombre,documento_fiscal FROM dbo.Cliente WHERE activo=1 ORDER BY nombre");
+            var metodos = VentaDatos.Consultar("SELECT id_metodo_pago,nombre,codigo FROM dbo.MetodoPago WHERE activo=1 ORDER BY nombre");
+            var tiendas = VentaDatos.Consultar("SELECT id_tienda,nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre");
+            object? tiendaAnterior = tienda.SelectedValue, clienteAnterior = cliente.SelectedValue;
+            cargandoCatalogos = true;
+            void Enlazar(ComboBox combo, DataTable datos, string id)
+            {
+                object? anterior = combo.SelectedValue;
+                combo.DisplayMember = "nombre"; combo.ValueMember = id; combo.DataSource = datos;
+                if (anterior is int valor && datos.AsEnumerable().Any(r => r.Field<int>(id) == valor)) combo.SelectedValue = valor;
+            }
+            Enlazar(cliente, clientes, "id_cliente"); Enlazar(metodo, metodos, "id_metodo_pago"); Enlazar(tienda, tiendas, "id_tienda");
+            if (!Equals(tiendaAnterior, tienda.SelectedValue)) detalle.Clear();
+            if (!Equals(clienteAnterior, cliente.SelectedValue))
+                rtnCliente.Text = cliente.SelectedItem is DataRowView fila ? VentaDatos.RtnSugerido(fila["documento_fiscal"]) : "";
+            CargarProductos(); ActualizarPago();
         }
         catch (Exception ex) { estado.Text = "No se pudieron cargar los catálogos."; MessageBox.Show(this, ex.Message, "Facturación", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+        finally { cargandoCatalogos = false; }
     }
     private void CargarProductos(bool limpiarBusqueda = false)
     {
@@ -212,6 +228,11 @@ public sealed class PuntoVenta : PantallaMaqueta
             catch (Exception ex) { MessageBox.Show(ventana, ex.Message, "Impresión"); }
         };
         var botones = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 54 }; botones.Controls.AddRange([boton, pdf]);
+        RecargaManual.Agregar(botones, () =>
+        {
+            comprobante = VentaDatos.Comprobante(ultima.Id);
+            texto.Text = comprobante.Replace("\n", Environment.NewLine);
+        });
         ventana.Controls.Add(texto); ventana.Controls.Add(botones); ventana.ShowDialog(this);
     }
 
@@ -221,21 +242,23 @@ public sealed class PuntoVenta : PantallaMaqueta
         {
             using var ventana = new Form { Text = "Facturas registradas (últimas 500)", Size = new Size(1000, 650), StartPosition = FormStartPosition.CenterParent };
             var tabla = Tabla();
-            var datos = VentaDatos.Consultar("""
+            DataTable CargarHistorial() => VentaDatos.Consultar("""
                 SELECT TOP(500) v.id_venta AS Id,v.numero AS Numero,v.fecha AS [Fecha UTC],c.nombre AS Cliente,v.rtn_cliente AS RTN,
                     t.nombre AS Tienda,v.estado AS Estado,total.total AS Total
                 FROM dbo.Venta v JOIN dbo.Cliente c ON c.id_cliente=v.id_cliente
                 JOIN dbo.Tienda t ON t.id_tienda=v.id_tienda JOIN dbo.vw_VentaTotal total ON total.id_venta=v.id_venta
                 ORDER BY v.id_venta DESC
                 """);
+            var datos = CargarHistorial();
             tabla.DataSource = datos.DefaultView;
             tabla.MultiSelect = false;
             var filtro = Buscar("Buscar número, cliente o RTN"); filtro.Dock = DockStyle.Top;
-            filtro.TextChanged += (_, _) =>
+            void FiltrarHistorial()
             {
                 string texto = System.Text.RegularExpressions.Regex.Replace(filtro.Text.Trim(), @"[%*\[\]]", "[$0]").Replace("'", "''");
                 datos.DefaultView.RowFilter = $"Numero LIKE '%{texto}%' OR Cliente LIKE '%{texto}%' OR RTN LIKE '%{texto}%'";
-            };
+            }
+            filtro.TextChanged += (_, _) => FiltrarHistorial();
             var ver = Boton("Ver / imprimir factura");
             var pdf = Boton("Exportar PDF");
             pdf.Click += async (_, _) => { if (tabla.CurrentRow?.DataBoundItem is DataRowView r) await DialogosExportacion.ReciboPdf(ventana, (int)r["Id"], Convert.ToString(r["Numero"])!); };
@@ -252,6 +275,7 @@ public sealed class PuntoVenta : PantallaMaqueta
                 catch (Exception ex) { MessageBox.Show(ventana, ex.Message, "Factura"); }
             };
             var botones = new FlowLayoutPanel { Dock = DockStyle.Bottom, Height = 54 }; botones.Controls.AddRange([ver, pdf]);
+            RecargaManual.Agregar(botones, () => { datos = CargarHistorial(); tabla.DataSource = datos.DefaultView; FiltrarHistorial(); });
             ventana.Controls.Add(tabla); ventana.Controls.Add(filtro); ventana.Controls.Add(botones); ventana.ShowDialog(this);
         }
         catch (Exception ex) { MessageBox.Show(this, ex.Message, "Historial de ventas"); }

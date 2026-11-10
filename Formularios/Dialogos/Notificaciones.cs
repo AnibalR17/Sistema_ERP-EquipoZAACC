@@ -20,6 +20,7 @@ namespace Sistema_ERP
             descripcion.Text = criterio;
             if (ModoDiseno.Activo(this)) return;
             ProductoEstilo.Boton(actualizar);
+            RecargaManual.Preparar(actualizar);
             ProductoEstilo.Boton(cerrar, true);
             actualizar.Width = cerrar.Width = 120;
             actualizar.Click += async (_, _) => await CargarAlertas();
@@ -43,7 +44,7 @@ namespace Sistema_ERP
                 resumen.Text = datos.Rows.Count == 0
                     ? "No hay alertas de stock con el criterio indicado."
                     : $"{datos.Rows.Count} {(datos.Rows.Count == 1 ? "producto por tienda requiere" : "productos por tienda requieren")} revisión.";
-                estado.Text = $"Datos consultados: {DateTime.Now:dd/MM/yyyy HH:mm:ss}. Actualizar vuelve a consultar las existencias actuales.";
+                estado.Text = $"Datos consultados: {DateTime.Now:dd/MM/yyyy HH:mm:ss}. Reiniciar vuelve a consultar las existencias actuales.";
                 Actualizadas?.Invoke(datos);
             }
             catch (Exception ex)

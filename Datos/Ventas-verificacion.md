@@ -12,7 +12,7 @@ La migración 002 ya se aplicó a la base local durante esta implementación. Co
 
 ## Uso
 
-En Ventas, seleccionar tienda, cliente y método de pago activos. Buscar por nombre o código, seleccionar un producto y agregar la cantidad al carrito (también con doble clic). Quitar o vaciar permite corregir el detalle. Actualizar catálogos vacía el carrito para evitar conservar precios antiguos.
+En Ventas, seleccionar tienda, cliente y método de pago activos. Buscar por nombre o código, seleccionar un producto y agregar la cantidad al carrito (también con doble clic). Quitar o vaciar permite corregir el detalle. Reiniciar actualiza los catálogos y conserva el carrito y sus precios capturados mientras la tienda seleccionada siga disponible; si cambia la tienda se limpia el carrito. Los productos disponibles muestran el catálogo actual para las nuevas líneas.
 
 El botón **Refrescar stock**, junto al buscador, vuelve a consultar las existencias de la tienda seleccionada y limpia el filtro para mostrar todos sus productos activos. Conserva la tienda, cliente, pago y carrito. La tabla muestra Existencia, Reservado y Disponible (existencia menos reservado), y el mensaje indica la tienda y hora de actualización. Al regresar a ventas desde otro módulo también se actualiza el stock, conservando la búsqueda. Si la consulta falla, se retiran los datos antiguos y se muestra el error.
 

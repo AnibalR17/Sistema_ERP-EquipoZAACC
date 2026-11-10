@@ -18,16 +18,17 @@ namespace Sistema_ERP
         public UsuariosRolesPermisos()
         {
             InitializeComponent();
+            RecargaManual.Preparar(recargar);
             foreach (Button boton in acciones.Controls) { ProductoEstilo.Boton(boton, boton == guardar); boton.Width = 110; }
             usuarios.Click += (_, _) => CambiarPestana(TipoSeguridad.Usuarios);
             roles.Click += (_, _) => CambiarPestana(TipoSeguridad.Roles);
-            permisos.Click += (_, _) => CambiarPestana(TipoSeguridad.Permisos);
             guardar.Click += (_, _) => Guardar(false);
             actualizar.Click += (_, _) => Guardar(true);
             nuevo.Click += (_, _) => Ejecutar(() => Limpiar());
             recargar.Click += (_, _) => Cargar();
             generarPermisos.Click += (_, _) => Ejecutar(GenerarPermisos);
             asignarPermisosModulo.Click += (_, _) => Ejecutar(AsignarPermisosPorModulo);
+            editarPermisosRol.Click += (_, _) => Ejecutar(EditarPermisosDelRol);
             desactivar.Click += (_, _) => CambiarEstado(false);
             reactivar.Click += (_, _) => CambiarEstado(true);
             buscar.TextChanged += (_, _) => Filtrar();
@@ -46,6 +47,8 @@ namespace Sistema_ERP
 
         private void CambiarPestana(TipoSeguridad siguiente)
         {
+            if (siguiente is not (TipoSeguridad.Usuarios or TipoSeguridad.Roles))
+                throw new ArgumentOutOfRangeException(nameof(siguiente));
             cargando = true;
             try
             {
@@ -124,9 +127,8 @@ namespace Sistema_ERP
         private void CargarAsignaciones()
         {
             asignaciones.Items.Clear();
-            if (tipo == TipoSeguridad.Permisos) return;
-            foreach (DataRow fila in SeguridadDatos.Asignaciones(tipo, idSeleccionado).Rows)
-                asignaciones.Items.Add(new Opcion((int)fila["Id"], (string)fila["Nombre"], (bool)fila["activo"]), (bool)fila["Asignado"]);
+            using var opciones = SeguridadDatos.Asignaciones(tipo, idSeleccionado);
+            AplicarAsignaciones(opciones, opciones.AsEnumerable().Where(f => f.Field<bool>("Asignado")).Select(f => f.Field<int>("Id")));
         }
 
         private void Guardar(bool editar)
@@ -152,10 +154,11 @@ namespace Sistema_ERP
             int[] seleccionados = asignaciones.CheckedItems.Cast<Opcion>().Select(o => o.Id).ToArray();
             using var rolesDisponibles = SeguridadDatos.Asignaciones(TipoSeguridad.Usuarios, idSeleccionado);
             using var permisosPorRol = SeguridadDatos.PermisosPorRol();
-            using var dialogo = new GenerarPermisosUsuario(primero.Text, rolesDisponibles, permisosPorRol, seleccionados);
+            using var dialogo = new GenerarPermisosUsuario(primero.Text, rolesDisponibles, permisosPorRol, seleccionados, idSeleccionado);
             if (dialogo.ShowDialog(this) != DialogResult.OK) return;
 
-            AplicarAsignaciones(rolesDisponibles, dialogo.RolesSeleccionados);
+            using var opcionesActuales = SeguridadDatos.Asignaciones(TipoSeguridad.Usuarios, idSeleccionado);
+            AplicarAsignaciones(opcionesActuales, dialogo.RolesSeleccionados);
             Mensaje("Permisos preparados. Pulsa Guardar o Actualizar para conservarlos con el usuario.");
         }
 
@@ -164,11 +167,62 @@ namespace Sistema_ERP
             if (tipo != TipoSeguridad.Roles || !disponible || (idSeleccionado.HasValue && !activo)) return;
             AutorizacionDatos.Exigir(Modulos.Seguridad, gestionar: true);
             int[] seleccionados = asignaciones.CheckedItems.Cast<Opcion>().Select(o => o.Id).ToArray();
-            using var catalogo = SeguridadDatos.Asignaciones(TipoSeguridad.Roles, idSeleccionado);
-            using var dialogo = new AsignarPermisosRol(segundo.Text, catalogo, seleccionados);
+            using var catalogo = SeguridadDatos.CatalogoPermisosParaRol(idSeleccionado);
+            using var dialogo = new AsignarPermisosRol(segundo.Text, catalogo, seleccionados, idSeleccionado, primero.Text);
             if (dialogo.ShowDialog(this) != DialogResult.OK) return;
-            AplicarAsignaciones(catalogo, dialogo.PermisosSeleccionados);
+            using var opcionesActuales = SeguridadDatos.Asignaciones(TipoSeguridad.Roles, idSeleccionado);
+            AplicarAsignaciones(opcionesActuales, dialogo.PermisosSeleccionados);
+            CompletarRolDesdePlantilla(dialogo.PlantillaAplicada);
             Mensaje("Permisos preparados. Pulsa Guardar o Actualizar para conservarlos con el rol.");
+        }
+
+        private void CompletarRolDesdePlantilla(PlantillaPermisos? plantilla)
+        {
+            if (plantilla is null || tipo != TipoSeguridad.Roles || idSeleccionado.HasValue) return;
+            string nombre = plantilla.NombreRol;
+            if (string.IsNullOrWhiteSpace(primero.Text))
+            {
+                using var existentes = SeguridadDatos.Listar(TipoSeguridad.Roles, true);
+                var codigos = existentes.AsEnumerable().Select(f => f.Field<string>("Primero")!).ToHashSet(StringComparer.OrdinalIgnoreCase);
+                string codigo = plantilla.Codigo;
+                int numero = 1;
+                while (codigos.Contains(codigo)) codigo = $"{plantilla.Codigo}_{++numero}";
+                primero.Text = codigo;
+                if (numero > 1) nombre += $" {numero}";
+            }
+            if (string.IsNullOrWhiteSpace(segundo.Text)) segundo.Text = nombre;
+            if (string.IsNullOrWhiteSpace(descripcion.Text)) descripcion.Text = plantilla.Descripcion;
+        }
+
+        private void EditarPermisosDelRol()
+        {
+            if (tipo != TipoSeguridad.Roles || !disponible || (idSeleccionado.HasValue && !activo)) return;
+            AutorizacionDatos.Exigir(Modulos.Seguridad, gestionar: true);
+            int[] seleccionados = asignaciones.CheckedItems.Cast<Opcion>().Select(o => o.Id).ToArray();
+            using var dialogo = new EditorPermisosRol(segundo.Text);
+            dialogo.ShowDialog(this);
+            AplicarPermisosCreados(seleccionados, dialogo.PermisosCreados);
+        }
+
+        private void AplicarPermisosCreados(IEnumerable<int> seleccion, IEnumerable<int> creados)
+        {
+            using var catalogo = SeguridadDatos.Asignaciones(TipoSeguridad.Roles, idSeleccionado);
+            var elegidos = seleccion.ToHashSet();
+            var nuevos = creados.ToHashSet();
+            foreach (var permiso in catalogo.AsEnumerable().Where(f => f.Field<bool>("activo") && nuevos.Contains(f.Field<int>("Id"))))
+            {
+                if (string.Equals(permiso.Field<string>("Accion"), "GESTIONAR", StringComparison.OrdinalIgnoreCase))
+                {
+                    var consulta = catalogo.AsEnumerable().FirstOrDefault(f => f.Field<bool>("activo") &&
+                        string.Equals(f.Field<string>("Modulo"), permiso.Field<string>("Modulo"), StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(f.Field<string>("Accion"), "CONSULTAR", StringComparison.OrdinalIgnoreCase));
+                    if (consulta is null) continue;
+                    elegidos.Add(consulta.Field<int>("Id"));
+                }
+                elegidos.Add(permiso.Field<int>("Id"));
+            }
+            AplicarAsignaciones(catalogo, elegidos);
+            Mensaje("Catálogo actualizado. Revisa los permisos elegidos y pulsa Guardar o Actualizar para asignarlos al rol. Gestionar requiere una consulta activa del mismo módulo.");
         }
 
         private void AplicarAsignaciones(DataTable opciones, IEnumerable<int> seleccionados)
@@ -179,7 +233,12 @@ namespace Sistema_ERP
             {
                 asignaciones.Items.Clear();
                 foreach (DataRow fila in opciones.Rows)
-                    asignaciones.Items.Add(new Opcion((int)fila["Id"], (string)fila["Nombre"], (bool)fila["activo"]), elegidos.Contains((int)fila["Id"]));
+                {
+                    string nombre = tipo == TipoSeguridad.Roles
+                        ? $"{CatalogoPermisos.NombrePantalla((string)fila["Modulo"])} · {fila["Accion"]}{((bool)fila["activo"] ? "" : " (inactivo)")}"
+                        : (string)fila["Nombre"];
+                    asignaciones.Items.Add(new Opcion((int)fila["Id"], nombre, (bool)fila["activo"]), elegidos.Contains((int)fila["Id"]));
+                }
             }
             finally { asignaciones.EndUpdate(); }
         }
@@ -221,6 +280,7 @@ namespace Sistema_ERP
             empleado.Enabled = asignaciones.Enabled = editable;
             generarPermisos.Enabled = editable && tipo == TipoSeguridad.Usuarios;
             asignarPermisosModulo.Enabled = editable && tipo == TipoSeguridad.Roles;
+            editarPermisosRol.Enabled = editable && tipo == TipoSeguridad.Roles;
         }
 
         private void Ejecutar(Action accion)

@@ -18,10 +18,11 @@ public partial class Pagina_Central
         chartTitleLabel.Text = "Ventas y compras · últimos 7 días";
         chartTitleLabel.Width = 420;
         MostrarInicioSinDatos("Cargando resumen de ventas y compras…");
+        RecargaManual.Preparar(actualizarInicio);
         headingPanel.Controls.Add(actualizarInicio);
         void ColocarActualizar() => actualizarInicio.Left = Math.Max(0, btnprobarconexion.Left - actualizarInicio.Width - 10);
         headingPanel.Resize += (_, _) => ColocarActualizar(); ColocarActualizar();
-        actualizarInicio.Click += async (_, _) => await ActualizarInicio();
+        actualizarInicio.Click += async (_, _) => { CargarTiendasCabecera(); await ActualizarInicio(); };
         inicio!.Activated += async (_, _) => { refrescoInicio.Start(); await ActualizarInicio(); };
         inicio.Deactivate += (_, _) => refrescoInicio.Stop();
         TiendaSeleccionadaChanged += async (_, _) => await ActualizarInicio();
@@ -75,7 +76,7 @@ public partial class Pagina_Central
                 catch (Exception ex)
                 {
                     if (IsDisposed || Disposing) return;
-                    MostrarInicioSinDatos("No se pudo cargar el resumen. Usa Actualizar resumen para reintentar. " + ex.Message);
+                    MostrarInicioSinDatos("No se pudo cargar el resumen. Usa Reiniciar para reintentar. " + ex.Message);
                 }
             } while (repetirConsultaInicio && ActiveMdiChild == inicio);
         }

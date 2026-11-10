@@ -68,6 +68,39 @@ namespace Sistema_ERP
             return tabla;
         }
 
+        internal static DataTable CatalogoPermisosParaRol(int? idRol)
+        {
+            using (var conexion = Conexion.AbrirConexion())
+            using (var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable))
+            {
+                int usuario = AutorizacionDatos.Exigir(conexion, Modulos.Seguridad, gestionar: true, transaccion: transaccion);
+                using var comando = new SqlCommand { Connection = conexion, Transaction = transaccion };
+                var valores = new List<string>();
+                foreach (var pantalla in CatalogoPermisos.Pantallas)
+                {
+                    foreach (var (accion, descripcion) in new[] { ("CONSULTAR", pantalla.Consulta), ("GESTIONAR", pantalla.Gestion) })
+                    {
+                        int indice = valores.Count;
+                        valores.Add($"(@modulo{indice},@accion{indice},@descripcion{indice})");
+                        comando.Parameters.Add($"@modulo{indice}", SqlDbType.VarChar, 50).Value = pantalla.Modulo;
+                        comando.Parameters.Add($"@accion{indice}", SqlDbType.VarChar, 30).Value = accion;
+                        comando.Parameters.Add($"@descripcion{indice}", SqlDbType.NVarChar, 300).Value = descripcion;
+                    }
+                }
+                comando.CommandText = $"""
+                    INSERT dbo.Permiso(modulo,accion,descripcion,creado_por)
+                    SELECT c.modulo,c.accion,c.descripcion,@usuario
+                    FROM (VALUES {string.Join(",", valores)}) c(modulo,accion,descripcion)
+                    WHERE NOT EXISTS(SELECT 1 FROM dbo.Permiso p WITH(UPDLOCK,HOLDLOCK)
+                        WHERE p.modulo=c.modulo AND p.accion=c.accion);
+                    """;
+                comando.Parameters.Add("@usuario", SqlDbType.Int).Value = usuario;
+                comando.ExecuteNonQuery();
+                transaccion.Commit();
+            }
+            return Asignaciones(TipoSeguridad.Roles, idRol);
+        }
+
         public static DataTable PermisosPorRol()
         {
             using var conexion = Conexion.AbrirConexion();
@@ -86,7 +119,7 @@ namespace Sistema_ERP
             return tabla;
         }
 
-        public static void Guardar(TipoSeguridad tipo, int? id, byte[]? version, string primero,
+        public static int Guardar(TipoSeguridad tipo, int? id, byte[]? version, string primero,
             string segundo, string descripcion, int? empleado, string contrasena, int[] asignaciones)
         {
             var (tabla, clave) = Entidad(tipo);
@@ -154,6 +187,7 @@ namespace Sistema_ERP
             int registro = id ?? resultado;
             if (tipo != TipoSeguridad.Permisos) GuardarAsignaciones(conexion, transaccion, tipo, registro, asignaciones);
             transaccion.Commit();
+            return registro;
         }
 
         private static void GuardarAsignaciones(SqlConnection conexion, SqlTransaction transaccion, TipoSeguridad tipo, int id, int[] seleccion)

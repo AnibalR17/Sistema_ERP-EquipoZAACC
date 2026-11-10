@@ -19,6 +19,7 @@ namespace Sistema_ERP
             PrepararAuditoria();
             PrepararFacturacion();
             ConectarEventos();
+            RecargaManual.Agregar(accionesTienda, CargarTiendas);
             ActualizarBotones();
             PermisosInterfaz.Configurar(this, Modulos.Configuracion, guardar, actualizar, nuevo, desactivar, reactivar);
         }
@@ -56,6 +57,8 @@ namespace Sistema_ERP
             buscarAuditoria.MaxLength = 150;
             var acciones = new FlowLayoutPanel { Dock = DockStyle.Fill };
             var refrescar = new Button { Text = "Actualizar", AutoSize = true };
+            RecargaManual.Preparar(refrescar);
+            refrescar.Name = "reiniciarAuditoria";
             var anterior = new Button { Text = "Anteriores", AutoSize = true };
             var siguiente = new Button { Text = "Siguientes", AutoSize = true };
             layoutAuditoria.Controls.Remove(contadorAuditoria);

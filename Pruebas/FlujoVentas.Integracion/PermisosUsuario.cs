@@ -160,6 +160,7 @@ internal static partial class Program
             Comprobar(!boton.Visible, "Una cuenta de consulta no ve Generar permisos");
             typeof(UsuariosRolesPermisos).GetMethod("CambiarPestana", instancia)!.Invoke(pantalla, [TipoSeguridad.Roles]);
             Comprobar(!pantalla.Controls.Find("asignarPermisosModulo", true).Single().Visible, "Una cuenta de consulta no ve Permisos por módulo");
+            Comprobar(!pantalla.Controls.Find("editarPermisosRol", true).Single().Visible, "Una cuenta de consulta no puede crear ni editar permisos desde Roles");
             typeof(UsuariosRolesPermisos).GetMethod("CambiarPestana", instancia)!.Invoke(pantalla, [TipoSeguridad.Usuarios]);
             Comprobar(!boton.Visible, "Cambiar de pestaña no revela la opción a una cuenta de consulta");
         }

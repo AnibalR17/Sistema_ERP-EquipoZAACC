@@ -78,6 +78,12 @@ internal static partial class Program
                 Comprobar(datos.Tables.Cast<DataTable>().All(t => !t.Columns.Contains("contrasena_hash") && !t.Columns.Contains("token_hash")), "El detalle no devuelve credenciales de " + tipo);
                 using var dialogo = (Form)Activator.CreateInstance(app.GetType("Sistema_ERP.DetalleBusquedaGlobal")!, instancia, null, [resultado, datos], null)!;
                 Comprobar(Descendientes(dialogo).OfType<DataGridView>().All(t => t.ReadOnly && !t.AutoGenerateColumns && !t.Columns.OfType<DataGridViewImageColumn>().Any()), "Detalle de solo lectura sin columnas binarias: " + tipo);
+                dialogo.ShowInTaskbar = false; dialogo.Opacity = 0;
+                dialogo.StartPosition = FormStartPosition.Manual; dialogo.Location = new Point(-5000, -5000); dialogo.Show();
+                object? fuenteAnterior = Descendientes(dialogo).OfType<DataGridView>().First().DataSource;
+                var reiniciarDetalle = dialogo.Controls.Find("btnReiniciar", true).OfType<Button>().Single();
+                reiniciarDetalle.PerformClick(); EsperarRecarga(reiniciarDetalle);
+                Comprobar(!ReferenceEquals(fuenteAnterior, Descendientes(dialogo).OfType<DataGridView>().First().DataSource), "Reiniciar consulta otra vez el detalle de " + tipo);
             }
             Comprobar(todos.Count(r => Tipo(r) == "Producto") == 10, "El límite se aplica por tipo");
             Comprobar(Buscar("CAFE").Any(r => Tipo(r) == "Producto" && Id(r) == productoGlobal), "La búsqueda ignora mayúsculas y acentos");
@@ -112,6 +118,11 @@ internal static partial class Program
                     $"La barra superior busca contenido fuera del módulo actual ({tabla.Rows.Count} filas; {estadoBusqueda})");
                 Comprobar(principal.MdiChildren.Any(p => p.Name == "pantallaBusquedaGlobal" && p.Visible),
                     "Los resultados se muestran dentro del MDI; activa: " + principal.ActiveMdiChild?.Text);
+                Ejecutar($"UPDATE dbo.Producto SET nombre=nombre+N' recargado' WHERE id_producto={productoGlobal}");
+                var reiniciarBusqueda = principal.MdiChildren.Single(p => p.Name == "pantallaBusquedaGlobal").Controls.Find("btnReiniciar", true).OfType<Button>().Single();
+                reiniciarBusqueda.PerformClick(); EsperarRecarga(reiniciarBusqueda);
+                Comprobar(campo.Text == "GLOBAL-001" && tabla.Rows.Count > 0 && tabla.Rows.Cast<DataGridViewRow>().All(r => ((string)r.Cells["Nombre"].Value!).EndsWith(" recargado")),
+                    "Reiniciar repite la búsqueda y muestra los cambios externos sin borrar la consulta");
                 campo.Text = "Global"; Task anterior = (Task)buscar.Invoke(principal, null)!;
                 campo.Text = "SIN-COINCIDENCIAS-999999"; Task ultima = (Task)buscar.Invoke(principal, null)!;
                 Bombear(Task.WhenAll(anterior, ultima));
@@ -141,6 +152,12 @@ internal static partial class Program
         finally { sesion.SetValue(null, original); }
 
         static IEnumerable<Control> Descendientes(Control control) => new[] { control }.Concat(control.Controls.Cast<Control>().SelectMany(Descendientes));
+        static void EsperarRecarga(Button boton)
+        {
+            DateTime limite = DateTime.UtcNow.AddSeconds(30);
+            while (!boton.Enabled && DateTime.UtcNow < limite) { Application.DoEvents(); Thread.Sleep(10); }
+            if (!boton.Enabled) throw new TimeoutException("No terminó la recarga de búsqueda.");
+        }
         static void Bombear(Task tarea)
         {
             DateTime limite = DateTime.UtcNow.AddSeconds(30);

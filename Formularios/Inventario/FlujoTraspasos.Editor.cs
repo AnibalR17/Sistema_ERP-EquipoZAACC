@@ -193,6 +193,36 @@ namespace Sistema_ERP
                     WrapContents = false, Margin = Padding.Empty, Padding = new Padding(0, 8, 0, 0)
                 };
                 acciones.Controls.Add(guardar);
+                void RecargarReferencias()
+                {
+                    object? origenAnterior = origen.SelectedValue ?? fila?["id_tienda_origen"];
+                    object? destinoAnterior = destino.SelectedValue ?? fila?["id_tienda_destino"];
+                    var tiendasActuales = TiendaDatos.ListarParaSeleccion(fila != null);
+                    var productosActuales = TraspasoDatos.Productos(origenAnterior is int id ? id : 0, fila != null);
+                    bool cargandoAntes = cargandoDatos;
+                    cargandoDatos = true;
+                    try
+                    {
+                        Enlazar(origen, tiendasActuales, "id_tienda", "Nombre");
+                        Enlazar(destino, tiendasActuales.Copy(), "id_tienda", "Nombre");
+                        if (origenAnterior is int o) origen.SelectedValue = o;
+                        if (destinoAnterior is int d) destino.SelectedValue = d;
+                        origen.Enabled = destino.Enabled = fila == null;
+                        foreach (DataRow anterior in productos.Rows.Cast<DataRow>().Where(p => datos.AsEnumerable().Any(d => d.Field<int?>("id_producto") == (int)p["id_producto"])))
+                            if (!productosActuales.AsEnumerable().Any(p => p.Field<int>("id_producto") == (int)anterior["id_producto"]))
+                            {
+                                var copia = productosActuales.NewRow();
+                                copia["id_producto"] = anterior["id_producto"]; copia["nombre"] = anterior["nombre"] + " (no disponible)";
+                                copia["precio_unitario"] = anterior["precio_unitario"]; copia["disponible"] = 0;
+                                productosActuales.Rows.Add(copia);
+                            }
+                        productos.Clear(); productos.Merge(productosActuales);
+                        foreach (DataGridViewRow renglon in lineas.Rows) ActualizarProducto(renglon, false);
+                        guardar.Enabled = true;
+                    }
+                    finally { cargandoDatos = cargandoAntes; }
+                }
+                RecargaManual.Agregar(acciones, RecargarReferencias);
                 if (mostrarCabecera)
                 {
                     var cerrar = new Button { Text = "Cerrar" };
@@ -203,16 +233,7 @@ namespace Sistema_ERP
                 layout.Controls.Add(acciones, 0, 2);
                 Load += (_, _) => Ejecutar(() =>
                 {
-                    Enlazar(origen, TiendaDatos.ListarParaSeleccion(fila != null), "id_tienda", "Nombre");
-                    Enlazar(destino, TiendaDatos.ListarParaSeleccion(fila != null), "id_tienda", "Nombre");
-                    if (fila != null)
-                    {
-                        origen.SelectedValue = fila["id_tienda_origen"];
-                        destino.SelectedValue = fila["id_tienda_destino"];
-                        origen.Enabled = false;
-                        destino.Enabled = false;
-                    }
-                    productos.Merge(TraspasoDatos.Productos(origen.SelectedValue is int tienda ? tienda : 0, fila != null));
+                    RecargarReferencias();
                     if (fila != null)
                         datos.Merge(TraspasoDatos.Detalle((int)fila["id_traspaso"]));
                     cargandoDatos = false;

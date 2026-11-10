@@ -13,6 +13,7 @@ namespace Sistema_ERP.Vistas
             InitializeComponent();
             if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
+            RecargaManual.Agregar(pnlAcciones, CargarDatos);
             PermisosInterfaz.Configurar(this, Modulos.Productos, btnDesactivar);
             btnDesactivar.Click += BtnDesactivar_Click;
         }

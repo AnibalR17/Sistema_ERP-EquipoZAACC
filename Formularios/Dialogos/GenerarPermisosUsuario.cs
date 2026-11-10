@@ -13,12 +13,13 @@ namespace Sistema_ERP
         private readonly List<Permiso> permisosPorRol = [];
         private readonly HashSet<int> administradores = [];
         private readonly HashSet<int> seleccionInicial;
+        private bool cargandoRoles;
 
         public int[] RolesSeleccionados => listaRoles.CheckedItems.Cast<Rol>().Select(r => r.Id).ToArray();
 
         public GenerarPermisosUsuario() : this("", new DataTable(), new DataTable(), []) { }
 
-        public GenerarPermisosUsuario(string usuario, DataTable roles, DataTable permisos, IEnumerable<int> seleccionados)
+        public GenerarPermisosUsuario(string usuario, DataTable roles, DataTable permisos, IEnumerable<int> seleccionados, int? idUsuario = null)
         {
             seleccionInicial = seleccionados.ToHashSet();
             InitializeComponent();
@@ -26,26 +27,47 @@ namespace Sistema_ERP
             Text = $"Generar permisos · {nombre}";
             titulo.Text = $"Permisos de {nombre}";
 
-            foreach (DataRow fila in permisos.Rows)
+            CargarOpciones(roles, permisos, seleccionInicial);
+            RecargaManual.Agregar(acciones, () =>
             {
-                int rol = (int)fila["IdRol"];
-                if (string.Equals((string)fila["CodigoRol"], "ADMINISTRADOR", StringComparison.OrdinalIgnoreCase))
-                    administradores.Add(rol);
-                if (!fila.IsNull("IdPermiso"))
-                    permisosPorRol.Add(new Permiso(rol, (int)fila["IdPermiso"], (string)fila["Modulo"], (string)fila["Accion"], (string)fila["Descripcion"]));
-            }
-            foreach (DataRow fila in roles.Rows)
-            {
-                var rol = new Rol((int)fila["Id"], (string)fila["Nombre"], (bool)fila["activo"]);
-                listaRoles.Items.Add(rol, seleccionInicial.Contains(rol.Id));
-            }
+                int[] actual = RolesSeleccionados;
+                using var rolesActuales = SeguridadDatos.Asignaciones(TipoSeguridad.Usuarios, idUsuario);
+                using var permisosActuales = SeguridadDatos.PermisosPorRol();
+                CargarOpciones(rolesActuales, permisosActuales, actual);
+            });
             listaRoles.ItemCheck += (_, e) =>
             {
+                if (cargandoRoles) return;
                 var rol = (Rol)listaRoles.Items[e.Index];
                 if (!rol.Activo && e.NewValue == CheckState.Checked && !seleccionInicial.Contains(rol.Id))
                     e.NewValue = e.CurrentValue;
                 ActualizarPermisos(e.Index, e.NewValue);
             };
+        }
+
+        private void CargarOpciones(DataTable roles, DataTable permisos, IEnumerable<int> seleccionados)
+        {
+            var actual = seleccionados.ToHashSet();
+            cargandoRoles = true;
+            listaRoles.BeginUpdate();
+            try
+            {
+                permisosPorRol.Clear(); administradores.Clear(); listaRoles.Items.Clear();
+                foreach (DataRow fila in permisos.Rows)
+                {
+                    int rol = (int)fila["IdRol"];
+                    if (string.Equals((string)fila["CodigoRol"], "ADMINISTRADOR", StringComparison.OrdinalIgnoreCase))
+                        administradores.Add(rol);
+                    if (!fila.IsNull("IdPermiso"))
+                        permisosPorRol.Add(new Permiso(rol, (int)fila["IdPermiso"], (string)fila["Modulo"], (string)fila["Accion"], (string)fila["Descripcion"]));
+                }
+                foreach (DataRow fila in roles.Rows)
+                {
+                    var rol = new Rol((int)fila["Id"], (string)fila["Nombre"], (bool)fila["activo"]);
+                    listaRoles.Items.Add(rol, actual.Contains(rol.Id));
+                }
+            }
+            finally { listaRoles.EndUpdate(); cargandoRoles = false; }
             ActualizarPermisos();
         }
 
@@ -61,7 +83,7 @@ namespace Sistema_ERP
             bool administrador = seleccion.Overlaps(administradores);
             var permisos = permisosPorRol.Where(p => seleccion.Contains(p.RolId))
                 .DistinctBy(p => p.Id).OrderBy(p => p.Modulo).ThenBy(p => p.Accion).ToArray();
-            tablaPermisos.DataSource = permisos.Select(p => new { p.Modulo, p.Accion, p.Descripcion }).ToArray();
+            tablaPermisos.DataSource = permisos.Select(p => new { Modulo = CatalogoPermisos.NombrePantalla(p.Modulo), p.Accion, p.Descripcion }).ToArray();
             bool mostrarTabla = !administrador && permisos.Length > 0;
             tablaPermisos.Visible = mostrarTabla;
             mensajePermisos.Visible = !mostrarTabla;

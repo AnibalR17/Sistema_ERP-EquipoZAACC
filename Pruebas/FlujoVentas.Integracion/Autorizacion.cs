@@ -62,6 +62,8 @@ internal static partial class Program
             Denegado(() => ProveedorDatos.Listar());
             Denegado(() => SeguridadDatos.Listar(TipoSeguridad.Usuarios, false));
             Denegado(() => SeguridadDatos.PermisosPorRol());
+            Denegado(() => Invocar("SeguridadDatos", "CatalogoPermisosParaRol", (object?)null));
+            Denegado(() => SeguridadDatos.Guardar(TipoSeguridad.Permisos, null, null, "NO_AUTORIZADO", "CONSULTAR", "Prueba de acceso", null, "", []));
             Denegado(() => TiendaDatos.Listar());
             Denegado(() => TiendaDatos.ListarParaSeleccion());
             Denegado(() => InventarioDatos.AlertasStock());
@@ -110,6 +112,7 @@ internal static partial class Program
                 ventana.Controls.Add(catalogo); ventana.Show();
                 Comprobar(!catalogo.Controls.Find("btnNuevoProducto", true).Single().Visible, "Consulta oculta Nuevo producto");
                 Comprobar(!catalogo.Controls.Find("btnEditar", true).Single().Visible, "Consulta oculta Editar producto");
+                Comprobar(catalogo.Controls.Find("btnReiniciar", true).Single().Visible, "Consulta conserva el botón Reiniciar");
                 ventana.Close();
             }
             Ejecutar($"UPDATE dbo.RolPermiso SET activo=0 WHERE id_rol={lectura}"); Entrar();

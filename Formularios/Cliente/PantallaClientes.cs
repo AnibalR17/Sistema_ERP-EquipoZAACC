@@ -14,6 +14,7 @@ namespace Sistema_ERP.Vistas
             ConstruirPresentacion();
             ConfigurarGrid();
             EnlazarEventos();
+            RecargaManual.Agregar(panelAcciones, CargarClientes);
             CargarClientes();
             ActualizarBotones();
             PermisosInterfaz.Configurar(this, Modulos.Directorio, btnNuevo, btnEditar, btnGuardarCliente, btnDesactivarCliente, btnReactivarCliente);
@@ -70,7 +71,7 @@ namespace Sistema_ERP.Vistas
             col.DataPropertyName = campo;
             col.Name = campo;
             col.HeaderText = titulo;
-            col.FillWeight = peso;
+            col.FillWeight = Math.Max(1, peso);
             col.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             col.Visible = visible;
             return col;

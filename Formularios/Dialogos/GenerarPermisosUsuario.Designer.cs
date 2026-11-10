@@ -8,6 +8,7 @@ namespace Sistema_ERP
         private CheckedListBox listaRoles = null!;
         private DataGridView tablaPermisos = null!;
         private Button aceptar = null!, cancelar = null!;
+        private FlowLayoutPanel acciones = null!;
 
         protected override void Dispose(bool disposing)
         {
@@ -89,7 +90,7 @@ namespace Sistema_ERP
             tablaPermisos.ColumnHeadersDefaultCellStyle.BackColor = ProductoEstilo.Suave;
             tablaPermisos.DefaultCellStyle.SelectionBackColor = ProductoEstilo.Suave;
             tablaPermisos.DefaultCellStyle.SelectionForeColor = ProductoEstilo.Texto;
-            tablaPermisos.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Modulo", HeaderText = "Módulo", FillWeight = 30 });
+            tablaPermisos.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Modulo", HeaderText = "Pantalla / módulo", FillWeight = 30 });
             tablaPermisos.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Accion", HeaderText = "Acción", FillWeight = 25 });
             tablaPermisos.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Descripcion", HeaderText = "Descripción", FillWeight = 45 });
             mensajePermisos.Name = "mensajePermisos";
@@ -107,7 +108,7 @@ namespace Sistema_ERP
                 AutoSize = true, Dock = DockStyle.Fill, ForeColor = ProductoEstilo.TextoSecundario,
                 Margin = new Padding(0, 0, 0, 12)
             }, 0, 4);
-            var acciones = new FlowLayoutPanel
+            acciones = new FlowLayoutPanel
             {
                 Dock = DockStyle.Fill, AutoSize = true, FlowDirection = FlowDirection.RightToLeft,
                 WrapContents = false, Margin = Padding.Empty

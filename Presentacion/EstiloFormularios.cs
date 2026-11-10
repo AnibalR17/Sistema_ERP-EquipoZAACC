@@ -17,7 +17,7 @@
             formulario.ResumeLayout(true);
         }
 
-        internal static void Acciones(FlowLayoutPanel acciones, TextBox buscar, params Button[] botones)
+        internal static void Acciones(FlowLayoutPanel acciones, TextBox? buscar, params Button[] botones)
         {
             acciones.WrapContents = false;
             acciones.AutoScroll = true;
@@ -27,8 +27,11 @@
                 boton.Width = 110;
                 boton.Margin = new Padding(0, 4, 8, 0);
             }
-            buscar.Width = 260;
-            buscar.Margin = new Padding(0, 8, 0, 0);
+            if (buscar is not null)
+            {
+                buscar.Width = 260;
+                buscar.Margin = new Padding(0, 8, 0, 0);
+            }
         }
 
         internal static void Campos(Panel panel, Label titulo, params (Label etiqueta, Control campo)[] campos)

@@ -15,6 +15,7 @@ namespace Sistema_ERP
         {
             InitializeComponent();
             ConfigurarPresentacion();
+            RecargaManual.Agregar(accionesDirectorio, Cargar);
             ConectarEventos();
             ActualizarBotones();
             PermisosInterfaz.Configurar(this, Modulos.Directorio, guardar, actualizar, nuevo, desactivar, reactivar);

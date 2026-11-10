@@ -33,6 +33,7 @@ namespace Sistema_ERP.Vistas
             btnConfirmar.Click += async (_, _) => await ConfirmarCompra();
             btnAnular.Click += async (_, _) => await AnularCompra();
             btnRecargar.Click += async (_, _) => { if (PuedeDescartar()) await CargarDatos(); };
+            RecargaManual.Preparar(btnRecargar);
             btnConsultar.Click += async (_, _) => await ConsultarHistorial();
             btnAbrirCompra.Click += async (_, _) => await AbrirCompra();
             dgvCompras.CellDoubleClick += async (_, e) => { if (e.RowIndex >= 0) await AbrirCompra(); };
@@ -105,7 +106,7 @@ namespace Sistema_ERP.Vistas
                 }
                 finally { cargandoCampos = false; }
                 Mensaje(datos.Item1.Rows.Count == 0 || datos.Item2.Rows.Count == 0 || datos.Item3.Rows.Count == 0
-                    ? "Registra proveedores, tiendas y productos activos; después pulsa Recargar."
+                    ? "Registra proveedores, tiendas y productos activos; después pulsa Reiniciar."
                     : "Agrega productos y guarda el borrador. Confirma la compra para ingresar las unidades al inventario.");
             }
             catch (Exception ex) { if (!IsDisposed) Mensaje(ErrorOperacion(ex), true); }

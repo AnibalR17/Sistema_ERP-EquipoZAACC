@@ -28,6 +28,7 @@ public sealed partial class ConfiguracionAuditoria
         campos.Controls.Add(PantallaMaqueta.Etiqueta("Ingresa el CAI entregado por el SAR para esta tienda. Se guardará en cada nueva factura y se mostrará en el recibo y sus reimpresiones.", 10), 0, 5);
         var botones = new FlowLayoutPanel { Dock = DockStyle.Fill };
         var guardarCai = PantallaMaqueta.Boton("Guardar CAI", true); var recargarCai = PantallaMaqueta.Boton("Actualizar");
+        RecargaManual.Preparar(recargarCai); recargarCai.Name = "reiniciarCAI";
         PermisosInterfaz.ConfigurarAcciones(this, (guardarCai, Modulos.Configuracion));
         botones.Controls.AddRange([guardarCai, recargarCai]); campos.Controls.Add(botones, 0, 6); campos.Controls.Add(mensajeCai, 0, 7); tabFiscal.Controls.Add(campos);
         tiendaCai.SelectedIndexChanged += (_, _) => CargarCai();

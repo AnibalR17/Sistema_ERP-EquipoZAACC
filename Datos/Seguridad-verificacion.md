@@ -6,6 +6,8 @@ Usar una base de pruebas con `Base de Datos/01_esquema_erp_3fn.sql` ya instalado
 
 Crear una tienda y dos empleados activos mediante los CRUD existentes. Abrir **Usuarios, roles y permisos** desde la ventana principal.
 
+La pantalla presenta dos pestañas, **Usuarios** y **Roles**. Los permisos se crean y administran desde **Roles → Crear / editar permisos…**. Guardar en ese editor actualiza el catálogo compartido; al volver, los nuevos permisos activos se preparan en las casillas del rol. Guardar o actualizar el rol conserva la asignación. Para gestionar un módulo también debe existir su consulta activa. Los presets y la selección por pantalla siguen en **Pantallas y presets…**.
+
 ## Casos funcionales contra SQL Server (pendientes de ejecucion)
 
 1. Crear dos permisos con modulo, accion y descripcion; comprobar que el codigo calculado corresponde. Probar campos vacios, limites de longitud, caracteres no ASCII en modulo/accion y combinaciones duplicadas.
@@ -22,6 +24,8 @@ Crear una tienda y dos empleados activos mediante los CRUD existentes. Abrir **U
 12. Sin conexion, abrir la pantalla y cambiar pestanas: debe mostrar error y deshabilitar escrituras. Restablecer conexion y pulsar Recargar. Revisar visualmente escalado, desplazamiento independiente y acceso a acciones en ventana pequena.
 
 ## Verificacion local realizada
+
+La integración de permisos en Roles superó 17 comprobaciones contra SQL Server en `Pruebas/FlujoVentas.Integracion/PermisosDesdeRoles.cs`: dos pestañas, acceso desde Roles, campos obligatorios, alta de varios permisos, duplicados, actualización, conflicto de versión, desactivación, reactivación, búsqueda, tamaño mínimo, conservación de la captura del rol, preparación de la selección y persistencia al guardar. La suite completa también aprobó sus 24 comprobaciones de permisos de usuarios, 23 de selección por módulo, 44 de presets, 25 de recarga, 44 de autorización y 103 de búsqueda global, además de los flujos de ventas y las 10 comprobaciones del catálogo inicial. Se usó una base temporal eliminada al finalizar.
 
 El 9 de noviembre de 2026 se verificó la ventana **Generar permisos…** con 23 comprobaciones de integración contra SQL Server: precarga al editar, combinación de roles sin duplicar permisos, acceso total de ADMINISTRADOR, roles y permisos inactivos, relaciones desactivadas, estados vacíos, aceptar/cancelar, persistencia al crear y editar, tamaño mínimo y ocultación de las opciones de asignación para cuentas de consulta al cambiar de pestaña.
 

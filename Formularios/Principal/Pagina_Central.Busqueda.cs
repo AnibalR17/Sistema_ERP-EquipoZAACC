@@ -60,6 +60,7 @@ public partial class Pagina_Central
             MostrarPantalla("Búsqueda global", null, () =>
             {
                 pantallaBusqueda = new PantallaBusquedaGlobal();
+                pantallaBusqueda.ReiniciarSolicitado += BuscarGlobal;
                 pantallaBusqueda.VerDetalle += async resultado => await VerDetalleBusqueda(resultado);
                 pantallaBusqueda.AbrirModulo += AbrirModuloBusqueda;
                 pantallaBusqueda.FormClosed += (_, _) => CancelarBusqueda();

@@ -53,6 +53,7 @@ internal static partial class Program
             categoria = (int)inicial["categoria"]; proveedor = (int)inicial["proveedor"]; efectivo = (int)inicial["efectivo"]; transferencia = (int)inicial["transferencia"];
             var acceso = Activator.CreateInstance(app.GetType("Sistema_ERP.AccesoUsuario")!, [usuario, "Prueba", "Prueba", false, Array.Empty<byte>(), (long)inicial["sesion"]]);
             app.GetType("Sistema_ERP.SesionActual")!.GetProperty("Usuario", estaticos)!.SetValue(null, acceso);
+            ProbarCatalogoInicialPermisos();
             ProbarImportacion(); ProbarApartados(); ProbarDevoluciones(); ProbarCasosAdicionales(); ProbarRtn(); ProbarImpuestos(); ProbarExportaciones(); ProbarPlantilla(); ProbarReferenciasPago(); ProbarListados(); ProbarPantallaApartados();
             using var pantalla = new ApartadosDevoluciones(); using var carga = new CargaMasiva(); using var configuracion = new ConfiguracionAuditoria();
             pantalla.Size = new Size(1400, 900); pantalla.CreateControl(); pantalla.PerformLayout();
@@ -67,6 +68,9 @@ internal static partial class Program
             Console.WriteLine("OK: construcción de las pantallas y disposición de controles.");
             ProbarGenerarPermisosUsuario();
             ProbarPermisosRolPorModulo();
+            ProbarPresetsPermisos();
+            ProbarPermisosDesdeRoles();
+            ProbarRecargaManual();
             ProbarAutorizacion();
             ProbarBusquedaGlobal();
             Console.WriteLine("TODAS LAS PRUEBAS COMPLETADAS. La base temporal se elimina al salir.");

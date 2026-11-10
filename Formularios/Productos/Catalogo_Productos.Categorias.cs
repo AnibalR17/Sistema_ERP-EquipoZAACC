@@ -57,6 +57,7 @@ namespace Sistema_ERP
             var btnNuevaCategoria = PantallaMaqueta.Boton("Nueva categoría");
             btnNuevaCategoria.Click += (_, _) => LimpiarCategoria();
             acciones.Controls.Add(btnNuevaCategoria);
+            RecargaManual.Agregar(acciones, CargarCategorias, "reiniciarCategorias");
             panel.Controls.Add(acciones, 0, 4);
             chkCategoriasInactivas.CheckedChanged += (_, _) => CargarCategorias();
             panel.Controls.Add(chkCategoriasInactivas, 0, 5);
