@@ -16,10 +16,20 @@ internal static partial class Program
             formulario.StartPosition = FormStartPosition.Manual; formulario.Location = new Point(-5000, -5000);
             formulario.Show();
         }
-        void Marcar(CheckedListBox lista, string nombre, bool marcar)
+        void AsignarRol(Control selector, string nombre, bool asignar)
         {
-            int indice = Enumerable.Range(0, lista.Items.Count).Single(i => lista.Items[i].ToString() == nombre);
-            lista.SetItemChecked(indice, marcar);
+            if (asignar)
+            {
+                var disponibles = selector.Controls.Find("rolesDisponibles", true).OfType<ComboBox>().Single();
+                disponibles.SelectedItem = disponibles.Items.Cast<object>().Single(r => r.ToString() == nombre);
+                selector.Controls.Find("agregarRol", true).OfType<Button>().Single().PerformClick();
+            }
+            else
+            {
+                var asignados = selector.Controls.Find("rolesAsignados", true).OfType<ListBox>().Single();
+                asignados.SelectedItem = asignados.Items.Cast<object>().Single(r => r.ToString() == nombre);
+                selector.Controls.Find("quitarRol", true).OfType<Button>().Single().PerformClick();
+            }
         }
         var inicial = Tabla($"""
             SET NOCOUNT ON;
@@ -53,26 +63,26 @@ internal static partial class Program
         using (var dialogo = new GenerarPermisosUsuario("nuevo.ventana", roles, permisos, [lectura]))
         {
             Mostrar(dialogo);
-            var lista = dialogo.Controls.Find("listaRoles", true).OfType<CheckedListBox>().Single();
+            var lista = dialogo.Controls.Find("listaRoles", true).OfType<SelectorRoles>().Single();
             var tabla = dialogo.Controls.Find("tablaPermisos", true).OfType<DataGridView>().Single();
             var mensaje = dialogo.Controls.Find("mensajePermisos", true).Single();
             Comprobar(dialogo.RolesSeleccionados.SequenceEqual([lectura]) && tabla.Visible && tabla.Rows.Count == 1 && !mensaje.Visible,
                 "La ventana precarga los roles y muestra sus permisos al abrirse");
-            Marcar(lista, "Ventana gestión", true);
+            AsignarRol(lista, "Ventana gestión", true);
             Comprobar(tabla.Rows.Count == 2, "Los permisos de varios roles se combinan sin duplicados");
-            Marcar(lista, "Ventana lectura", false);
+            AsignarRol(lista, "Ventana lectura", false);
             Comprobar(tabla.Rows.Count == 2, "Retirar un rol conserva los permisos aportados por otro");
-            Marcar(lista, "Ventana gestión", false);
+            AsignarRol(lista, "Ventana gestión", false);
             Comprobar(tabla.Rows.Count == 0 && mensaje.Visible, "Quitar todos los roles limpia la vista de permisos");
-            Marcar(lista, "Ventana sin permisos", true);
+            AsignarRol(lista, "Ventana sin permisos", true);
             Comprobar(mensaje.Visible && tabla.Rows.Count == 0, "Un rol sin permisos muestra el estado vacío");
-            Marcar(lista, "Ventana sin permisos", false);
-            Marcar(lista, "Ventana lectura", true);
+            AsignarRol(lista, "Ventana sin permisos", false);
+            AsignarRol(lista, "Ventana lectura", true);
             // Se usa el código del rol, aunque su nombre visible sea distinto.
             string nombreAdmin = roles.AsEnumerable().Single(f => (int)f["Id"] == administrador).Field<string>("Nombre")!;
-            Marcar(lista, nombreAdmin, true);
+            AsignarRol(lista, nombreAdmin, true);
             Comprobar(!tabla.Visible && mensaje.Text.Contains("Acceso total"), "ADMINISTRADOR muestra acceso total");
-            Marcar(lista, nombreAdmin, false);
+            AsignarRol(lista, nombreAdmin, false);
             Comprobar(tabla.Visible && tabla.Rows.Count == 1 && !mensaje.Visible, "Retirar ADMINISTRADOR recupera la vista de permisos");
             dialogo.Size = dialogo.MinimumSize;
             dialogo.PerformLayout();
@@ -97,8 +107,9 @@ internal static partial class Program
             "Crear el usuario persiste los roles elegidos en la ventana");
         using (var dialogo = new GenerarPermisosUsuario("nuevo.ventana", asignados, permisos, [lectura, gestion]))
         {
-            var lista = dialogo.Controls.Find("listaRoles", true).OfType<CheckedListBox>().Single();
-            Marcar(lista, "Ventana gestión", false);
+            Mostrar(dialogo);
+            var lista = dialogo.Controls.Find("listaRoles", true).OfType<SelectorRoles>().Single();
+            AsignarRol(lista, "Ventana gestión", false);
             SeguridadDatos.Guardar(TipoSeguridad.Usuarios, idUsuario, (byte[])creado["version_fila"], "nuevo.ventana", "", "", empleado, "", dialogo.RolesSeleccionados);
         }
         Comprobar((int)Tabla($"SELECT COUNT(*) FROM dbo.UsuarioRol WHERE id_usuario={idUsuario} AND id_rol={gestion} AND activo=0").Rows[0][0] == 1,
@@ -108,10 +119,10 @@ internal static partial class Program
         using (var dialogo = new GenerarPermisosUsuario("nuevo.ventana", conInactivos, permisos, [lectura, inactivo]))
         {
             Mostrar(dialogo);
-            var lista = dialogo.Controls.Find("listaRoles", true).OfType<CheckedListBox>().Single();
+            var lista = dialogo.Controls.Find("listaRoles", true).OfType<SelectorRoles>().Single();
             Comprobar(dialogo.RolesSeleccionados.Contains(inactivo) && dialogo.Controls.Find("tablaPermisos", true).OfType<DataGridView>().Single().Rows.Count == 1,
                 "Editar conserva un rol inactivo asignado sin mostrar sus permisos");
-            Marcar(lista, "Ventana inactivo (inactivo)", false);
+            AsignarRol(lista, "Ventana inactivo (inactivo)", false);
             Comprobar(!dialogo.RolesSeleccionados.Contains(inactivo), "Puede retirarse un rol inactivo");
         }
         using (var dialogo = new GenerarPermisosUsuario("", new DataTable(), new DataTable(), []))
@@ -130,6 +141,19 @@ internal static partial class Program
             tabla.Rows.Cast<DataGridViewRow>().Single(f => (int)((DataRowView)f.DataBoundItem!)["Id"] == idUsuario).Selected = true;
             Comprobar(boton.Visible && boton.Enabled && Campo<int?>(pantalla, "idSeleccionado") == idUsuario,
                 $"La opción está disponible al editar un usuario activo (visible={boton.Visible}, habilitado={boton.Enabled}, id={Campo<int?>(pantalla, "idSeleccionado")}, esperado={idUsuario}, filas={tabla.SelectedRows.Count}, estado={Campo<Label>(pantalla, "estado").Text})");
+            var selector = Campo<SelectorRoles>(pantalla, "selectorRoles");
+            AsignarRol(selector, "Ventana gestión", true);
+            Campo<Button>(pantalla, "actualizar").PerformClick();
+            using (var guardados = SeguridadDatos.Asignaciones(TipoSeguridad.Usuarios, idUsuario))
+                Comprobar(guardados.AsEnumerable().Where(f => (bool)f["Asignado"]).Select(f => (int)f["Id"]).ToHashSet().SetEquals([lectura, gestion, inactivo]),
+                    "Actualizar guarda el rol agregado desde el desplegable sin perder los anteriores");
+            tabla.ClearSelection();
+            tabla.Rows.Cast<DataGridViewRow>().Single(f => (int)((DataRowView)f.DataBoundItem!)["Id"] == idUsuario).Selected = true;
+            AsignarRol(selector, "Ventana gestión", false);
+            Campo<Button>(pantalla, "actualizar").PerformClick();
+            using (var guardados = SeguridadDatos.Asignaciones(TipoSeguridad.Usuarios, idUsuario))
+                Comprobar(guardados.AsEnumerable().Where(f => (bool)f["Asignado"]).Select(f => (int)f["Id"]).ToHashSet().SetEquals([lectura, inactivo]),
+                    "Actualizar retira solo el rol elegido desde la lista");
             typeof(UsuariosRolesPermisos).GetMethod("CambiarPestana", instancia)!.Invoke(pantalla, [TipoSeguridad.Roles]);
             Comprobar(!boton.Visible, "La opción se muestra solo en la pestaña Usuarios");
         }
@@ -158,6 +182,8 @@ internal static partial class Program
             Mostrar(pantalla);
             var boton = pantalla.Controls.Find("generarPermisos", true).Single();
             Comprobar(!boton.Visible, "Una cuenta de consulta no ve Generar permisos");
+            Comprobar(!pantalla.Controls.Find("agregarRol", true).Single().Visible && !pantalla.Controls.Find("quitarRol", true).Single().Visible,
+                "Una cuenta de consulta no puede agregar ni quitar roles desde el selector");
             typeof(UsuariosRolesPermisos).GetMethod("CambiarPestana", instancia)!.Invoke(pantalla, [TipoSeguridad.Roles]);
             Comprobar(!pantalla.Controls.Find("asignarPermisosModulo", true).Single().Visible, "Una cuenta de consulta no ve Permisos por módulo");
             Comprobar(!pantalla.Controls.Find("editarPermisosRol", true).Single().Visible, "Una cuenta de consulta no puede crear ni editar permisos desde Roles");

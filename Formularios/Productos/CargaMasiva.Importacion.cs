@@ -161,7 +161,7 @@ namespace Sistema_ERP
 
             if (Texto("Precio").Length > 0)
             {
-                if (!TryParseDecimal(Texto("Precio"), out decimal precio)) errores.Add("El precio no es un número válido");
+                if (!TryParseDecimal(Texto("Precio"), out decimal precio)) errores.Add("Precio no válido: usa 12.50 o 12,50, hasta dos decimales, sin moneda ni separadores de miles");
                 else if (precio <= 0) errores.Add("El precio debe ser mayor a cero");
                 else if (precio > 99999999.99m || decimal.Round(precio, 2) != precio) errores.Add("El precio admite hasta 99999999.99 y dos decimales");
             }
@@ -188,8 +188,7 @@ namespace Sistema_ERP
         }
 
         private static bool TryParseDecimal(string texto, out decimal valor) =>
-            decimal.TryParse(texto.Replace(',', '.'), NumberStyles.AllowLeadingSign | NumberStyles.AllowDecimalPoint,
-                CultureInfo.InvariantCulture, out valor);
+            ImporteMonetario.TryParse(texto, out valor);
 
         private void ImportarDatos()
         {
@@ -241,7 +240,8 @@ namespace Sistema_ERP
                 if (!string.IsNullOrEmpty(Convert.ToString(fila[ColObservacion]))) continue;
 
                 string Texto(string col) => Convert.ToString(fila[col])?.Trim() ?? "";
-                TryParseDecimal(Texto("Precio"), out decimal precio);
+                if (!TryParseDecimal(Texto("Precio"), out decimal precio))
+                    throw new InvalidOperationException($"Revisa el precio de la fila {tabla.Rows.IndexOf(fila) + 2} antes de importar.");
                 int.TryParse(Texto("StockInicial"), NumberStyles.Integer, CultureInfo.InvariantCulture, out int stock);
 
                 lista.Add(new ProductoImportado(

@@ -178,13 +178,9 @@ namespace Sistema_ERP.Vistas
 
         internal static decimal LeerCosto(string texto)
         {
-            string entrada = texto.Trim();
-            var estilo = NumberStyles.AllowDecimalPoint;
-            bool valido = decimal.TryParse(entrada, estilo, CultureInfo.CurrentCulture, out decimal costo);
-            if (!valido && CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator != ".")
-                valido = decimal.TryParse(entrada, estilo, CultureInfo.InvariantCulture, out costo);
+            bool valido = ImporteMonetario.TryParse(texto, out decimal costo);
             if (!valido || costo <= 0 || costo > MaximoImporte || decimal.Round(costo, 2) != costo)
-                throw new ArgumentException("Indica un costo positivo con hasta dos decimales, sin separadores de miles.");
+                throw new ArgumentException("Indica un costo positivo como 12.50 o 12,50, con hasta dos decimales, sin moneda ni separadores de miles.");
             return costo;
         }
 

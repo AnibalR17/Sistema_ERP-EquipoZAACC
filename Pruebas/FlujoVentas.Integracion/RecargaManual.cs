@@ -168,7 +168,7 @@ internal static partial class Program
         {
             Ejecutar("INSERT dbo.Rol(codigo,nombre) VALUES('RECARGA_ROL',N'Recarga rol')");
             Reiniciar(pantalla).PerformClick();
-            Comprobar(Campo<CheckedListBox>(pantalla, "listaRoles").Items.Cast<object>().Any(r => r.ToString() == "Recarga rol") && pantalla.RolesSeleccionados.Contains(seleccionado),
+            Comprobar(pantalla.Controls.Find("rolesDisponibles", true).OfType<ComboBox>().Single().Items.Cast<object>().Any(r => r.ToString() == "Recarga rol") && pantalla.RolesSeleccionados.Contains(seleccionado),
                 "La ventana de permisos de usuario actualiza los roles sin perder la selección");
         }
         using var catalogo = SeguridadDatos.Asignaciones(TipoSeguridad.Roles, null);

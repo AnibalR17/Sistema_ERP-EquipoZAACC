@@ -57,7 +57,7 @@ internal static class CargaMasivaPlantilla
         var instrucciones = libro.Worksheets.Add("Instrucciones");
         string[] notas = ["PLANTILLA DE CARGA MASIVA · PRODUCTOS", "Edita únicamente los datos de la primera hoja Productos; conserva la fila de encabezados.",
             "CodigoBarras: texto obligatorio, único, máximo 50 caracteres. Conserva los ceros iniciales.", "Nombre: obligatorio, máximo 150 caracteres.",
-            "Precio: celda numérica positiva, hasta dos decimales y máximo 99999999.99; sin símbolo de moneda ni separadores de miles.",
+            "Precio: número positivo hasta 99999999.99 y dos decimales. Como texto usa 12.50 o 12,50, sin moneda ni miles (1,000 es ambiguo y se rechaza). El formato visual de una celda numérica no cambia su valor.",
             "StockInicial: entero no negativo; una celda vacía equivale a cero. Selecciona en la pantalla la tienda donde se cargará el stock.",
             "NombreCategoria: nombre de una categoría activa, exactamente como aparece en Catalogos; no uses su ID.",
             "RTNProveedor: RTN de un proveedor activo existente, guardado como texto; no uses el ID ni el nombre de empresa.",

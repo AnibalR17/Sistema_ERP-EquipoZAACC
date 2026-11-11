@@ -5,7 +5,7 @@ namespace Sistema_ERP
     {
         private System.ComponentModel.IContainer? components;
         private Label titulo = null!, resumen = null!, mensajePermisos = null!;
-        private CheckedListBox listaRoles = null!;
+        private SelectorRoles listaRoles = null!;
         private DataGridView tablaPermisos = null!;
         private Button aceptar = null!, cancelar = null!;
         private FlowLayoutPanel acciones = null!;
@@ -20,7 +20,7 @@ namespace Sistema_ERP
         {
             components = new System.ComponentModel.Container();
             titulo = new Label(); resumen = new Label(); mensajePermisos = new Label();
-            listaRoles = new CheckedListBox(); tablaPermisos = new DataGridView();
+            listaRoles = new SelectorRoles(); tablaPermisos = new DataGridView();
             aceptar = new Button(); cancelar = new Button();
             SuspendLayout();
             AutoScaleMode = AutoScaleMode.Font;
@@ -53,7 +53,7 @@ namespace Sistema_ERP
             contenido.Controls.Add(titulo, 0, 0);
             var indicacion = new Label
             {
-                Text = "Selecciona los roles del usuario. Los roles inactivos no conceden permisos. Gestionar requiere también Consultar del mismo módulo.",
+                Text = "Agrega roles desde el desplegable o quítalos de la lista. Los roles inactivos no conceden permisos. Gestionar requiere también Consultar del mismo módulo.",
                 Dock = DockStyle.Fill, AutoSize = true, ForeColor = ProductoEstilo.TextoSecundario,
                 Margin = new Padding(0, 0, 0, 16)
             };
@@ -67,12 +67,10 @@ namespace Sistema_ERP
             columnas.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 68));
             columnas.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             columnas.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            columnas.Controls.Add(new Label { Text = "Roles disponibles", AutoSize = true, Margin = new Padding(0, 0, 0, 8) }, 0, 0);
+            columnas.Controls.Add(new Label { Text = "Roles del usuario", AutoSize = true, Margin = new Padding(0, 0, 0, 8) }, 0, 0);
             columnas.Controls.Add(new Label { Text = "Permisos de los roles seleccionados", AutoSize = true, Margin = new Padding(0, 0, 0, 8) }, 1, 0);
             listaRoles.Name = "listaRoles";
-            listaRoles.Dock = DockStyle.Fill; listaRoles.CheckOnClick = true;
-            listaRoles.IntegralHeight = false; listaRoles.HorizontalScrollbar = true;
-            listaRoles.BorderStyle = BorderStyle.FixedSingle;
+            listaRoles.Dock = DockStyle.Fill;
             listaRoles.Margin = new Padding(0, 0, 16, 0);
             columnas.Controls.Add(listaRoles, 0, 1);
 

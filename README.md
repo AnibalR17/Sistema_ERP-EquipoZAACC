@@ -45,7 +45,7 @@ En **Roles → Pantallas y presets…**, selecciona cada pantalla por su nombre 
 
 **Aplicar preset** reemplaza la selección completa sin guardar. **Aceptar** lleva los permisos al formulario; **Guardar** o **Actualizar** los conserva. Para configurar un rol existente, selecciona su fila primero. Para crear otro, pulsa **Nuevo**; al aceptar un preset se completan los campos vacíos y se propone un código disponible, incluso si ya existe un rol con ese código base. El preset Administrador propone `ADMIN_PERSONALIZADO`, que admite restricciones; el código reservado `ADMINISTRADOR` conserva siempre acceso total. Los presets no reactivan permisos ni conceden acciones desconocidas; si faltan permisos activos se informa la selección incompleta.
 
-Después, en **Usuarios → Generar permisos…**, selecciona los roles guardados y consulta las pantallas que aportan. **Aceptar** aplica la selección al formulario; **Guardar** o **Actualizar** la conserva junto con el usuario. **Cancelar** conserva la selección anterior. Los roles inactivos no conceden permisos y `ADMINISTRADOR` muestra acceso total. La opción requiere permiso para gestionar seguridad. Los permisos de varios roles se suman: para restringir una cuenta, retira los otros roles que concedan ese acceso.
+En **Usuarios**, elige un rol en el desplegable y pulsa **Agregar**. La lista conserva todos los roles asignados; selecciona uno y pulsa **Quitar** para retirarlo. En **Generar permisos…** puedes ajustar los mismos roles y consultar las pantallas que aportan. **Aceptar** aplica la selección al formulario; **Guardar** o **Actualizar** la conserva junto con el usuario. **Cancelar** conserva la selección anterior. Los roles inactivos ya asignados se conservan y pueden retirarse, pero no agregarse; no conceden permisos. `ADMINISTRADOR` muestra acceso total. La asignación requiere permiso para gestionar seguridad. Los permisos de varios roles se suman: para restringir una cuenta, retira los otros roles que concedan ese acceso.
 
 En **Pantallas y presets…**, **Seleccionar módulo** incluye todos los permisos activos del módulo mostrado y **Quitar del módulo** retira solamente los de ese módulo. **Quitar todos** vacía la selección completa para empezar sin accesos.
 
@@ -89,6 +89,12 @@ Tambien puede guardar la cadena en la variable de entorno `SISTEMA_ERP_CONNECTIO
 Los traspasos requieren el esquema 3FN y `Base de Datos/Triggers2.sql`, basado en la base proporcionada. Ejecute los triggers en la misma base configurada para la aplicacion. La base genera el historial y reserva inventario al aprobar; las tiendas de una solicitud creada no se cambian. La preparacion y las pruebas se describen en [Datos/Traspasos-verificacion.md](Datos/Traspasos-verificacion.md).
 
 Aplicacion de escritorio desarrollada con C# y Windows Forms sobre .NET 10 para Windows.
+
+## Pruebas
+
+`dotnet run --project Pruebas/FlujoVentas.Integracion -- --sin-bd` verifica los formatos de precios y el selector de roles sin conexión a SQL Server.
+
+`dotnet run --project Pruebas/FlujoVentas.Integracion` ejecuta también la integración completa. Requiere la conexión local configurada y permisos para crear una base temporal de pruebas, que se elimina al terminar.
 
 ## Estandar grafico
 

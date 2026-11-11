@@ -12,7 +12,7 @@ Dentro de **Carga masiva**, la pestaña **Ejemplo de plantilla** muestra los die
 | --- | --- |
 | CodigoBarras | Texto obligatorio y único, hasta 50 caracteres. Guardar como texto para conservar los ceros iniciales. |
 | Nombre | Texto obligatorio, hasta 150 caracteres. |
-| Precio | Número mayor que cero, con hasta dos decimales y máximo 99999999.99. No incluir moneda ni separadores de miles. Preferir una celda numérica de Excel; como texto se acepta punto o coma decimal. |
+| Precio | Número mayor que cero, con hasta dos decimales y máximo 99999999.99. Preferir una celda numérica de Excel. Como texto se acepta `12.50` o `12,50`, sin moneda ni separadores de miles. Textos como `1,000`, `1.000` o `1,234.56` se rechazan para evitar importes ambiguos. |
 | StockInicial | Entero de cero a 2147483647. La celda vacía equivale a cero, pero el encabezado es obligatorio. |
 | NombreCategoria | Nombre de una categoría activa existente. No es el ID. Se ignoran mayúsculas/minúsculas y espacios al principio/final. |
 | RTNProveedor | RTN de un proveedor activo existente, como texto. No es el nombre ni el ID del proveedor. Se eliminan guiones y espacios para comparar. |
@@ -25,6 +25,10 @@ CodigoBarras | Nombre             | Precio | StockInicial | NombreCategoria | RT
 ```
 
 Se lee únicamente la primera hoja. Productos es la hoja de datos; Catalogos e Instrucciones son de consulta. Evita celdas combinadas, filas de títulos anteriores a los encabezados y encabezados repetidos. Los códigos existentes en la base o repetidos en el archivo se marcan con error; no se actualizan productos existentes.
+
+El formato visual de una celda numérica no modifica su precio: si Excel muestra `1,234.56` o moneda, se lee el valor numérico almacenado. La restricción de separadores se aplica a celdas de texto. Los precios con formato inválido se marcan en la vista previa y no se importan.
+
+Verificación del 11 de noviembre de 2026: pasaron 179 comprobaciones de precios en importación y compras, bajo las culturas en-US, es-HN, es-ES y de-DE, con lectura de un XLSX real y rechazo de textos ambiguos. La integración completa verificó también que los precios de la plantilla se guardan en SQL Server sin cambios.
 
 Selecciona una tienda en la pantalla cuando haya StockInicial mayor que cero. El stock se registra en esa tienda mediante movimientos de inventario auditados; no se escribe un stock global en Producto. La importación guarda productos, movimientos e historial en una transacción. Si ocurre un error al guardar el lote, se revierte completo. La previsualización muestra las filas inválidas en rojo; Importar datos válidos permite omitirlas tras confirmar.
 

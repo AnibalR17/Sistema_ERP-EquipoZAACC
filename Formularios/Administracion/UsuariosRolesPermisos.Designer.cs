@@ -12,6 +12,8 @@ namespace Sistema_ERP
         private TextBox primero = null!, segundo = null!, descripcion = null!, contrasena = null!, confirmar = null!, buscar = null!;
         private ComboBox empleado = null!;
         private CheckedListBox asignaciones = null!;
+        private SelectorRoles selectorRoles = null!;
+        private Panel contenedorAsignaciones = null!;
         private Label titulo = null!, aviso = null!, estado = null!, contador = null!;
         private Label etiquetaPrimero = null!, etiquetaSegundo = null!, etiquetaDescripcion = null!, etiquetaEmpleado = null!, etiquetaContrasena = null!, etiquetaConfirmar = null!, etiquetaAsignaciones = null!;
         private CheckBox inactivos = null!;
@@ -35,6 +37,8 @@ namespace Sistema_ERP
             guardar = new Button(); actualizar = new Button(); desactivar = new Button(); reactivar = new Button(); nuevo = new Button(); recargar = new Button();
             primero = new TextBox(); segundo = new TextBox(); descripcion = new TextBox(); contrasena = new TextBox(); confirmar = new TextBox(); buscar = new TextBox();
             empleado = new ComboBox(); asignaciones = new CheckedListBox();
+            selectorRoles = new SelectorRoles();
+            contenedorAsignaciones = new Panel();
             titulo = new Label(); aviso = new Label(); estado = new Label(); contador = new Label();
             etiquetaPrimero = new Label(); etiquetaSegundo = new Label(); etiquetaDescripcion = new Label();
             etiquetaEmpleado = new Label(); etiquetaContrasena = new Label(); etiquetaConfirmar = new Label(); etiquetaAsignaciones = new Label();
@@ -115,7 +119,14 @@ namespace Sistema_ERP
             asignaciones.Dock = DockStyle.Fill; asignaciones.Height = 90;
             asignaciones.CheckOnClick = true; asignaciones.IntegralHeight = false;
             asignaciones.Margin = new Padding(0, 4, 0, 14);
-            contenido.Controls.Add(asignaciones, 0, 5);
+            selectorRoles.Name = "selectorRoles";
+            selectorRoles.Dock = DockStyle.Fill; selectorRoles.Height = 140;
+            contenedorAsignaciones.Dock = DockStyle.Fill; contenedorAsignaciones.Height = 140;
+            contenedorAsignaciones.Margin = asignaciones.Margin;
+            asignaciones.Margin = selectorRoles.Margin = Padding.Empty;
+            contenedorAsignaciones.Controls.Add(asignaciones);
+            contenedorAsignaciones.Controls.Add(selectorRoles);
+            contenido.Controls.Add(contenedorAsignaciones, 0, 5);
             acciones.AutoSize = true; acciones.Dock = DockStyle.Fill;
             guardar.Text = "Guardar"; actualizar.Text = "Actualizar"; desactivar.Text = "Desactivar";
             reactivar.Text = "Reactivar"; nuevo.Text = "Nuevo"; recargar.Text = "Recargar";

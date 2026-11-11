@@ -24,8 +24,11 @@ namespace Sistema_ERP
             asignarPermisosModulo.Visible = rol;
             editarPermisosRol.Visible = rol;
             etiquetaAsignaciones.Text = usuario ? "Roles asignados" : "Permisos asignados";
+            selectorRoles.Visible = usuario;
+            asignaciones.Visible = rol;
+            contenedorAsignaciones.Height = usuario ? 140 : 90;
             aviso.Text = usuario
-                ? "Selecciona un empleado y usa Generar permisos para asignar roles. Al actualizar, deja la contraseña vacía para conservarla. Las cuentas nuevas deben cambiarla al ingresar."
+                ? "Selecciona un empleado y agrega sus roles desde el desplegable. Generar permisos muestra los accesos combinados. Al actualizar, deja la contraseña vacía para conservarla."
                 : "Usa Pantallas y presets para elegir accesos. Crea y modifica permisos desde Crear / editar permisos. Guarda o actualiza el rol para conservar su asignación.";
             tabla.Columns.Clear();
             void Columna(string propiedad, string texto) => tabla.Columns.Add(new DataGridViewTextBoxColumn { Name = propiedad, DataPropertyName = propiedad, HeaderText = texto, MinimumWidth = 100 });

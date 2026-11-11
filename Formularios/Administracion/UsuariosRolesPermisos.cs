@@ -36,7 +36,8 @@ namespace Sistema_ERP
             tabla.SelectionChanged += (_, _) => { if (!cargando) Ejecutar(Seleccionar); };
             ConfigurarCampos();
             Botones();
-            PermisosInterfaz.Configurar(this, Modulos.Seguridad, guardar, actualizar, nuevo, desactivar, reactivar, accionesAsignaciones);
+            PermisosInterfaz.Configurar(this, Modulos.Seguridad,
+                [guardar, actualizar, nuevo, desactivar, reactivar, accionesAsignaciones, .. selectorRoles.ControlesEdicion]);
         }
 
         protected override void OnLoad(EventArgs e)
@@ -140,7 +141,7 @@ namespace Sistema_ERP
                     throw new ArgumentException("Las contraseñas no coinciden.");
                 SeguridadDatos.Guardar(tipo, editar ? idSeleccionado : null, editar ? version : null,
                     primero.Text, segundo.Text, descripcion.Text, empleado.SelectedValue as int?, contrasena.Text,
-                    asignaciones.CheckedItems.Cast<Opcion>().Select(o => o.Id).ToArray());
+                    SeleccionAsignaciones());
                 contrasena.Clear(); confirmar.Clear();
                 Cargar();
                 if (disponible) Mensaje(editar ? "Registro actualizado correctamente." : "Registro guardado correctamente.");
@@ -151,7 +152,7 @@ namespace Sistema_ERP
         {
             if (tipo != TipoSeguridad.Usuarios || !disponible || (idSeleccionado.HasValue && !activo)) return;
             AutorizacionDatos.Exigir(Modulos.Seguridad, gestionar: true);
-            int[] seleccionados = asignaciones.CheckedItems.Cast<Opcion>().Select(o => o.Id).ToArray();
+            int[] seleccionados = SeleccionAsignaciones();
             using var rolesDisponibles = SeguridadDatos.Asignaciones(TipoSeguridad.Usuarios, idSeleccionado);
             using var permisosPorRol = SeguridadDatos.PermisosPorRol();
             using var dialogo = new GenerarPermisosUsuario(primero.Text, rolesDisponibles, permisosPorRol, seleccionados, idSeleccionado);
@@ -228,6 +229,11 @@ namespace Sistema_ERP
         private void AplicarAsignaciones(DataTable opciones, IEnumerable<int> seleccionados)
         {
             var elegidos = seleccionados.ToHashSet();
+            if (tipo == TipoSeguridad.Usuarios)
+            {
+                selectorRoles.Cargar(opciones, elegidos);
+                return;
+            }
             asignaciones.BeginUpdate();
             try
             {
@@ -242,6 +248,10 @@ namespace Sistema_ERP
             }
             finally { asignaciones.EndUpdate(); }
         }
+
+        private int[] SeleccionAsignaciones() => tipo == TipoSeguridad.Usuarios
+            ? selectorRoles.IdsSeleccionados
+            : asignaciones.CheckedItems.Cast<Opcion>().Select(o => o.Id).ToArray();
 
         private void CambiarEstado(bool activar)
         {
@@ -277,7 +287,7 @@ namespace Sistema_ERP
             reactivar.Enabled = disponible && idSeleccionado.HasValue && !activo;
             bool editable = disponible && (!idSeleccionado.HasValue || activo);
             foreach (var campo in new[] { primero, segundo, descripcion, contrasena, confirmar }) campo.ReadOnly = !editable;
-            empleado.Enabled = asignaciones.Enabled = editable;
+            empleado.Enabled = asignaciones.Enabled = selectorRoles.Enabled = editable;
             generarPermisos.Enabled = editable && tipo == TipoSeguridad.Usuarios;
             asignarPermisosModulo.Enabled = editable && tipo == TipoSeguridad.Roles;
             editarPermisosRol.Enabled = editable && tipo == TipoSeguridad.Roles;

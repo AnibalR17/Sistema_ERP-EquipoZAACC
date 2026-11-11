@@ -13,9 +13,16 @@ internal static partial class Program
     private static int tienda, cliente, producto, usuario, efectivo, transferencia, categoria, proveedor;
 
     [STAThread]
-    private static int Main()
+    private static int Main(string[] args)
     {
         ApplicationConfiguration.Initialize();
+        // La suite usa DoEvents en lugar de Application.Run; conserva el contexto de UI
+        // entre ventanas para que las continuaciones no terminen en el ThreadPool.
+        WindowsFormsSynchronizationContext.AutoInstall = false;
+        using var contextoInterfaz = new WindowsFormsSynchronizationContext();
+        SynchronizationContext.SetSynchronizationContext(contextoInterfaz);
+        int regresiones = ProbarRegresionesIssues();
+        if (regresiones != 0 || args.Contains("--sin-bd")) return regresiones;
         string raiz = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../"));
         string? anterior = Environment.GetEnvironmentVariable("SISTEMA_ERP_CONNECTION_STRING");
         string original = anterior ?? File.ReadAllText(Path.Combine(raiz, "connection.local.txt")).Trim();
@@ -198,6 +205,9 @@ internal static partial class Program
             Igual(false, (bool)carga.GetMethod("ValidarFila", estaticos)!.Invoke(null, [negativa, catalogos])!, "Precio negativo rechazado");
             var productos = (List<ProductoImportado>)carga.GetMethod("ConstruirProductosValidos", estaticos)!.Invoke(null, [tabla, catalogos])!;
             Igual(10, CargaMasivaDatos.ImportarProductos(productos, tienda, "plantilla.xlsx", System.Security.Cryptography.SHA256.HashData(File.ReadAllBytes(ruta))), "Importación desde plantilla");
+            using var preciosGuardados = Tabla("SELECT codigo_barras,precio_unitario FROM dbo.Producto");
+            var porCodigo = preciosGuardados.AsEnumerable().ToDictionary(f => (string)f["codigo_barras"], f => (decimal)f["precio_unitario"]);
+            foreach (var producto in productos) Igual(producto.Precio, porCodigo[producto.CodigoBarras], "Precio de Excel conservado al guardar en SQL");
             Igual(35, Convert.ToInt32(Tabla("SELECT SUM(i.existencia) FROM dbo.InventarioTienda i JOIN dbo.Producto p ON p.id_producto=i.id_producto WHERE p.codigo_barras LIKE '000990%' AND i.id_tienda=" + tienda).Rows[0][0]), "Stock de los ejemplos");
             Console.WriteLine("OK: XLSX leído y validado por el importador real, ceros iniciales y rechazo de datos inválidos.");
         }
