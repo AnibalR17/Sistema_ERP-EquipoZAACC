@@ -96,6 +96,8 @@ Aplicacion de escritorio desarrollada con C# y Windows Forms sobre .NET 10 para 
 
 `dotnet run --project Pruebas/FlujoVentas.Integracion -- --disposicion` comprueba 14 pantallas con dos anchos de ventana y métricas simuladas de 100 %, 125 %, 150 % y 200 %. Añade `--rapida` para comprobar solo 900 px al 100 %, o `--capturas` para guardar imágenes de pantallas representativas en `capturas-disposicion` dentro de la salida de las pruebas. Estas comprobaciones no cambian la escala de Windows ni requieren SQL Server.
 
+`dotnet run --project Pruebas/FlujoVentas.Integracion -- --cierre-sesion` verifica, sin SQL Server, el cierre por el botón y por la X con Compras en segundo plano. Las consultas pendientes permiten salir; una escritura en curso informa que debe terminar antes del cierre. Si el cierre se cancela, se conserva la sesión actual.
+
 `dotnet run --project Pruebas/FlujoVentas.Integracion` ejecuta también la integración completa. Requiere la conexión local configurada y permisos para crear una base temporal de pruebas, que se elimina al terminar.
 
 ## Estandar grafico

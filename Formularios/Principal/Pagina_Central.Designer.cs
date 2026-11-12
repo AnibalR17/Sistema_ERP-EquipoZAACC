@@ -513,6 +513,7 @@ namespace Sistema_ERP
             logoutButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             logoutButton.BackColor = System.Drawing.Color.FromArgb(242, 242, 242);
             logoutButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            logoutButton.CausesValidation = false;
             logoutButton.FlatAppearance.BorderSize = 0;
             logoutButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
             logoutButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;

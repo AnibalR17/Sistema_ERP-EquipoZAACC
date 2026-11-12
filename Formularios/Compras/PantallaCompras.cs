@@ -8,7 +8,7 @@ namespace Sistema_ERP.Vistas
     {
         private const decimal MaximoImporte = 9999999999999999.99m;
         private readonly DataTable dtCarrito = CrearCarrito();
-        private bool ocupado, cargandoCampos, catalogosListos, historialListo, modificado, lineaPendiente;
+        private bool ocupado, escribiendo, cargandoCampos, catalogosListos, historialListo, modificado, lineaPendiente;
         private int? compraId;
         private byte[]? versionCompra;
         private DataRow? lineaEnEdicion;
@@ -311,7 +311,10 @@ namespace Sistema_ERP.Vistas
                 DateTime fecha = dtpFecha.Value.Date;
                 var lineas = dtCarrito.AsEnumerable().Select(f => new LineaCompra(f.Field<int>("id_producto"), f.Field<int>("Cantidad"), f.Field<decimal>("Costo"))).ToArray();
                 ocupado = true; ActualizarAcciones();
-                int id = await Task.Run(() => CompraDatos.Guardar(compraId, versionCompra, proveedor, tienda, factura, fecha, notas, lineas));
+                int id;
+                escribiendo = true;
+                try { id = await Task.Run(() => CompraDatos.Guardar(compraId, versionCompra, proveedor, tienda, factura, fecha, notas, lineas)); }
+                finally { escribiendo = false; }
                 if (IsDisposed) return;
                 compraId = id; estadoCompra = "BORRADOR"; versionCompra = null; modificado = false;
                 guardada = true;
@@ -438,7 +441,9 @@ namespace Sistema_ERP.Vistas
             bool aplicada = false;
             try
             {
-                await Task.Run(operacion);
+                escribiendo = true;
+                try { await Task.Run(operacion); }
+                finally { escribiendo = false; }
                 if (IsDisposed) return;
                 estadoCompra = nuevoEstado; versionCompra = null;
                 aplicada = true;
@@ -481,9 +486,19 @@ namespace Sistema_ERP.Vistas
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            if (ocupado || (e.CloseReason == CloseReason.UserClosing && !PuedeDescartar())) e.Cancel = true;
+            if (escribiendo)
+            {
+                e.Cancel = true;
+                MostrarCierrePendiente();
+            }
+            else if (e.CloseReason is CloseReason.UserClosing or CloseReason.MdiFormClosing && !PuedeDescartar())
+                e.Cancel = true;
             base.OnFormClosing(e);
         }
+
+        protected virtual void MostrarCierrePendiente() => MessageBox.Show(MdiParent ?? this,
+            "Se está guardando una operación de Compras. Espera a que termine y vuelve a intentar cerrar la sesión o la aplicación.",
+            "Operación en curso", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         private void Mensaje(string texto, bool error = false)
         {

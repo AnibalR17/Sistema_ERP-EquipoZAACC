@@ -347,8 +347,10 @@ namespace Sistema_ERP
 
         private void logoutButton_Click(object? sender, EventArgs e)
         {
+            bool volverAntes = VolverAlAcceso;
             VolverAlAcceso = true;
-            Close();
+            try { Close(); }
+            finally { if (!IsDisposed) VolverAlAcceso = volverAntes; }
         }
 
         private void salesButton_Click(object? sender, EventArgs e) =>

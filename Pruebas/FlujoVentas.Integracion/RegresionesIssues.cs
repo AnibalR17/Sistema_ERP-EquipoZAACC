@@ -14,6 +14,7 @@ internal static partial class Program
             ProbarDesplegableRoles();
             ProbarTemasVisuales();
             ProbarDisposicion();
+            ProbarCierreSesion();
             return 0;
         }
         catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }
