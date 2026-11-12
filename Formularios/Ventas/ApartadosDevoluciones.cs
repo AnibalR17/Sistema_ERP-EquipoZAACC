@@ -22,7 +22,7 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
             tabla.AutoGenerateColumns = false;
             tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
         }
-        var raiz = Filas(-100, 48); var pestanas = new TabControl { Dock = DockStyle.Fill };
+        var raiz = Filas(-100, 48); var pestanas = new Sistema_ERP.PestanasTematicas { Dock = DockStyle.Fill };
         TabPage Pagina(string titulo, DataGridView tabla, TextBox buscar, ComboBox estados, Dictionary<string, Button> botones, (string Texto, Action Accion)[] opciones)
         {
             var pagina = new TabPage(titulo) { Padding = new Padding(10), BackColor = Color.White };
@@ -92,7 +92,7 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
                 Name = dato.ColumnName, HeaderText = dato.ColumnName, DataPropertyName = dato.ColumnName,
                 ValueType = dato.DataType, MinimumWidth = dato.DataType == typeof(DateTime) ? 140 : 80
             };
-            if (dato.DataType == typeof(decimal)) columna.DefaultCellStyle.Format = "'L 'N2";
+            if (dato.DataType == typeof(decimal)) columna.DefaultCellStyle.Format = "'L '#,##0.00";
             if (dato.DataType == typeof(DateTime)) columna.DefaultCellStyle.Format = "dd/MM/yyyy HH:mm";
             tabla.Columns.Add(columna);
         }
@@ -125,7 +125,7 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
     {
         var fila = Seleccion(apartado ? apartados : devoluciones); if (fila is null) return;
         using var ventana = Ventana((apartado ? "Apartado " : "Devolución ") + Numero(fila));
-        var tabs = new TabControl { Dock = DockStyle.Fill }; string[] nombres = apartado ? ["Resumen", "Productos", "Abonos", "Reembolsos"] : ["Resumen", "Productos", "Reembolsos"];
+        var tabs = new Sistema_ERP.PestanasTematicas { Dock = DockStyle.Fill }; string[] nombres = apartado ? ["Resumen", "Productos", "Abonos", "Reembolsos"] : ["Resumen", "Productos", "Reembolsos"];
         void CargarDetalle()
         {
             using var ds = apartado ? ApartadoDatos.Obtener(Numero(fila)) : DevolucionDatos.Obtener(Numero(fila));
@@ -193,7 +193,7 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
         string? motivo = PedirMotivo($"Reembolsar devolución: L {d["Pendiente"]:N2}"); if (motivo is null) return;
         decimal total = DevolucionDatos.Reembolsar(Numero(d), Version(d), motivo); CargarListas(); mensaje.Text = $"Reembolso registrado: L {total:N2}, aplicado a los pagos originales de la factura.";
     }
-    private static Form Ventana(string titulo) => new() { Text = titulo, Size = new Size(1000, 680), MinimumSize = new Size(760, 540), StartPosition = FormStartPosition.CenterParent, Font = new Font("Segoe UI", 10), Padding = new Padding(16), BackColor = Color.White };
+    private static Form Ventana(string titulo) => new FormularioTematico() { Text = titulo, Size = new Size(1000, 680), MinimumSize = new Size(760, 540), StartPosition = FormStartPosition.CenterParent, Font = new Font("Segoe UI", 10), Padding = new Padding(16), BackColor = Color.White };
     private void MostrarComprobante(string texto, string numero, int venta)
     {
         using var ventana = Ventana("Factura " + numero);
@@ -208,7 +208,7 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
     }
     private string? PedirMotivo(string titulo)
     {
-        using var ventana = new Form { Text = titulo, Size = new Size(570, 290), StartPosition = FormStartPosition.CenterParent, Padding = new Padding(16) };
+        using var ventana = new FormularioTematico { Text = titulo, Size = new Size(570, 290), StartPosition = FormStartPosition.CenterParent, Padding = new Padding(16) };
         var texto = new TextBox { Multiline = true, MaxLength = 500, Dock = DockStyle.Fill, PlaceholderText = "Escribe el motivo de la operación" };
         var aceptar = Accion("Confirmar", () => { if (!string.IsNullOrWhiteSpace(texto.Text)) ventana.DialogResult = DialogResult.OK; else texto.Focus(); }); aceptar.Dock = DockStyle.Bottom;
         ventana.Controls.Add(texto); ventana.Controls.Add(aceptar); return ventana.ShowDialog(this) == DialogResult.OK ? texto.Text.Trim() : null;

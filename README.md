@@ -92,7 +92,7 @@ Aplicacion de escritorio desarrollada con C# y Windows Forms sobre .NET 10 para 
 
 ## Pruebas
 
-`dotnet run --project Pruebas/FlujoVentas.Integracion -- --sin-bd` verifica los formatos de precios y el selector de roles sin conexión a SQL Server.
+`dotnet run --project Pruebas/FlujoVentas.Integracion -- --sin-bd` verifica los formatos de precios, el selector de roles, los cambios de tema, el contraste y las preferencias de apariencia sin conexión a SQL Server.
 
 `dotnet run --project Pruebas/FlujoVentas.Integracion` ejecuta también la integración completa. Requiere la conexión local configurada y permisos para crear una base temporal de pruebas, que se elimina al terminar.
 
@@ -102,25 +102,46 @@ El estandar parte de `Formularios/Principal/Pagina_Central.Designer.cs` y `Formu
 
 ### 1. Identidad visual
 
-Interfaz de escritorio clara y minimalista: fondos blancos, grises neutros, tipografia Segoe UI, navegacion lateral y paneles con esquinas redondeadas. La jerarquia se establece mediante tamano, negrita y espaciado.
+Interfaz de escritorio clara: fondos blancos y gris azulado, acciones azules, texto oscuro, tipografia Segoe UI, navegacion lateral y paneles con esquinas redondeadas. La jerarquia se establece mediante color, tamano, negrita y espaciado.
 
-La marca se presenta como texto **Sistema ERP**. No hay logotipo grafico ni color corporativo de acento definido en el codigo.
+La marca se presenta como texto **Sistema ERP** con acento azul. Las paletas clara y oscura se definen en `Presentacion/ProductoEstilo.cs`; `TemaAplicacion` las aplica al acceso, las pantallas MDI, sus controles dinamicos y los dialogos. `FormularioTematico` aplica el tema antes de mostrar cada ventana y `PestanasTematicas` adapta las cabeceras de las pestañas.
+
+En **Configuración y auditoría → Apariencia**, selecciona **Claro (azul y gris)** u **Oscuro (estilo VS Code)** y pulsa **Aplicar tema**. Cambia las ventanas abiertas sin reiniciar ni perder la captura. La preferencia se guarda por usuario de Windows en `%LOCALAPPDATA%\Sistema_ERP\apariencia.json` y se recupera antes de mostrar el acceso. Si no existe o está dañada, se usa el tema claro. Si no se puede guardar, se conserva el tema anterior y se muestra un mensaje.
 
 ### 2. Paleta de colores
 
 | Uso implementado | HEX | RGB |
 | --- | --- | --- |
-| Fondo de ventana, menu, barra superior y tarjetas | `#FFFFFF` | 255, 255, 255 |
-| Fondo del area principal | `#FDFDFD` | 253, 253, 253 |
-| Texto secundario y descripciones | `#7D7D7D` | 125, 125, 125 |
-| Fondo de la franja informativa | `#F3F3F3` | 243, 243, 243 |
-| Fondo de Cerrar sesion | `#F2F2F2` | 242, 242, 242 |
-| Fondo de botones al pasar el puntero | `#F5F5F5` | 245, 245, 245 |
-| Contorno de tarjetas y grafico | `#F7F7F7` | 247, 247, 247 |
-| Separadores del menu y barra superior | `#D3D3D3` | 211, 211, 211 |
-| Puntos y linea del grafico | `#121212` | 18, 18, 18 |
+| Menu, barra superior, tarjetas y botones secundarios | `#FFFFFF` | 255, 255, 255 |
+| Fondo del area principal | `#F4F7FB` | 244, 247, 251 |
+| Texto principal | `#1F2937` | 31, 41, 55 |
+| Texto secundario y descripciones | `#475569` | 71, 85, 105 |
+| Franja informativa y encabezados de tablas | `#E8EEF5` | 232, 238, 245 |
+| Acciones principales y texto de botones secundarios | `#1D4ED8` | 29, 78, 216 |
+| Accion principal al pasar el puntero | `#1E40AF` | 30, 64, 175 |
+| Seleccion del menu y filas de tablas | `#DBEAFE` | 219, 234, 254 |
+| Texto de la seleccion | `#1E3A8A` | 30, 58, 138 |
+| Bordes y separadores | `#B8C5D6` | 184, 197, 214 |
+| Fondo de botones deshabilitados | `#E2E8F0` | 226, 232, 240 |
+| Texto de botones deshabilitados | `#475569` | 71, 85, 105 |
 
-El texto principal hereda el color de texto de WinForms; no tiene un HEX explicito. Los fondos transparentes de las etiquetas dejan ver el contenedor. Los formularios CRUD usan las variantes de estado documentadas en la seccion 8; el resto del diseno conserva la paleta neutra.
+Las acciones principales usan texto blanco. Los botones deshabilitados conservan `Enabled = false` y dibujan su texto con contraste en ambos temas para evitar el atenuado de WinForms. Al habilitarse recuperan el estilo del tema actual. `ColoresBoton` permite cambiar colores sin modificar las medidas del disenador.
+
+El tema oscuro se inspira en [Dark Modern de VS Code](https://github.com/microsoft/vscode/blob/main/extensions/theme-defaults/themes/dark_modern.json):
+
+| Uso | HEX |
+| --- | --- |
+| Fondo principal | `#1F1F1F` |
+| Navegación y cabeceras | `#181818` |
+| Tarjetas y superficies | `#252526` |
+| Campos | `#313131` |
+| Texto principal / secundario | `#CCCCCC` / `#9D9D9D` |
+| Acciones principales / hover | `#0078D4` / `#026EC1` |
+| Selección | `#264F78` |
+| Bordes | `#3C3C3C` |
+| Botones deshabilitados: fondo / texto | `#2D2D2D` / `#A0A0A0` |
+
+Los controles nativos usan además el modo de color de Windows Forms cuando Windows lo admite. Las ventanas del sistema (por ejemplo, impresión y selección de archivos) conservan el estilo que ofrece Windows.
 
 ### 3. Tipografia
 
@@ -169,9 +190,9 @@ La fila de tarjetas conserva cuatro columnas al reducir la ventana: no hay una d
 
 ### 5. Componentes y estados
 
-- **Navegacion lateral:** botones planos de 236 × 40, sin borde, fondo blanco y relleno izquierdo de 10. Inicio se distingue con negrita, sin resaltado gris permanente. Al pasar el puntero se aplica `#F5F5F5`.
+- **Navegacion lateral:** botones planos de 236 × 40, sin borde, fondo blanco y relleno izquierdo de 10. La pantalla actual se distingue con negrita, fondo `#DBEAFE` y texto `#1E3A8A`. Al pasar el puntero se aplica el mismo azul suave.
 - **Grupos de navegacion:** Descubrir y Administracion, con encabezados en negrita.
-- **Sesion:** nombre de usuario, rol en gris y boton Cerrar sesion de 216 × 38 con fondo `#F2F2F2`.
+- **Sesion:** nombre de usuario, rol en gris oscuro y boton Cerrar sesion de 216 × 38 con fondo blanco, texto azul y borde visible.
 - **Barra superior:** boton ☰ de 36 × 30, buscador sin borde, nombre de cuenta con simbolo ⌄ y boton de notificaciones de 64 × 30 para mostrar campana y contador. Los botones de simbolos tienen borde de 1.
 - **Buscador:** ancho ajustado al espacio disponible; texto de ayuda «Buscar en todo el ERP… (Ctrl+K)».
 - **Franja informativa:** texto secundario, simbolo ℹ y relleno horizontal de 16 a la izquierda y 8 a la derecha.
@@ -186,7 +207,7 @@ Estas reglas se proponen a partir de los patrones existentes:
 
 1. Usar Segoe UI y conservar la jerarquia tipografica descrita.
 2. Mantener menu lateral, barra superior y margenes del contenido en las nuevas pantallas.
-3. Usar blanco para superficies y gris para informacion secundaria; reservar las negritas para titulos, valores y seleccion del menu.
+3. Usar blanco para superficies, gris oscuro para informacion secundaria y azul para acciones; reservar las negritas para titulos, valores y seleccion del menu.
 4. Reutilizar radios de 30 en paneles principales y 18 en franjas informativas.
 5. Mantener navegacion plana, texto a la izquierda y respuesta visual al pasar el puntero.
 6. Declarar controles y propiedades editables en `InitializeComponent`, con sus campos en `.Designer.cs`; dejar comportamiento y dibujo personalizado en `.cs`.
@@ -197,14 +218,14 @@ Estas reglas se proponen a partir de los patrones existentes:
 - `Presentacion/ProductoEstilo.cs` concentra colores y botones compartidos. Las propiedades editables y los valores de distribucion se conservan en cada `.Designer.cs`.
 - Las esquinas redondeadas y el grafico se dibujan durante la ejecucion y pueden no aparecer completos en el disenador.
 - La implementacion no dibuja las sombras de la imagen de referencia.
-- Las variantes de tablas, captura, dialogos, validacion y acciones principales se describen en la seccion 8. No se ha definido modo oscuro.
+- Las variantes de tablas, captura, dialogos, validacion y acciones principales se describen en la seccion 8. El tema oscuro se elige en Configuración → Apariencia.
 - Las reglas visuales de esta sección acompañan los flujos implementados; la búsqueda global se describe en `Datos/BusquedaGlobal-verificacion.md`.
 
 ### 8. Variantes de captura y CRUD
 
 - **Superficie:** fondo blanco, margenes de contenido de 32, 34, 32 y 36; el menu y el encabezado compartidos los aporta la ventana MDI. Configuracion y Directorio desplazan su contenido de forma independiente.
 - **Captura:** campos distribuidos en tres columnas; etiquetas de 10 pt y entradas de 11 pt. Los campos obligatorios llevan `*`. El formulario cambia sus campos segun Clientes, Proveedores o Empleados.
-- **Acciones:** Guardar, Actualizar, Desactivar, Reactivar y Nuevo. Botones planos de 110 x 44; la accion principal usa fondo `#181818` y texto blanco. Solo se habilitan las acciones aplicables al registro seleccionado.
+- **Acciones:** Guardar, Actualizar, Desactivar, Reactivar y Nuevo. Botones planos de 110 x 44; la accion principal usa fondo `#1D4ED8` y texto blanco. Las acciones no disponibles usan fondo `#E2E8F0`, texto `#475569` y borde visible. Solo se habilitan las acciones aplicables al registro seleccionado.
 - **Listados:** tabla de solo lectura dentro de un panel blanco de radio 30 y borde `#F7F7F7`, mediante `PanelDisenoInventario.ColorBorde`. Seleccion de una fila, encabezados de 10 pt en negrita y altura de filas de 42. Un buscador filtra el listado y una casilla permite incluir inactivos.
 - **Pestanas:** Clientes, Proveedores y Empleados comparten la misma distribucion. La pestana seleccionada usa la variante principal de boton; no se duplica la navegacion MDI.
 - **Estados:** exito `#006400` y error `#B22222`, centralizados en `ProductoEstilo.Exito` y `ProductoEstilo.Error`. Siempre se acompanan de un mensaje; el estado no depende solo del color.

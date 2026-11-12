@@ -1,6 +1,6 @@
 namespace Sistema_ERP
 {
-    public class DialogoMaqueta : Form
+    public class DialogoMaqueta : FormularioTematico
     {
         protected readonly TableLayoutPanel Contenido;
         public DialogoMaqueta() : this("Dialogo", 300) { }

@@ -21,7 +21,7 @@ public sealed partial class CargaMasiva : PantallaMaqueta
         Cursor = Cursors.Hand
     };
     private Label lblResumen = new();
-    private readonly TabControl pestanasCarga = new() { Name = "pestanasCargaMasiva", Dock = DockStyle.Fill };
+    private readonly TabControl pestanasCarga = new PestanasTematicas() { Name = "pestanasCargaMasiva", Dock = DockStyle.Fill };
     private readonly TabPage tabEjemplo = new("Ejemplo de plantilla") { Padding = new Padding(12), BackColor = Color.White };
     private readonly TabPage tabPrevisualizacion = new("Vista previa del archivo") { BackColor = Color.White };
     private readonly ComboBox cmbTiendaImportacion = new() { Name = "tiendaStockInicial", DropDownStyle = ComboBoxStyle.DropDownList, Width = 300 };

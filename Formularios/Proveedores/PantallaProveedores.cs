@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Sistema_ERP.Vistas
 {
-    public partial class PantallaProveedores : Form
+    public partial class PantallaProveedores : FormularioTematico
     {
         private DataView? vistaProveedores;
         private int? idProveedorSeleccionado;
@@ -306,12 +306,12 @@ namespace Sistema_ERP.Vistas
 
         private void Btn_MouseEnter(object sender, EventArgs e)
         {
-            if (sender is Button btn) btn.BackColor = Color.FromArgb(245, 245, 245);
+            if (sender is Button btn) EstiloBotones.Actualizar(btn);
         }
 
         private void Btn_MouseLeave(object sender, EventArgs e)
         {
-            if (sender is Button btn) btn.BackColor = Color.White;
+            if (sender is Button btn) EstiloBotones.Actualizar(btn);
         }
     }
 }

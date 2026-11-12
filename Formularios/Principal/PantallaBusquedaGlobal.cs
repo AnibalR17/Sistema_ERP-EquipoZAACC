@@ -65,7 +65,7 @@ internal sealed class PantallaBusquedaGlobal : PantallaMaqueta
     }
 }
 
-internal sealed class DetalleBusquedaGlobal : Form
+internal sealed class DetalleBusquedaGlobal : FormularioTematico
 {
     internal ResultadoBusqueda Resultado { get; }
 
@@ -76,7 +76,7 @@ internal sealed class DetalleBusquedaGlobal : Form
         Size = new Size(1050, 650); MinimumSize = new Size(700, 400);
         StartPosition = FormStartPosition.CenterParent; ShowInTaskbar = false;
         Font = new Font("Segoe UI", 11F); Padding = new Padding(16); BackColor = Color.White;
-        var tabs = new TabControl { Dock = DockStyle.Fill };
+        var tabs = new Sistema_ERP.PestanasTematicas { Dock = DockStyle.Fill };
         string[] titulos = resultado.Tipo switch
         {
             "Apartado" => ["Datos generales", "Productos", "Abonos", "Reembolsos"],

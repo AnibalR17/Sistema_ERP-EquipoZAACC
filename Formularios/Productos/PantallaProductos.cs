@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Sistema_ERP.Vistas
 {
-    public partial class PantallaProductos : Form
+    public partial class PantallaProductos : FormularioTematico
     {
         public PantallaProductos()
         {
@@ -88,7 +88,7 @@ namespace Sistema_ERP.Vistas
 
         private void pnlContenedorGrid_Paint(object sender, PaintEventArgs e)
         {
-            DibujarPanelRedondeado(e.Graphics, pnlContenedorGrid.ClientRectangle, 18, pnlContenedorGrid.BackColor, Color.FromArgb(235, 235, 235));
+            DibujarPanelRedondeado(e.Graphics, pnlContenedorGrid.ClientRectangle, 18, pnlContenedorGrid.BackColor, ProductoEstilo.Borde);
         }
 
         private void DibujarPanelRedondeado(Graphics g, Rectangle bounds, int radius, Color backColor, Color borderColor)
@@ -118,12 +118,12 @@ namespace Sistema_ERP.Vistas
 
         private void Btn_MouseEnter(object sender, EventArgs e)
         {
-            if (sender is Button btn) btn.BackColor = Color.FromArgb(245, 245, 245);
+            if (sender is Button btn) EstiloBotones.Actualizar(btn);
         }
 
         private void Btn_MouseLeave(object sender, EventArgs e)
         {
-            if (sender is Button btn) btn.BackColor = Color.White;
+            if (sender is Button btn) EstiloBotones.Actualizar(btn);
         }
     }
 }

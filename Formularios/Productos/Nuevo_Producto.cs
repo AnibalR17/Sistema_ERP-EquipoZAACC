@@ -2,7 +2,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Sistema_ERP
 {
-    public partial class Nuevo_Producto : Form
+    public partial class Nuevo_Producto : FormularioTematico
     {
         private readonly Producto? _editando;
 

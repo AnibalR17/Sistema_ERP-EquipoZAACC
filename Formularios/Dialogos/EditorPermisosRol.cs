@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Sistema_ERP;
 
-public sealed partial class EditorPermisosRol : Form
+public sealed partial class EditorPermisosRol : FormularioTematico
 {
     private sealed record Modulo(string Codigo, string Nombre)
     {
@@ -23,6 +23,7 @@ public sealed partial class EditorPermisosRol : Form
     public EditorPermisosRol(string nombreRol)
     {
         InitializeComponent();
+        TemaAplicacion.Aplicar(this);
         titulo.Text = string.IsNullOrWhiteSpace(nombreRol) ? "Permisos del nuevo rol" : $"Permisos de {nombreRol.Trim()}";
         foreach (var pantalla in CatalogoPermisos.Pantallas) modulo.Items.Add(new Modulo(pantalla.Modulo, pantalla.Nombre));
         accion.Items.AddRange(["CONSULTAR", "GESTIONAR", "EXPORTAR"]);

@@ -1,6 +1,6 @@
 namespace Sistema_ERP
 {
-    public sealed partial class MotivoDesactivacion : Form
+    public sealed partial class MotivoDesactivacion : FormularioTematico
     {
         public string Motivo { get; private set; } = "";
         public MotivoDesactivacion() : this("Registro") { }

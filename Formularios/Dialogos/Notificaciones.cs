@@ -2,7 +2,7 @@ using System.Data;
 
 namespace Sistema_ERP
 {
-    public sealed partial class Notificaciones : Form
+    public sealed partial class Notificaciones : FormularioTematico
     {
         private readonly Func<Task<DataTable>> cargar;
         private bool cargando;

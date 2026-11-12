@@ -32,7 +32,7 @@ namespace Sistema_ERP.Vistas
             components = new System.ComponentModel.Container();
             mainLayout = new TableLayoutPanel(); encabezado = new TableLayoutPanel(); capturaLayout = new TableLayoutPanel();
             datosCompra = new TableLayoutPanel(); datosProducto = new TableLayoutPanel(); historialLayout = new TableLayoutPanel(); filtrosHistorial = new TableLayoutPanel();
-            pestanasCompras = new TabControl(); tabCaptura = new TabPage(); tabHistorial = new TabPage();
+            pestanasCompras = new Sistema_ERP.PestanasTematicas(); tabCaptura = new TabPage(); tabHistorial = new TabPage();
             accionesDetalle = new FlowLayoutPanel(); accionesCompra = new FlowLayoutPanel(); accionesHistorial = new FlowLayoutPanel();
             lblTitulo = new Label(); lblEstadoCompra = new Label(); lblMensaje = new Label(); lblTotal = new Label();
             lblSeccionProv = new Label(); lblProveedor = new Label(); lblTienda = new Label(); lblFecha = new Label(); lblFactura = new Label(); lblObservaciones = new Label();

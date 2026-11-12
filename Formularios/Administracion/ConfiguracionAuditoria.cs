@@ -3,7 +3,7 @@ using System.Data;
 
 namespace Sistema_ERP
 {
-    public sealed partial class ConfiguracionAuditoria : Form
+    public sealed partial class ConfiguracionAuditoria : FormularioTematico
     {
         private DataView? vista;
         private int? idSeleccionado;

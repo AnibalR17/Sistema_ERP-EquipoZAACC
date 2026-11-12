@@ -8,6 +8,7 @@ namespace Sistema_ERP
             control.ForeColor = ProductoEstilo.Texto;
             control.BackColor = ProductoEstilo.Fondo;
             control.Padding = new Padding(32, 34, 32, 36);
+            TemaAplicacion.Aplicar(control);
             if (control is Form ventana)
             {
                 ventana.MinimumSize = new Size(560, 360);

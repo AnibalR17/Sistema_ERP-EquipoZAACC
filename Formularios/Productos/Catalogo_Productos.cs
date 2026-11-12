@@ -71,7 +71,7 @@ namespace Sistema_ERP
             stock.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dgvProductos.Columns.Add(stock);
             var precio = Columna("precio_unitario", "Precio", 18);
-            precio.DefaultCellStyle.Format = "'L. 'N2";
+            precio.DefaultCellStyle.Format = "'L. '#,##0.00";
             precio.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
             dgvProductos.Columns.Add(precio);
             dgvProductos.Columns.Add(new DataGridViewCheckBoxColumn

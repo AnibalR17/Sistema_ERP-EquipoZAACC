@@ -106,14 +106,12 @@ namespace Sistema_ERP
                 foreach (Button boton in tabs.Controls)
                 {
                     bool seleccionado = boton == (mostrarCategorias ? tabCategorias : tabProductos);
-                    boton.BackColor = seleccionado ? ProductoEstilo.Texto : ProductoEstilo.Suave;
-                    boton.ForeColor = seleccionado ? Color.White : ProductoEstilo.Texto;
+                    ProductoEstilo.ColoresBoton(boton, seleccionado);
                 }
                 if (mostrarCategorias) CargarCategorias();
             }
             tabProductos.Click += (_, _) => Seleccionar(false);
             tabCategorias.Click += (_, _) => Seleccionar(true);
-            tabCategorias.BackColor = ProductoEstilo.Suave;
             Control[] filas = { titleLabel, subtitleLabel, label1, tabs, cuerpo };
             for (int i = 0; i < filas.Length; i++)
             {

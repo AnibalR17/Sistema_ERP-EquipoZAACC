@@ -20,7 +20,7 @@ namespace Sistema_ERP
             desdeInventario = new DateTimePicker(); hastaInventario = new DateTimePicker();
             consultarInventario = new Button(); guardarMinimo = new Button();
             minimoInventario = new NumericUpDown(); estadoInventario = new Label(); resumenInventario = new Label();
-            existenciasInventario = new DataGridView(); historialInventario = new DataGridView(); pestanasInventario = new TabControl();
+            existenciasInventario = new DataGridView(); historialInventario = new DataGridView(); pestanasInventario = new Sistema_ERP.PestanasTematicas();
             contenidoInventario.Dock = DockStyle.Fill;
             contenidoInventario.Padding = new Padding(32, 34, 32, 36);
             contenidoInventario.ColumnCount = 1; contenidoInventario.RowCount = 6;

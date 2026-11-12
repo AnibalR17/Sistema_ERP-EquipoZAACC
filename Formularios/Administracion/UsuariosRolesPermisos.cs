@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Sistema_ERP
 {
-    public sealed partial class UsuariosRolesPermisos : Form
+    public sealed partial class UsuariosRolesPermisos : FormularioTematico
     {
         private TipoSeguridad tipo;
         private DataView? vista;

@@ -4,6 +4,7 @@ namespace Sistema_ERP
     {
         internal static void Redondear(Form dialogo)
         {
+            TemaAplicacion.Aplicar(dialogo);
             int d = Math.Min(48, Math.Min(dialogo.Width, dialogo.Height));
             if (d <= 0) return;
             using var path = new System.Drawing.Drawing2D.GraphicsPath();
@@ -19,6 +20,7 @@ namespace Sistema_ERP
 
         internal static void Mostrar(Form propietario, Form dialogo)
         {
+            TemaAplicacion.Aplicar(dialogo);
             using (dialogo)
             {
                 using var sombra = new Form

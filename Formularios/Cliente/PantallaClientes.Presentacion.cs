@@ -1,7 +1,7 @@
 ﻿namespace Sistema_ERP.Vistas
 {
 
-    public partial class PantallaClientes : Form
+    public partial class PantallaClientes : FormularioTematico
     {
         private readonly TableLayoutPanel mainLayout = new();
         private readonly Label lblTitulo = new() { Text = "Clientes" };

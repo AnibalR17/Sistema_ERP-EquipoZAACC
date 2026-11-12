@@ -3,7 +3,7 @@ using System.Data;
 
 namespace Sistema_ERP
 {
-    public sealed partial class DirectorioRoles : Form
+    public sealed partial class DirectorioRoles : FormularioTematico
     {
         private TipoDirectorio tipoActual = TipoDirectorio.Clientes;
         private DataView? vista;

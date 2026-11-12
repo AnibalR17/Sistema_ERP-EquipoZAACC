@@ -68,7 +68,7 @@ internal static partial class Program
             configuracion.ShowInTaskbar = false; configuracion.StartPosition = FormStartPosition.Manual;
             configuracion.Location = new Point(-5000, -5000); configuracion.Opacity = 0; configuracion.Show();
             var tabs = configuracion.Controls.Find("pestanasConfiguracion", true).OfType<TabControl>().Single();
-            Igual(3, tabs.TabPages.Count, "Pestañas de configuración"); tabs.SelectedIndex = 1;
+            Igual(4, tabs.TabPages.Count, "Pestañas de configuración"); tabs.SelectedIndex = 1;
             var tiendaFiscal = configuracion.Controls.Find("tiendaCAI", true).OfType<ComboBox>().Single(); tiendaFiscal.SelectedValue = tienda;
             var campoCai = configuracion.Controls.Find("valorCAI", true).OfType<TextBox>().Single();
             Igual("DEF456-ABC123-DEF456-ABC123-DEF456-BB", campoCai.Text, "Pantalla carga CAI de la tienda seleccionada");

@@ -9,18 +9,7 @@ namespace Sistema_ERP.Vistas
                 var medida = boton.Size;
                 ProductoEstilo.Boton(boton, boton == btnAgregarCarrito || boton == btnGuardar);
                 boton.Size = medida;
-                if (boton == btnAgregarCarrito || boton == btnGuardar)
-                {
-                    boton.EnabledChanged += (_, _) => AplicarEstadoAccion(boton);
-                    AplicarEstadoAccion(boton);
-                }
             }
-        }
-
-        private static void AplicarEstadoAccion(Button boton)
-        {
-            boton.BackColor = boton.Enabled ? ProductoEstilo.Texto : ProductoEstilo.Suave;
-            boton.ForeColor = boton.Enabled ? Color.White : ProductoEstilo.TextoSecundario;
         }
     }
 }

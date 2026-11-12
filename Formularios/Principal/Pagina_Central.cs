@@ -3,7 +3,7 @@ using System.Drawing.Drawing2D;
 
 namespace Sistema_ERP
 {
-    public partial class Pagina_Central : Form
+    public partial class Pagina_Central : FormularioTematico
     {
         private readonly Dictionary<string, Form> pantallas = new();
         private readonly Dictionary<Form, Button> navegacion = new();
@@ -94,12 +94,14 @@ namespace Sistema_ERP
 
         private void Sidebar_Paint(object? sender, PaintEventArgs e)
         {
-            e.Graphics.DrawLine(Pens.LightGray, panelContenedor.Width - 1, 0, panelContenedor.Width - 1, panelContenedor.Height);
+            using var borde = new Pen(ProductoEstilo.Borde);
+            e.Graphics.DrawLine(borde, panelContenedor.Width - 1, 0, panelContenedor.Width - 1, panelContenedor.Height);
         }
 
         private void Header_Paint(object? sender, PaintEventArgs e)
         {
-            e.Graphics.DrawLine(Pens.LightGray, 0, header.Height - 1, header.Width, header.Height - 1);
+            using var borde = new Pen(ProductoEstilo.Borde);
+            e.Graphics.DrawLine(borde, 0, header.Height - 1, header.Width, header.Height - 1);
         }
 
         private static GraphicsPath RoundedPath(Rectangle rect, int radius)
@@ -137,7 +139,7 @@ namespace Sistema_ERP
             if (sender is not Panel panel || panel.Width < 2 || panel.Height < 2) return;
             e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
             using var path = RoundedPath(new Rectangle(0, 0, panel.Width - 1, panel.Height - 1), panel == infoPanel ? 18 : 30);
-            using var border = new Pen(Color.FromArgb(247, 247, 247));
+            using var border = new Pen(ProductoEstilo.Borde);
             e.Graphics.DrawPath(border, path);
         }
 
@@ -236,13 +238,15 @@ namespace Sistema_ERP
             logoutButton.Top = 70;
             panelContenedor.Controls.Add(menu);
             panelContenedor.Controls.Add(pie);
+            foreach (var boton in menu.Controls.OfType<Button>()) ProductoEstilo.Navegacion(boton, false);
+            brandLabel.ForeColor = ProductoEstilo.Acento;
             ResumeLayout(true);
             Shown += (_, _) => MostrarInicio();
         }
 
         private Form CrearPantalla(Control contenido, string titulo)
         {
-            var pantalla = new Form { Text = titulo, AutoScaleMode = AutoScaleMode.None };
+            var pantalla = new FormularioTematico { Text = titulo, AutoScaleMode = AutoScaleMode.None };
             contenido.Dock = DockStyle.Fill;
             pantalla.Controls.Add(contenido);
             if (contenido is Inventario inventario)
@@ -301,7 +305,7 @@ namespace Sistema_ERP
                     navegacion.TryGetValue(ActiveMdiChild, out var activo) && activo == boton;
                 var estilo = seleccionado ? FontStyle.Bold : FontStyle.Regular;
                 if (boton.Font.Style != estilo) boton.Font = new Font(boton.Font, estilo);
-                boton.BackColor = seleccionado ? Color.FromArgb(243, 243, 243) : Color.White;
+                ProductoEstilo.Navegacion(boton, seleccionado);
             }
             if (ActiveMdiChild != null) Text = $"Sistema ERP - {ActiveMdiChild.Text}";
         }

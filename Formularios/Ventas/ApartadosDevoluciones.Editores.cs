@@ -159,7 +159,7 @@ public sealed partial class ApartadosDevoluciones
         if (ventana.ShowDialog(this) == DialogResult.OK) { CargarListas(); mensaje.Text = "Borrador guardado. Confirma la devolución para aplicar el inventario."; }
     }
 
-    private sealed class CobroDialogo : Form
+    private sealed class CobroDialogo : FormularioTematico
     {
         private readonly ComboBox metodo;
         private readonly NumericUpDown monto, recibido;

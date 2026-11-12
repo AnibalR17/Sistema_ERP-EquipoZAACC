@@ -11,12 +11,15 @@
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
+            TemaAplicacion.Inicializar();
             while (true)
             {
                 using var login = new LoginERP.FrmLogin();
+                TemaAplicacion.Aplicar(login);
                 if (login.ShowDialog() != DialogResult.OK || login.Acceso is not AccesoUsuario acceso) break;
                 SesionActual.Usuario = acceso;
                 using var principal = new Pagina_Central(acceso);
+                TemaAplicacion.Aplicar(principal);
                 Application.Run(principal);
                 SesionActual.Usuario = null;
                 try { AccesoDatos.Cerrar(acceso); }

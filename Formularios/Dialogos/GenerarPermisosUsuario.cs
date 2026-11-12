@@ -2,7 +2,7 @@ using System.Data;
 
 namespace Sistema_ERP
 {
-    public sealed partial class GenerarPermisosUsuario : Form
+    public sealed partial class GenerarPermisosUsuario : FormularioTematico
     {
         private sealed record Permiso(int RolId, int Id, string Modulo, string Accion, string Descripcion);
         private readonly List<Permiso> permisosPorRol = [];
@@ -14,6 +14,7 @@ namespace Sistema_ERP
         public GenerarPermisosUsuario(string usuario, DataTable roles, DataTable permisos, IEnumerable<int> seleccionados, int? idUsuario = null)
         {
             InitializeComponent();
+            TemaAplicacion.Aplicar(this);
             string nombre = string.IsNullOrWhiteSpace(usuario) ? "Nuevo usuario" : usuario.Trim();
             Text = $"Generar permisos · {nombre}";
             titulo.Text = $"Permisos de {nombre}";

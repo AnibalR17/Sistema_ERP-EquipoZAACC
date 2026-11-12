@@ -61,7 +61,7 @@ public sealed class PuntoVenta : PantallaMaqueta
         carrito.DataSource = detalle; carrito.Columns["Id"]!.Visible = false;
         carrito.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
         carrito.Columns["Importe"]!.HeaderText = "Subtotal";
-        foreach (string columna in new[] { "Precio", "Importe", "ISV", "Total" }) carrito.Columns[columna]!.DefaultCellStyle.Format = "'L 'N2";
+        foreach (string columna in new[] { "Precio", "Importe", "ISV", "Total" }) carrito.Columns[columna]!.DefaultCellStyle.Format = "'L '#,##0.00";
         agregar.Click += (_, _) => Agregar(); productos.CellDoubleClick += (_, e) => { if (e.RowIndex >= 0) Agregar(); };
         quitar.Click += (_, _) => { if (carrito.CurrentRow?.DataBoundItem is DataRowView r) { detalle.Rows.Remove(r.Row); Totales(); } };
         vaciar.Click += (_, _) => { detalle.Clear(); Totales(); };
@@ -131,7 +131,7 @@ public sealed class PuntoVenta : PantallaMaqueta
             var actualizado = VentaDatos.Productos(id);
             catalogo = actualizado; productos.DataSource = catalogo.DefaultView;
             productos.Columns["id_producto"]!.Visible = false;
-            productos.Columns["Precio"]!.DefaultCellStyle.Format = "'L 'N2";
+            productos.Columns["Precio"]!.DefaultCellStyle.Format = "'L '#,##0.00";
             foreach (string columna in new[] { "Existencia", "Reservado", "Disponible" })
             { productos.Columns[columna]!.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight; productos.Columns[columna]!.DefaultCellStyle.Format = "N0"; }
             if (limpiarBusqueda) buscar.Clear();
@@ -203,7 +203,7 @@ public sealed class PuntoVenta : PantallaMaqueta
         if (ultima is null) { estado.Text = "Primero emite una factura."; return; }
         try { if (string.IsNullOrWhiteSpace(comprobante)) comprobante = VentaDatos.Comprobante(ultima.Id); }
         catch (Exception ex) { estado.Text = "No se pudo cargar el recibo. " + ex.Message; return; }
-        using var ventana = new Form { Text = "Factura " + ultima.Numero, Size = new Size(720, 650), StartPosition = FormStartPosition.CenterParent };
+        using var ventana = new FormularioTematico { Text = "Factura " + ultima.Numero, Size = new Size(720, 650), StartPosition = FormStartPosition.CenterParent };
         var texto = new TextBox { Multiline = true, ReadOnly = true, ScrollBars = ScrollBars.Both, Dock = DockStyle.Fill, Text = comprobante.Replace("\n", Environment.NewLine) };
         var boton = Boton("Imprimir");
         var pdf = Boton("Guardar PDF"); pdf.Click += async (_, _) => await DialogosExportacion.ReciboPdf(ventana, ultima.Id, ultima.Numero);
@@ -240,7 +240,7 @@ public sealed class PuntoVenta : PantallaMaqueta
     {
         try
         {
-            using var ventana = new Form { Text = "Facturas registradas (últimas 500)", Size = new Size(1000, 650), StartPosition = FormStartPosition.CenterParent };
+            using var ventana = new FormularioTematico { Text = "Facturas registradas (últimas 500)", Size = new Size(1000, 650), StartPosition = FormStartPosition.CenterParent };
             var tabla = Tabla();
             DataTable CargarHistorial() => VentaDatos.Consultar("""
                 SELECT TOP(500) v.id_venta AS Id,v.numero AS Numero,v.fecha AS [Fecha UTC],c.nombre AS Cliente,v.rtn_cliente AS RTN,

@@ -2,7 +2,7 @@ using System.Data;
 
 namespace Sistema_ERP
 {
-    public sealed partial class AsignarPermisosRol : Form
+    public sealed partial class AsignarPermisosRol : FormularioTematico
     {
         private sealed record Permiso(int Id, string Modulo, string Accion, string Descripcion, bool Activo)
         {
@@ -54,6 +54,7 @@ namespace Sistema_ERP
                 CargarCatalogo(actuales, seleccionados.ToArray());
             });
             CargarCatalogo(catalogo, seleccionInicial);
+            TemaAplicacion.Aplicar(this);
         }
 
         private void CargarCatalogo(DataTable catalogo, IEnumerable<int> seleccion)

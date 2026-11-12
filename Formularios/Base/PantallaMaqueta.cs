@@ -2,7 +2,7 @@ using System.Drawing.Drawing2D;
 
 namespace Sistema_ERP
 {
-    public class PantallaMaqueta : Form
+    public class PantallaMaqueta : FormularioTematico
     {
         protected readonly TableLayoutPanel Pagina;
         protected readonly Panel Cuerpo;

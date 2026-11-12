@@ -20,6 +20,7 @@ namespace Sistema_ERP
                 campos.Controls.Add(lblContacto, 0, fila);
                 campos.Controls.Add(contacto, 0, fila + 1);
             }
+            TemaAplicacion.Aplicar(this);
         }
     }
 }

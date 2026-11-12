@@ -9,6 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Update="Formularios/Administracion/ConfiguracionAuditoria.Apariencia.cs">
+      <DependentUpon>ConfiguracionAuditoria.cs</DependentUpon>
+    </Compile>
     <Compile Update="Formularios/Dialogos/EditorPermisosRol.cs">
       <SubType>Form</SubType>
     </Compile>

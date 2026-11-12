@@ -190,9 +190,9 @@ namespace Sistema_ERP
                 Editar(fila);
                 return;
             }
-            using var ventana = new Form { Text = $"Traspaso #{fila["id_traspaso"]} — {fila["estado"]}", Size = new Size(900, 600), StartPosition = FormStartPosition.CenterParent };
+            using var ventana = new FormularioTematico { Text = $"Traspaso #{fila["id_traspaso"]} — {fila["estado"]}", Size = new Size(900, 600), StartPosition = FormStartPosition.CenterParent };
             TraspasoEstilo.Superficie(ventana);
-            var tabs = new TabControl { Dock = DockStyle.Fill, Padding = new Point(18, 10) };
+            var tabs = new Sistema_ERP.PestanasTematicas { Dock = DockStyle.Fill, Padding = new Point(18, 10) };
             void CargarDetalle()
             {
                 int seleccion = tabs.SelectedIndex;
@@ -224,7 +224,7 @@ namespace Sistema_ERP
         private void Editar(DataRow? fila)
         {
             Usuario();
-            using var ventana = new Form
+            using var ventana = new FormularioTematico
             {
                 Text = "Editar solicitud pendiente", Size = new Size(950, 650),
                 MinimumSize = new Size(760, 560), StartPosition = FormStartPosition.CenterParent
@@ -249,7 +249,7 @@ namespace Sistema_ERP
             };
             if (!permitido) throw new InvalidOperationException("El estado actual no permite esta operación.");
             int actor = Usuario();
-            using var dialogo = new Form { Text = $"{estado}: traspaso #{fila["id_traspaso"]}", Size = new Size(680, 450), StartPosition = FormStartPosition.CenterParent };
+            using var dialogo = new FormularioTematico { Text = $"{estado}: traspaso #{fila["id_traspaso"]}", Size = new Size(680, 450), StartPosition = FormStartPosition.CenterParent };
             TraspasoEstilo.Superficie(dialogo);
             var motivo = new TextBox { Dock = DockStyle.Fill, Multiline = true, MaxLength = 500 };
             var aceptar = new Button { Text = "Confirmar", Dock = DockStyle.Bottom, Height = 36 };

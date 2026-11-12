@@ -102,11 +102,15 @@ public partial class Pagina_Central
         g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
         using var fuente = new Font("Segoe UI", 9F);
         using var ventas = new Pen(ProductoEstilo.Texto, 2.5f);
-        using var compras = new Pen(Color.SteelBlue, 2.5f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash };
-        if (permisos.Puede(Modulos.Ventas)) { g.DrawLine(ventas, 28, 62, 53, 62); g.DrawString("Ventas", fuente, Brushes.Black, 59, 53); }
-        if (permisos.Puede(Modulos.Compras)) { g.DrawLine(compras, 143, 62, 168, 62); g.DrawString("Compras", fuente, Brushes.SteelBlue, 174, 53); }
+        using var compras = new Pen(ProductoEstilo.TextoAcento, 2.5f) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash };
+        using var textoVentas = new SolidBrush(ProductoEstilo.Texto);
+        using var textoCompras = new SolidBrush(ProductoEstilo.TextoAcento);
+        using var textoSecundario = new SolidBrush(ProductoEstilo.TextoSecundario);
+        using var cuadricula = new Pen(ProductoEstilo.Borde);
+        if (permisos.Puede(Modulos.Ventas)) { g.DrawLine(ventas, 28, 62, 53, 62); g.DrawString("Ventas", fuente, textoVentas, 59, 53); }
+        if (permisos.Puede(Modulos.Compras)) { g.DrawLine(compras, 143, 62, 168, 62); g.DrawString("Compras", fuente, textoCompras, 174, 53); }
         if (diasInicio.Length == 0)
-        { g.DrawString("El gráfico se mostrará al cargar el resumen.", fuente, Brushes.Gray, 28, 95); return; }
+        { g.DrawString("El gráfico se mostrará al cargar el resumen.", fuente, textoSecundario, 28, 95); return; }
         float izquierda = 100, derecha = chartPanel.Width - 30, arriba = 95, abajo = chartPanel.Height - 50;
         decimal maximo = Math.Max(1, diasInicio.Max(d => Math.Max(d.Ventas, d.Compras)));
         using var centrado = new StringFormat { Alignment = StringAlignment.Center };
@@ -114,8 +118,8 @@ public partial class Pagina_Central
         for (int i = 0; i <= 4; i++)
         {
             float y = abajo - (abajo - arriba) * i / 4;
-            g.DrawLine(Pens.Gainsboro, izquierda, y, derecha, y);
-            g.DrawString($"L {maximo * i / 4:N0}", fuente, Brushes.Gray, new RectangleF(0, y - 8, izquierda - 8, 20), alineado);
+            g.DrawLine(cuadricula, izquierda, y, derecha, y);
+            g.DrawString($"L {maximo * i / 4:N0}", fuente, textoSecundario, new RectangleF(0, y - 8, izquierda - 8, 20), alineado);
         }
         PointF[] Puntos(Func<DiaInicio, decimal> importe) => diasInicio.Select((dia, i) => new PointF(
             izquierda + (derecha - izquierda) * i / (diasInicio.Length - 1),
@@ -125,9 +129,9 @@ public partial class Pagina_Central
         if (permisos.Puede(Modulos.Ventas)) g.DrawLines(ventas, puntosVentas);
         for (int i = 0; i < diasInicio.Length; i++)
         {
-            if (permisos.Puede(Modulos.Compras)) g.FillEllipse(Brushes.SteelBlue, puntosCompras[i].X - 3, puntosCompras[i].Y - 3, 6, 6);
-            if (permisos.Puede(Modulos.Ventas)) g.FillEllipse(Brushes.Black, puntosVentas[i].X - 3, puntosVentas[i].Y - 3, 6, 6);
-            g.DrawString(diasInicio[i].Fecha.ToString("dd/MM", CultureInfo.InvariantCulture), fuente, Brushes.Gray,
+            if (permisos.Puede(Modulos.Compras)) g.FillEllipse(textoCompras, puntosCompras[i].X - 3, puntosCompras[i].Y - 3, 6, 6);
+            if (permisos.Puede(Modulos.Ventas)) g.FillEllipse(textoVentas, puntosVentas[i].X - 3, puntosVentas[i].Y - 3, 6, 6);
+            g.DrawString(diasInicio[i].Fecha.ToString("dd/MM", CultureInfo.InvariantCulture), fuente, textoSecundario,
                 new PointF(puntosVentas[i].X, abajo + 12), centrado);
         }
     }

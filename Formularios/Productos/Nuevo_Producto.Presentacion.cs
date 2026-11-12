@@ -41,6 +41,7 @@
             btnGuardar.SetBounds(418, 582, 170, 44);
             btnGuardar.TabIndex = 6;
             btnCancelar.TabIndex = 7;
+            TemaAplicacion.Aplicar(this);
             ResumeLayout(true);
         }
     }

@@ -2,7 +2,7 @@ using Sistema_ERP;
 
 namespace LoginERP
 {
-    public partial class FrmLogin : Form
+    public partial class FrmLogin : FormularioTematico
     {
         internal AccesoUsuario? Acceso { get; private set; }
         private AccesoUsuario? pendiente;

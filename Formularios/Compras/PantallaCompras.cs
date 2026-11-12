@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Sistema_ERP.Vistas
 {
-    public partial class PantallaCompras : Form
+    public partial class PantallaCompras : FormularioTematico
     {
         private const decimal MaximoImporte = 9999999999999999.99m;
         private readonly DataTable dtCarrito = CrearCarrito();

@@ -11,7 +11,7 @@ public sealed partial class ConfiguracionAuditoria
 
     private void PrepararFacturacion()
     {
-        var tabs = new TabControl { Name = "pestanasConfiguracion", Dock = DockStyle.Fill };
+        var tabs = new Sistema_ERP.PestanasTematicas { Name = "pestanasConfiguracion", Dock = DockStyle.Fill };
         var tabTiendas = new TabPage("Tiendas") { AutoScroll = true, BackColor = Color.White };
         var tabFiscal = new TabPage("Facturación / CAI") { Padding = new Padding(24), BackColor = Color.White, AutoScroll = true };
         var tabAuditoria = new TabPage("Auditoría") { Padding = new Padding(12), BackColor = Color.White };
@@ -20,6 +20,7 @@ public sealed partial class ConfiguracionAuditoria
         layoutConfiguracion.MinimumSize = new Size(0, 550); layoutConfiguracion.RowStyles[6].Height = 100;
         tabTiendas.Controls.Add(layoutConfiguracion); tabAuditoria.Controls.Add(layoutAuditoria);
         tabs.TabPages.AddRange([tabTiendas, tabFiscal, tabAuditoria]); Cuerpo.Controls.Add(tabs);
+        PrepararApariencia(tabs);
         var campos = PantallaMaqueta.Filas(48, 28, 40, 28, 42, 64, 48, 76);
         campos.Dock = DockStyle.Top; campos.Height = 474;
         campos.Controls.Add(PantallaMaqueta.Etiqueta("Configuración de facturación", 19, true), 0, 0);

@@ -2,7 +2,7 @@ using Microsoft.Data.SqlClient;
 
 namespace Sistema_ERP
 {
-    public sealed partial class AgregarDirectorio : Form
+    public sealed partial class AgregarDirectorio : FormularioTematico
     {
         private readonly TipoDirectorio tipo;
         public AgregarDirectorio() : this(TipoDirectorio.Clientes) { }
