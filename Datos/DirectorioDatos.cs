@@ -1,5 +1,4 @@
 using System.Data;
-using System.Net.Mail;
 using Microsoft.Data.SqlClient;
 using Sistema_ERP.Clases;
 
@@ -59,12 +58,17 @@ namespace Sistema_ERP
         {
             var e = Entidad(tipo);
             if (string.IsNullOrWhiteSpace(nombre)) throw new ArgumentException("Introduce el nombre.");
+            foreach (var (valor, campo) in new[]
+            {
+                (nombre, "Nombre"), (telefono, "Teléfono"), (correo, "Correo"),
+                (identificador, "Identificador"), (direccion, "Dirección"), (contacto, "Contacto")
+            }) ValidacionDatos.NoSoloCeros(valor, campo);
             if (nombre.Trim().Length > 150 || telefono.Trim().Length > 30 || correo.Trim().Length > 254 ||
                 identificador.Trim().Length > 30 || direccion.Trim().Length > 300 || contacto.Trim().Length > 150)
                 throw new ArgumentException("Uno de los campos supera la longitud permitida.");
-            if (!string.IsNullOrWhiteSpace(correo) &&
-                (!MailAddress.TryCreate(correo.Trim(), out var email) || email.Address != correo.Trim()))
-                throw new ArgumentException("Introduce un correo electronico valido.");
+            ValidacionDatos.Nombre(nombre, "Nombre");
+            if (tipo == TipoDirectorio.Proveedores) ValidacionDatos.Nombre(contacto, "Contacto", opcional: true);
+            ValidacionDatos.Correo(correo);
             if (tipo == TipoDirectorio.Proveedores)
             {
                 var proveedor = new Proveedor
@@ -120,6 +124,7 @@ namespace Sistema_ERP
             if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
             if (!activar && (string.IsNullOrWhiteSpace(motivo) || motivo.Trim().Length > 300))
                 throw new ArgumentException("Introduce un motivo de entre 1 y 300 caracteres.");
+            if (!activar) ValidacionDatos.NoSoloCeros(motivo, "Motivo");
             string valores = activar
                 ? "desactivado_en=NULL, desactivado_por=NULL, motivo_desactivacion=NULL"
                 : "desactivado_en=SYSUTCDATETIME(), motivo_desactivacion=@motivo";

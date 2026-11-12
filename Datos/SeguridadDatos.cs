@@ -130,6 +130,8 @@ namespace Sistema_ERP
                 ValidarTexto(segundo, tipo == TipoSeguridad.Roles ? 80 : 30, "El segundo campo", true, tipo == TipoSeguridad.Permisos);
                 ValidarTexto(descripcion, 300, "La descripción", tipo == TipoSeguridad.Permisos);
             }
+            if (tipo == TipoSeguridad.Usuarios) ValidacionDatos.Nombre(primero, "Usuario");
+            if (tipo == TipoSeguridad.Roles) ValidacionDatos.Nombre(segundo, "Nombre del rol");
             string? hash = null;
             if (tipo == TipoSeguridad.Usuarios)
             {
@@ -247,6 +249,7 @@ namespace Sistema_ERP
         private static void ValidarTexto(string texto, int maximo, string campo, bool obligatorio, bool ascii = false)
         {
             if (obligatorio && string.IsNullOrWhiteSpace(texto)) throw new ArgumentException(campo + " es obligatorio.");
+            ValidacionDatos.NoSoloCeros(texto, campo);
             if (texto.Length > maximo) throw new ArgumentException($"{campo} admite hasta {maximo} caracteres.");
             if (ascii && texto.Any(c => c > 127 || char.IsControl(c))) throw new ArgumentException(campo + " debe usar caracteres ASCII imprimibles.");
         }

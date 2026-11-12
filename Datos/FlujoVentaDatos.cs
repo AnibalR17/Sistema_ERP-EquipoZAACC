@@ -65,6 +65,7 @@ internal static class FlujoVentaDatos
     {
         motivo = motivo.Trim();
         if (motivo.Length is < 1 or > 500) throw new ArgumentException("Introduce un motivo de hasta 500 caracteres.");
+        ValidacionDatos.NoSoloCeros(motivo, "Motivo");
         return motivo;
     }
 
@@ -79,7 +80,11 @@ internal static class FlujoVentaDatos
     }
 
     internal static string ReferenciaPago(bool efectivo, string referencia)
-        => efectivo ? "EFE-" + Guid.NewGuid().ToString("N") : referencia.Trim();
+    {
+        if (efectivo) return "EFE-" + Guid.NewGuid().ToString("N");
+        ValidacionDatos.NoSoloCeros(referencia, "Referencia del pago");
+        return referencia.Trim();
+    }
 
     internal static void Evento(SqlConnection cn, SqlTransaction tx, int usuario, string modulo, string accion, int id, string descripcion)
         => Ejecutar(cn, tx, """

@@ -93,7 +93,7 @@ internal static partial class Program
             Ejecutar($"INSERT dbo.UsuarioRol(id_usuario,id_rol) VALUES({limitado},{lectura}),({limitado},{escritura})");
             Permiso(escritura, "GESTIONAR"); Entrar();
             Denegado(() => ProductoDatos.Listar());
-            Denegado(() => ProductoDatos.Agregar(new Producto()));
+            Denegado(() => ProductoDatos.Agregar(new Producto { CodigoBarras = "SIN-AUTORIZACION", Nombre = "Producto sin autorización", PrecioUnitario = 10, IdCategoria = categoria, IdProveedor = proveedor }));
             Permiso(lectura, "CONSULTAR"); Entrar();
             Comprobar(ProductoDatos.Listar().Rows.Count > 0, "Consulta concedida por un rol activo");
             int creado = ProductoDatos.Agregar(new Producto { CodigoBarras = "AUTORIZADO", Nombre = "Autorizado", PrecioUnitario = 10, IdCategoria = categoria, IdProveedor = proveedor });
@@ -103,7 +103,7 @@ internal static partial class Program
 
             Ejecutar($"UPDATE dbo.UsuarioRol SET activo=0 WHERE id_usuario={limitado} AND id_rol={escritura}"); Entrar();
             Comprobar(ProductoDatos.Listar().Rows.Count > 0, "El rol de consulta conserva lectura");
-            Denegado(() => ProductoDatos.Agregar(new Producto()));
+            Denegado(() => ProductoDatos.Agregar(new Producto { CodigoBarras = "SIN-AUTORIZACION", Nombre = "Producto sin autorización", PrecioUnitario = 10, IdCategoria = categoria, IdProveedor = proveedor }));
             Denegado(() => ProductoDatos.Desactivar(creado, "No permitido"));
             Denegado(() => CargaMasivaDatos.ImportarProductos([new("SIN-PERMISO", "Rechazado", 10, 0, categoria, proveedor)], tienda));
             using (var catalogo = new Catalogo_Productos())

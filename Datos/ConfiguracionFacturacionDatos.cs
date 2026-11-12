@@ -11,6 +11,7 @@ internal static class ConfiguracionFacturacionDatos
     {
         string valor = Regex.Replace(cai ?? "", @"\s", "").ToUpperInvariant();
         if (valor.Length == 0) return null;
+        ValidacionDatos.NoSoloCeros(valor, "CAI");
         if (Regex.IsMatch(valor, "^[A-Z0-9]{32}$")) valor = string.Join("-", Enumerable.Range(0, 5).Select(i => valor.Substring(i * 6, 6)).Append(valor[30..]));
         if (!Regex.IsMatch(valor, "^[A-Z0-9]{6}(?:-[A-Z0-9]{6}){4}-[A-Z0-9]{2}$"))
             throw new ArgumentException("Introduce el CAI autorizado con formato XXXXXX-XXXXXX-XXXXXX-XXXXXX-XXXXXX-XX (37 caracteres).");

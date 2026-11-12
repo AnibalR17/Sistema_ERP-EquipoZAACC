@@ -144,7 +144,7 @@ internal static partial class Program
                     using var productos = ProductoDatos.Listar();
                     Comprobar(productos.Rows.Count > 0, "Analista consulta productos desde la capa de datos");
                     bool denegado = false;
-                    try { ProductoDatos.Agregar(new Producto()); } catch (UnauthorizedAccessException) { denegado = true; }
+                    try { ProductoDatos.Agregar(new Producto { CodigoBarras = "SIN-AUTORIZACION", Nombre = "Producto sin autorización", PrecioUnitario = 10, IdCategoria = categoria, IdProveedor = proveedor }); } catch (UnauthorizedAccessException) { denegado = true; }
                     Comprobar(denegado, "Analista no puede guardar productos mediante una llamada directa");
                 }
                 if (codigo == "CAJERO")

@@ -22,6 +22,7 @@ namespace Sistema_ERP.Clases
                 throw new ArgumentException("Estado inválido.");
             if (motivo.Length > 500 || (estado is "CANCELADO" or "RECHAZADO" && string.IsNullOrWhiteSpace(motivo)))
                 throw new ArgumentException("Indique un motivo de hasta 500 caracteres.");
+            ValidacionDatos.NoSoloCeros(motivo, "Motivo");
             if (SesionActual.Exigir().Id != usuario) throw new InvalidOperationException("El operador debe ser el usuario autenticado.");
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction();
@@ -91,6 +92,8 @@ namespace Sistema_ERP.Clases
         public static bool Categoria(int idCategoria, string nombre, string? descripcion)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(nombre);
+            ValidacionDatos.Nombre(nombre, "Nombre de la categoría");
+            ValidacionDatos.NoSoloCeros(descripcion, "Descripción");
             if (idCategoria <= 0)
                 throw new ArgumentOutOfRangeException(nameof(idCategoria));
             if (nombre.Trim().Length > 100)

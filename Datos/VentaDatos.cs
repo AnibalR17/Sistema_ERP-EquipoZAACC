@@ -16,6 +16,7 @@ internal static class VentaDatos
     {
         string valor = new((rtn ?? "").Where(c => c != '-' && !char.IsWhiteSpace(c)).ToArray());
         if (valor.Length == 0) return null;
+        ValidacionDatos.NoSoloCeros(valor, "RTN");
         if (valor.Length != 14 || valor.Any(c => c is < '0' or > '9'))
             throw new ArgumentException("El RTN es opcional. Si lo ingresas, debe contener 14 dígitos; se permiten espacios y guiones.");
         return valor;
@@ -96,6 +97,7 @@ internal static class VentaDatos
             throw new ArgumentException("Selecciona tienda, cliente, método de pago y productos con cantidades positivas.");
         if (referencia.Length > 100 || observaciones.Length > 500 || recibido < 0)
             throw new ArgumentException("Revisa el monto, la referencia y las observaciones.");
+        ValidacionDatos.NoSoloCeros(observaciones, "Observaciones");
         using var cn = Conexion.AbrirConexion();
         using var tx = cn.BeginTransaction(IsolationLevel.Serializable);
         int usuario = AutorizacionDatos.Exigir(cn, Modulos.Ventas, gestionar: true, transaccion: tx);

@@ -189,6 +189,8 @@ namespace Sistema_ERP
             btnGuardarCategoria.Enabled = btnActualizarCategoria.Enabled = false;
             try
             {
+                ValidacionDatos.Nombre(nombre, "Nombre de la categoría");
+                ValidacionDatos.NoSoloCeros(txtDescripcionCategoria.Text, "Descripción");
                 if (CategoriaDatos.ExisteNombre(nombre, actualizar ? idCategoriaSeleccionada : null))
                 {
                     MostrarCategoriaDuplicada();
@@ -215,6 +217,10 @@ namespace Sistema_ERP
             catch (SqlException ex) when (ex.Number == 2601 || ex.Number == 2627)
             {
                 MostrarCategoriaDuplicada();
+            }
+            catch (ArgumentException ex)
+            {
+                MessageBox.Show(this, ex.Message, "Categorías", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             catch (Exception)
             {

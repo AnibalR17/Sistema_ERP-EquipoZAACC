@@ -23,6 +23,7 @@ namespace Sistema_ERP
 
         public static bool ExisteNombre(string nombre, int? excluirId = null)
         {
+            ValidacionDatos.Nombre(nombre, "Nombre de la categoría");
             const string sql = @"SELECT COUNT(1) FROM dbo.Categoria
                                  WHERE nombre = @nombre
                                    AND (@excluirId IS NULL OR id_categoria <> @excluirId)";

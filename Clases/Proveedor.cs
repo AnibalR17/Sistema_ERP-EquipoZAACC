@@ -1,5 +1,3 @@
-using System.Net.Mail;
-
 namespace Sistema_ERP.Clases
 {
     public sealed class Proveedor
@@ -22,13 +20,16 @@ namespace Sistema_ERP.Clases
                 (Contacto, 150, "Contacto"), (Telefono, 30, "Teléfono"),
                 (Correo, 254, "Correo"), (Direccion, 300, "Dirección")
             })
+            {
+                ValidacionDatos.NoSoloCeros(valor, campo);
                 if (valor.Trim().Length > limite)
                     throw new ArgumentException($"{campo} admite hasta {limite} caracteres.");
+            }
             if (Rtn.Any(c => c > 127))
                 throw new ArgumentException("El RTN debe contener caracteres ASCII.");
-            if (!string.IsNullOrWhiteSpace(Correo) &&
-                (!MailAddress.TryCreate(Correo.Trim(), out var correo) || correo.Address != Correo.Trim()))
-                throw new ArgumentException("Introduzca un correo electrónico válido.");
+            ValidacionDatos.Nombre(NombreEmpresa, "Nombre de empresa");
+            ValidacionDatos.Nombre(Contacto, "Contacto", opcional: true);
+            ValidacionDatos.Correo(Correo);
         }
     }
 }

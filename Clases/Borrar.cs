@@ -21,6 +21,7 @@ namespace Sistema_ERP.Clases
         {
             if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
             ArgumentException.ThrowIfNullOrWhiteSpace(motivo);
+            ValidacionDatos.NoSoloCeros(motivo, "Motivo");
             if (motivo.Trim().Length > 300)
                 throw new ArgumentException("El motivo admite hasta 300 caracteres.", nameof(motivo));
 

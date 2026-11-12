@@ -11,6 +11,8 @@ internal static partial class Program
         try
         {
             ProbarLecturaPrecios();
+            ProbarValidacionCeros();
+            ProbarValidacionContactos();
             ProbarDesplegableRoles();
             ProbarTemasVisuales();
             ProbarDisposicion();

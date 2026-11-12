@@ -27,6 +27,8 @@ namespace Sistema_ERP.Clases
         public static int Categoria(string nombre, string? descripcion = null)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(nombre);
+            ValidacionDatos.Nombre(nombre, "Nombre de la categoría");
+            ValidacionDatos.NoSoloCeros(descripcion, "Descripción");
             if (nombre.Trim().Length > 100)
                 throw new ArgumentException("El nombre admite hasta 100 caracteres.", nameof(nombre));
             if (descripcion?.Trim().Length > 300)

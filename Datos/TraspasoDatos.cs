@@ -93,6 +93,7 @@ namespace Sistema_ERP
                 throw new ArgumentException("Seleccione dos tiendas distintas.");
             if (observaciones.Length > 500)
                 throw new ArgumentException("Las observaciones admiten hasta 500 caracteres.");
+            ValidacionDatos.NoSoloCeros(observaciones, "Observaciones");
             if (lineas.Count == 0 || lineas.Any(l => l.Producto <= 0 || l.Cantidad <= 0 || l.Precio < 0 || l.Precio > 9999999999999999.99m)
                 || lineas.Select(l => l.Producto).Distinct().Count() != lineas.Count)
                 throw new ArgumentException("Agregue productos sin repetir, con cantidades enteras positivas y precios válidos.");

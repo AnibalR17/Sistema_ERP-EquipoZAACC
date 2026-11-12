@@ -115,6 +115,10 @@ namespace Sistema_ERP
 
                 DialogResult = DialogResult.OK;
             }
+            catch (ArgumentException ex)
+            {
+                Error(ex.Message, txtCodigo);
+            }
             catch (SqlException)
             {
                 MessageBox.Show(this, "No se pudo guardar el producto. Verifique la conexion a la base de datos.",
@@ -128,6 +132,9 @@ namespace Sistema_ERP
 
             if (string.IsNullOrWhiteSpace(txtCodigo.Text)) { Error("El codigo de barras es obligatorio.", txtCodigo); return false; }
             if (string.IsNullOrWhiteSpace(txtNombre.Text)) { Error("El nombre es obligatorio.", txtNombre); return false; }
+            if (ValidacionDatos.SoloCeros(txtCodigo.Text)) { Error("El código de barras no puede contener solo ceros.", txtCodigo); return false; }
+            if (ValidacionDatos.SoloCeros(txtNombre.Text)) { Error("El nombre no puede contener solo ceros.", txtNombre); return false; }
+            if (!ValidacionDatos.NombreValido(txtNombre.Text)) { Error("El nombre del producto debe contener al menos 3 letras.", txtNombre); return false; }
             if (nudPrecio.Value <= 0) { Error("El precio unitario debe ser un numero mayor a cero.", nudPrecio); return false; }
             if (cmbCategoria.SelectedValue is not int cat) { Error("Seleccione una categoria.", cmbCategoria); return false; }
             if (cmbProveedor.SelectedValue is not int prov) { Error("Seleccione un proveedor.", cmbProveedor); return false; }

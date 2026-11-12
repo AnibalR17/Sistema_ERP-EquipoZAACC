@@ -62,6 +62,11 @@ public static class CargaMasivaDatos
     public static int ImportarProductos(IReadOnlyList<ProductoImportado> productos, int? tienda = null, string? archivo = null, byte[]? hash = null)
     {
         if (productos.Count == 0) return 0;
+        foreach (var producto in productos)
+        {
+            ValidacionDatos.NoSoloCeros(producto.CodigoBarras, "Código de barras");
+            ValidacionDatos.Nombre(producto.Nombre, "Nombre del producto");
+        }
 
         if (productos.Any(p => string.IsNullOrWhiteSpace(p.CodigoBarras) || p.CodigoBarras.Length > 50 || string.IsNullOrWhiteSpace(p.Nombre) || p.Nombre.Length > 150
             || p.Precio <= 0 || p.Precio > 99999999.99m || decimal.Round(p.Precio, 2) != p.Precio || p.StockInicial < 0)

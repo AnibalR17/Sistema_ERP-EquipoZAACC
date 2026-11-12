@@ -156,6 +156,11 @@ namespace Sistema_ERP
             string[] obligatorios = { "CodigoBarras", "Nombre", "Precio", "NombreCategoria", "RTNProveedor" };
             string[] vacios = obligatorios.Where(c => Texto(c).Length == 0).ToArray();
             if (vacios.Length > 0) errores.Add("Falta: " + string.Join(", ", vacios));
+            foreach (string campo in new[] { "CodigoBarras", "Nombre", "NombreCategoria", "RTNProveedor" })
+                if (ValidacionDatos.SoloCeros(Texto(campo))) errores.Add($"{campo} no puede contener solo ceros");
+            foreach (string campo in new[] { "Nombre", "NombreCategoria" })
+                if (Texto(campo).Length > 0 && !ValidacionDatos.SoloCeros(Texto(campo)) && !ValidacionDatos.NombreValido(Texto(campo)))
+                    errores.Add($"{campo} debe contener al menos 3 letras");
             if (Texto("CodigoBarras").Length > 50) errores.Add("El código admite hasta 50 caracteres");
             if (Texto("Nombre").Length > 150) errores.Add("El nombre admite hasta 150 caracteres");
 

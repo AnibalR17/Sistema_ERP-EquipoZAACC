@@ -14,6 +14,12 @@ namespace Sistema_ERP
         public int IdCategoria { get; set; }
         public int IdProveedor { get; set; }
         public bool Activo { get; set; } = true;
+
+        public void Validar()
+        {
+            ValidacionDatos.NoSoloCeros(CodigoBarras, "Código de barras");
+            ValidacionDatos.Nombre(Nombre, "Nombre del producto");
+        }
     }
 
     public static class ProductoDatos
@@ -45,6 +51,7 @@ namespace Sistema_ERP
 
         public static bool ExisteCodigo(string codigoBarras, int? excluirId = null)
         {
+            ValidacionDatos.NoSoloCeros(codigoBarras, "Código de barras");
             const string sql = @"SELECT COUNT(1) FROM dbo.Producto
                                  WHERE codigo_barras = @codigo
                                    AND (@excluirId IS NULL OR id_producto <> @excluirId)";
@@ -59,6 +66,7 @@ namespace Sistema_ERP
 
         public static int Agregar(Producto producto)
         {
+            producto.Validar();
             const string sql = @"DECLARE @insertados TABLE (id_producto int);
                                  INSERT INTO dbo.Producto
                                     (codigo_barras, nombre, precio_unitario, id_categoria, id_proveedor)
@@ -75,6 +83,7 @@ namespace Sistema_ERP
 
         public static bool Editar(Producto producto)
         {
+            producto.Validar();
             const string sql = @"UPDATE dbo.Producto
                                  SET codigo_barras = @codigo, nombre = @nombre, precio_unitario = @precio,
                                      id_categoria = @idCategoria, id_proveedor = @idProveedor

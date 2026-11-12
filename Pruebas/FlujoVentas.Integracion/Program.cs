@@ -21,6 +21,16 @@ internal static partial class Program
         WindowsFormsSynchronizationContext.AutoInstall = false;
         using var contextoInterfaz = new WindowsFormsSynchronizationContext();
         SynchronizationContext.SetSynchronizationContext(contextoInterfaz);
+        if (args.Contains("--validacion-contactos"))
+        {
+            try { ProbarValidacionContactos(); return 0; }
+            catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }
+        }
+        if (args.Contains("--validacion-ceros"))
+        {
+            try { ProbarValidacionCeros(); return 0; }
+            catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }
+        }
         if (args.Contains("--cierre-sesion"))
         {
             try { ProbarCierreSesion(); return 0; }

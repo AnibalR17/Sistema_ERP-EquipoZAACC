@@ -206,6 +206,7 @@ namespace Sistema_ERP
         {
             if (string.IsNullOrWhiteSpace(motivo) || motivo.Trim().Length > 500)
                 throw new ArgumentException("Introduce un motivo de anulación de hasta 500 caracteres.");
+            ValidacionDatos.NoSoloCeros(motivo, "Motivo");
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
             int usuario = Preparar(conexion, transaccion, motivo.Trim());
@@ -229,6 +230,8 @@ namespace Sistema_ERP
             if (proveedor <= 0 || tienda <= 0) throw new ArgumentException("Selecciona proveedor y tienda.");
             if (string.IsNullOrWhiteSpace(factura) || factura.Trim().Length > 50)
                 throw new ArgumentException("Introduce un número de factura de hasta 50 caracteres.");
+            ValidacionDatos.NoSoloCeros(factura, "Número de factura");
+            ValidacionDatos.NoSoloCeros(observaciones, "Observaciones");
             if (observaciones.Length > 500) throw new ArgumentException("Las observaciones admiten hasta 500 caracteres.");
             if (lineas.Count == 0 || lineas.Any(l => l.Producto <= 0 || l.Cantidad <= 0 || l.Costo <= 0
                 || l.Costo > MaximoImporte || decimal.Round(l.Costo, 2) != l.Costo)

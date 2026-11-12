@@ -25,6 +25,11 @@
             Nombre = Nombre.Trim();
             Telefono = string.IsNullOrWhiteSpace(Telefono) ? null : Telefono.Trim();
             Correo = string.IsNullOrWhiteSpace(Correo) ? null : Correo.Trim();
+            ValidacionDatos.NoSoloCeros(Nombre, "Nombre del cliente");
+            ValidacionDatos.NoSoloCeros(Telefono, "Teléfono");
+            ValidacionDatos.NoSoloCeros(Correo, "Correo");
+            ValidacionDatos.Nombre(Nombre, "Nombre del cliente");
+            ValidacionDatos.Correo(Correo, maximo: 150);
         }
     }
 }

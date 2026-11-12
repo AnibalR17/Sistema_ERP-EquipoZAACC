@@ -98,7 +98,21 @@ Aplicacion de escritorio desarrollada con C# y Windows Forms sobre .NET 10 para 
 
 `dotnet run --project Pruebas/FlujoVentas.Integracion -- --cierre-sesion` verifica, sin SQL Server, el cierre por el botón y por la X con Compras en segundo plano. Las consultas pendientes permiten salir; una escritura en curso informa que debe terminar antes del cierre. Si el cierre se cancela, se conserva la sesión actual.
 
+`dotnet run --project Pruebas/FlujoVentas.Integracion -- --validacion-ceros` verifica el rechazo de campos de texto formados únicamente por ceros, tanto en altas y actualizaciones como en la previsualización de Excel y los diálogos de motivo y cambio de contraseña, sin requerir SQL Server.
+
+`dotnet run --project Pruebas/FlujoVentas.Integracion -- --validacion-contactos` comprueba el formato de los correos y el mínimo de tres letras en nombres, tanto al crear y actualizar registros como al previsualizar Excel, sin SQL Server.
+
 `dotnet run --project Pruebas/FlujoVentas.Integracion` ejecuta también la integración completa. Requiere la conexión local configurada y permisos para crear una base temporal de pruebas, que se elimina al terminar.
+
+## Validación de datos
+
+Los nombres, códigos, datos de contacto, identificadores, números de factura, referencias de pago, motivos, observaciones, RTN, CAI y nuevas contraseñas rechazan valores compuestos solo por ceros. La comprobación también reconoce espacios y separadores habituales, como `0000-0000` o `(000) 000-0000`. Los mensajes indican el campo que debe corregirse y la carga masiva señala el error en cada fila. La validación se aplica antes de persistir los datos mediante `Clases/ValidacionDatos.cs`.
+
+Se conservan los ceros iniciales de datos válidos, como `000123`. Los campos opcionales pueden permanecer vacíos y los valores numéricos conservan sus reglas de negocio: por ejemplo, el stock inicial, el mínimo de inventario y la tasa de un producto exento pueden ser cero. La consulta y el acceso a cuentas existentes siguen disponibles para corregir registros anteriores.
+
+Los nombres de clientes, empleados, proveedores, contactos, productos, categorías, tiendas, usuarios y roles deben contener al menos tres letras. Se cuentan letras con acentos; los espacios, dígitos y signos no cuentan para el mínimo. Por ejemplo, `Ana`, `José` y `USB 2.0` son válidos; `Al` y `A12` requieren corrección. El contacto del proveedor continúa siendo opcional.
+
+Los correos opcionales pueden quedar vacíos. Si se ingresan, deben ser una sola dirección con formato `usuario@dominio.com`, sin espacios internos, con usuario y dominio completos. Se admiten alias con `+`, subdominios y dominios internacionales. Se rechazan direcciones incompletas, puntos consecutivos, nombres de dominio mal formados y valores que excedan la longitud admitida por el campo. Los mismos criterios se aplican a clientes, proveedores y empleados.
 
 ## Estandar grafico
 

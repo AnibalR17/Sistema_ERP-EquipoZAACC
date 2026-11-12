@@ -78,6 +78,7 @@ namespace Sistema_ERP.Datos
         {
             if (string.IsNullOrWhiteSpace(motivo))
                 throw new ArgumentException("El motivo de desactivacion es obligatorio.", nameof(motivo));
+            ValidacionDatos.NoSoloCeros(motivo, "Motivo");
 
             const string sql = @"UPDATE Cliente
                                  SET desactivado_en = SYSDATETIME(), desactivado_por = @por,
