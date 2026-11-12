@@ -21,6 +21,11 @@ internal static partial class Program
         WindowsFormsSynchronizationContext.AutoInstall = false;
         using var contextoInterfaz = new WindowsFormsSynchronizationContext();
         SynchronizationContext.SetSynchronizationContext(contextoInterfaz);
+        if (args.Contains("--disposicion"))
+        {
+            try { ProbarDisposicion(args.Contains("--rapida"), args.Contains("--capturas")); return 0; }
+            catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }
+        }
         int regresiones = ProbarRegresionesIssues();
         if (regresiones != 0 || args.Contains("--sin-bd")) return regresiones;
         string raiz = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../../../../"));

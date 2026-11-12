@@ -33,7 +33,7 @@ namespace Sistema_ERP
         {
             ColoresBoton(boton, principal);
             boton.Font = new Font("Segoe UI", 11F);
-            boton.Size = new Size(170, 44);
+            DisposicionControles.Boton(boton);
         }
     }
 }

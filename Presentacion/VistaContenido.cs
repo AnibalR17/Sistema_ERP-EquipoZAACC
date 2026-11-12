@@ -14,7 +14,14 @@
             }
             vista.MinimumSize = Size.Empty;
             contenido.Dock = DockStyle.Fill;
+            vista.Load -= PrepararDisposicion;
+            vista.Load += PrepararDisposicion;
             vista.ResumeLayout(true);
+        }
+
+        private static void PrepararDisposicion(object? sender, EventArgs e)
+        {
+            if (sender is Control vista && !ModoDiseno.Activo(vista)) DisposicionControles.Preparar(vista);
         }
     }
 }

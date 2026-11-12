@@ -13,6 +13,7 @@ internal static partial class Program
             ProbarLecturaPrecios();
             ProbarDesplegableRoles();
             ProbarTemasVisuales();
+            ProbarDisposicion();
             return 0;
         }
         catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }

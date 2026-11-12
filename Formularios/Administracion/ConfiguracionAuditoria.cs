@@ -61,10 +61,11 @@ namespace Sistema_ERP
             refrescar.Name = "reiniciarAuditoria";
             var anterior = new Button { Text = "Anteriores", AutoSize = true };
             var siguiente = new Button { Text = "Siguientes", AutoSize = true };
+            foreach (var boton in new[] { refrescar, anterior, siguiente }) ProductoEstilo.Boton(boton);
             layoutAuditoria.Controls.Remove(contadorAuditoria);
             contadorAuditoria.AutoSize = true;
             acciones.Controls.AddRange([refrescar, anterior, siguiente, contadorAuditoria]);
-            layoutAuditoria.RowStyles[3].Height = 38;
+            layoutAuditoria.RowStyles[3].SizeType = SizeType.AutoSize;
             layoutAuditoria.Controls.Add(acciones, 0, 3);
             refrescar.Click += (_, _) => ReiniciarAuditoria();
             anterior.Click += (_, _) => { if (paginas.Count > 0) { antes = paginas.Pop(); CargarAuditoria(); } };

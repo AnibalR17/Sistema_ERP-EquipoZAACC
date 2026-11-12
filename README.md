@@ -92,7 +92,9 @@ Aplicacion de escritorio desarrollada con C# y Windows Forms sobre .NET 10 para 
 
 ## Pruebas
 
-`dotnet run --project Pruebas/FlujoVentas.Integracion -- --sin-bd` verifica los formatos de precios, el selector de roles, los cambios de tema, el contraste y las preferencias de apariencia sin conexión a SQL Server.
+`dotnet run --project Pruebas/FlujoVentas.Integracion -- --sin-bd` verifica los formatos de precios, el selector de roles, los cambios de tema, el contraste, las preferencias de apariencia y la distribución de botones, etiquetas y campos sin conexión a SQL Server.
+
+`dotnet run --project Pruebas/FlujoVentas.Integracion -- --disposicion` comprueba 14 pantallas con dos anchos de ventana y métricas simuladas de 100 %, 125 %, 150 % y 200 %. Añade `--rapida` para comprobar solo 900 px al 100 %, o `--capturas` para guardar imágenes de pantallas representativas en `capturas-disposicion` dentro de la salida de las pruebas. Estas comprobaciones no cambian la escala de Windows ni requieren SQL Server.
 
 `dotnet run --project Pruebas/FlujoVentas.Integracion` ejecuta también la integración completa. Requiere la conexión local configurada y permisos para crear una base temporal de pruebas, que se elimina al terminar.
 
@@ -165,6 +167,8 @@ Los textos se alinean principalmente a la izquierda y se centran verticalmente d
 ### 4. Distribucion y medidas
 
 Las medidas siguientes son valores de diseno de WinForms. La ventana utiliza `AutoScaleMode.Font`, por lo que el tamano visible puede variar con el escalado y la fuente.
+
+Los botones de acción comparten una altura mínima de 44 y un ancho mínimo de 120 unidades a 96 DPI; el ancho aumenta según el texto. `DisposicionControles` adapta las filas a las fuentes, los márgenes y la altura nativa de los desplegables. Las barras de acciones pueden ocupar varias filas al reducir la ventana. La aplicación utiliza `PerMonitorV2` y vuelve a ajustar la distribución cuando cambia el DPI del monitor.
 
 | Elemento | Medida base |
 | --- | --- |

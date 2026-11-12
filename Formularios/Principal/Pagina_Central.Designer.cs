@@ -626,7 +626,7 @@ namespace Sistema_ERP
             catalogButton.Location = new System.Drawing.Point(14, 396);
             catalogButton.Name = "catalogButton";
             catalogButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
-            catalogButton.Size = new System.Drawing.Size(226, 40);
+            catalogButton.Size = new System.Drawing.Size(236, 40);
             catalogButton.TabIndex = 9;
             catalogButton.Text = "Catalogo de productos";
             catalogButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

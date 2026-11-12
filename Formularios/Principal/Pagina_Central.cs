@@ -202,7 +202,7 @@ namespace Sistema_ERP
                 Name = "proveedoresButton",
                 Text = "Proveedores",
                 Location = new Point(inventoryButton.Left, comprasButton.Bottom),
-                Size = catalogButton.Size,
+                Size = inventoryButton.Size,
                 FlatStyle = FlatStyle.Flat,
                 BackColor = Color.White,
                 TextAlign = ContentAlignment.MiddleLeft,
@@ -238,7 +238,12 @@ namespace Sistema_ERP
             logoutButton.Top = 70;
             panelContenedor.Controls.Add(menu);
             panelContenedor.Controls.Add(pie);
-            foreach (var boton in menu.Controls.OfType<Button>()) ProductoEstilo.Navegacion(boton, false);
+            foreach (var boton in menu.Controls.OfType<Button>())
+            {
+                boton.AutoSize = false;
+                boton.Size = inventoryButton.Size;
+                ProductoEstilo.Navegacion(boton, false);
+            }
             brandLabel.ForeColor = ProductoEstilo.Acento;
             ResumeLayout(true);
             Shown += (_, _) => MostrarInicio();

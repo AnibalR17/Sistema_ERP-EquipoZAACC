@@ -19,12 +19,13 @@
 
         internal static void Acciones(FlowLayoutPanel acciones, TextBox? buscar, params Button[] botones)
         {
-            acciones.WrapContents = false;
-            acciones.AutoScroll = true;
+            acciones.AutoSize = true;
+            acciones.WrapContents = true;
+            acciones.AutoScroll = false;
+            if (botones.Length == 0) botones = acciones.Controls.OfType<Button>().ToArray();
             foreach (var boton in botones)
             {
                 ProductoEstilo.Boton(boton, boton == botones[0]);
-                boton.Width = 110;
                 boton.Margin = new Padding(0, 4, 8, 0);
             }
             if (buscar is not null)

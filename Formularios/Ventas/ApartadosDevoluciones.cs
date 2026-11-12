@@ -58,7 +58,7 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
     { var combo = new ComboBox { DropDownStyle = ComboBoxStyle.DropDownList }; combo.Items.Add("Todos los estados"); combo.Items.AddRange(estados); combo.SelectedIndex = 0; return combo; }
     private static Button Accion(string texto, Action ejecutar)
     {
-        var boton = Boton(texto); boton.AutoSize = true; boton.Height = 36; boton.Font = new Font("Segoe UI", 10);
+        var boton = Boton(texto);
         boton.Margin = new Padding(0, 2, 8, 4); boton.Click += (_, _) => ejecutar(); return boton;
     }
     protected override void OnActivated(EventArgs e) { base.OnActivated(e); if (!ModoDiseno.Activo(this)) Recargar(); }

@@ -26,7 +26,9 @@ namespace Sistema_ERP
 
         internal static Control Campo(string texto, Control campo)
         {
-            var panel = new TableLayoutPanel { AutoSize = true, ColumnCount = 1, Margin = new Padding(0, 0, 20, 12) };
+            var panel = new TableLayoutPanel { AutoSize = true, ColumnCount = 1, RowCount = 2, Margin = new Padding(0, 0, 20, 12) };
+            panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             campo.Margin = Padding.Empty;
             campo.BackColor = Color.White;
             campo.ForeColor = ProductoEstilo.Texto;

@@ -37,7 +37,6 @@ public sealed class PuntoVenta : PantallaMaqueta
         var acciones = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoScroll = true, WrapContents = false };
         var agregar = Boton("Agregar"); var quitar = Boton("Quitar"); var vaciar = Boton("Vaciar");
         PermisosInterfaz.Configurar(this, Modulos.Ventas, procesar, agregar, quitar, vaciar);
-        foreach (var b in new[] { agregar, quitar, vaciar }) { b.AutoSize = true; b.Width = 85; b.Font = new Font("Segoe UI", 10); }
         cantidad.Width = 70; tasaIsv.Items.AddRange(["Exento (0%)", "ISV 15%", "ISV 18%"]); tasaIsv.SelectedIndex = 1;
         acciones.Controls.AddRange([cantidad, tasaIsv, agregar, quitar, vaciar]); izquierda.Controls.Add(acciones, 0, 2);
         izquierda.Controls.Add(carrito, 0, 3); izquierda.Controls.Add(estado, 0, 4);
