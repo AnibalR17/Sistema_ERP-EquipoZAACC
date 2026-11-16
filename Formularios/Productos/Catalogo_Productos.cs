@@ -20,7 +20,7 @@ namespace Sistema_ERP
             if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
             UsarNavegacionPrincipal();
-            PermisosInterfaz.Configurar(this, Modulos.Productos, btnNuevoProducto, btnEditar, btnDesactivar, btnReactivarProducto,
+            PermisosInterfaz.Configurar(this, Modulos.productos, btnNuevoProducto, btnEditar, btnDesactivar, btnReactivarProducto,
                 btnGuardarCategoria, btnActualizarCategoria, btnDesactivarCategoria, btnReactivarCategoria);
 
             homeButton.Click += (_, _) => HomeRequested?.Invoke(this, EventArgs.Empty);
@@ -124,16 +124,7 @@ namespace Sistema_ERP
         {
             if (vistaProductos is null) return;
 
-            string texto = txtBuscar.Text.Trim();
-            if (texto.Length == 0)
-            {
-                vistaProductos.RowFilter = "";
-                btnExportarExcel.Enabled = vistaProductos.Count > 0 && !exportandoCatalogo;
-                return;
-            }
-
-            string seguro = Regex.Replace(texto, @"[%*\[\]]", "[$0]").Replace("'", "''");
-            vistaProductos.RowFilter = $"nombre LIKE '%{seguro}%' OR codigo_barras LIKE '%{seguro}%'";
+            BusquedaDatos.Filtrar(vistaProductos, txtBuscar.Text, dgvProductos);
             btnExportarExcel.Enabled = vistaProductos.Count > 0 && !exportandoCatalogo;
         }
 

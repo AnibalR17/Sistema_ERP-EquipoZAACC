@@ -9,9 +9,9 @@ namespace Sistema_ERP
         public static DataTable ListarParaSeleccion(bool incluirInactivas = false)
         {
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.ExigirAlguno(conexion, Modulos.Ventas, Modulos.Apartados, Modulos.Compras,
-                Modulos.Inventario, Modulos.Traspasos, Modulos.Validacion, Modulos.Productos,
-                Modulos.CargaMasiva, Modulos.Directorio, Modulos.Configuracion);
+            AutorizacionDatos.ExigirAlguno(conexion, Modulos.ventas, Modulos.apartados, Modulos.compras,
+                Modulos.inventario, Modulos.traspasos, Modulos.validacion, Modulos.productos,
+                Modulos.cargaMasiva, Modulos.directorio, Modulos.configuracion);
             using var adaptador = new SqlDataAdapter("SELECT id_tienda,nombre AS Nombre,activo FROM dbo.Tienda WHERE activo=1 OR @incluir=1 ORDER BY nombre", conexion);
             adaptador.SelectCommand.Parameters.Add("@incluir", SqlDbType.Bit).Value = incluirInactivas;
             var tabla = new DataTable(); adaptador.Fill(tabla); return tabla;
@@ -20,7 +20,7 @@ namespace Sistema_ERP
         public static DataTable Listar(bool incluirInactivas = false)
         {
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Configuracion);
+            AutorizacionDatos.Exigir(conexion, Modulos.configuracion);
             using var adaptador = new SqlDataAdapter("SELECT id_tienda, codigo AS Codigo, nombre AS Nombre, direccion AS Direccion, telefono AS Telefono, activo, motivo_desactivacion FROM dbo.Tienda WHERE activo=1 OR @incluirInactivas=1 ORDER BY nombre", conexion);
             adaptador.SelectCommand.Parameters.Add("@incluirInactivas", SqlDbType.Bit).Value = incluirInactivas;
             var tabla = new DataTable(); adaptador.Fill(tabla); return tabla;
@@ -30,9 +30,9 @@ namespace Sistema_ERP
 
         public static bool Reactivar(int idTienda)
         {
-            if (idTienda <= 0) throw new ArgumentOutOfRangeException(nameof(idTienda));
+            ReactivarRegistroValidacion.Validar(idTienda, nameof(idTienda));
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Configuracion, gestionar: true);
+            AutorizacionDatos.Exigir(conexion, Modulos.configuracion, gestionar: true);
             using var comando = new SqlCommand(@"UPDATE dbo.Tienda SET desactivado_en=NULL, desactivado_por=NULL,
                 motivo_desactivacion=NULL, actualizado_en=SYSUTCDATETIME() WHERE id_tienda=@id AND activo=0;
                 SELECT CONVERT(int, @@ROWCOUNT);", conexion);
@@ -44,7 +44,7 @@ namespace Sistema_ERP
         {
             Validar(codigo, nombre, direccion, telefono);
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Configuracion, gestionar: true);
+            AutorizacionDatos.Exigir(conexion, Modulos.configuracion, gestionar: true);
             using var comando = new SqlCommand("INSERT INTO dbo.Tienda(codigo,nombre,direccion,telefono) VALUES(@codigo,@nombre,@direccion,@telefono)", conexion);
             Parametros(comando, codigo, nombre, direccion, telefono);
             comando.ExecuteNonQuery();
@@ -52,10 +52,10 @@ namespace Sistema_ERP
 
         public static bool Editar(int idTienda, string codigo, string nombre, string direccion, string telefono)
         {
-            if (idTienda <= 0) throw new ArgumentOutOfRangeException(nameof(idTienda));
+            GuardarTiendaValidacion.Edicion(idTienda);
             Validar(codigo, nombre, direccion, telefono);
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Configuracion, gestionar: true);
+            AutorizacionDatos.Exigir(conexion, Modulos.configuracion, gestionar: true);
             using var comando = new SqlCommand(@"UPDATE dbo.Tienda SET codigo=@codigo, nombre=@nombre,
                 direccion=@direccion, telefono=@telefono, actualizado_en=SYSUTCDATETIME()
                 WHERE id_tienda=@id AND activo=1; SELECT CONVERT(int, @@ROWCOUNT);", conexion);
@@ -65,19 +65,7 @@ namespace Sistema_ERP
         }
 
         private static void Validar(string codigo, string nombre, string direccion, string telefono)
-        {
-            if (string.IsNullOrWhiteSpace(codigo)) throw new ArgumentException("Introduce el codigo de la tienda.");
-            if (string.IsNullOrWhiteSpace(nombre)) throw new ArgumentException("Introduce el nombre de la tienda.");
-            foreach (var (valor, campo) in new[]
-            {
-                (codigo, "Código de la tienda"), (nombre, "Nombre de la tienda"),
-                (direccion, "Dirección"), (telefono, "Teléfono")
-            }) ValidacionDatos.NoSoloCeros(valor, campo);
-            ValidacionDatos.Nombre(nombre, "Nombre de la tienda");
-            if (codigo.Trim().Length > 20 || nombre.Trim().Length > 100 || direccion.Trim().Length > 300 || telefono.Trim().Length > 30)
-                throw new ArgumentException("Uno de los campos supera la longitud permitida.");
-            if (codigo.Any(c => c > 127)) throw new ArgumentException("El codigo debe contener caracteres ASCII.");
-        }
+        { GuardarTiendaValidacion.Validar(codigo, nombre, direccion, telefono); }
 
         private static void Parametros(SqlCommand comando, string codigo, string nombre, string direccion, string telefono)
         {

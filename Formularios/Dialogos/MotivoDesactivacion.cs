@@ -15,15 +15,8 @@ namespace Sistema_ERP
 
         private void Confirmar()
         {
-            string motivo = txtMotivo.Text.Trim();
-            if (motivo.Length == 0 || ValidacionDatos.SoloCeros(motivo))
-            {
-                error.Text = motivo.Length == 0 ? "Introduce el motivo para continuar." : "El motivo no puede contener solo ceros.";
-                txtMotivo.Focus();
-                return;
-            }
-            Motivo = motivo;
-            DialogResult = DialogResult.OK;
+            try { Motivo = DesactivarRegistroValidacion.MotivoCapturado(txtMotivo.Text); DialogResult = DialogResult.OK; }
+            catch (ArgumentException ex) { error.Text = ex.Message; txtMotivo.Focus(); }
         }
     }
 }

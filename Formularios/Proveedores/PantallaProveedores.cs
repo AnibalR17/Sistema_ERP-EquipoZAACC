@@ -20,7 +20,7 @@ namespace Sistema_ERP.Vistas
             if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
             RecargaManual.Agregar(pnlAcciones, CargarDatos);
-            PermisosInterfaz.Configurar(this, Modulos.Proveedores, btnNuevo, btnGuardarProveedor, btnEditar, btnDesactivarProveedor, btnReactivarProveedor);
+            PermisosInterfaz.Configurar(this, Modulos.proveedores, btnNuevo, btnGuardarProveedor, btnEditar, btnDesactivarProveedor, btnReactivarProveedor);
             btnNuevo.Click += (_, _) => LimpiarProveedor();
             btnGuardarProveedor.Click += (_, _) => GuardarProveedor(false);
             btnEditar.Click += (_, _) => GuardarProveedor(true);
@@ -145,10 +145,7 @@ namespace Sistema_ERP.Vistas
         private void FiltrarProveedores()
         {
             if (vistaProveedores is null) return;
-            string texto = txtBuscar.Text.Trim();
-            string seguro = System.Text.RegularExpressions.Regex.Replace(texto, @"[%*\[\]]", "[$0]").Replace("'", "''");
-            vistaProveedores.RowFilter = texto.Length == 0 ? "" :
-                $"nombre_empresa LIKE '%{seguro}%' OR rtn LIKE '%{seguro}%'";
+            BusquedaDatos.Filtrar(vistaProveedores, txtBuscar.Text, dgvProveedores);
             LimpiarProveedor(enfocarNombre: false);
         }
 
@@ -169,11 +166,7 @@ namespace Sistema_ERP.Vistas
             try
             {
                 proveedor.Validar();
-                if (ProveedorDatos.ExisteRtn(proveedor.Rtn, actualizar ? proveedor.IdProveedor : null))
-                {
-                    MostrarRtnDuplicado();
-                    return;
-                }
+                GuardarProveedorValidacion.RtnDisponible(ProveedorDatos.ExisteRtn(proveedor.Rtn, actualizar ? proveedor.IdProveedor : null));
                 if (actualizar)
                 {
                     if (!ProveedorDatos.Editar(proveedor))
@@ -196,6 +189,11 @@ namespace Sistema_ERP.Vistas
             catch (SqlException ex) when (ex.Number == 2601 || ex.Number == 2627)
             {
                 MostrarRtnDuplicado();
+            }
+            catch (ErrorCampoValidacion ex)
+            {
+                MessageBox.Show(this, ex.Message, "Proveedores", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtRtnProveedor.Focus();
             }
             catch (ArgumentException ex)
             {

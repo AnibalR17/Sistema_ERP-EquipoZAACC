@@ -2,7 +2,7 @@ namespace Sistema_ERP
 {
     public class DialogoMaqueta : FormularioTematico
     {
-        protected readonly TableLayoutPanel Contenido;
+        protected readonly TableLayoutPanel contenido;
         public DialogoMaqueta() : this("Dialogo", 300) { }
 
         protected DialogoMaqueta(string titulo, int alto)
@@ -10,8 +10,8 @@ namespace Sistema_ERP
             Text = titulo; ClientSize = new Size(500, alto); Font = new Font("Segoe UI", 11F);
             FormBorderStyle = FormBorderStyle.None; StartPosition = FormStartPosition.CenterParent; ShowInTaskbar = false;
             BackColor = Color.White; Padding = new Padding(28);
-            Contenido = PantallaMaqueta.Filas(40, -100, 54);
-            Contenido.Controls.Add(PantallaMaqueta.Etiqueta(titulo, 16, true), 0, 0); Controls.Add(Contenido);
+            contenido = PantallaMaqueta.Filas(40, -100, 54);
+            contenido.Controls.Add(PantallaMaqueta.Etiqueta(titulo, 16, true), 0, 0); Controls.Add(contenido);
             var cerrar = new Button { Text = "Cerrar", DialogResult = DialogResult.Cancel };
             CancelButton = cerrar;
         }

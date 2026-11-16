@@ -12,15 +12,26 @@ internal sealed record FacturaEmitida(int Id, string Numero, decimal Total, deci
 
 internal static class VentaDatos
 {
-    internal static string? NormalizarRtn(string? rtn)
+    internal static DataTable Historial(DateTime? desde = null, DateTime? hasta = null)
     {
-        string valor = new((rtn ?? "").Where(c => c != '-' && !char.IsWhiteSpace(c)).ToArray());
-        if (valor.Length == 0) return null;
-        ValidacionDatos.NoSoloCeros(valor, "RTN");
-        if (valor.Length != 14 || valor.Any(c => c is < '0' or > '9'))
-            throw new ArgumentException("El RTN es opcional. Si lo ingresas, debe contener 14 dígitos; se permiten espacios y guiones.");
-        return valor;
+        var rango = new RangoFechas(desde, hasta);
+        using var cn = Conexion.AbrirConexion(); AutorizacionDatos.Exigir(cn, Modulos.ventas);
+        using var cmd = new SqlCommand("""
+            SELECT TOP(500) v.id_venta AS Id,v.numero AS Numero,v.fecha AS [Fecha UTC],c.nombre AS Cliente,v.rtn_cliente AS RTN,
+                t.nombre AS Tienda,v.estado AS Estado,total.total AS Total
+            FROM dbo.Venta v JOIN dbo.Cliente c ON c.id_cliente=v.id_cliente
+            JOIN dbo.Tienda t ON t.id_tienda=v.id_tienda JOIN dbo.vw_VentaTotal total ON total.id_venta=v.id_venta
+            WHERE (@desde IS NULL OR v.fecha>=@desde) AND (@hasta IS NULL OR v.fecha<@hasta)
+            ORDER BY v.id_venta DESC
+            """, cn);
+        cmd.Parameters.Add("@desde", SqlDbType.DateTime2).Value = (object?)rango.Desde ?? DBNull.Value;
+        cmd.Parameters.Add("@hasta", SqlDbType.DateTime2).Value = (object?)rango.HastaExclusivo ?? DBNull.Value;
+        using var adaptador = new SqlDataAdapter(cmd);
+        var datos = new DataTable(); adaptador.Fill(datos); return datos;
     }
+
+    internal static string? NormalizarRtn(string? rtn)
+    { return AsignarRtnVentaValidacion.Normalizar(rtn); }
 
     internal static string RtnSugerido(object? documento)
     {
@@ -31,7 +42,7 @@ internal static class VentaDatos
     internal static string Comprobante(int id)
     {
         using var cn = Conexion.AbrirConexion();
-        AutorizacionDatos.ExigirAlguno(cn, Modulos.Ventas, Modulos.Apartados);
+        AutorizacionDatos.ExigirAlguno(cn, Modulos.ventas, Modulos.apartados);
         using var cmd = new SqlCommand("""
             SELECT v.numero,v.fecha,v.estado,t.nombre AS tienda,c.nombre AS cliente,v.rtn_cliente,v.cai,u.nombre_usuario,v.observaciones,
                 p.monto,p.monto_recibido,p.referencia,m.nombre AS metodo
@@ -69,7 +80,7 @@ internal static class VentaDatos
         return texto.ToString().Replace("\r\n", "\n");
     }
 
-    internal static DataTable Consultar(string sql, int? tienda = null, string modulo = Modulos.Ventas)
+    internal static DataTable Consultar(string sql, int? tienda = null, string modulo = Modulos.ventas)
     {
         using var cn = Conexion.AbrirConexion();
         AutorizacionDatos.Exigir(cn, modulo);
@@ -79,7 +90,7 @@ internal static class VentaDatos
         var tabla = new DataTable(); adapter.Fill(tabla); return tabla;
     }
 
-    internal static DataTable Productos(int tienda, string modulo = Modulos.Ventas) => Consultar("""
+    internal static DataTable Productos(int tienda, string modulo = Modulos.ventas) => Consultar("""
         SELECT p.id_producto,p.codigo_barras AS Codigo,p.nombre AS Producto,p.precio_unitario AS Precio,
         ISNULL(i.existencia,0) AS Existencia,ISNULL(i.reservado,0) AS Reservado,
         ISNULL(i.existencia-i.reservado,0) AS Disponible
@@ -91,16 +102,10 @@ internal static class VentaDatos
         string referencia, string observaciones, IReadOnlyCollection<LineaVenta> lineas, string? rtn = null)
     {
         rtn = NormalizarRtn(rtn);
-        if (tienda <= 0 || cliente <= 0 || metodo <= 0 || lineas.Count == 0
-            || lineas.Any(l => l.Producto <= 0 || l.Cantidad <= 0 || l.Precio <= 0)
-            || lineas.Select(l => l.Producto).Distinct().Count() != lineas.Count)
-            throw new ArgumentException("Selecciona tienda, cliente, método de pago y productos con cantidades positivas.");
-        if (referencia.Length > 100 || observaciones.Length > 500 || recibido < 0)
-            throw new ArgumentException("Revisa el monto, la referencia y las observaciones.");
-        ValidacionDatos.NoSoloCeros(observaciones, "Observaciones");
+        EmitirVentaValidacion.Validar(tienda, cliente, metodo, recibido, referencia, observaciones, lineas);
         using var cn = Conexion.AbrirConexion();
         using var tx = cn.BeginTransaction(IsolationLevel.Serializable);
-        int usuario = AutorizacionDatos.Exigir(cn, Modulos.Ventas, gestionar: true, transaccion: tx);
+        int usuario = AutorizacionDatos.Exigir(cn, Modulos.ventas, gestionar: true, transaccion: tx);
         using var preparar = new SqlCommand("""
             IF (SELECT value_in_use FROM sys.configurations WHERE name='nested triggers')<>1
                 OR DATABASEPROPERTYEX(DB_NAME(),'IsRecursiveTriggersEnabled')=1
@@ -123,7 +128,7 @@ internal static class VentaDatos
         preparar.Parameters.AddWithValue("@cliente", cliente);
         preparar.Parameters.AddWithValue("@metodo", metodo);
         bool efectivo = string.Equals(Convert.ToString(preparar.ExecuteScalar()), "EFECTIVO", StringComparison.OrdinalIgnoreCase);
-        if (!efectivo && string.IsNullOrWhiteSpace(referencia)) throw new ArgumentException("Introduce la referencia del pago.");
+        RegistrarPagoValidacion.ReferenciaObligatoria(efectivo, referencia);
         referencia = FlujoVentaDatos.ReferenciaPago(efectivo, referencia);
         string numero = "V-" + Guid.NewGuid().ToString("N");
         using var cabecera = new SqlCommand("""
@@ -150,8 +155,7 @@ internal static class VentaDatos
             producto.Parameters.AddWithValue("@tienda", tienda);
             producto.Parameters.AddWithValue("@cantidad", linea.Cantidad);
             object? precio = producto.ExecuteScalar();
-            if (precio is null || precio == DBNull.Value) throw new InvalidOperationException("Un producto no está activo o no tiene existencias suficientes. Recarga el catálogo.");
-            if (Convert.ToDecimal(precio) != linea.Precio) throw new InvalidOperationException("El precio de un producto cambió. Actualiza los catálogos y vuelve a agregar los productos.");
+            EmitirVentaValidacion.PrecioActual(precio, linea.Precio);
             decimal subtotalLinea = Convert.ToDecimal(precio) * linea.Cantidad;
             total = checked(total + subtotalLinea + ImpuestosVenta.Isv(subtotalLinea, linea.TasaIsv));
             using var detalle = new SqlCommand("""
@@ -164,8 +168,7 @@ internal static class VentaDatos
             detalle.Parameters.AddWithValue("@tasa", linea.TasaIsv);
             detalle.ExecuteNonQuery();
         }
-        if (total <= 0 || total > 9999999999999999.99m) throw new ArgumentException("El total de la venta está fuera del rango permitido.");
-        if (efectivo && recibido < total) throw new ArgumentException("El monto recibido es insuficiente.");
+        EmitirVentaValidacion.Total(total, efectivo, recibido);
         using var pago = new SqlCommand("""
             INSERT dbo.PagoVenta(id_venta,id_metodo_pago,monto,monto_recibido,referencia) VALUES(@venta,@metodo,@total,@recibido,@referencia);
             UPDATE dbo.Venta SET estado='CONFIRMADA' WHERE id_venta=@venta;

@@ -30,7 +30,7 @@ namespace Sistema_ERP
             label1.BackColor = ProductoEstilo.Suave;
             label1.Padding = new Padding(12, 0, 8, 0);
             label1.Font = new Font("Segoe UI", 10F);
-            txtBuscar.PlaceholderText = "Buscar por nombre o codigo de barras...";
+            txtBuscar.PlaceholderText = "Buscar por cualquier dato del producto…";
             txtBuscar.BorderStyle = BorderStyle.FixedSingle;
             ProductoEstilo.Boton(btnNuevoProducto, true);
             ProductoEstilo.Boton(btnEditar);

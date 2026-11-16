@@ -7,6 +7,7 @@ namespace Sistema_ERP
         private Label titulo = null!, resumen = null!, mensajePermisos = null!;
         private SelectorRoles listaRoles = null!;
         private DataGridView tablaPermisos = null!;
+        private Control busquedaPermisos = null!;
         private Button aceptar = null!, cancelar = null!;
         private FlowLayoutPanel acciones = null!;
 
@@ -94,7 +95,8 @@ namespace Sistema_ERP
             mensajePermisos.Name = "mensajePermisos";
             mensajePermisos.Dock = DockStyle.Fill; mensajePermisos.TextAlign = ContentAlignment.MiddleCenter;
             mensajePermisos.Padding = new Padding(20); mensajePermisos.BackColor = ProductoEstilo.Suave;
-            vistaPermisos.Controls.Add(tablaPermisos); vistaPermisos.Controls.Add(mensajePermisos);
+            busquedaPermisos = BusquedaTabla.Crear(tablaPermisos);
+            vistaPermisos.Controls.Add(busquedaPermisos); vistaPermisos.Controls.Add(mensajePermisos);
             columnas.Controls.Add(vistaPermisos, 1, 1);
             contenido.Controls.Add(columnas, 0, 2);
             resumen.Name = "resumen";

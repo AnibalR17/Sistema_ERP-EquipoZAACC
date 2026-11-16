@@ -69,18 +69,18 @@ internal static class AutorizacionDatos
     internal static string? ModuloPantalla(string pantalla) => pantalla switch
     {
         "Inicio" or "Búsqueda global" => null,
-        "Punto de Venta" => Modulos.Ventas,
-        "Inventario y movimientos" or "Notificaciones" => Modulos.Inventario,
-        "Compras" => Modulos.Compras,
-        "Proveedores" => Modulos.Proveedores,
-        "Traspasos" => Modulos.Traspasos,
-        "Validacion" => Modulos.Validacion,
-        "Carga masiva" => Modulos.CargaMasiva,
-        "Catalogo" => Modulos.Productos,
-        "Apartados y devoluciones" => Modulos.Apartados,
-        "Directorio y roles" => Modulos.Directorio,
-        "Usuarios, roles y permisos" => Modulos.Seguridad,
-        "Configuración y auditoría" => Modulos.Configuracion,
+        "Punto de Venta" => Modulos.ventas,
+        "Inventario y movimientos" or "Notificaciones" => Modulos.inventario,
+        "Compras" => Modulos.compras,
+        "Proveedores" => Modulos.proveedores,
+        "Traspasos" => Modulos.traspasos,
+        "Validacion" => Modulos.validacion,
+        "Carga masiva" => Modulos.cargaMasiva,
+        "Catalogo" => Modulos.productos,
+        "Apartados y devoluciones" => Modulos.apartados,
+        "Directorio y roles" => Modulos.directorio,
+        "Usuarios, roles y permisos" => Modulos.seguridad,
+        "Configuración y auditoría" => Modulos.configuracion,
         _ => throw new UnauthorizedAccessException("La pantalla no tiene un permiso de acceso definido.")
     };
 }

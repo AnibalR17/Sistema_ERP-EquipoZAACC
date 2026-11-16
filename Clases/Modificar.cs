@@ -8,25 +8,17 @@ namespace Sistema_ERP.Clases
         public static int Traspaso(int id, byte[] version, int origen, int destino, int usuario,
             string observaciones, IReadOnlyCollection<LineaTraspaso> lineas)
         {
-            if (id <= 0)
-                throw new ArgumentOutOfRangeException(nameof(id));
-            ArgumentNullException.ThrowIfNull(version);
+            GuardarTraspasoValidacion.Edicion(id, version);
             return TraspasoDatos.Guardar(id, version, origen, destino, usuario, observaciones, lineas);
         }
 
         public static void ResolverTraspaso(int id, byte[] version, int usuario, string estado, string motivo)
         {
-            if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
-            ArgumentNullException.ThrowIfNull(version);
-            if (estado is not ("CANCELADO" or "APROBADO" or "RECHAZADO" or "EN_TRANSITO" or "RECIBIDO"))
-                throw new ArgumentException("Estado inválido.");
-            if (motivo.Length > 500 || (estado is "CANCELADO" or "RECHAZADO" && string.IsNullOrWhiteSpace(motivo)))
-                throw new ArgumentException("Indique un motivo de hasta 500 caracteres.");
-            ValidacionDatos.NoSoloCeros(motivo, "Motivo");
+            ResolverTraspasoValidacion.Validar(id, version, estado, motivo);
             if (SesionActual.Exigir().Id != usuario) throw new InvalidOperationException("El operador debe ser el usuario autenticado.");
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction();
-            AutorizacionDatos.Exigir(conexion, estado is "APROBADO" or "RECHAZADO" ? Modulos.Validacion : Modulos.Traspasos,
+            AutorizacionDatos.Exigir(conexion, estado is "APROBADO" or "RECHAZADO" ? Modulos.validacion : Modulos.traspasos,
                 gestionar: true, transaccion: transaccion);
             TraspasoDatos.PrepararOperacion(conexion, transaccion, usuario, motivo.Trim());
             using var comando = new SqlCommand(@"UPDATE dbo.Traspaso SET estado=@estado
@@ -53,8 +45,7 @@ namespace Sistema_ERP.Clases
 
         private static bool Reactivar(string tabla, string columnaId, int id)
         {
-            if (id <= 0)
-                throw new ArgumentOutOfRangeException(nameof(id));
+            ReactivarRegistroValidacion.Validar(id);
 
             string sql = $@"UPDATE dbo.{tabla}
                             SET desactivado_en = NULL, desactivado_por = NULL,
@@ -63,8 +54,8 @@ namespace Sistema_ERP.Clases
                             SELECT CONVERT(int, @@ROWCOUNT);";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
-            if (tabla == "Proveedor") AutorizacionDatos.ExigirAlguno(conexion, true, Modulos.Proveedores, Modulos.Directorio);
-            else AutorizacionDatos.Exigir(conexion, Modulos.Productos, gestionar: true);
+            if (tabla == "Proveedor") AutorizacionDatos.ExigirAlguno(conexion, true, Modulos.proveedores, Modulos.directorio);
+            else AutorizacionDatos.Exigir(conexion, Modulos.productos, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = id;
             return (int)comando.ExecuteScalar() > 0;
@@ -73,8 +64,7 @@ namespace Sistema_ERP.Clases
         public static bool Proveedor(Proveedor proveedor)
         {
             proveedor.Validar();
-            if (proveedor.IdProveedor <= 0)
-                throw new ArgumentOutOfRangeException(nameof(proveedor.IdProveedor));
+            GuardarProveedorValidacion.Edicion(proveedor.IdProveedor);
             const string sql = @"UPDATE dbo.Proveedor
                                  SET nombre_empresa = @nombre, rtn = @rtn, contacto = @contacto,
                                      telefono = @telefono, correo = @correo, direccion = @direccion,
@@ -82,7 +72,7 @@ namespace Sistema_ERP.Clases
                                  WHERE id_proveedor = @id AND activo = 1;
                                  SELECT CONVERT(int, @@ROWCOUNT);";
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.ExigirAlguno(conexion, true, Modulos.Proveedores, Modulos.Directorio);
+            AutorizacionDatos.ExigirAlguno(conexion, true, Modulos.proveedores, Modulos.directorio);
             using var comando = new SqlCommand(sql, conexion);
             ProveedorDatos.AgregarParametros(comando, proveedor);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = proveedor.IdProveedor;
@@ -91,15 +81,7 @@ namespace Sistema_ERP.Clases
 
         public static bool Categoria(int idCategoria, string nombre, string? descripcion)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(nombre);
-            ValidacionDatos.Nombre(nombre, "Nombre de la categoría");
-            ValidacionDatos.NoSoloCeros(descripcion, "Descripción");
-            if (idCategoria <= 0)
-                throw new ArgumentOutOfRangeException(nameof(idCategoria));
-            if (nombre.Trim().Length > 100)
-                throw new ArgumentException("El nombre admite hasta 100 caracteres.", nameof(nombre));
-            if (descripcion?.Trim().Length > 300)
-                throw new ArgumentException("La descripción admite hasta 300 caracteres.", nameof(descripcion));
+            GuardarCategoriaValidacion.Validar(nombre, descripcion, idCategoria);
 
             const string sql = @"UPDATE dbo.Categoria SET nombre = @nombre, descripcion = @descripcion,
                                  actualizado_en = SYSUTCDATETIME()
@@ -107,7 +89,7 @@ namespace Sistema_ERP.Clases
                                  SELECT CONVERT(int, @@ROWCOUNT);";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Productos, gestionar: true);
+            AutorizacionDatos.Exigir(conexion, Modulos.productos, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@nombre", SqlDbType.NVarChar, 100).Value = nombre.Trim();
             comando.Parameters.Add("@id", SqlDbType.Int).Value = idCategoria;

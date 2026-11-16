@@ -66,7 +66,7 @@ namespace Sistema_ERP
                 TraspasoEstilo.Tabla(grid);
                 grid.RowTemplate.Height = 42; grid.ColumnHeadersDefaultCellStyle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
                 var tarjetaInventario = new PanelDisenoInventario { Dock = DockStyle.Fill, Radio = 30, MostrarSombra = false, ColorBorde = Color.FromArgb(247, 247, 247), Padding = new Padding(16) };
-                tarjetaInventario.Controls.Add(grid); pagina.Controls.Add(tarjetaInventario); pestanasInventario.TabPages.Add(pagina);
+                tarjetaInventario.Controls.Add(BusquedaTabla.Crear(grid)); pagina.Controls.Add(tarjetaInventario); pestanasInventario.TabPages.Add(pagina);
             }
             contenidoInventario.Controls.Add(pestanasInventario, 0, 5);
             content.Font = new Font("Segoe UI", 11F); content.BackColor = Color.White;

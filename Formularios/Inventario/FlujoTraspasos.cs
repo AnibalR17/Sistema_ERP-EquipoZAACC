@@ -23,9 +23,9 @@ namespace Sistema_ERP
             filtro.SelectedIndexChanged += (_, _) => Ejecutar(Cargar);
             Load += FlujoTraspasos_Load;
             lista.SelectionChanged += (_, _) => ActualizarAcciones();
-            PermisosInterfaz.Configurar(this, validacion ? Modulos.Validacion : Modulos.Traspasos);
+            PermisosInterfaz.Configurar(this, validacion ? Modulos.validacion : Modulos.traspasos);
             PermisosInterfaz.ConfigurarAcciones(this, botones.Where(b => b.Key is not ("Actualizar" or "Detalle / historial"))
-                .Select(b => ((Control)b.Value, b.Key is "Aprobar" or "Rechazar" ? Modulos.Validacion : Modulos.Traspasos)).ToArray());
+                .Select(b => ((Control)b.Value, b.Key is "Aprobar" or "Rechazar" ? Modulos.validacion : Modulos.traspasos)).ToArray());
         }
 
         private void ConfigurarSolicitud()
@@ -72,7 +72,7 @@ namespace Sistema_ERP
             Boton("Enviar", () => Resolver("EN_TRANSITO"));
             Boton("Confirmar recepción", () => Resolver("RECIBIDO"));
             ActualizarAcciones();
-            Controls.Add(TraspasoEstilo.Tarjeta(lista));
+            Controls.Add(TraspasoEstilo.Tarjeta(BusquedaTabla.Crear(lista, conFechas: true)));
             Controls.Add(barra);
             Controls.Add(filtros);
             Controls.Add(cabecera);
@@ -153,18 +153,10 @@ namespace Sistema_ERP
         }
 
         private DataRow Fila()
-        {
-            if (lista.CurrentRow?.DataBoundItem is not DataRowView seleccion)
-                throw new InvalidOperationException("Seleccione una solicitud.");
-
-            return seleccion.Row;
-        }
+            => ConsultarTraspasoValidacion.Seleccion(lista.CurrentRow?.DataBoundItem as DataRowView).Row;
 
         private static void Pendiente(DataRow fila)
-        {
-            if ((string)fila["estado"] != "PENDIENTE")
-                throw new InvalidOperationException("Solo se pueden modificar solicitudes pendientes.");
-        }
+            => ResolverTraspasoValidacion.Pendiente((string)fila["estado"]);
 
         private void Cargar()
         {
@@ -204,7 +196,7 @@ namespace Sistema_ERP
                 {
                     var pagina = new TabPage(par.Item1) { BackColor = ProductoEstilo.Fondo, Padding = new Padding(8) };
                     var tabla = Tabla(); tabla.DataSource = par.Item2;
-                    pagina.Controls.Add(TraspasoEstilo.Tarjeta(tabla)); tabs.TabPages.Add(pagina);
+                    pagina.Controls.Add(TraspasoEstilo.Tarjeta(BusquedaTabla.Crear(tabla, conFechas: true))); tabs.TabPages.Add(pagina);
                 }
                 if (seleccion >= 0 && seleccion < tabs.TabCount) tabs.SelectedIndex = seleccion;
             }
@@ -240,14 +232,7 @@ namespace Sistema_ERP
         {
             var fila = Fila();
             string anterior = (string)fila["estado"];
-            bool permitido = estado switch
-            {
-                "EN_TRANSITO" => anterior == "APROBADO",
-                "RECIBIDO" => anterior == "EN_TRANSITO",
-                "CANCELADO" => anterior is "PENDIENTE" or "APROBADO",
-                _ => anterior == "PENDIENTE"
-            };
-            if (!permitido) throw new InvalidOperationException("El estado actual no permite esta operación.");
+            ResolverTraspasoValidacion.Transicion(anterior, estado);
             int actor = Usuario();
             using var dialogo = new FormularioTematico { Text = $"{estado}: traspaso #{fila["id_traspaso"]}", Size = new Size(680, 450), StartPosition = FormStartPosition.CenterParent };
             TraspasoEstilo.Superficie(dialogo);

@@ -11,6 +11,10 @@ internal static partial class Program
         try
         {
             ProbarLecturaPrecios();
+            ProbarValidacionesAcciones();
+            ProbarBusquedaDatos();
+            ProbarBusquedaCombos();
+            ProbarFiltrosFechas();
             ProbarValidacionCeros();
             ProbarValidacionContactos();
             ProbarDesplegableRoles();
@@ -133,7 +137,7 @@ internal static partial class Program
         var agregar = selector.Controls.Find("agregarRol", true).OfType<Button>().Single();
         var quitar = selector.Controls.Find("quitarRol", true).OfType<Button>().Single();
         var tabla = dialogo.Controls.Find("tablaPermisos", true).OfType<DataGridView>().Single();
-        Comprobar(disponibles.DropDownStyle == ComboBoxStyle.DropDownList && dialogo.RolesSeleccionados.SequenceEqual([1, 4]),
+        Comprobar(disponibles.DropDownStyle == ComboBoxStyle.DropDown && disponibles.AutoCompleteMode == AutoCompleteMode.SuggestAppend && dialogo.RolesSeleccionados.SequenceEqual([1, 4]),
             "El desplegable conserva varios roles existentes, incluidos los inactivos");
         Comprobar(tabla.Rows.Count == 1 && disponibles.Items.Count == 2, "Solo se ofrecen roles activos sin asignar");
         disponibles.SelectedItem = disponibles.Items.Cast<object>().Single(r => r.ToString() == "Gestión"); agregar.PerformClick();

@@ -12,6 +12,7 @@ namespace Sistema_ERP
         private readonly Stack<long> paginas = new();
         private long antes = long.MaxValue;
         private readonly System.Windows.Forms.Timer filtroAuditoria = new() { Interval = 350 };
+        private readonly FiltroFechas fechasAuditoria = new("Fecha UTC");
 
         public ConfiguracionAuditoria()
         {
@@ -21,7 +22,7 @@ namespace Sistema_ERP
             ConectarEventos();
             RecargaManual.Agregar(accionesTienda, CargarTiendas);
             ActualizarBotones();
-            PermisosInterfaz.Configurar(this, Modulos.Configuracion, guardar, actualizar, nuevo, desactivar, reactivar);
+            PermisosInterfaz.Configurar(this, Modulos.configuracion, guardar, actualizar, nuevo, desactivar, reactivar);
         }
 
         private void ConectarEventos()
@@ -55,6 +56,12 @@ namespace Sistema_ERP
             tablaAuditoria.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
             tablaAuditoria.ScrollBars = ScrollBars.Both;
             buscarAuditoria.MaxLength = 150;
+            layoutAuditoria.Controls.Remove(buscarAuditoria);
+            var filtros = PantallaMaqueta.Filas(38, 48); filtros.AutoSize = true;
+            filtros.RowStyles[0].SizeType = filtros.RowStyles[1].SizeType = SizeType.AutoSize;
+            filtros.Controls.Add(buscarAuditoria, 0, 0); filtros.Controls.Add(fechasAuditoria, 0, 1);
+            layoutAuditoria.Controls.Add(filtros, 0, 1); layoutAuditoria.RowStyles[1].SizeType = SizeType.AutoSize;
+            fechasAuditoria.Cambio += (_, _) => { filtroAuditoria.Stop(); filtroAuditoria.Start(); };
             var acciones = new FlowLayoutPanel { Dock = DockStyle.Fill };
             var refrescar = new Button { Text = "Actualizar", AutoSize = true };
             RecargaManual.Preparar(refrescar);
@@ -92,7 +99,7 @@ namespace Sistema_ERP
             if (ModoDiseno.Activo(this)) return;
             try
             {
-                eventos = AuditoriaDatos.Listar(buscarAuditoria.Text, antes);
+                eventos = AuditoriaDatos.Listar(buscarAuditoria.Text, antes, fechasAuditoria.Desde, fechasAuditoria.Hasta);
                 tablaAuditoria.DataSource = eventos;
                 tablaAuditoria.Columns["Id"]!.Visible = false;
                 tablaAuditoria.Columns["Fecha UTC"]!.DefaultCellStyle.Format = "dd/MM/yyyy HH:mm:ss";
@@ -192,8 +199,7 @@ namespace Sistema_ERP
         private void Filtrar()
         {
             if (vista is null) return;
-            string texto = System.Text.RegularExpressions.Regex.Replace(buscar.Text.Trim(), @"[%*\[\]]", "[$0]").Replace("'", "''");
-            vista.RowFilter = texto.Length == 0 ? "" : $"Nombre LIKE '%{texto}%' OR Codigo LIKE '%{texto}%'";
+            BusquedaDatos.Filtrar(vista, buscar.Text, tiendas);
             Limpiar(false); estadoLista.Text = $"Mostrando {vista.Count} registros";
         }
     }

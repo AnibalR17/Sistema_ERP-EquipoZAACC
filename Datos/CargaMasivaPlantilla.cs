@@ -5,7 +5,7 @@ namespace Sistema_ERP;
 
 internal static class CargaMasivaPlantilla
 {
-    internal static readonly string[] Columnas = ["CodigoBarras", "Nombre", "Precio", "StockInicial", "NombreCategoria", "RTNProveedor"];
+    internal static readonly string[] columnas = ["CodigoBarras", "Nombre", "Precio", "StockInicial", "NombreCategoria", "RTNProveedor"];
 
     internal static DataTable LeerEjemplo()
     {
@@ -15,11 +15,10 @@ internal static class CargaMasivaPlantilla
         var hoja = libro.Worksheets.First();
         var tabla = new DataTable();
         Type[] tipos = [typeof(string), typeof(string), typeof(decimal), typeof(int), typeof(string), typeof(string)];
-        for (int i = 0; i < Columnas.Length; i++)
+        for (int i = 0; i < columnas.Length; i++)
         {
-            if (!string.Equals(hoja.Cell(1, i + 1).GetString().Trim(), Columnas[i], StringComparison.OrdinalIgnoreCase))
-                throw new InvalidDataException("Los encabezados de la plantilla de ejemplo no coinciden con el formato de carga.");
-            tabla.Columns.Add(Columnas[i], tipos[i]);
+            ImportarProductosValidacion.EncabezadoPlantilla(hoja.Cell(1, i + 1).GetString().Trim(), columnas[i]);
+            tabla.Columns.Add(columnas[i], tipos[i]);
         }
         foreach (var fila in hoja.RowsUsed().Skip(1))
             tabla.Rows.Add(fila.Cell(1).GetString(), fila.Cell(2).GetString(), fila.Cell(3).GetValue<decimal>(),
@@ -33,7 +32,7 @@ internal static class CargaMasivaPlantilla
         var existentes = CargaMasivaDatos.CodigosExistentes();
         using var libro = new XLWorkbook();
         var productos = libro.Worksheets.Add("Productos");
-        for (int i = 0; i < Columnas.Length; i++) productos.Cell(1, i + 1).Value = Columnas[i];
+        for (int i = 0; i < columnas.Length; i++) productos.Cell(1, i + 1).Value = columnas[i];
         productos.Column(1).Style.NumberFormat.Format = "@"; productos.Column(6).Style.NumberFormat.Format = "@";
         productos.Column(3).Style.NumberFormat.Format = "0.00";
         string categoria = categorias.Keys.OrderBy(c => c).FirstOrDefault() ?? "COMPLETAR_CATEGORIA_EXISTENTE";

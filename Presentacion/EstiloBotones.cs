@@ -8,7 +8,7 @@ internal static class EstiloBotones
 
     private sealed class Colores
     {
-        internal Tipo Tipo;
+        internal Tipo tipo;
     }
 
     private static readonly ConditionalWeakTable<Button, Colores> estilos = new();
@@ -24,7 +24,7 @@ internal static class EstiloBotones
             boton.EnabledChanged += ActualizarEstado;
             boton.Paint += PintarDeshabilitado;
         }
-        colores.Tipo = tipo;
+        colores.tipo = tipo;
         boton.FlatStyle = FlatStyle.Flat;
         boton.UseVisualStyleBackColor = false;
         ActualizarEstado(boton, EventArgs.Empty);
@@ -35,9 +35,9 @@ internal static class EstiloBotones
     private static void ActualizarEstado(object? sender, EventArgs e)
     {
         if (sender is not Button boton || !estilos.TryGetValue(boton, out var colores)) return;
-        bool principal = colores.Tipo == Tipo.Principal;
-        bool seleccionado = colores.Tipo == Tipo.NavegacionSeleccionada;
-        bool navegacion = colores.Tipo is Tipo.Navegacion or Tipo.NavegacionSeleccionada;
+        bool principal = colores.tipo == Tipo.Principal;
+        bool seleccionado = colores.tipo == Tipo.NavegacionSeleccionada;
+        bool navegacion = colores.tipo is Tipo.Navegacion or Tipo.NavegacionSeleccionada;
         Color fondo = principal ? ProductoEstilo.Acento : seleccionado ? ProductoEstilo.Seleccion
             : navegacion ? ProductoEstilo.Lateral : ProductoEstilo.Superficie;
         Color texto = principal ? Color.White : seleccionado ? ProductoEstilo.TextoSeleccion

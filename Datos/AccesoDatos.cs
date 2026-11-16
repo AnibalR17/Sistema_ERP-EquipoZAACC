@@ -18,7 +18,7 @@ namespace Sistema_ERP
         internal static ResultadoAcceso Ingresar(string usuario, string clave)
         {
             usuario = usuario.Trim();
-            if (usuario.Length is < 1 or > 50 || clave.Length is < 1 or > 128)
+            if (!IniciarSesionValidacion.Credenciales(usuario, clave))
                 return ResultadoAcceso.Rechazado("Introduce un usuario y una contraseña válidos.");
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
@@ -143,8 +143,7 @@ namespace Sistema_ERP
 
         internal static void CambiarClave(AccesoUsuario acceso, string anterior, string nueva)
         {
-            if (!acceso.CambiarClave) throw new InvalidOperationException("No hay un cambio de contraseña pendiente.");
-            if (anterior == nueva) throw new ArgumentException("La contraseña nueva debe ser diferente de la anterior.");
+            CambiarClaveValidacion.Validar(acceso.CambiarClave, anterior, nueva);
             string hash = ClaveSegura.Crear(nueva);
             using var conexion = Conexion.AbrirConexion();
             using var comando = new SqlCommand("""
@@ -158,7 +157,7 @@ namespace Sistema_ERP
             comando.Parameters.Add("@hash", SqlDbType.NVarChar, 512).Value = hash;
             comando.Parameters.Add("@id", SqlDbType.Int).Value = acceso.Id;
             comando.Parameters.Add("@version", SqlDbType.Timestamp, 8).Value = acceso.Version;
-            if (Convert.ToInt32(comando.ExecuteScalar()) != 1) throw new InvalidOperationException("La cuenta cambió. Cierra esta ventana e inicia sesión de nuevo.");
+            CambiarClaveValidacion.CuentaActualizada(Convert.ToInt32(comando.ExecuteScalar()));
         }
 
         internal static bool Vigente(AccesoUsuario acceso)

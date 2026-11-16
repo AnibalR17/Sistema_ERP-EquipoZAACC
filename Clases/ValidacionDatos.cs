@@ -5,6 +5,18 @@ namespace Sistema_ERP;
 
 internal static class ValidacionDatos
 {
+    internal static void IdPositivo(int id, string parametro = "id")
+    {
+        if (id <= 0) throw new ArgumentOutOfRangeException(parametro);
+    }
+
+    internal static void Texto(string texto, int maximo, string campo, bool obligatorio, bool ascii = false)
+    {
+        if (obligatorio && string.IsNullOrWhiteSpace(texto)) throw new ArgumentException(campo + " es obligatorio.");
+        NoSoloCeros(texto, campo);
+        if (texto.Length > maximo) throw new ArgumentException($"{campo} admite hasta {maximo} caracteres.");
+        if (ascii && texto.Any(c => c > 127 || char.IsControl(c))) throw new ArgumentException(campo + " debe usar caracteres ASCII imprimibles.");
+    }
     internal static bool SoloCeros(string? valor)
     {
         bool contieneCero = false;

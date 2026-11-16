@@ -25,7 +25,7 @@ internal static class PreferenciasApariencia
 
     internal static void Guardar(string ruta, TemaVisual tema)
     {
-        if (!Enum.IsDefined(tema)) throw new ArgumentOutOfRangeException(nameof(tema));
+        CambiarTemaValidacion.Validar(tema);
         string destino = Path.GetFullPath(ruta);
         Directory.CreateDirectory(Path.GetDirectoryName(destino)!);
         string temporal = destino + "." + Guid.NewGuid().ToString("N") + ".tmp";

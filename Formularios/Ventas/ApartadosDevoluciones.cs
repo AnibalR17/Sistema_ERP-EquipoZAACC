@@ -35,7 +35,7 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
             filtros.Controls.Add(buscar, 0, 0); filtros.Controls.Add(estados, 1, 0); filtros.Controls.Add(consultar, 2, 0);
             var barra = new FlowLayoutPanel { Dock = DockStyle.Fill, AutoScroll = true };
             foreach (var opcion in opciones) { var boton = Accion(opcion.Texto, () => Ejecutar(opcion.Accion)); botones.Add(opcion.Texto, boton); barra.Controls.Add(boton); }
-            contenido.Controls.Add(filtros, 0, 0); contenido.Controls.Add(barra, 0, 1); contenido.Controls.Add(tabla, 0, 2); pagina.Controls.Add(contenido);
+            contenido.Controls.Add(filtros, 0, 0); contenido.Controls.Add(barra, 0, 1); contenido.Controls.Add(BusquedaTabla.Crear(tabla, conFechas: true), 0, 2); pagina.Controls.Add(contenido);
             buscar.KeyDown += (_, e) => { if (e.KeyCode == Keys.Enter) { e.SuppressKeyPress = true; Recargar(); } };
             estados.SelectedIndexChanged += (_, _) => Recargar(); tabla.SelectionChanged += (_, _) => ActualizarAcciones();
             return pagina;
@@ -46,11 +46,11 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
         pestanas.TabPages.Add(Pagina("Devoluciones", devoluciones, buscarDevolucion, estadoDevolucion, accionesDevolucion,
         [ ("Nueva devolución", () => EditarDevolucion(false)), ("Editar borrador", () => EditarDevolucion(true)), ("Ver detalle", () => VerDetalle(false)),
           ("Confirmar devolución", ConfirmarDevolucion), ("Anular devolución", AnularDevolucion), ("Reembolsar", ReembolsarDevolucion) ]));
-        raiz.Controls.Add(pestanas, 0, 0); raiz.Controls.Add(mensaje, 0, 1); Cuerpo.Controls.Add(raiz);
+        raiz.Controls.Add(pestanas, 0, 0); raiz.Controls.Add(mensaje, 0, 1); cuerpo.Controls.Add(raiz);
         apartados.CellDoubleClick += (_, e) => { if (e.RowIndex >= 0) Ejecutar(() => VerDetalle(true)); };
         devoluciones.CellDoubleClick += (_, e) => { if (e.RowIndex >= 0) Ejecutar(() => VerDetalle(false)); };
         ActualizarAcciones();
-        PermisosInterfaz.Configurar(this, Modulos.Apartados, accionesApartado.Concat(accionesDevolucion)
+        PermisosInterfaz.Configurar(this, Modulos.apartados, accionesApartado.Concat(accionesDevolucion)
             .Where(a => a.Key != "Ver detalle").Select(a => (Control)a.Value).ToArray());
     }
 
@@ -136,7 +136,7 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
             {
                 var tab = new TabPage(nombres[i]); var tabla = Tabla(); tabla.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.DisplayedCells;
                 ConfigurarColumnas(tabla, ds.Tables[i]); tabla.DataSource = ds.Tables[i];
-                tab.Controls.Add(tabla); tabs.TabPages.Add(tab);
+                tab.Controls.Add(BusquedaTabla.Crear(tabla, conFechas: true)); tabs.TabPages.Add(tab);
             }
             if (seleccion >= 0 && seleccion < tabs.TabCount) tabs.SelectedIndex = seleccion;
         }
@@ -210,7 +210,7 @@ public sealed partial class ApartadosDevoluciones : PantallaMaqueta
     {
         using var ventana = new FormularioTematico { Text = titulo, Size = new Size(570, 290), StartPosition = FormStartPosition.CenterParent, Padding = new Padding(16) };
         var texto = new TextBox { Multiline = true, MaxLength = 500, Dock = DockStyle.Fill, PlaceholderText = "Escribe el motivo de la operación" };
-        var aceptar = Accion("Confirmar", () => { if (!string.IsNullOrWhiteSpace(texto.Text)) ventana.DialogResult = DialogResult.OK; else texto.Focus(); }); aceptar.Dock = DockStyle.Bottom;
+        var aceptar = Accion("Confirmar", () => { if (RegistrarMotivoValidacion.CapturaValida(texto.Text)) ventana.DialogResult = DialogResult.OK; else texto.Focus(); }); aceptar.Dock = DockStyle.Bottom;
         ventana.Controls.Add(texto); ventana.Controls.Add(aceptar); return ventana.ShowDialog(this) == DialogResult.OK ? texto.Text.Trim() : null;
     }
 }

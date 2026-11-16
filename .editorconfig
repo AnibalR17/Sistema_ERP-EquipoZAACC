@@ -1,0 +1,12 @@
+root = true
+
+[*.cs]
+# Campos (incluidas constantes) y variables locales usan camelCase sin prefijos.
+dotnet_naming_rule.variables_camel_case.severity = warning
+dotnet_naming_rule.variables_camel_case.symbols = variables
+dotnet_naming_rule.variables_camel_case.style = camel_case
+
+dotnet_naming_symbols.variables.applicable_kinds = field, local
+dotnet_naming_symbols.variables.applicable_accessibilities = *
+
+dotnet_naming_style.camel_case.capitalization = camel_case

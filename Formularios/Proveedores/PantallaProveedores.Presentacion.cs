@@ -77,7 +77,7 @@ namespace Sistema_ERP.Vistas
             pnlAcciones.Margin = Padding.Empty;
             lblInfo.Text = "El nombre de la empresa es obligatorio. Selecciona una fila para actualizar sus datos.";
             lblInfo.AutoEllipsis = true;
-            txtBuscar.PlaceholderText = "Buscar proveedor por nombre o RTN...";
+            txtBuscar.PlaceholderText = "Buscar por cualquier dato del proveedor…";
             txtBuscar.Dock = DockStyle.Fill;
             txtBuscar.Margin = new Padding(0, 4, 0, 4);
             mainLayout.Controls.Add(lblTitulo, 0, 0);

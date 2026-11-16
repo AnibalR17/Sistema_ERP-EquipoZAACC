@@ -26,7 +26,7 @@ namespace Sistema_ERP
                 _ => "modulo AS Primero, accion AS Segundo, descripcion AS Descripcion"
             };
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Seguridad);
+            AutorizacionDatos.Exigir(conexion, Modulos.seguridad);
             using var adaptador = new SqlDataAdapter($"SELECT {id} AS Id, {campos}, activo, motivo_desactivacion, version_fila FROM dbo.{tabla} WHERE activo=1 OR @inactivos=1 ORDER BY Primero", conexion);
             adaptador.SelectCommand.Parameters.Add("@inactivos", SqlDbType.Bit).Value = inactivos;
             var resultado = new DataTable();
@@ -37,7 +37,7 @@ namespace Sistema_ERP
         public static DataTable Empleados()
         {
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Seguridad);
+            AutorizacionDatos.Exigir(conexion, Modulos.seguridad);
             using var adaptador = new SqlDataAdapter("SELECT id_empleado AS Id, nombre AS Nombre, activo FROM dbo.Empleado ORDER BY nombre", conexion);
             var tabla = new DataTable();
             adaptador.Fill(tabla);
@@ -55,7 +55,7 @@ namespace Sistema_ERP
             string nombre = usuario ? "e.nombre" : "e.codigo";
             string detalle = usuario ? "" : ", e.modulo AS Modulo, e.accion AS Accion, e.descripcion AS Descripcion";
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Seguridad);
+            AutorizacionDatos.Exigir(conexion, Modulos.seguridad);
             using var adaptador = new SqlDataAdapter($"""
                 SELECT e.{clave} AS Id, {nombre} + CASE WHEN e.activo=0 THEN N' (inactivo)' ELSE N'' END AS Nombre,
                        e.activo, CONVERT(bit,CASE WHEN r.activo=1 THEN 1 ELSE 0 END) AS Asignado{detalle}
@@ -73,7 +73,7 @@ namespace Sistema_ERP
             using (var conexion = Conexion.AbrirConexion())
             using (var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable))
             {
-                int usuario = AutorizacionDatos.Exigir(conexion, Modulos.Seguridad, gestionar: true, transaccion: transaccion);
+                int usuario = AutorizacionDatos.Exigir(conexion, Modulos.seguridad, gestionar: true, transaccion: transaccion);
                 using var comando = new SqlCommand { Connection = conexion, Transaction = transaccion };
                 var valores = new List<string>();
                 foreach (var pantalla in CatalogoPermisos.Pantallas)
@@ -104,7 +104,7 @@ namespace Sistema_ERP
         public static DataTable PermisosPorRol()
         {
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Seguridad);
+            AutorizacionDatos.Exigir(conexion, Modulos.seguridad);
             using var adaptador = new SqlDataAdapter("""
                 SELECT r.id_rol AS IdRol, r.codigo AS CodigoRol, p.id_permiso AS IdPermiso,
                        p.modulo AS Modulo, p.accion AS Accion, p.descripcion AS Descripcion
@@ -124,28 +124,18 @@ namespace Sistema_ERP
         {
             var (tabla, clave) = Entidad(tipo);
             primero = primero.Trim(); segundo = segundo.Trim(); descripcion = descripcion.Trim();
-            ValidarTexto(primero, tipo == TipoSeguridad.Roles ? 30 : 50, "El primer campo", true, tipo != TipoSeguridad.Usuarios);
-            if (tipo != TipoSeguridad.Usuarios)
-            {
-                ValidarTexto(segundo, tipo == TipoSeguridad.Roles ? 80 : 30, "El segundo campo", true, tipo == TipoSeguridad.Permisos);
-                ValidarTexto(descripcion, 300, "La descripción", tipo == TipoSeguridad.Permisos);
-            }
-            if (tipo == TipoSeguridad.Usuarios) ValidacionDatos.Nombre(primero, "Usuario");
-            if (tipo == TipoSeguridad.Roles) ValidacionDatos.Nombre(segundo, "Nombre del rol");
             string? hash = null;
-            if (tipo == TipoSeguridad.Usuarios)
+            switch (tipo)
             {
-                if (empleado is null or <= 0) throw new ArgumentException("Selecciona un empleado.");
-                if (!id.HasValue || contrasena.Length > 0)
-                {
-                    if (contrasena.Length < 12 || contrasena.Length > 128)
-                        throw new ArgumentException("La contraseña debe tener entre 12 y 128 caracteres.");
-                    hash = ClaveSegura.Crear(contrasena);
-                }
+                case TipoSeguridad.Usuarios:
+                    if (GuardarUsuarioValidacion.Validar(id, primero, empleado, contrasena)) hash = ClaveSegura.Crear(contrasena);
+                    break;
+                case TipoSeguridad.Roles: GuardarRolValidacion.Validar(primero, segundo, descripcion); break;
+                case TipoSeguridad.Permisos: GuardarPermisoValidacion.Validar(primero, segundo, descripcion); break;
             }
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
-            AutorizacionDatos.Exigir(conexion, Modulos.Seguridad, gestionar: true, transaccion: transaccion);
+            AutorizacionDatos.Exigir(conexion, Modulos.seguridad, gestionar: true, transaccion: transaccion);
             if (tipo == TipoSeguridad.Usuarios)
             {
                 using var comprobar = new SqlCommand("""
@@ -154,7 +144,7 @@ namespace Sistema_ERP
                     """, conexion, transaccion);
                 comprobar.Parameters.Add("@empleado", SqlDbType.Int).Value = empleado!.Value;
                 comprobar.Parameters.Add("@id", SqlDbType.Int).Value = (object?)id ?? DBNull.Value;
-                if (Convert.ToInt32(comprobar.ExecuteScalar()) != 1) throw new ArgumentException("Selecciona un empleado activo para una nueva asignación.");
+                GuardarUsuarioValidacion.EmpleadoActivo(Convert.ToInt32(comprobar.ExecuteScalar()) == 1);
             }
             string columnas = tipo switch
             {
@@ -185,7 +175,7 @@ namespace Sistema_ERP
             comando.Parameters.Add("@id", SqlDbType.Int).Value = (object?)id ?? DBNull.Value;
             comando.Parameters.Add("@version", SqlDbType.Timestamp, 8).Value = (object?)version ?? DBNull.Value;
             int resultado = Convert.ToInt32(comando.ExecuteScalar());
-            if (id.HasValue && resultado != 1) throw new InvalidOperationException("El registro cambió o fue desactivado. Recarga la pestaña antes de continuar.");
+            GuardarRegistroSeguridadValidacion.Resultado(id, resultado);
             int registro = id ?? resultado;
             if (tipo != TipoSeguridad.Permisos) GuardarAsignaciones(conexion, transaccion, tipo, registro, asignaciones);
             transaccion.Commit();
@@ -228,10 +218,10 @@ namespace Sistema_ERP
 
         public static void CambiarEstado(TipoSeguridad tipo, int id, byte[] version, bool activar, string motivo)
         {
-            if (!activar) ValidarTexto(motivo.Trim(), 300, "El motivo", true);
+            CambiarEstadoSeguridadValidacion.Motivo(activar, motivo);
             var (tabla, clave) = Entidad(tipo);
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Seguridad, gestionar: true);
+            AutorizacionDatos.Exigir(conexion, Modulos.seguridad, gestionar: true);
             using var comando = new SqlCommand($"""
                 UPDATE dbo.{tabla} SET desactivado_en=CASE WHEN @activar=1 THEN NULL ELSE SYSUTCDATETIME() END,
                 desactivado_por=NULL,motivo_desactivacion=CASE WHEN @activar=1 THEN NULL ELSE @motivo END,
@@ -242,16 +232,8 @@ namespace Sistema_ERP
             comando.Parameters.Add("@version", SqlDbType.Timestamp, 8).Value = version;
             comando.Parameters.Add("@activar", SqlDbType.Bit).Value = activar;
             comando.Parameters.Add("@motivo", SqlDbType.NVarChar, 300).Value = motivo.Trim();
-            if (Convert.ToInt32(comando.ExecuteScalar()) != 1)
-                throw new InvalidOperationException("El registro cambió. Recarga la pestaña antes de continuar.");
+            CambiarEstadoSeguridadValidacion.Resultado(Convert.ToInt32(comando.ExecuteScalar()));
         }
 
-        private static void ValidarTexto(string texto, int maximo, string campo, bool obligatorio, bool ascii = false)
-        {
-            if (obligatorio && string.IsNullOrWhiteSpace(texto)) throw new ArgumentException(campo + " es obligatorio.");
-            ValidacionDatos.NoSoloCeros(texto, campo);
-            if (texto.Length > maximo) throw new ArgumentException($"{campo} admite hasta {maximo} caracteres.");
-            if (ascii && texto.Any(c => c > 127 || char.IsControl(c))) throw new ArgumentException(campo + " debe usar caracteres ASCII imprimibles.");
-        }
     }
 }

@@ -190,7 +190,7 @@ namespace Sistema_ERP.Vistas
             columnaCantidad.DefaultCellStyle.Format = "N0"; columnaCosto.DefaultCellStyle.Format = columnaSubtotal.DefaultCellStyle.Format = "N2";
             dgvDetalleCompra.Columns.AddRange(new DataGridViewColumn[] { columnaProductoId, columnaCodigo, columnaProducto, columnaCantidad, columnaCosto, columnaSubtotal });
             columnaProductoId.Visible = false;
-            pnlContenedorGrid.Controls.Add(dgvDetalleCompra); capturaLayout.Controls.Add(pnlContenedorGrid, 0, 4);
+            pnlContenedorGrid.Controls.Add(BusquedaTabla.Crear(dgvDetalleCompra)); capturaLayout.Controls.Add(pnlContenedorGrid, 0, 4);
             lblTotal.Name = "lblTotal"; lblTotal.Text = "Total: L. 0.00"; lblTotal.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
             lblTotal.Dock = DockStyle.Fill; lblTotal.TextAlign = ContentAlignment.MiddleRight;
             capturaLayout.Controls.Add(lblTotal, 0, 5);
@@ -223,7 +223,7 @@ namespace Sistema_ERP.Vistas
             btnConsultar.Name = "btnConsultar"; btnConsultar.Text = "Consultar";
             btnAbrirCompra.Name = "btnAbrirCompra"; btnAbrirCompra.Text = "Abrir detalle";
             accionesHistorial.Controls.AddRange(new Control[] { btnConsultar, btnAbrirCompra }); historialLayout.Controls.Add(accionesHistorial, 0, 1);
-            pnlListado.Controls.Add(dgvCompras); historialLayout.Controls.Add(pnlListado, 0, 2); tabHistorial.Controls.Add(historialLayout);
+            pnlListado.Controls.Add(BusquedaTabla.Crear(dgvCompras)); historialLayout.Controls.Add(pnlListado, 0, 2); tabHistorial.Controls.Add(historialLayout);
             foreach (var boton in new[] { btnAgregarCarrito, btnActualizarLinea, btnQuitarLinea, btnGuardar, btnConfirmar, btnAnular, btnCancelar, btnConsultar, btnAbrirCompra })
             {
                 boton.Size = new Size(156, 44); boton.Margin = new Padding(0, 4, 8, 0); boton.FlatStyle = FlatStyle.Flat;

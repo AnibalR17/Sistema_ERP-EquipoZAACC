@@ -7,12 +7,12 @@ public partial class Pagina_Central
         RevisarPermisosBusqueda(actuales);
         permisos = actuales;
         (Button Boton, string Modulo)[] opciones = [
-            (salesButton, Modulos.Ventas), (inventoryButton, Modulos.Inventario),
-            (comprasButton, Modulos.Compras), (proveedoresButton, Modulos.Proveedores),
-            (transferButton, Modulos.Traspasos), (validationButton, Modulos.Validacion),
-            (bulkButton, Modulos.CargaMasiva), (catalogButton, Modulos.Productos),
-            (returnsButton, Modulos.Apartados), (rolesButton, Modulos.Directorio),
-            (seguridadButton, Modulos.Seguridad), (settingsButton, Modulos.Configuracion)
+            (salesButton, Modulos.ventas), (inventoryButton, Modulos.inventario),
+            (comprasButton, Modulos.compras), (proveedoresButton, Modulos.proveedores),
+            (transferButton, Modulos.traspasos), (validationButton, Modulos.validacion),
+            (bulkButton, Modulos.cargaMasiva), (catalogButton, Modulos.productos),
+            (returnsButton, Modulos.apartados), (rolesButton, Modulos.directorio),
+            (seguridadButton, Modulos.seguridad), (settingsButton, Modulos.configuracion)
         ];
         int arriba = adminLabel.Bottom + 4;
         foreach (var (boton, modulo) in opciones)
@@ -23,19 +23,19 @@ public partial class Pagina_Central
             if (permisos.Puede(modulo)) arriba += boton.Height;
         }
         menuNavegacion.AutoScrollMinSize = new Size(0, arriba + 12);
-        notificationButton.Visible = permisos.Puede(Modulos.Inventario);
-        if (permisos.Puede(Modulos.Inventario)) actualizarAlertas?.Start(); else actualizarAlertas?.Stop();
-        if (!permisos.Puede(Modulos.Inventario))
+        notificationButton.Visible = permisos.Puede(Modulos.inventario);
+        if (permisos.Puede(Modulos.inventario)) actualizarAlertas?.Start(); else actualizarAlertas?.Stop();
+        if (!permisos.Puede(Modulos.inventario))
             foreach (var dialogo in OwnedForms.OfType<Notificaciones>().ToArray()) dialogo.Dispose();
-        selectorTienda.Visible = permisos.PuedeAlguno(Modulos.Ventas, Modulos.Apartados, Modulos.Compras,
-            Modulos.Inventario, Modulos.Traspasos, Modulos.Validacion, Modulos.Productos,
-            Modulos.CargaMasiva, Modulos.Directorio, Modulos.Configuracion);
-        cardPanel0.Visible = permisos.Puede(Modulos.Ventas);
-        cardPanel1.Visible = permisos.Puede(Modulos.Compras);
-        cardPanel2.Visible = permisos.PuedeAlguno(Modulos.Traspasos, Modulos.Validacion);
-        cardPanel3.Visible = permisos.Puede(Modulos.Inventario);
-        chartPanel.Visible = permisos.PuedeAlguno(Modulos.Ventas, Modulos.Compras);
-        btnprobarconexion.Visible = permisos.Puede(Modulos.Configuracion);
+        selectorTienda.Visible = permisos.PuedeAlguno(Modulos.ventas, Modulos.apartados, Modulos.compras,
+            Modulos.inventario, Modulos.traspasos, Modulos.validacion, Modulos.productos,
+            Modulos.cargaMasiva, Modulos.directorio, Modulos.configuracion);
+        cardPanel0.Visible = permisos.Puede(Modulos.ventas);
+        cardPanel1.Visible = permisos.Puede(Modulos.compras);
+        cardPanel2.Visible = permisos.PuedeAlguno(Modulos.traspasos, Modulos.validacion);
+        cardPanel3.Visible = permisos.Puede(Modulos.inventario);
+        chartPanel.Visible = permisos.PuedeAlguno(Modulos.ventas, Modulos.compras);
+        btnprobarconexion.Visible = permisos.Puede(Modulos.configuracion);
         MostrarInicioSinDatos("Consulta los módulos disponibles en el menú.");
         foreach (var (clave, pantalla) in pantallas.ToArray())
         {

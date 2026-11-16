@@ -2,10 +2,10 @@ namespace Sistema_ERP;
 
 internal static class Modulos
 {
-    internal const string Ventas = "VENTAS", Inventario = "INVENTARIO", Compras = "COMPRAS",
-        Proveedores = "PROVEEDORES", Traspasos = "TRASPASOS", Validacion = "VALIDACION_TRASPASOS",
-        CargaMasiva = "CARGA_MASIVA", Productos = "PRODUCTOS", Apartados = "APARTADOS_DEVOLUCIONES",
-        Directorio = "DIRECTORIO", Seguridad = "SEGURIDAD", Configuracion = "CONFIGURACION";
+    internal const string ventas = "VENTAS", inventario = "INVENTARIO", compras = "COMPRAS",
+        proveedores = "PROVEEDORES", traspasos = "TRASPASOS", validacion = "VALIDACION_TRASPASOS",
+        cargaMasiva = "CARGA_MASIVA", productos = "PRODUCTOS", apartados = "APARTADOS_DEVOLUCIONES",
+        directorio = "DIRECTORIO", seguridad = "SEGURIDAD", configuracion = "CONFIGURACION";
 }
 
 internal sealed class PermisosUsuario(bool administrador, IEnumerable<string> codigos)

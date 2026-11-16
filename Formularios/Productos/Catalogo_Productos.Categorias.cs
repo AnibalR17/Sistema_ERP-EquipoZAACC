@@ -81,7 +81,7 @@ namespace Sistema_ERP
                 DataPropertyName = "activo",
                 HeaderText = "Activa"
             });
-            panel.Controls.Add(dgvCategorias, 0, 6);
+            panel.Controls.Add(BusquedaTabla.Crear(dgvCategorias), 0, 6);
             return panel;
         }
 
@@ -178,24 +178,12 @@ namespace Sistema_ERP
             int id = idCategoriaSeleccionada.GetValueOrDefault();
             if (actualizar && (id == 0 || !categoriaSeleccionadaActiva)) return;
             string nombre = txtNombreCategoria.Text.Trim();
-            if (nombre.Length == 0)
-            {
-                MessageBox.Show(this, "Introduzca el nombre de la categoría.", "Categorías",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtNombreCategoria.Focus();
-                return;
-            }
 
             btnGuardarCategoria.Enabled = btnActualizarCategoria.Enabled = false;
             try
             {
-                ValidacionDatos.Nombre(nombre, "Nombre de la categoría");
-                ValidacionDatos.NoSoloCeros(txtDescripcionCategoria.Text, "Descripción");
-                if (CategoriaDatos.ExisteNombre(nombre, actualizar ? idCategoriaSeleccionada : null))
-                {
-                    MostrarCategoriaDuplicada();
-                    return;
-                }
+                GuardarCategoriaValidacion.Captura(nombre, txtDescripcionCategoria.Text);
+                GuardarCategoriaValidacion.NombreDisponible(CategoriaDatos.ExisteNombre(nombre, actualizar ? idCategoriaSeleccionada : null));
                 if (actualizar)
                 {
                     if (!CategoriaDatos.Editar(id, nombre, txtDescripcionCategoria.Text))
@@ -217,6 +205,11 @@ namespace Sistema_ERP
             catch (SqlException ex) when (ex.Number == 2601 || ex.Number == 2627)
             {
                 MostrarCategoriaDuplicada();
+            }
+            catch (ErrorCampoValidacion ex)
+            {
+                MessageBox.Show(this, ex.Message, "Categorías", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtNombreCategoria.Focus();
             }
             catch (ArgumentException ex)
             {

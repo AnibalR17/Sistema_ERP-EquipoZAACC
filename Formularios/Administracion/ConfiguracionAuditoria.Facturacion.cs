@@ -15,11 +15,11 @@ public sealed partial class ConfiguracionAuditoria
         var tabTiendas = new TabPage("Tiendas") { AutoScroll = true, BackColor = Color.White };
         var tabFiscal = new TabPage("Facturación / CAI") { Padding = new Padding(24), BackColor = Color.White, AutoScroll = true };
         var tabAuditoria = new TabPage("Auditoría") { Padding = new Padding(12), BackColor = Color.White };
-        layoutConfiguracion.Controls.Remove(layoutAuditoria); Cuerpo.Controls.Remove(layoutConfiguracion);
+        layoutConfiguracion.Controls.Remove(layoutAuditoria); cuerpo.Controls.Remove(layoutConfiguracion);
         layoutConfiguracion.RowStyles.RemoveAt(8); layoutConfiguracion.RowCount = 8;
         layoutConfiguracion.MinimumSize = new Size(0, 550); layoutConfiguracion.RowStyles[6].Height = 100;
         tabTiendas.Controls.Add(layoutConfiguracion); tabAuditoria.Controls.Add(layoutAuditoria);
-        tabs.TabPages.AddRange([tabTiendas, tabFiscal, tabAuditoria]); Cuerpo.Controls.Add(tabs);
+        tabs.TabPages.AddRange([tabTiendas, tabFiscal, tabAuditoria]); cuerpo.Controls.Add(tabs);
         PrepararApariencia(tabs);
         var campos = PantallaMaqueta.Filas(48, 28, 40, 28, 42, 64, 48, 76);
         campos.Dock = DockStyle.Top; campos.Height = 474;
@@ -30,16 +30,16 @@ public sealed partial class ConfiguracionAuditoria
         var botones = new FlowLayoutPanel { Dock = DockStyle.Fill };
         var guardarCai = PantallaMaqueta.Boton("Guardar CAI", true); var recargarCai = PantallaMaqueta.Boton("Actualizar");
         RecargaManual.Preparar(recargarCai); recargarCai.Name = "reiniciarCAI";
-        PermisosInterfaz.ConfigurarAcciones(this, (guardarCai, Modulos.Configuracion));
+        PermisosInterfaz.ConfigurarAcciones(this, (guardarCai, Modulos.configuracion));
         botones.Controls.AddRange([guardarCai, recargarCai]); campos.Controls.Add(botones, 0, 6); campos.Controls.Add(mensajeCai, 0, 7); tabFiscal.Controls.Add(campos);
         tiendaCai.SelectedIndexChanged += (_, _) => CargarCai();
         recargarCai.Click += (_, _) => CargarTiendasCai();
         guardarCai.Click += (_, _) =>
         {
-            if (tiendaCai.SelectedValue is not int tienda) { mensajeCai.Text = "Selecciona una tienda."; return; }
             guardarCai.Enabled = false;
             try
             {
+                int tienda = GuardarCaiValidacion.Tienda(tiendaCai.SelectedValue as int?);
                 ConfiguracionFacturacionDatos.Guardar(tienda, valorCai.Text, versionCai);
                 CargarCai(); mensajeCai.ForeColor = ProductoEstilo.Exito; mensajeCai.Text = "CAI guardado para las nuevas facturas de esta tienda."; ReiniciarAuditoria();
             }
@@ -56,7 +56,7 @@ public sealed partial class ConfiguracionAuditoria
         {
             object? seleccion = tiendaCai.SelectedValue;
             tiendaCai.DisplayMember = "nombre"; tiendaCai.ValueMember = "id_tienda";
-            var tiendas = VentaDatos.Consultar("SELECT id_tienda,nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre", modulo: Modulos.Configuracion);
+            var tiendas = VentaDatos.Consultar("SELECT id_tienda,nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre", modulo: Modulos.configuracion);
             tiendaCai.DataSource = tiendas;
             if (seleccion is int id && tiendas.AsEnumerable().Any(t => t.Field<int>("id_tienda") == id)) tiendaCai.SelectedValue = id;
             CargarCai();

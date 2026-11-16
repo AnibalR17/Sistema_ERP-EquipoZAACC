@@ -5,7 +5,7 @@ namespace Sistema_ERP;
 
 public sealed partial class CargaMasiva : PantallaMaqueta
 {
-    private const string TextoSeleccionArchivo = "Arrastra tu archivo .xlsx aqui o haz clic para seleccionar";
+    private const string textoSeleccionArchivo = "Arrastra tu archivo .xlsx aqui o haz clic para seleccionar";
     private DataGridView dgvPrevia = new();
     private Button btnImportar = new();
     private readonly Button btnCancelarCarga = new() { Name = "cancelarCarga", Text = "Cancelar carga", Enabled = false };
@@ -13,7 +13,7 @@ public sealed partial class CargaMasiva : PantallaMaqueta
     {
         Name = "seleccionarArchivoCarga",
         Dock = DockStyle.Fill,
-        Text = TextoSeleccionArchivo,
+        Text = textoSeleccionArchivo,
         FlatStyle = FlatStyle.Flat,
         ForeColor = Color.Gray,
         BackColor = Color.White,
@@ -50,7 +50,7 @@ public sealed partial class CargaMasiva : PantallaMaqueta
             if (selector.ShowDialog(this) == DialogResult.OK) Seleccionar(selector.FileName);
         };
         archivo.DragEnter += (_, e) => {
-            if (e.Data?.GetData(DataFormats.FileDrop) is string[] rutas && rutas.Length == 1 && Path.GetExtension(rutas[0]).Equals(".xlsx", StringComparison.OrdinalIgnoreCase))
+            if (ImportarProductosValidacion.ArchivoAdmitido(e.Data?.GetData(DataFormats.FileDrop) as string[]))
                 e.Effect = DragDropEffects.Copy;
         };
         archivo.DragDrop += (_, e) => {
@@ -82,7 +82,7 @@ public sealed partial class CargaMasiva : PantallaMaqueta
         var layoutTabla = Filas(-100, 40, 48);
 
         dgvPrevia.Dock = DockStyle.Fill;
-        layoutTabla.Controls.Add(dgvPrevia, 0, 0);
+        layoutTabla.Controls.Add(BusquedaTabla.Crear(dgvPrevia), 0, 0);
 
         lblResumen.Text = "";
         lblResumen.Dock = DockStyle.Fill;
@@ -111,10 +111,10 @@ public sealed partial class CargaMasiva : PantallaMaqueta
         filas.Controls.Add(tarjetaArchivo, 0, 0);
         filas.Controls.Add(opciones, 0, 1);
         filas.Controls.Add(pestanasCarga, 0, 2);
-        Cuerpo.Controls.Add(filas);
+        cuerpo.Controls.Add(filas);
 
         ConfigurarPrevisualizacion();
-        PermisosInterfaz.Configurar(this, Modulos.CargaMasiva, btnImportar);
+        PermisosInterfaz.Configurar(this, Modulos.cargaMasiva, btnImportar);
         MostrarEjemploPlantilla();
     }
 
@@ -127,7 +127,7 @@ public sealed partial class CargaMasiva : PantallaMaqueta
         ejemplo.ScrollBars = ScrollBars.Both;
         ejemplo.ClipboardCopyMode = DataGridViewClipboardCopyMode.EnableAlwaysIncludeHeaderText;
         var ayuda = Etiqueta("Precio: número con hasta dos decimales. StockInicial: entero no negativo. CodigoBarras y RTNProveedor: texto.", 10);
-        contenido.Controls.Add(descripcion, 0, 0); contenido.Controls.Add(ejemplo, 0, 1); contenido.Controls.Add(ayuda, 0, 2);
+        contenido.Controls.Add(descripcion, 0, 0); contenido.Controls.Add(BusquedaTabla.Crear(ejemplo), 0, 1); contenido.Controls.Add(ayuda, 0, 2);
         tabEjemplo.Controls.Add(contenido);
         try
         {
@@ -151,7 +151,7 @@ public sealed partial class CargaMasiva : PantallaMaqueta
         {
             object? anterior = cmbTiendaImportacion.SelectedValue;
             cmbTiendaImportacion.DisplayMember = "nombre"; cmbTiendaImportacion.ValueMember = "id_tienda";
-            cmbTiendaImportacion.DataSource = VentaDatos.Consultar("SELECT id_tienda,nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre", modulo: Modulos.CargaMasiva);
+            cmbTiendaImportacion.DataSource = VentaDatos.Consultar("SELECT id_tienda,nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre", modulo: Modulos.cargaMasiva);
             cmbTiendaImportacion.SelectedIndex = -1;
             if (anterior is int id) cmbTiendaImportacion.SelectedValue = id;
         }

@@ -8,6 +8,7 @@ namespace Sistema_ERP
         private ListBox listaModulos = null!;
         private CheckedListBox listaPermisos = null!;
         private ComboBox listaPresets = null!;
+        private TextBox buscarPermisos = null!;
         private Button seleccionarModulo = null!, quitarModulo = null!, aceptar = null!, cancelar = null!, aplicarPreset = null!, quitarTodos = null!;
         private FlowLayoutPanel acciones = null!;
 
@@ -90,7 +91,12 @@ namespace Sistema_ERP
             alcanceModulo.Name = "alcanceModulo"; alcanceModulo.AutoSize = true; alcanceModulo.Dock = DockStyle.Fill;
             alcanceModulo.ForeColor = ProductoEstilo.TextoSecundario; alcanceModulo.Margin = new Padding(0, 0, 0, 8);
             detalle.Controls.Add(alcanceModulo, 0, 0); detalle.Controls.Add(listaPermisos, 0, 1);
-            columnas.Controls.Add(listaModulos, 0, 1); columnas.Controls.Add(detalle, 1, 1);
+            buscarPermisos = new TextBox { Name = "buscarPermisos", Dock = DockStyle.Fill, PlaceholderText = "Buscar pantalla, acción o descripción…" };
+            var modulos = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 2, Margin = Padding.Empty };
+            modulos.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            modulos.RowStyles.Add(new RowStyle(SizeType.AutoSize)); modulos.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            modulos.Controls.Add(buscarPermisos, 0, 0); modulos.Controls.Add(listaModulos, 0, 1);
+            columnas.Controls.Add(modulos, 0, 1); columnas.Controls.Add(detalle, 1, 1);
             contenido.Controls.Add(columnas, 0, 5);
 
             var accionesModulo = new FlowLayoutPanel { AutoSize = true, Dock = DockStyle.Fill, Margin = new Padding(0, 8, 0, 0) };

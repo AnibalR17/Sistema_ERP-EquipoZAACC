@@ -16,10 +16,7 @@ namespace Sistema_ERP
         public bool Activo { get; set; } = true;
 
         public void Validar()
-        {
-            ValidacionDatos.NoSoloCeros(CodigoBarras, "Código de barras");
-            ValidacionDatos.Nombre(Nombre, "Nombre del producto");
-        }
+        { GuardarProductoValidacion.Validar(this); }
     }
 
     public static class ProductoDatos
@@ -40,7 +37,7 @@ namespace Sistema_ERP
                                  ORDER BY p.nombre";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Productos);
+            AutorizacionDatos.Exigir(conexion, Modulos.productos);
             using var adaptador = new SqlDataAdapter(sql, conexion);
             adaptador.SelectCommand.Parameters.Add("@incluirInactivos", SqlDbType.Bit).Value = incluirInactivos;
             adaptador.SelectCommand.Parameters.Add("@idTienda", SqlDbType.Int).Value = (object?)idTienda ?? DBNull.Value;
@@ -51,13 +48,13 @@ namespace Sistema_ERP
 
         public static bool ExisteCodigo(string codigoBarras, int? excluirId = null)
         {
-            ValidacionDatos.NoSoloCeros(codigoBarras, "Código de barras");
+            GuardarProductoValidacion.CodigoConsultable(codigoBarras);
             const string sql = @"SELECT COUNT(1) FROM dbo.Producto
                                  WHERE codigo_barras = @codigo
                                    AND (@excluirId IS NULL OR id_producto <> @excluirId)";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Productos);
+            AutorizacionDatos.Exigir(conexion, Modulos.productos);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@codigo", SqlDbType.NVarChar, 50).Value = codigoBarras.Trim();
             comando.Parameters.Add("@excluirId", SqlDbType.Int).Value = (object?)excluirId ?? DBNull.Value;
@@ -75,7 +72,7 @@ namespace Sistema_ERP
                                  SELECT id_producto FROM @insertados;";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Productos, gestionar: true);
+            AutorizacionDatos.Exigir(conexion, Modulos.productos, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             AgregarParametros(comando, producto);
             return (int)comando.ExecuteScalar();
@@ -91,7 +88,7 @@ namespace Sistema_ERP
                                  SELECT CONVERT(int, @@ROWCOUNT);";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Productos, gestionar: true);
+            AutorizacionDatos.Exigir(conexion, Modulos.productos, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             AgregarParametros(comando, producto);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = producto.IdProducto;

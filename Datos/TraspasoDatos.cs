@@ -11,7 +11,7 @@ namespace Sistema_ERP
         private static DataTable Consultar(string sql, int? id = null)
         {
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.ExigirAlguno(conexion, Modulos.Traspasos, Modulos.Validacion);
+            AutorizacionDatos.ExigirAlguno(conexion, Modulos.traspasos, Modulos.validacion);
             using var adaptador = new SqlDataAdapter(sql, conexion);
             if (id.HasValue)
                 adaptador.SelectCommand.Parameters.Add("@id", SqlDbType.Int).Value = id.Value;
@@ -67,7 +67,7 @@ namespace Sistema_ERP
                                  WHERE p.activo = 1 OR @incluirInactivos = 1
                                  ORDER BY p.nombre";
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.ExigirAlguno(conexion, Modulos.Traspasos, Modulos.Validacion);
+            AutorizacionDatos.ExigirAlguno(conexion, Modulos.traspasos, Modulos.validacion);
             using var adaptador = new SqlDataAdapter(sql, conexion);
             adaptador.SelectCommand.Parameters.Add("@id", SqlDbType.Int).Value = idTienda;
             adaptador.SelectCommand.Parameters.Add("@incluirInactivos", SqlDbType.Bit).Value = incluirInactivos;
@@ -89,18 +89,11 @@ namespace Sistema_ERP
         internal static int Guardar(int? id, byte[]? version, int origen, int destino, int usuario,
             string observaciones, IReadOnlyCollection<LineaTraspaso> lineas)
         {
-            if (origen <= 0 || destino <= 0 || origen == destino)
-                throw new ArgumentException("Seleccione dos tiendas distintas.");
-            if (observaciones.Length > 500)
-                throw new ArgumentException("Las observaciones admiten hasta 500 caracteres.");
-            ValidacionDatos.NoSoloCeros(observaciones, "Observaciones");
-            if (lineas.Count == 0 || lineas.Any(l => l.Producto <= 0 || l.Cantidad <= 0 || l.Precio < 0 || l.Precio > 9999999999999999.99m)
-                || lineas.Select(l => l.Producto).Distinct().Count() != lineas.Count)
-                throw new ArgumentException("Agregue productos sin repetir, con cantidades enteras positivas y precios válidos.");
-            if (SesionActual.Exigir().Id != usuario) throw new InvalidOperationException("El operador debe ser el usuario autenticado.");
+            GuardarTraspasoValidacion.Validar(origen, destino, observaciones, lineas);
+        if (SesionActual.Exigir().Id != usuario) throw new InvalidOperationException("El operador debe ser el usuario autenticado.");
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
-            AutorizacionDatos.Exigir(conexion, Modulos.Traspasos, gestionar: true, transaccion: transaccion);
+            AutorizacionDatos.Exigir(conexion, Modulos.traspasos, gestionar: true, transaccion: transaccion);
             SqlCommand Comando(string sql) => new(sql, conexion, transaccion);
             using (var validar = Comando(@"SELECT COUNT(*) FROM dbo.Tienda WITH (HOLDLOCK) WHERE activo=1 AND id_tienda IN (@origen,@destino)"))
             {
@@ -155,8 +148,7 @@ namespace Sistema_ERP
         {
             using var comando = new SqlCommand("SELECT COUNT(*) FROM dbo.Usuario WITH(HOLDLOCK) WHERE id_usuario=@usuario AND activo=1", conexion, transaccion);
             comando.Parameters.AddWithValue("@usuario", usuario);
-            if ((int)comando.ExecuteScalar()! != 1)
-                throw new ArgumentException("Seleccione un usuario activo.");
+            GuardarTraspasoValidacion.UsuarioActivo((int)comando.ExecuteScalar()! == 1);
         }
 
         internal static void PrepararOperacion(SqlConnection conexion, SqlTransaction transaccion, int usuario, string motivo)

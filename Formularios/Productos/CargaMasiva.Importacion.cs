@@ -1,29 +1,17 @@
-﻿using System.Data;
-using System.Globalization;
-using ClosedXML.Excel;
-using Sistema_ERP.Datos;
+using System.Data;
 
 namespace Sistema_ERP
 {
     public partial class CargaMasiva
     {
-        private static readonly string[] ColumnasEsperadas =
-            CargaMasivaPlantilla.Columnas;
+        private const string colObservacion = "Observacion";
 
-        private const string ColObservacion = "Observacion";
-
-        private DataTable? _tablaPrevia;
-        private Catalogos? _catalogos;
+        private DataTable? tablaPrevia;
+        private Catalogos? catalogos;
         private string? rutaOriginal;
         private byte[]? hashOriginal;
 
-        private sealed class Catalogos
-        {
-            public HashSet<string> CodigosBD { get; init; } = new(StringComparer.OrdinalIgnoreCase);
-            public HashSet<string> CodigosArchivo { get; } = new(StringComparer.OrdinalIgnoreCase);
-            public Dictionary<string, int> Categorias { get; init; } = new(StringComparer.OrdinalIgnoreCase);
-            public Dictionary<string, int> Proveedores { get; init; } = new(StringComparer.OrdinalIgnoreCase);
-        }
+        private sealed class Catalogos : CatalogosImportacion { }
 
         private void ConfigurarPrevisualizacion()
         {
@@ -42,7 +30,7 @@ namespace Sistema_ERP
             dgvPrevia.CellFormatting += (_, e) =>
             {
                 if (e.RowIndex < 0 || dgvPrevia.Rows[e.RowIndex].DataBoundItem is not DataRowView fila) return;
-                if (!string.IsNullOrEmpty(Convert.ToString(fila[ColObservacion])))
+                if (!string.IsNullOrEmpty(Convert.ToString(fila[colObservacion])))
                 {
                     e.CellStyle.BackColor = Color.FromArgb(255, 199, 199);
                     e.CellStyle.ForeColor = Color.FromArgb(110, 0, 0);
@@ -56,18 +44,17 @@ namespace Sistema_ERP
 
         private void CargarArchivo(string ruta)
         {
-            if (!string.Equals(Path.GetExtension(ruta), ".xlsx", StringComparison.OrdinalIgnoreCase))
+            try { ImportarProductosValidacion.TipoArchivo(ruta); }
+            catch (InvalidDataException ex)
             {
-                MessageBox.Show(this, "Solo se admiten archivos .xlsx.", "Carga masiva",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show(this, ex.Message, "Carga masiva", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             try
             {
                 ReiniciarPrevisualizacion();
                 DataTable tabla = LeerArchivo(ruta);
-                _catalogos = new Catalogos
+                catalogos = new Catalogos
                 {
                     CodigosBD = CargaMasivaDatos.CodigosExistentes(),
                     Categorias = CargaMasivaDatos.MapaCategorias(),
@@ -76,13 +63,13 @@ namespace Sistema_ERP
 
                 int validas = 0;
                 foreach (DataRow fila in tabla.Rows)
-                    if (ValidarFila(fila, _catalogos)) validas++;
+                    if (ValidarFila(fila, catalogos)) validas++;
 
-                _tablaPrevia = tabla;
+                tablaPrevia = tabla;
                 rutaOriginal = ruta;
                 using (var original = File.OpenRead(ruta)) hashOriginal = System.Security.Cryptography.SHA256.HashData(original);
                 dgvPrevia.DataSource = tabla;
-                dgvPrevia.Columns[ColObservacion]!.FillWeight = 200;
+                dgvPrevia.Columns[colObservacion]!.FillWeight = 200;
 
                 int conError = tabla.Rows.Count - validas;
                 lblResumen.Text = $"{tabla.Rows.Count} filas: {validas} válidas, {conError} con error.";
@@ -105,102 +92,22 @@ namespace Sistema_ERP
         }
 
         private static DataTable LeerArchivo(string ruta)
-        {
-            using var flujo = new FileStream(ruta, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            using var libro = new XLWorkbook(flujo);
-            IXLWorksheet hoja = libro.Worksheets.First();
+        { return ImportarProductosValidacion.LeerArchivo(ruta); }
 
-            IXLRow? encabezado = hoja.FirstRowUsed();
-            if (encabezado is null) throw new InvalidDataException("La hoja está vacía.");
 
-            var columnas = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
-            foreach (IXLCell celda in encabezado.CellsUsed())
-            {
-                string nombre = celda.GetString().Trim();
-                if (!columnas.TryAdd(nombre, celda.Address.ColumnNumber)) throw new InvalidDataException("Hay columnas repetidas: " + nombre);
-            }
-
-            string[] faltantes = ColumnasEsperadas.Where(c => !columnas.ContainsKey(c)).ToArray();
-            if (faltantes.Length > 0)
-                throw new InvalidDataException("Faltan columnas en el archivo: " + string.Join(", ", faltantes) + ".");
-
-            var tabla = new DataTable();
-            foreach (string c in ColumnasEsperadas) tabla.Columns.Add(c, typeof(string));
-            tabla.Columns.Add(ColObservacion, typeof(string));
-
-            foreach (IXLRow filaExcel in hoja.RowsUsed().Skip(1))
-            {
-                DataRow fila = tabla.NewRow();
-                foreach (string c in ColumnasEsperadas) fila[c] = TextoCelda(filaExcel.Cell(columnas[c]));
-                fila[ColObservacion] = "";
-                tabla.Rows.Add(fila);
-            }
-
-            if (tabla.Rows.Count == 0) throw new InvalidDataException("El archivo no tiene filas de datos.");
-            return tabla;
-        }
-
-        private static string TextoCelda(IXLCell celda)
-        {
-            if (celda.IsEmpty()) return "";
-            if (celda.DataType == XLDataType.Number)
-                return ((decimal)celda.GetDouble()).ToString(CultureInfo.InvariantCulture);
-            return celda.GetString().Trim();
-        }
 
         private static bool ValidarFila(DataRow fila, Catalogos cat)
-        {
-            var errores = new List<string>();
-            string Texto(string col) => Convert.ToString(fila[col])?.Trim() ?? "";
-
-            string[] obligatorios = { "CodigoBarras", "Nombre", "Precio", "NombreCategoria", "RTNProveedor" };
-            string[] vacios = obligatorios.Where(c => Texto(c).Length == 0).ToArray();
-            if (vacios.Length > 0) errores.Add("Falta: " + string.Join(", ", vacios));
-            foreach (string campo in new[] { "CodigoBarras", "Nombre", "NombreCategoria", "RTNProveedor" })
-                if (ValidacionDatos.SoloCeros(Texto(campo))) errores.Add($"{campo} no puede contener solo ceros");
-            foreach (string campo in new[] { "Nombre", "NombreCategoria" })
-                if (Texto(campo).Length > 0 && !ValidacionDatos.SoloCeros(Texto(campo)) && !ValidacionDatos.NombreValido(Texto(campo)))
-                    errores.Add($"{campo} debe contener al menos 3 letras");
-            if (Texto("CodigoBarras").Length > 50) errores.Add("El código admite hasta 50 caracteres");
-            if (Texto("Nombre").Length > 150) errores.Add("El nombre admite hasta 150 caracteres");
-
-            if (Texto("Precio").Length > 0)
-            {
-                if (!TryParseDecimal(Texto("Precio"), out decimal precio)) errores.Add("Precio no válido: usa 12.50 o 12,50, hasta dos decimales, sin moneda ni separadores de miles");
-                else if (precio <= 0) errores.Add("El precio debe ser mayor a cero");
-                else if (precio > 99999999.99m || decimal.Round(precio, 2) != precio) errores.Add("El precio admite hasta 99999999.99 y dos decimales");
-            }
-
-            if (Texto("StockInicial").Length > 0 &&
-                (!int.TryParse(Texto("StockInicial"), NumberStyles.Integer, CultureInfo.InvariantCulture, out int stock) || stock < 0))
-                errores.Add("El stock inicial debe ser un entero mayor o igual a cero");
-
-            string codigo = Texto("CodigoBarras");
-            if (codigo.Length > 0)
-            {
-                if (cat.CodigosBD.Contains(codigo)) errores.Add("El código de barras ya existe en la base de datos");
-                else if (!cat.CodigosArchivo.Add(codigo)) errores.Add("Código de barras repetido en el archivo");
-            }
-
-            if (Texto("NombreCategoria").Length > 0 && !cat.Categorias.ContainsKey(Texto("NombreCategoria")))
-                errores.Add($"La categoría '{Texto("NombreCategoria")}' no existe");
-            string rtn = CargaMasivaDatos.NormalizarRtn(Texto("RTNProveedor"));
-            if (rtn.Length > 0 && !cat.Proveedores.ContainsKey(rtn))
-                errores.Add($"No existe un proveedor con RTN '{Texto("RTNProveedor")}'");
-
-            fila[ColObservacion] = string.Join("; ", errores);
-            return errores.Count == 0;
-        }
+        { return ImportarProductosValidacion.ValidarFila(fila, cat); }
 
         private static bool TryParseDecimal(string texto, out decimal valor) =>
-            ImporteMonetario.TryParse(texto, out valor);
+            ImportarProductosValidacion.TryParseDecimal(texto, out valor);
 
         private void ImportarDatos()
         {
-            if (_tablaPrevia is null || _catalogos is null) return;
+            if (tablaPrevia is null || catalogos is null) return;
 
-            List<ProductoImportado> validos = ConstruirProductosValidos(_tablaPrevia, _catalogos);
-            int omitidas = _tablaPrevia.Rows.Count - validos.Count;
+            List<ProductoImportado> validos = ConstruirProductosValidos(tablaPrevia, catalogos);
+            int omitidas = tablaPrevia.Rows.Count - validos.Count;
             if (validos.Count == 0)
             {
                 MessageBox.Show(this, "No hay filas válidas para importar.", "Carga masiva",
@@ -215,11 +122,7 @@ namespace Sistema_ERP
 
             try
             {
-                if (validos.Any(p => p.StockInicial > 0) && cmbTiendaImportacion.SelectedValue is not int)
-                    throw new InvalidOperationException("Selecciona la tienda para el stock inicial.");
-                using (var original = File.OpenRead(rutaOriginal!))
-                    if (hashOriginal is null || !System.Security.Cryptography.SHA256.HashData(original).SequenceEqual(hashOriginal))
-                        throw new InvalidOperationException("El archivo cambió desde la previsualización. Vuelve a seleccionarlo.");
+                ImportarProductosValidacion.AntesDeImportar(validos, cmbTiendaImportacion.SelectedValue as int?, rutaOriginal!, hashOriginal);
                 int insertados = CargaMasivaDatos.ImportarProductos(validos,
                     cmbTiendaImportacion.SelectedValue is int tienda ? tienda : null, Path.GetFileName(rutaOriginal), hashOriginal);
                 MessageBox.Show(this, $"Importación completada: {insertados} productos registrados.", "Carga masiva",
@@ -238,39 +141,19 @@ namespace Sistema_ERP
         }
 
         private static List<ProductoImportado> ConstruirProductosValidos(DataTable tabla, Catalogos cat)
-        {
-            var lista = new List<ProductoImportado>();
-            foreach (DataRow fila in tabla.Rows)
-            {
-                if (!string.IsNullOrEmpty(Convert.ToString(fila[ColObservacion]))) continue;
-
-                string Texto(string col) => Convert.ToString(fila[col])?.Trim() ?? "";
-                if (!TryParseDecimal(Texto("Precio"), out decimal precio))
-                    throw new InvalidOperationException($"Revisa el precio de la fila {tabla.Rows.IndexOf(fila) + 2} antes de importar.");
-                int.TryParse(Texto("StockInicial"), NumberStyles.Integer, CultureInfo.InvariantCulture, out int stock);
-
-                lista.Add(new ProductoImportado(
-                    Texto("CodigoBarras"),
-                    Texto("Nombre"),
-                    Math.Round(precio, 2),
-                    stock,
-                    cat.Categorias[Texto("NombreCategoria")],
-                    cat.Proveedores[CargaMasivaDatos.NormalizarRtn(Texto("RTNProveedor"))], tabla.Rows.IndexOf(fila) + 2));
-            }
-            return lista;
-        }
+        { return ImportarProductosValidacion.ConstruirProductosValidos(tabla, cat); }
 
         private void ReiniciarPrevisualizacion()
         {
-            _tablaPrevia = null;
-            _catalogos = null;
+            tablaPrevia = null;
+            catalogos = null;
             rutaOriginal = null;
             hashOriginal = null;
             dgvPrevia.DataSource = null;
             lblResumen.Text = "";
             btnImportar.Enabled = false;
             btnCancelarCarga.Enabled = false;
-            archivo.Text = TextoSeleccionArchivo;
+            archivo.Text = textoSeleccionArchivo;
         }
     }
 }

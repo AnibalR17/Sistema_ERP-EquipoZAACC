@@ -4,7 +4,7 @@ namespace Sistema_ERP
 {
     public sealed partial class AsignarPermisosRol : FormularioTematico
     {
-        private sealed record Permiso(int Id, string Modulo, string Accion, string Descripcion, bool Activo)
+        private sealed record Permiso(int Id, string Modulo, string Accion, string Descripcion, bool Activo) : PermisoAsignable(Id, Modulo, Accion, Descripcion, Activo)
         {
             public override string ToString() => $"{Accion}{(Activo ? "" : " (inactivo)")} · {Descripcion}";
         }
@@ -41,6 +41,7 @@ namespace Sistema_ERP
             avisoAdministrador.Visible = string.Equals(codigoRol.Trim(), "ADMINISTRADOR", StringComparison.OrdinalIgnoreCase);
             avisoAdministrador.Text = "ADMINISTRADOR siempre tiene acceso total. Para limitar pantallas, usa otro rol y retira este del usuario.";
             listaModulos.SelectedIndexChanged += (_, _) => MostrarModulo();
+            buscarPermisos.TextChanged += (_, _) => FiltrarModulos();
             listaPermisos.ItemCheck += CambiarPermiso;
             seleccionarModulo.Click += (_, _) => SeleccionarModulo();
             quitarModulo.Click += (_, _) =>
@@ -59,19 +60,32 @@ namespace Sistema_ERP
 
         private void CargarCatalogo(DataTable catalogo, IEnumerable<int> seleccion)
         {
-            string? moduloAnterior = listaModulos.SelectedItem as string;
             var ids = seleccion.ToHashSet();
             permisos.Clear(); seleccionados.Clear();
             foreach (DataRow fila in catalogo.Rows)
                 permisos.Add(new Permiso((int)fila["Id"], (string)fila["Modulo"], (string)fila["Accion"], (string)fila["Descripcion"], (bool)fila["activo"]));
             seleccionados.UnionWith(permisos.Where(p => ids.Contains(p.Id)).Select(p => p.Id));
-            listaModulos.Items.Clear();
-            foreach (string modulo in permisos.Select(p => p.Modulo).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(CatalogoPermisos.NombrePantalla))
-                listaModulos.Items.Add(modulo);
-            if (moduloAnterior is not null && listaModulos.Items.Contains(moduloAnterior)) listaModulos.SelectedItem = moduloAnterior;
-            else if (listaModulos.Items.Count > 0) listaModulos.SelectedIndex = 0;
-            else MostrarModulo();
+            FiltrarModulos();
             aplicarPreset.Enabled = permisos.Any(p => p.Activo);
+        }
+
+        private void FiltrarModulos()
+        {
+            string? anterior = listaModulos.SelectedItem as string;
+            string texto = buscarPermisos.Text.Trim();
+            bool Coincide(string valor) => valor.Contains(texto, StringComparison.CurrentCultureIgnoreCase);
+            listaModulos.BeginUpdate();
+            try
+            {
+                listaModulos.Items.Clear();
+                foreach (string modulo in permisos.Where(p => Coincide(p.Modulo) || Coincide(CatalogoPermisos.NombrePantalla(p.Modulo))
+                    || Coincide(p.Accion) || Coincide(p.Descripcion)).Select(p => p.Modulo).Distinct(StringComparer.OrdinalIgnoreCase).OrderBy(CatalogoPermisos.NombrePantalla))
+                    listaModulos.Items.Add(modulo);
+                if (anterior is not null && listaModulos.Items.Contains(anterior)) listaModulos.SelectedItem = anterior;
+                else if (listaModulos.Items.Count > 0) listaModulos.SelectedIndex = 0;
+                else MostrarModulo();
+            }
+            finally { listaModulos.EndUpdate(); }
         }
 
         private void DescribirPreset()
@@ -83,16 +97,11 @@ namespace Sistema_ERP
         private void AplicarPreset()
         {
             if (listaPresets.SelectedItem is not PlantillaPermisos plantilla) return;
-            var activos = permisos.Where(p => p.Activo).ToArray();
-            var consultas = activos.Where(p => EsAccion(p, "CONSULTAR")).Select(p => p.Modulo).ToHashSet(StringComparer.OrdinalIgnoreCase);
-            var elegidos = activos.Where(p => plantilla.Incluye(p.Modulo, p.Accion) &&
-                (!EsAccion(p, "GESTIONAR") || consultas.Contains(p.Modulo))).ToArray();
+            var (elegidos, faltantes) = AplicarPresetPermisosValidacion.Seleccionar(plantilla, permisos);
             seleccionados.Clear();
             seleccionados.UnionWith(elegidos.Select(p => p.Id));
             PlantillaAplicada = plantilla;
             MostrarModulo();
-            int faltantes = plantilla.Permisos.Count(p => !elegidos.Any(e =>
-                string.Equals(e.Modulo, p.Modulo, StringComparison.OrdinalIgnoreCase) && EsAccion(e, p.Accion)));
             mensaje.Text = $"Preset {plantilla.Nombre} aplicado. Puedes ajustar sus pantallas antes de aceptar." +
                 (faltantes > 0 ? $" Faltan {faltantes} permisos activos requeridos; revísalos en Roles → Crear / editar permisos." : "");
         }
@@ -118,7 +127,7 @@ namespace Sistema_ERP
                 quitarModulo.Enabled = PermisosDelModulo().Any(p => seleccionados.Contains(p.Id));
                 listaPermisos.Enabled = listaPermisos.Items.Count > 0;
                 mensaje.Text = listaModulos.Items.Count == 0
-                    ? "No hay permisos disponibles. Revisa los inactivos en Roles → Crear / editar permisos."
+                    ? buscarPermisos.Text.Trim().Length > 0 ? "No hay coincidencias. Cambia o borra la búsqueda." : "No hay permisos disponibles. Revisa los inactivos en Roles → Crear / editar permisos."
                     : "Sin consulta no hay acceso; los permisos inactivos no conceden acceso.";
                 ActualizarResumen();
             }
@@ -129,33 +138,11 @@ namespace Sistema_ERP
         {
             if (cargando) return;
             var permiso = (Permiso)listaPermisos.Items[e.Index];
-            if (e.NewValue == CheckState.Checked)
+            try
             {
-                if (!permiso.Activo && !seleccionInicial.Contains(permiso.Id))
-                {
-                    e.NewValue = e.CurrentValue;
-                    mensaje.Text = "No se pueden asignar permisos inactivos.";
-                    return;
-                }
-                if (permiso.Activo && EsAccion(permiso, "GESTIONAR"))
-                {
-                    var consulta = PermisosDelModulo().FirstOrDefault(p => p.Activo && EsAccion(p, "CONSULTAR"));
-                    if (consulta is null)
-                    {
-                        e.NewValue = e.CurrentValue;
-                        mensaje.Text = "Este módulo necesita un permiso CONSULTAR activo para asignar GESTIONAR.";
-                        return;
-                    }
-                    seleccionados.Add(consulta.Id);
-                }
-                seleccionados.Add(permiso.Id);
+                AsignarPermisoRolValidacion.Cambiar(permiso, e.NewValue == CheckState.Checked, PermisosDelModulo().ToArray(), seleccionados, seleccionInicial);
             }
-            else
-            {
-                seleccionados.Remove(permiso.Id);
-                if (EsAccion(permiso, "CONSULTAR"))
-                    seleccionados.ExceptWith(PermisosDelModulo().Where(p => EsAccion(p, "GESTIONAR")).Select(p => p.Id));
-            }
+            catch (InvalidOperationException ex) { e.NewValue = e.CurrentValue; mensaje.Text = ex.Message; return; }
             SincronizarSeleccion(e.Index);
             quitarModulo.Enabled = PermisosDelModulo().Any(p => seleccionados.Contains(p.Id));
             ActualizarResumen();
@@ -163,12 +150,9 @@ namespace Sistema_ERP
 
         private void SeleccionarModulo()
         {
-            var activos = PermisosDelModulo().Where(p => p.Activo).ToArray();
-            bool consulta = activos.Any(p => EsAccion(p, "CONSULTAR"));
-            seleccionados.UnionWith(activos.Where(p => !EsAccion(p, "GESTIONAR") || consulta).Select(p => p.Id));
+            string? advertencia = AsignarPermisoRolValidacion.SeleccionarModulo(PermisosDelModulo(), seleccionados);
             MostrarModulo();
-            if (!consulta && activos.Any(p => EsAccion(p, "GESTIONAR")))
-                mensaje.Text = "No se asignó GESTIONAR porque este módulo no tiene un permiso CONSULTAR activo.";
+            if (advertencia is not null) mensaje.Text = advertencia;
         }
 
         private void SincronizarSeleccion(int indiceActual)
@@ -190,6 +174,5 @@ namespace Sistema_ERP
             quitarTodos.Enabled = seleccionados.Count > 0;
         }
 
-        private static bool EsAccion(Permiso permiso, string accion) => string.Equals(permiso.Accion, accion, StringComparison.OrdinalIgnoreCase);
     }
 }

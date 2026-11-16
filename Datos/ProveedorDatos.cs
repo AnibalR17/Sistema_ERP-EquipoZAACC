@@ -11,7 +11,7 @@ namespace Sistema_ERP
             const string sql = "SELECT id_proveedor, nombre_empresa FROM dbo.Proveedor WHERE activo = 1 ORDER BY nombre_empresa";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.ExigirAlguno(conexion, Modulos.Proveedores, Modulos.Productos);
+            AutorizacionDatos.ExigirAlguno(conexion, Modulos.proveedores, Modulos.productos);
             using var adaptador = new SqlDataAdapter(sql, conexion);
             var tabla = new DataTable();
             adaptador.Fill(tabla);
@@ -23,7 +23,7 @@ namespace Sistema_ERP
                                         activo, motivo_desactivacion
                                  FROM dbo.Proveedor WHERE activo = 1 OR @incluirInactivos = 1 ORDER BY nombre_empresa";
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.ExigirAlguno(conexion, Modulos.Proveedores, Modulos.Directorio);
+            AutorizacionDatos.ExigirAlguno(conexion, Modulos.proveedores, Modulos.directorio);
             using var adaptador = new SqlDataAdapter(sql, conexion);
             adaptador.SelectCommand.Parameters.Add("@incluirInactivos", SqlDbType.Bit).Value = incluirInactivos;
             var tabla = new DataTable();
@@ -37,7 +37,7 @@ namespace Sistema_ERP
             const string sql = @"SELECT COUNT(*) FROM dbo.Proveedor
                                  WHERE rtn = @rtn AND (@id IS NULL OR id_proveedor <> @id)";
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.ExigirAlguno(conexion, Modulos.Proveedores, Modulos.Directorio);
+            AutorizacionDatos.ExigirAlguno(conexion, Modulos.proveedores, Modulos.directorio);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@rtn", SqlDbType.VarChar, 30).Value = rtn.Trim();
             comando.Parameters.Add("@id", SqlDbType.Int).Value = (object?)excluirId ?? DBNull.Value;

@@ -2,9 +2,11 @@
 
 La sección tiene dos pestañas conectadas a SQL Server, con búsqueda, filtro por estado, consulta de detalles y actualización al regresar al módulo. Usa el esquema 3FN, `Base de Datos/Triggers2.sql` y `Datos/Migraciones/002_bitacora_sistema.sql`, ya utilizados por facturación. No requiere reiniciar la base ni eliminar datos.
 
+Los listados y los detalles que muestran fechas incluyen **Desde**, **Hasta** y **Quitar fechas**. Cada límite es opcional y el día final se incluye completo. Si hay varias fechas (por ejemplo, creación y vencimiento), el selector indica cuál se filtra. El intervalo se combina con la búsqueda de texto y el estado. Las columnas identificadas como UTC usan días UTC.
+
 ## Apartados
 
-1. Crear un apartado seleccionando tienda, cliente, vencimiento (hora de Honduras) y productos. Antes de guardar se pueden agregar y quitar líneas. El guardado reserva las unidades disponibles; valida precios y stock nuevamente en la transacción.
+1. Crear un apartado seleccionando tienda, un cliente existente y activo, vencimiento (hora de Honduras) y productos. El cliente comienza sin selección; **Buscar cliente…** permite elegirlo por código, nombre, teléfono, correo o RTN/documento fiscal. Este diálogo solo selecciona registros existentes. Antes de guardar se pueden agregar y quitar líneas. El guardado reserva las unidades disponibles; valida cliente activo, precios y stock nuevamente en la transacción.
 2. Registrar abonos hasta cubrir el saldo. En efectivo, la referencia se genera automáticamente al guardar el abono o cobrar el saldo de una entrega. Para métodos distintos de efectivo se solicita una referencia manual. No se aceptan abonos sobre el total ni sobre apartados vencidos o cerrados.
 3. Entregar y facturar cobra el saldo pendiente, transforma cada abono en un pago de la factura y genera el pago final si corresponde. También admite apartados totalmente abonados. La confirmación de la venta libera la reserva y descuenta la existencia una sola vez. La factura aparece en el historial de facturación, donde puede reimprimirse.
 4. Cancelar o marcar vencido libera la reserva. Vencer exige que ya haya llegado la fecha. Se solicita motivo y se registra en auditoría. Los abonos no se eliminan: Reembolsar abonos registra el importe pendiente por cada método original. Un segundo intento no duplica los reembolsos.

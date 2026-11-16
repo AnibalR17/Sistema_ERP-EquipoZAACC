@@ -8,9 +8,9 @@ namespace Sistema_ERP
 
     public static class CompraDatos
     {
-        private const decimal MaximoImporte = 9999999999999999.99m;
+        private const decimal maximoImporte = 9999999999999999.99m;
 
-        private const string VersionSql = """
+        private const string versionSql = """
             HASHBYTES('SHA2_256',(
                 SELECT c.id_compra,c.id_proveedor,c.id_tienda,c.numero_factura,c.fecha_factura,
                        c.registrado_en,c.id_usuario,c.estado,c.observaciones,
@@ -21,11 +21,11 @@ namespace Sistema_ERP
                 FOR JSON PATH,WITHOUT_ARRAY_WRAPPER,INCLUDE_NULL_VALUES))
             """;
 
-        private static readonly string CabeceraSql = $"""
+        private static readonly string cabeceraSql = $"""
             SELECT c.id_compra,p.nombre_empresa AS Proveedor,t.nombre AS Tienda,
                    c.numero_factura,c.fecha_factura,c.registrado_en,u.nombre_usuario AS Usuario,
                    c.estado,c.observaciones,c.motivo_anulacion,c.id_proveedor,c.id_tienda,
-                   total.total AS Total,{VersionSql} AS version_fila
+                   total.total AS Total,{versionSql} AS version_fila
             FROM dbo.Compra c
             JOIN dbo.Proveedor p ON p.id_proveedor=c.id_proveedor
             JOIN dbo.Tienda t ON t.id_tienda=c.id_tienda
@@ -33,7 +33,7 @@ namespace Sistema_ERP
             JOIN dbo.vw_CompraTotal total ON total.id_compra=c.id_compra
             """;
 
-        private const string DetalleSql = """
+        private const string detalleSql = """
             SELECT d.id_detalle_compra,d.id_producto,p.codigo_barras AS Codigo,
                    p.nombre AS Producto,d.cantidad,d.costo_unitario,d.subtotal,p.activo AS Activo
             FROM dbo.DetalleCompra d JOIN dbo.Producto p ON p.id_producto=d.id_producto
@@ -57,13 +57,10 @@ namespace Sistema_ERP
         public static DataTable Listar(string buscar = "", string estado = "", DateTime? desde = null, DateTime? hasta = null)
         {
             estado = estado.Trim().ToUpperInvariant();
-            if (estado.Length > 0 && estado is not ("BORRADOR" or "CONFIRMADA" or "ANULADA"))
-                throw new ArgumentException("Selecciona un estado de compra válido.");
-            if (desde.HasValue && hasta.HasValue && desde.Value.Date > hasta.Value.Date)
-                throw new ArgumentException("La fecha inicial no puede ser posterior a la final.");
+            ConsultarHistorialValidacion.Compras(estado, desde, hasta);
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Compras);
-            using var comando = new SqlCommand(CabeceraSql + """
+            AutorizacionDatos.Exigir(conexion, Modulos.compras);
+            using var comando = new SqlCommand(cabeceraSql + """
 
                 WHERE (@estado='' OR c.estado=@estado)
                 AND (@desde IS NULL OR c.fecha_factura>=@desde)
@@ -83,18 +80,18 @@ namespace Sistema_ERP
 
         public static DataSet Obtener(int id)
         {
-            if (id <= 0) throw new ArgumentException("Selecciona una compra.");
+            ConsultarCompraValidacion.Seleccion(id);
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
-            AutorizacionDatos.Exigir(conexion, Modulos.Compras, transaccion: transaccion);
-            using var cabecera = new SqlCommand(CabeceraSql + " WHERE c.id_compra=@id", conexion, transaccion);
+            AutorizacionDatos.Exigir(conexion, Modulos.compras, transaccion: transaccion);
+            using var cabecera = new SqlCommand(cabeceraSql + " WHERE c.id_compra=@id", conexion, transaccion);
             cabecera.Parameters.Add("@id", SqlDbType.Int).Value = id;
             var datos = new DataSet();
             DataTable tabla = Llenar(cabecera);
             tabla.TableName = "Compra";
-            if (tabla.Rows.Count != 1) throw new InvalidOperationException("La compra ya no existe. Recarga el listado.");
+            ConsultarCompraValidacion.Existe(tabla.Rows.Count);
             datos.Tables.Add(tabla);
-            using var detalle = new SqlCommand(DetalleSql, conexion, transaccion);
+            using var detalle = new SqlCommand(detalleSql, conexion, transaccion);
             detalle.Parameters.Add("@id", SqlDbType.Int).Value = id;
             tabla = Llenar(detalle);
             tabla.TableName = "Detalle";
@@ -113,15 +110,13 @@ namespace Sistema_ERP
             DateTime fecha, string observaciones, IReadOnlyCollection<LineaCompra> lineas)
         {
             ValidarCompra(proveedor, tienda, factura, observaciones, lineas);
-            if (id.HasValue && (id.Value <= 0 || version is not { Length: 32 }))
-                throw new ArgumentException("Recarga la compra antes de actualizarla.");
+            GuardarCompraValidacion.Version(id, version);
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
             int usuario = Preparar(conexion, transaccion, "Guardar borrador de compra");
             if (id.HasValue)
             {
-                if (ComprobarVersion(conexion, transaccion, id.Value, version!) != "BORRADOR")
-                    throw new InvalidOperationException("Solo se pueden editar compras en BORRADOR.");
+                GuardarCompraValidacion.Estado(ComprobarVersion(conexion, transaccion, id.Value, version!));
             }
             ValidarEntidades(conexion, transaccion, proveedor, tienda, lineas.Select(l => l.Producto));
             int numero;
@@ -179,8 +174,7 @@ namespace Sistema_ERP
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
             Preparar(conexion, transaccion, "Confirmar compra");
-            if (ComprobarVersion(conexion, transaccion, id, version) != "BORRADOR")
-                throw new InvalidOperationException("Solo se puede confirmar una compra en BORRADOR.");
+            ConfirmarCompraValidacion.Estado(ComprobarVersion(conexion, transaccion, id, version));
             using (var validar = new SqlCommand("""
                 IF NOT EXISTS(SELECT 1 FROM dbo.DetalleCompra WHERE id_compra=@id)
                     THROW 50001, 'Agrega al menos un producto antes de confirmar.', 1;
@@ -204,15 +198,12 @@ namespace Sistema_ERP
 
         public static void Anular(int id, byte[] version, string motivo)
         {
-            if (string.IsNullOrWhiteSpace(motivo) || motivo.Trim().Length > 500)
-                throw new ArgumentException("Introduce un motivo de anulación de hasta 500 caracteres.");
-            ValidacionDatos.NoSoloCeros(motivo, "Motivo");
+            AnularCompraValidacion.Motivo(motivo);
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
             int usuario = Preparar(conexion, transaccion, motivo.Trim());
             string estado = ComprobarVersion(conexion, transaccion, id, version);
-            if (estado is not ("BORRADOR" or "CONFIRMADA"))
-                throw new InvalidOperationException("La compra ya está anulada.");
+            AnularCompraValidacion.Estado(estado);
             using var anular = new SqlCommand("""
                 UPDATE dbo.Compra SET estado='ANULADA',anulado_en=SYSUTCDATETIME(),
                     anulado_por=@usuario,motivo_anulacion=@motivo WHERE id_compra=@id
@@ -226,26 +217,7 @@ namespace Sistema_ERP
 
         private static void ValidarCompra(int proveedor, int tienda, string factura, string observaciones,
             IReadOnlyCollection<LineaCompra> lineas)
-        {
-            if (proveedor <= 0 || tienda <= 0) throw new ArgumentException("Selecciona proveedor y tienda.");
-            if (string.IsNullOrWhiteSpace(factura) || factura.Trim().Length > 50)
-                throw new ArgumentException("Introduce un número de factura de hasta 50 caracteres.");
-            ValidacionDatos.NoSoloCeros(factura, "Número de factura");
-            ValidacionDatos.NoSoloCeros(observaciones, "Observaciones");
-            if (observaciones.Length > 500) throw new ArgumentException("Las observaciones admiten hasta 500 caracteres.");
-            if (lineas.Count == 0 || lineas.Any(l => l.Producto <= 0 || l.Cantidad <= 0 || l.Costo <= 0
-                || l.Costo > MaximoImporte || decimal.Round(l.Costo, 2) != l.Costo)
-                || lineas.Select(l => l.Producto).Distinct().Count() != lineas.Count)
-                throw new ArgumentException("Agrega productos sin repetir, cantidades enteras positivas y costos positivos con hasta dos decimales.");
-            decimal total = 0;
-            foreach (var linea in lineas)
-            {
-                decimal subtotal = linea.Cantidad * linea.Costo;
-                if (subtotal > MaximoImporte || total > MaximoImporte - subtotal)
-                    throw new ArgumentException("El subtotal o total supera el importe permitido (decimal 18,2).");
-                total += subtotal;
-            }
-        }
+        { GuardarCompraValidacion.Validar(proveedor, tienda, factura, observaciones, lineas); }
 
         private static void ValidarEntidades(SqlConnection conexion, SqlTransaction transaccion,
             int proveedor, int tienda, IEnumerable<int> productos)
@@ -273,7 +245,7 @@ namespace Sistema_ERP
 
         private static string ComprobarVersion(SqlConnection conexion, SqlTransaction transaccion, int id, byte[] version)
         {
-            if (id <= 0 || version is not { Length: 32 }) throw new ArgumentException("Selecciona una compra y recárgala antes de operar.");
+            ConsultarCompraValidacion.Version(id, version);
             using (var bloquear = new SqlCommand("""
                 SELECT id_compra FROM dbo.Compra WITH(UPDLOCK,HOLDLOCK) WHERE id_compra=@id;
                 SELECT id_detalle_compra FROM dbo.DetalleCompra WITH(UPDLOCK,HOLDLOCK) WHERE id_compra=@id;
@@ -282,17 +254,17 @@ namespace Sistema_ERP
                 bloquear.Parameters.Add("@id", SqlDbType.Int).Value = id;
                 bloquear.ExecuteNonQuery();
             }
-            using var comando = new SqlCommand($"SELECT c.estado,{VersionSql} AS version_fila FROM dbo.Compra c WHERE c.id_compra=@id", conexion, transaccion);
+            using var comando = new SqlCommand($"SELECT c.estado,{versionSql} AS version_fila FROM dbo.Compra c WHERE c.id_compra=@id", conexion, transaccion);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = id;
             using var lector = comando.ExecuteReader();
-            if (!lector.Read() || !((byte[])lector["version_fila"]).SequenceEqual(version))
-                throw new InvalidOperationException("La compra cambió en otra ventana. Recárgala antes de guardar o cambiar su estado.");
+            bool existe = lector.Read();
+            ConsultarCompraValidacion.VersionActual(existe, existe ? (byte[])lector["version_fila"] : null, version);
             return lector.GetString(0);
         }
 
         private static int Preparar(SqlConnection conexion, SqlTransaction transaccion, string motivo)
         {
-            int usuario = AutorizacionDatos.Exigir(conexion, Modulos.Compras, gestionar: true, transaccion: transaccion);
+            int usuario = AutorizacionDatos.Exigir(conexion, Modulos.compras, gestionar: true, transaccion: transaccion);
             using var comando = new SqlCommand("""
                 IF (SELECT value_in_use FROM sys.configurations WHERE name='nested triggers')<>1
                     OR DATABASEPROPERTYEX(DB_NAME(),'IsRecursiveTriggersEnabled')=1
@@ -319,7 +291,7 @@ namespace Sistema_ERP
         private static DataTable Consultar(string sql)
         {
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Compras);
+            AutorizacionDatos.Exigir(conexion, Modulos.compras);
             using var comando = new SqlCommand(sql, conexion);
             return Llenar(comando);
         }

@@ -137,7 +137,7 @@ public partial class Pagina_Central
 
     private void RevisarPermisosBusqueda(PermisosUsuario actuales)
     {
-        if (BusquedaGlobalDatos.Destinos.Any(d => BusquedaGlobalDatos.PuedeVer(permisos, d.Pantalla) != BusquedaGlobalDatos.PuedeVer(actuales, d.Pantalla)))
+        if (BusquedaGlobalDatos.destinos.Any(d => BusquedaGlobalDatos.PuedeVer(permisos, d.Pantalla) != BusquedaGlobalDatos.PuedeVer(actuales, d.Pantalla)))
         {
             CancelarBusqueda();
             if (pantallaBusqueda is { IsDisposed: false }) pantallaBusqueda.MostrarEstado("Tus permisos cambiaron. Vuelve a buscar.");

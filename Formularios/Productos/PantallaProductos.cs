@@ -13,8 +13,10 @@ namespace Sistema_ERP.Vistas
             InitializeComponent();
             if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
+            txtBuscar.PlaceholderText = "Buscar por cualquier dato del producto…";
+            txtBuscar.TextChanged += (_, _) => FiltrarProductos();
             RecargaManual.Agregar(pnlAcciones, CargarDatos);
-            PermisosInterfaz.Configurar(this, Modulos.Productos, btnDesactivar);
+            PermisosInterfaz.Configurar(this, Modulos.productos, btnDesactivar);
             btnDesactivar.Click += BtnDesactivar_Click;
         }
 
@@ -53,11 +55,17 @@ namespace Sistema_ERP.Vistas
             try
             {
                 dgvProductos.DataSource = ProductoDatos.Listar();
+                FiltrarProductos();
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al cargar productos: " + ex.Message);
             }
+        }
+
+        private void FiltrarProductos()
+        {
+            if (dgvProductos.DataSource is DataTable datos) BusquedaDatos.Filtrar(datos.DefaultView, txtBuscar.Text, dgvProductos);
         }
 
         private void BtnDesactivar_Click(object? sender, EventArgs e)

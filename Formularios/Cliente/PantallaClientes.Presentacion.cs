@@ -51,7 +51,7 @@
             mainLayout.Controls.Add(chkClientesInactivos, 0, 3);
 
             dgvClientes.Dock = DockStyle.Fill;
-            mainLayout.Controls.Add(dgvClientes, 0, 4);
+            mainLayout.Controls.Add(BusquedaTabla.Crear(dgvClientes), 0, 4);
 
             Controls.Add(mainLayout);
             Dock = DockStyle.Fill;

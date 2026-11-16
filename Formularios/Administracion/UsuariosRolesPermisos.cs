@@ -36,7 +36,7 @@ namespace Sistema_ERP
             tabla.SelectionChanged += (_, _) => { if (!cargando) Ejecutar(Seleccionar); };
             ConfigurarCampos();
             Botones();
-            PermisosInterfaz.Configurar(this, Modulos.Seguridad,
+            PermisosInterfaz.Configurar(this, Modulos.seguridad,
                 [guardar, actualizar, nuevo, desactivar, reactivar, accionesAsignaciones, .. selectorRoles.ControlesEdicion]);
         }
 
@@ -137,8 +137,7 @@ namespace Sistema_ERP
             if (!disponible || (editar && (!idSeleccionado.HasValue || !activo))) return;
             Ejecutar(() =>
             {
-                if (tipo == TipoSeguridad.Usuarios && contrasena.Text != confirmar.Text)
-                    throw new ArgumentException("Las contraseñas no coinciden.");
+                if (tipo == TipoSeguridad.Usuarios) GuardarUsuarioValidacion.Confirmacion(contrasena.Text, confirmar.Text);
                 SeguridadDatos.Guardar(tipo, editar ? idSeleccionado : null, editar ? version : null,
                     primero.Text, segundo.Text, descripcion.Text, empleado.SelectedValue as int?, contrasena.Text,
                     SeleccionAsignaciones());
@@ -151,7 +150,7 @@ namespace Sistema_ERP
         private void GenerarPermisos()
         {
             if (tipo != TipoSeguridad.Usuarios || !disponible || (idSeleccionado.HasValue && !activo)) return;
-            AutorizacionDatos.Exigir(Modulos.Seguridad, gestionar: true);
+            AutorizacionDatos.Exigir(Modulos.seguridad, gestionar: true);
             int[] seleccionados = SeleccionAsignaciones();
             using var rolesDisponibles = SeguridadDatos.Asignaciones(TipoSeguridad.Usuarios, idSeleccionado);
             using var permisosPorRol = SeguridadDatos.PermisosPorRol();
@@ -166,7 +165,7 @@ namespace Sistema_ERP
         private void AsignarPermisosPorModulo()
         {
             if (tipo != TipoSeguridad.Roles || !disponible || (idSeleccionado.HasValue && !activo)) return;
-            AutorizacionDatos.Exigir(Modulos.Seguridad, gestionar: true);
+            AutorizacionDatos.Exigir(Modulos.seguridad, gestionar: true);
             int[] seleccionados = asignaciones.CheckedItems.Cast<Opcion>().Select(o => o.Id).ToArray();
             using var catalogo = SeguridadDatos.CatalogoPermisosParaRol(idSeleccionado);
             using var dialogo = new AsignarPermisosRol(segundo.Text, catalogo, seleccionados, idSeleccionado, primero.Text);
@@ -198,7 +197,7 @@ namespace Sistema_ERP
         private void EditarPermisosDelRol()
         {
             if (tipo != TipoSeguridad.Roles || !disponible || (idSeleccionado.HasValue && !activo)) return;
-            AutorizacionDatos.Exigir(Modulos.Seguridad, gestionar: true);
+            AutorizacionDatos.Exigir(Modulos.seguridad, gestionar: true);
             int[] seleccionados = asignaciones.CheckedItems.Cast<Opcion>().Select(o => o.Id).ToArray();
             using var dialogo = new EditorPermisosRol(segundo.Text);
             dialogo.ShowDialog(this);
@@ -208,20 +207,7 @@ namespace Sistema_ERP
         private void AplicarPermisosCreados(IEnumerable<int> seleccion, IEnumerable<int> creados)
         {
             using var catalogo = SeguridadDatos.Asignaciones(TipoSeguridad.Roles, idSeleccionado);
-            var elegidos = seleccion.ToHashSet();
-            var nuevos = creados.ToHashSet();
-            foreach (var permiso in catalogo.AsEnumerable().Where(f => f.Field<bool>("activo") && nuevos.Contains(f.Field<int>("Id"))))
-            {
-                if (string.Equals(permiso.Field<string>("Accion"), "GESTIONAR", StringComparison.OrdinalIgnoreCase))
-                {
-                    var consulta = catalogo.AsEnumerable().FirstOrDefault(f => f.Field<bool>("activo") &&
-                        string.Equals(f.Field<string>("Modulo"), permiso.Field<string>("Modulo"), StringComparison.OrdinalIgnoreCase) &&
-                        string.Equals(f.Field<string>("Accion"), "CONSULTAR", StringComparison.OrdinalIgnoreCase));
-                    if (consulta is null) continue;
-                    elegidos.Add(consulta.Field<int>("Id"));
-                }
-                elegidos.Add(permiso.Field<int>("Id"));
-            }
+            var elegidos = AsignarPermisoRolValidacion.IncluirCreados(catalogo, seleccion, creados);
             AplicarAsignaciones(catalogo, elegidos);
             Mensaje("Catálogo actualizado. Revisa los permisos elegidos y pulsa Guardar o Actualizar para asignarlos al rol. Gestionar requiere una consulta activa del mismo módulo.");
         }
@@ -274,9 +260,7 @@ namespace Sistema_ERP
         private void Filtrar()
         {
             if (vista is null) return;
-            string texto = buscar.Text.Trim();
-            string literal = texto.Replace("'", "''").Replace("[", "[[]").Replace("%", "[%]").Replace("*", "[*]");
-            vista.RowFilter = $"Primero LIKE '%{literal}%' OR Segundo LIKE '%{literal}%' OR Descripcion LIKE '%{literal}%'";
+            BusquedaDatos.Filtrar(vista, buscar.Text, tabla);
             contador.Text = $"{vista.Count} registros";
         }
 

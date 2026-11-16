@@ -4,7 +4,7 @@ namespace Sistema_ERP
 {
     public partial class Nuevo_Producto : FormularioTematico
     {
-        private readonly Producto? _editando;
+        private readonly Producto? editando;
 
         public Nuevo_Producto() : this(null) { }
 
@@ -13,11 +13,11 @@ namespace Sistema_ERP
             InitializeComponent();
             if (Sistema_ERP.ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
-            _editando = producto;
+            editando = producto;
             var reiniciar = RecargaManual.Agregar(this, CargarReferencias);
             reiniciar.SetBounds(32, 582, 120, 44);
             reiniciar.TabIndex = 8;
-            PermisosInterfaz.Configurar(this, Modulos.Productos, btnGuardar);
+            PermisosInterfaz.Configurar(this, Modulos.productos, btnGuardar);
 
             Load += FormProducto_Load;
             btnGuardar.Click += BtnGuardar_Click;
@@ -50,17 +50,17 @@ namespace Sistema_ERP
                 return;
             }
 
-            if (_editando is not null)
+            if (editando is not null)
             {
                 Text = "Editar producto";
                 titleLabel.Text = "Editar producto";
                 btnGuardar.Text = "Guardar cambios";
-                txtCodigo.Text = _editando.CodigoBarras;
-                txtNombre.Text = _editando.Nombre;
-                nudPrecio.Value = Math.Min(_editando.PrecioUnitario, nudPrecio.Maximum);
-                txtStock.Text = _editando.StockActual.ToString();
-                cmbCategoria.SelectedValue = _editando.IdCategoria;
-                cmbProveedor.SelectedValue = _editando.IdProveedor;
+                txtCodigo.Text = editando.CodigoBarras;
+                txtNombre.Text = editando.Nombre;
+                nudPrecio.Value = Math.Min(editando.PrecioUnitario, nudPrecio.Maximum);
+                txtStock.Text = editando.StockActual.ToString();
+                cmbCategoria.SelectedValue = editando.IdCategoria;
+                cmbProveedor.SelectedValue = editando.IdProveedor;
             }
             else
             {
@@ -94,7 +94,7 @@ namespace Sistema_ERP
 
             var producto = new Producto
             {
-                IdProducto = _editando?.IdProducto ?? 0,
+                IdProducto = editando?.IdProducto ?? 0,
                 CodigoBarras = txtCodigo.Text.Trim(),
                 Nombre = txtNombre.Text.Trim(),
                 PrecioUnitario = nudPrecio.Value,
@@ -104,13 +104,9 @@ namespace Sistema_ERP
 
             try
             {
-                if (ProductoDatos.ExisteCodigo(producto.CodigoBarras, _editando?.IdProducto))
-                {
-                    Error("Ya existe un producto con ese codigo de barras.", txtCodigo);
-                    return;
-                }
+                GuardarProductoValidacion.CodigoDisponible(ProductoDatos.ExisteCodigo(producto.CodigoBarras, editando?.IdProducto));
 
-                if (_editando is null) ProductoDatos.Agregar(producto);
+                if (editando is null) ProductoDatos.Agregar(producto);
                 else ProductoDatos.Editar(producto);
 
                 DialogResult = DialogResult.OK;
@@ -130,18 +126,18 @@ namespace Sistema_ERP
         {
             idCategoria = idProveedor = 0;
 
-            if (string.IsNullOrWhiteSpace(txtCodigo.Text)) { Error("El codigo de barras es obligatorio.", txtCodigo); return false; }
-            if (string.IsNullOrWhiteSpace(txtNombre.Text)) { Error("El nombre es obligatorio.", txtNombre); return false; }
-            if (ValidacionDatos.SoloCeros(txtCodigo.Text)) { Error("El código de barras no puede contener solo ceros.", txtCodigo); return false; }
-            if (ValidacionDatos.SoloCeros(txtNombre.Text)) { Error("El nombre no puede contener solo ceros.", txtNombre); return false; }
-            if (!ValidacionDatos.NombreValido(txtNombre.Text)) { Error("El nombre del producto debe contener al menos 3 letras.", txtNombre); return false; }
-            if (nudPrecio.Value <= 0) { Error("El precio unitario debe ser un numero mayor a cero.", nudPrecio); return false; }
-            if (cmbCategoria.SelectedValue is not int cat) { Error("Seleccione una categoria.", cmbCategoria); return false; }
-            if (cmbProveedor.SelectedValue is not int prov) { Error("Seleccione un proveedor.", cmbProveedor); return false; }
-
-            idCategoria = cat;
-            idProveedor = prov;
-            return true;
+            try
+            {
+                (idCategoria, idProveedor) = GuardarProductoValidacion.Captura(txtCodigo.Text, txtNombre.Text, nudPrecio.Value,
+                    cmbCategoria.SelectedValue as int?, cmbProveedor.SelectedValue as int?);
+                return true;
+            }
+            catch (ErrorCampoValidacion ex)
+            {
+                Control foco = ex.Campo switch { "Nombre" => txtNombre, "PrecioUnitario" => nudPrecio,
+                    "IdCategoria" => cmbCategoria, "IdProveedor" => cmbProveedor, _ => txtCodigo };
+                Error(ex.Message, foco); return false;
+            }
         }
 
         private void Error(string mensaje, Control foco)

@@ -28,7 +28,7 @@ namespace Sistema_ERP
                 p.{e.Identificador} AS Identificador, {extras}, p.activo, p.motivo_desactivacion
                 FROM dbo.{e.Tabla} p {join} WHERE p.activo=1 OR @incluir=1 ORDER BY p.{e.Nombre}";
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Directorio);
+            AutorizacionDatos.Exigir(conexion, Modulos.directorio);
             using var adaptador = new SqlDataAdapter(sql, conexion);
             adaptador.SelectCommand.Parameters.Add("@incluir", SqlDbType.Bit).Value = incluirInactivos;
             var tabla = new DataTable(); adaptador.Fill(tabla); return tabla;
@@ -37,7 +37,7 @@ namespace Sistema_ERP
         public static DataTable Tiendas()
         {
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Directorio);
+            AutorizacionDatos.Exigir(conexion, Modulos.directorio);
             using var adaptador = new SqlDataAdapter("SELECT id_tienda, nombre FROM dbo.Tienda WHERE activo=1 ORDER BY nombre", conexion);
             var tabla = new DataTable(); adaptador.Fill(tabla); return tabla;
         }
@@ -49,7 +49,7 @@ namespace Sistema_ERP
         public static bool Editar(TipoDirectorio tipo, int id, string nombre, string telefono, string correo,
             string identificador, string direccion, string contacto, int? tienda)
         {
-            if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
+            GuardarDirectorioValidacion.Edicion(id);
             return Guardar(tipo, id, nombre, telefono, correo, identificador, direccion, contacto, tienda);
         }
 
@@ -57,39 +57,14 @@ namespace Sistema_ERP
             string identificador, string direccion, string contacto, int? tienda)
         {
             var e = Entidad(tipo);
-            if (string.IsNullOrWhiteSpace(nombre)) throw new ArgumentException("Introduce el nombre.");
-            foreach (var (valor, campo) in new[]
-            {
-                (nombre, "Nombre"), (telefono, "Teléfono"), (correo, "Correo"),
-                (identificador, "Identificador"), (direccion, "Dirección"), (contacto, "Contacto")
-            }) ValidacionDatos.NoSoloCeros(valor, campo);
-            if (nombre.Trim().Length > 150 || telefono.Trim().Length > 30 || correo.Trim().Length > 254 ||
-                identificador.Trim().Length > 30 || direccion.Trim().Length > 300 || contacto.Trim().Length > 150)
-                throw new ArgumentException("Uno de los campos supera la longitud permitida.");
-            ValidacionDatos.Nombre(nombre, "Nombre");
-            if (tipo == TipoDirectorio.Proveedores) ValidacionDatos.Nombre(contacto, "Contacto", opcional: true);
-            ValidacionDatos.Correo(correo);
+            GuardarDirectorioValidacion.Validar(tipo, nombre, telefono, correo, identificador, direccion, contacto, tienda);
             if (tipo == TipoDirectorio.Proveedores)
             {
-                var proveedor = new Proveedor
-                {
-                    IdProveedor = id ?? 0,
-                    NombreEmpresa = nombre,
-                    Telefono = telefono,
-                    Correo = correo,
-                    Rtn = identificador,
-                    Direccion = direccion,
-                    Contacto = contacto
-                };
-                proveedor.Validar();
+                var proveedor = new Proveedor { IdProveedor = id ?? 0, NombreEmpresa = nombre, Telefono = telefono,
+                    Correo = correo, Rtn = identificador, Direccion = direccion, Contacto = contacto };
                 if (id.HasValue) return ProveedorDatos.Editar(proveedor);
                 ProveedorDatos.Agregar(proveedor); return true;
             }
-            if (tipo == TipoDirectorio.Empleados && (string.IsNullOrWhiteSpace(identificador) || tienda is null || tienda <= 0))
-                throw new ArgumentException("Introduce el codigo y selecciona la tienda del empleado.");
-            if (tipo == TipoDirectorio.Clientes && identificador.Any(c => c > 127))
-                throw new ArgumentException("El documento fiscal debe contener caracteres ASCII.");
-
             string extraColumna = tipo == TipoDirectorio.Empleados ? "id_tienda" : "direccion";
             string extraParametro = tipo == TipoDirectorio.Empleados ? "@tienda" : "@direccion";
             string sql = id.HasValue
@@ -103,7 +78,7 @@ namespace Sistema_ERP
                     AND NOT EXISTS(SELECT 1 FROM dbo.Empleado WHERE id_empleado=@id AND id_tienda=@tienda)
                     THROW 50001, 'Selecciona una tienda activa para el empleado.', 1; " + sql;
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Directorio, gestionar: true);
+            AutorizacionDatos.Exigir(conexion, Modulos.directorio, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             foreach (var (campo, largo, valor) in new[] { ("@nombre",150,nombre), ("@telefono",30,telefono),
                 ("@correo",254,correo), ("@identificador",30,identificador), ("@direccion",300,direccion) })
@@ -121,15 +96,12 @@ namespace Sistema_ERP
         private static bool CambiarEstado(TipoDirectorio tipo, int id, bool activar, string motivo)
         {
             var e = Entidad(tipo);
-            if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
-            if (!activar && (string.IsNullOrWhiteSpace(motivo) || motivo.Trim().Length > 300))
-                throw new ArgumentException("Introduce un motivo de entre 1 y 300 caracteres.");
-            if (!activar) ValidacionDatos.NoSoloCeros(motivo, "Motivo");
+            CambiarEstadoDirectorioValidacion.Validar(id, activar, motivo);
             string valores = activar
                 ? "desactivado_en=NULL, desactivado_por=NULL, motivo_desactivacion=NULL"
                 : "desactivado_en=SYSUTCDATETIME(), motivo_desactivacion=@motivo";
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Directorio, gestionar: true);
+            AutorizacionDatos.Exigir(conexion, Modulos.directorio, gestionar: true);
             using var comando = new SqlCommand($@"UPDATE dbo.{e.Tabla} SET {valores}, actualizado_en=SYSUTCDATETIME()
                 WHERE {e.Id}=@id AND activo=@anterior; SELECT CONVERT(int, @@ROWCOUNT);", conexion);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = id;

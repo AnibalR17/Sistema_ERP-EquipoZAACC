@@ -11,7 +11,7 @@ namespace Sistema_ERP
         internal event Action? ErrorCarga;
 
         public Notificaciones() : this(
-            () => Task.Run(() => InventarioDatos.AlertasStock()), InventarioDatos.DescripcionAlerta) { }
+            () => Task.Run(() => InventarioDatos.AlertasStock()), InventarioDatos.descripcionAlerta) { }
 
         internal Notificaciones(Func<Task<DataTable>> cargar, string criterio)
         {

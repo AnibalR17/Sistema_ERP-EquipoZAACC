@@ -11,8 +11,8 @@ public record ProductoImportado(
 
 public static class CargaMasivaDatos
 {
-    private const int UniqueIndex = 2601;
-    private const int UniqueConstraint = 2627;
+    private const int uniqueIndex = 2601;
+    private const int uniqueConstraint = 2627;
 
 
     public static string NormalizarRtn(string? rtn) =>
@@ -22,7 +22,7 @@ public static class CargaMasivaDatos
     {
         var codigos = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         using SqlConnection conexion = Conexion.AbrirConexion();
-        AutorizacionDatos.Exigir(conexion, Modulos.CargaMasiva);
+        AutorizacionDatos.Exigir(conexion, Modulos.cargaMasiva);
         using var comando = new SqlCommand("SELECT codigo_barras FROM Producto", conexion);
         using SqlDataReader lector = comando.ExecuteReader();
         while (lector.Read()) codigos.Add(lector.GetString(0).Trim());
@@ -34,7 +34,7 @@ public static class CargaMasivaDatos
     {
         var mapa = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         using SqlConnection conexion = Conexion.AbrirConexion();
-        AutorizacionDatos.Exigir(conexion, Modulos.CargaMasiva);
+        AutorizacionDatos.Exigir(conexion, Modulos.cargaMasiva);
         using var comando = new SqlCommand("SELECT id_categoria, nombre FROM dbo.Categoria WHERE activo=1", conexion);
         using SqlDataReader lector = comando.ExecuteReader();
         while (lector.Read()) mapa[lector.GetString(1).Trim()] = lector.GetInt32(0);
@@ -46,14 +46,14 @@ public static class CargaMasivaDatos
     {
         var mapa = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
         using SqlConnection conexion = Conexion.AbrirConexion();
-        AutorizacionDatos.Exigir(conexion, Modulos.CargaMasiva);
+        AutorizacionDatos.Exigir(conexion, Modulos.cargaMasiva);
         using var comando = new SqlCommand("SELECT id_proveedor, rtn FROM dbo.Proveedor WHERE activo=1 AND rtn IS NOT NULL", conexion);
         using SqlDataReader lector = comando.ExecuteReader();
         while (lector.Read())
         {
             string rtn = NormalizarRtn(lector.GetString(1));
             if (rtn.Length == 0) continue;
-            if (!mapa.TryAdd(rtn, lector.GetInt32(0))) throw new InvalidOperationException("Hay proveedores activos con el mismo RTN normalizado. Corrige sus RTN antes de importar.");
+            ImportarProductosValidacion.ProveedorUnico(mapa.TryAdd(rtn, lector.GetInt32(0)));
         }
         return mapa;
     }
@@ -62,18 +62,7 @@ public static class CargaMasivaDatos
     public static int ImportarProductos(IReadOnlyList<ProductoImportado> productos, int? tienda = null, string? archivo = null, byte[]? hash = null)
     {
         if (productos.Count == 0) return 0;
-        foreach (var producto in productos)
-        {
-            ValidacionDatos.NoSoloCeros(producto.CodigoBarras, "Código de barras");
-            ValidacionDatos.Nombre(producto.Nombre, "Nombre del producto");
-        }
-
-        if (productos.Any(p => string.IsNullOrWhiteSpace(p.CodigoBarras) || p.CodigoBarras.Length > 50 || string.IsNullOrWhiteSpace(p.Nombre) || p.Nombre.Length > 150
-            || p.Precio <= 0 || p.Precio > 99999999.99m || decimal.Round(p.Precio, 2) != p.Precio || p.StockInicial < 0)
-            || productos.Select(p => p.CodigoBarras.Trim()).Distinct(StringComparer.OrdinalIgnoreCase).Count() != productos.Count)
-            throw new ArgumentException("Revisa códigos únicos, nombres, precios positivos de hasta dos decimales y stock entero no negativo.");
-        if (productos.Any(p => p.StockInicial > 0) && tienda is not > 0) throw new ArgumentException("Selecciona la tienda donde se registrará el stock inicial.");
-
+        ImportarProductosValidacion.Validar(productos, tienda);
         const string sql = """
             IF NOT EXISTS(SELECT 1 FROM dbo.Categoria WITH(HOLDLOCK) WHERE id_categoria=@idCategoria AND activo=1)
                 OR NOT EXISTS(SELECT 1 FROM dbo.Proveedor WITH(HOLDLOCK) WHERE id_proveedor=@idProveedor AND activo=1)
@@ -87,7 +76,7 @@ public static class CargaMasivaDatos
         using SqlTransaction transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
         try
         {
-            int usuario = AutorizacionDatos.Exigir(conexion, Modulos.CargaMasiva, gestionar: true, transaccion: transaccion);
+            int usuario = AutorizacionDatos.Exigir(conexion, Modulos.cargaMasiva, gestionar: true, transaccion: transaccion);
             FlujoVentaDatos.Ejecutar(conexion, transaccion, """
                 EXEC sys.sp_set_session_context @key=N'id_usuario',@value=@usuario;
                 EXEC sys.sp_set_session_context @key=N'motivo',@value=N'Importación de productos desde Excel';
@@ -134,7 +123,7 @@ public static class CargaMasivaDatos
             transaccion.Commit();
             return productos.Count;
         }
-        catch (SqlException ex) when (ex.Number is UniqueIndex or UniqueConstraint)
+        catch (SqlException ex) when (ex.Number is uniqueIndex or uniqueConstraint)
         {
             throw new InvalidOperationException(
                 "Se encontró un código de barras duplicado durante la importación. No se guardó ningún producto.", ex);

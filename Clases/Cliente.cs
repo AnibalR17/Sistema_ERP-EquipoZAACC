@@ -1,4 +1,4 @@
-﻿namespace Sistema_ERP.Clases
+namespace Sistema_ERP.Clases
 {
 
     public class Cliente
@@ -18,18 +18,6 @@
 
 
         public void Validar()
-        {
-            if (string.IsNullOrWhiteSpace(Nombre))
-                throw new ArgumentException("El nombre del cliente es obligatorio.", nameof(Nombre));
-
-            Nombre = Nombre.Trim();
-            Telefono = string.IsNullOrWhiteSpace(Telefono) ? null : Telefono.Trim();
-            Correo = string.IsNullOrWhiteSpace(Correo) ? null : Correo.Trim();
-            ValidacionDatos.NoSoloCeros(Nombre, "Nombre del cliente");
-            ValidacionDatos.NoSoloCeros(Telefono, "Teléfono");
-            ValidacionDatos.NoSoloCeros(Correo, "Correo");
-            ValidacionDatos.Nombre(Nombre, "Nombre del cliente");
-            ValidacionDatos.Correo(Correo, maximo: 150);
-        }
+        { GuardarClienteValidacion.Validar(this); }
     }
 }

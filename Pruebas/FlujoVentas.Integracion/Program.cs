@@ -21,6 +21,26 @@ internal static partial class Program
         WindowsFormsSynchronizationContext.AutoInstall = false;
         using var contextoInterfaz = new WindowsFormsSynchronizationContext();
         SynchronizationContext.SetSynchronizationContext(contextoInterfaz);
+        if (args.Contains("--validaciones-acciones"))
+        {
+            try { ProbarValidacionesAcciones(); return 0; }
+            catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }
+        }
+        if (args.Contains("--fechas"))
+        {
+            try { ProbarFiltrosFechas(); return 0; }
+            catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }
+        }
+        if (args.Contains("--combobox"))
+        {
+            try { ProbarBusquedaCombos(); return 0; }
+            catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }
+        }
+        if (args.Contains("--busquedas"))
+        {
+            try { ProbarBusquedaDatos(); return 0; }
+            catch (Exception ex) { Console.Error.WriteLine(ex); return 1; }
+        }
         if (args.Contains("--validacion-contactos"))
         {
             try { ProbarValidacionContactos(); return 0; }
@@ -100,6 +120,7 @@ internal static partial class Program
             ProbarRecargaManual();
             ProbarAutorizacion();
             ProbarBusquedaGlobal();
+            ProbarHistorialFechasSql();
             Console.WriteLine("TODAS LAS PRUEBAS COMPLETADAS. La base temporal se elimina al salir.");
             return 0;
         }

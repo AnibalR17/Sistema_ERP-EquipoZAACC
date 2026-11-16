@@ -4,8 +4,8 @@ namespace Sistema_ERP
 {
     public class PantallaMaqueta : FormularioTematico
     {
-        protected readonly TableLayoutPanel Pagina;
-        protected readonly Panel Cuerpo;
+        protected readonly TableLayoutPanel pagina;
+        protected readonly Panel cuerpo;
 
         public PantallaMaqueta() : this("Pantalla", "", "") { }
 
@@ -18,18 +18,18 @@ namespace Sistema_ERP
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             Padding = new Padding(32, 24, 32, 28);
-            Pagina = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 4, MinimumSize = new Size(680, 600) };
-            Pagina.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
-            foreach (var alto in new[] { 58F, 36F, 62F }) Pagina.RowStyles.Add(new RowStyle(SizeType.Absolute, alto));
-            Pagina.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            Pagina.Controls.Add(Etiqueta(titulo, 27, true), 0, 0);
+            pagina = new TableLayoutPanel { Dock = DockStyle.Fill, ColumnCount = 1, RowCount = 4, MinimumSize = new Size(680, 600) };
+            pagina.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+            foreach (var alto in new[] { 58F, 36F, 62F }) pagina.RowStyles.Add(new RowStyle(SizeType.Absolute, alto));
+            pagina.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            pagina.Controls.Add(Etiqueta(titulo, 27, true), 0, 0);
             var descripcion = Etiqueta(subtitulo); descripcion.ForeColor = Color.Gray;
-            Pagina.Controls.Add(descripcion, 0, 1);
+            pagina.Controls.Add(descripcion, 0, 1);
             var info = new PanelDisenoInventario { Dock = DockStyle.Fill, Radio = 18, MostrarSombra = false, BackColor = ProductoEstilo.Suave, Padding = new Padding(16, 0, 12, 0), Margin = new Padding(0, 6, 0, 14) };
             var mensaje = Etiqueta("ℹ " + aviso, 10); mensaje.ForeColor = Color.Gray;
-            info.Controls.Add(mensaje); Pagina.Controls.Add(info, 0, 2);
-            Cuerpo = new Panel { Dock = DockStyle.Fill, Margin = Padding.Empty };
-            Pagina.Controls.Add(Cuerpo, 0, 3); Controls.Add(Pagina);
+            info.Controls.Add(mensaje); pagina.Controls.Add(info, 0, 2);
+            cuerpo = new Panel { Dock = DockStyle.Fill, Margin = Padding.Empty };
+            pagina.Controls.Add(cuerpo, 0, 3); Controls.Add(pagina);
         }
 
         internal static Label Etiqueta(string texto, float tamano = 11, bool negrita = false) => new()

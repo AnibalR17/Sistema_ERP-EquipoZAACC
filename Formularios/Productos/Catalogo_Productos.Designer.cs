@@ -57,10 +57,10 @@
             btnNuevoProducto = new System.Windows.Forms.Button();
             txtBuscar = new System.Windows.Forms.TextBox();
             dgvProductos = new System.Windows.Forms.DataGridView();
-            Column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            Column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            Column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            Column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            column1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            column2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            column3 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            column4 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             button2 = new System.Windows.Forms.Button();
@@ -472,7 +472,7 @@
             // dgvProductos
             // 
             dgvProductos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvProductos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { Column1, Column2, Column3, Column4 });
+            dgvProductos.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] { column1, column2, column3, column4 });
             dgvProductos.Location = new System.Drawing.Point(35, 304);
             dgvProductos.Name = "dgvProductos";
             dgvProductos.RowHeadersWidth = 51;
@@ -481,31 +481,31 @@
             // 
             // Column1
             // 
-            Column1.HeaderText = "Codigo";
-            Column1.MinimumWidth = 6;
-            Column1.Name = "Column1";
-            Column1.Width = 125;
+            column1.HeaderText = "Codigo";
+            column1.MinimumWidth = 6;
+            column1.Name = "Column1";
+            column1.Width = 125;
             // 
             // Column2
             // 
-            Column2.HeaderText = "Nombre";
-            Column2.MinimumWidth = 6;
-            Column2.Name = "Column2";
-            Column2.Width = 125;
+            column2.HeaderText = "Nombre";
+            column2.MinimumWidth = 6;
+            column2.Name = "Column2";
+            column2.Width = 125;
             // 
             // Column3
             // 
-            Column3.HeaderText = "Stock";
-            Column3.MinimumWidth = 6;
-            Column3.Name = "Column3";
-            Column3.Width = 125;
+            column3.HeaderText = "Stock";
+            column3.MinimumWidth = 6;
+            column3.Name = "Column3";
+            column3.Width = 125;
             // 
             // Column4
             // 
-            Column4.HeaderText = "Precio";
-            Column4.MinimumWidth = 6;
-            Column4.Name = "Column4";
-            Column4.Width = 125;
+            column4.HeaderText = "Precio";
+            column4.MinimumWidth = 6;
+            column4.Name = "Column4";
+            column4.Width = 125;
             // 
             // label2
             // 
@@ -622,10 +622,10 @@
         private System.Windows.Forms.Button btnDesactivar;
         private System.Windows.Forms.Button btnEditar;
         private System.Windows.Forms.DataGridView dgvProductos;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn column4;
         private System.Windows.Forms.TextBox txtBuscar;
         private System.Windows.Forms.Button btnNuevoProducto;
         private System.Windows.Forms.Label label1;

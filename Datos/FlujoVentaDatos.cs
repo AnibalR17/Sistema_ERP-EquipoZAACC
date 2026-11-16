@@ -33,7 +33,7 @@ internal static class FlujoVentaDatos
 
     internal static int Preparar(SqlConnection cn, SqlTransaction tx, string motivo)
     {
-        int usuario = AutorizacionDatos.Exigir(cn, Modulos.Apartados, gestionar: true, transaccion: tx);
+        int usuario = AutorizacionDatos.Exigir(cn, Modulos.apartados, gestionar: true, transaccion: tx);
         Ejecutar(cn, tx, """
             IF (SELECT value_in_use FROM sys.configurations WHERE name='nested triggers')<>1
                 OR DATABASEPROPERTYEX(DB_NAME(),'IsRecursiveTriggersEnabled')=1
@@ -56,33 +56,25 @@ internal static class FlujoVentaDatos
     }
 
     internal static void Importe(decimal importe)
-    {
-        if (importe <= 0 || importe > 9999999999999999.99m || decimal.Round(importe, 2) != importe)
-            throw new ArgumentException("El importe debe ser positivo, con hasta dos decimales y dentro del rango permitido.");
-    }
+    { RegistrarImporteValidacion.Validar(importe); }
 
     internal static string Motivo(string motivo)
-    {
-        motivo = motivo.Trim();
-        if (motivo.Length is < 1 or > 500) throw new ArgumentException("Introduce un motivo de hasta 500 caracteres.");
-        ValidacionDatos.NoSoloCeros(motivo, "Motivo");
-        return motivo;
-    }
+    { return RegistrarMotivoValidacion.Validar(motivo); }
 
     internal static bool ValidarPago(SqlConnection cn, SqlTransaction tx, int metodo, string referencia)
     {
-        if (referencia.Length > 100) throw new ArgumentException("La referencia admite hasta 100 caracteres.");
+        RegistrarPagoValidacion.LongitudReferencia(referencia);
         var tabla = Tabla(cn, tx, "SELECT codigo FROM dbo.MetodoPago WITH(HOLDLOCK) WHERE id_metodo_pago=@id AND activo=1", ("@id", metodo));
-        if (tabla.Rows.Count != 1) throw new ArgumentException("Selecciona un método de pago activo.");
+        RegistrarPagoValidacion.MetodoActivo(tabla.Rows.Count == 1);
         bool efectivo = string.Equals(Convert.ToString(tabla.Rows[0][0]), "EFECTIVO", StringComparison.OrdinalIgnoreCase);
-        if (!efectivo && string.IsNullOrWhiteSpace(referencia)) throw new ArgumentException("Introduce la referencia del pago.");
+        RegistrarPagoValidacion.ReferenciaObligatoria(efectivo, referencia);
         return efectivo;
     }
 
     internal static string ReferenciaPago(bool efectivo, string referencia)
     {
         if (efectivo) return "EFE-" + Guid.NewGuid().ToString("N");
-        ValidacionDatos.NoSoloCeros(referencia, "Referencia del pago");
+        RegistrarPagoValidacion.ReferenciaManual(referencia);
         return referencia.Trim();
     }
 

@@ -51,7 +51,9 @@ namespace Sistema_ERP
 
                 lineas.CurrentCellDirtyStateChanged += (_, _) =>
                 {
-                    if (lineas.CurrentCell is DataGridViewComboBoxCell && lineas.IsCurrentCellDirty)
+                    if (lineas.CurrentCell is DataGridViewComboBoxCell && lineas.IsCurrentCellDirty
+                        && lineas.EditingControl is ComboBox editor && editor.SelectedIndex >= 0
+                        && string.Equals(editor.Text, editor.GetItemText(editor.SelectedItem), StringComparison.CurrentCultureIgnoreCase))
                         lineas.CommitEdit(DataGridViewDataErrorContexts.Commit);
                 };
                 bool cargandoDatos = true;
@@ -92,8 +94,7 @@ namespace Sistema_ERP
                             administrador.EndCurrentEdit();
                         foreach (DataRow renglon in datos.Rows.Cast<DataRow>()
                             .Where(r => r.RowState != DataRowState.Deleted &&
-                                datos.Columns.Cast<DataColumn>().All(c =>
-                                    r.IsNull(c) || r[c] is string texto && string.IsNullOrWhiteSpace(texto)))
+                                GuardarTraspasoValidacion.FilaVacia(r))
                             .ToArray())
                             datos.Rows.Remove(renglon);
                     }
@@ -178,14 +179,14 @@ namespace Sistema_ERP
                 layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
                 layout.RowStyles.Add(new RowStyle(SizeType.Absolute, 64));
                 layout.Controls.Add(cabecera, 0, 0);
-                layout.Controls.Add(TraspasoEstilo.Tarjeta(lineas), 0, 1);
+                layout.Controls.Add(TraspasoEstilo.Tarjeta(BusquedaTabla.Crear(lineas)), 0, 1);
                 Controls.Add(layout);
                 if (mostrarCabecera)
                     Controls.Add(TraspasoEstilo.Cabecera(Text, fila == null
                         ? "Selecciona las tiendas y agrega los productos que deseas traspasar."
                         : "Edita productos y observaciones. Las tiendas y el solicitante se conservan."));
                 TraspasoEstilo.Boton(guardar, true);
-                PermisosInterfaz.ConfigurarAcciones(this, (guardar, Modulos.Traspasos));
+                PermisosInterfaz.ConfigurarAcciones(this, (guardar, Modulos.traspasos));
                 guardar.Dock = DockStyle.None;
                 var acciones = new FlowLayoutPanel
                 {

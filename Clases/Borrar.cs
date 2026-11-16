@@ -19,11 +19,7 @@ namespace Sistema_ERP.Clases
 
         private static bool Desactivar(string tabla, string columnaId, int id, string motivo)
         {
-            if (id <= 0) throw new ArgumentOutOfRangeException(nameof(id));
-            ArgumentException.ThrowIfNullOrWhiteSpace(motivo);
-            ValidacionDatos.NoSoloCeros(motivo, "Motivo");
-            if (motivo.Trim().Length > 300)
-                throw new ArgumentException("El motivo admite hasta 300 caracteres.", nameof(motivo));
+            DesactivarRegistroValidacion.Validar(id, motivo);
 
             string sql = $@"UPDATE dbo.{tabla}
                             SET desactivado_en = SYSUTCDATETIME(), motivo_desactivacion = @motivo,
@@ -32,8 +28,8 @@ namespace Sistema_ERP.Clases
                             SELECT CONVERT(int, @@ROWCOUNT);";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
-            if (tabla == "Proveedor") AutorizacionDatos.ExigirAlguno(conexion, true, Modulos.Proveedores, Modulos.Directorio);
-            else AutorizacionDatos.Exigir(conexion, tabla == "Tienda" ? Modulos.Configuracion : Modulos.Productos, gestionar: true);
+            if (tabla == "Proveedor") AutorizacionDatos.ExigirAlguno(conexion, true, Modulos.proveedores, Modulos.directorio);
+            else AutorizacionDatos.Exigir(conexion, tabla == "Tienda" ? Modulos.configuracion : Modulos.productos, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = id;
             comando.Parameters.Add("@motivo", SqlDbType.NVarChar, 300).Value = motivo.Trim();

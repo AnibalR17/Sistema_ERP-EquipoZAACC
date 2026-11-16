@@ -44,10 +44,10 @@ internal static class InicioDatos
                     AND (@tienda IS NULL OR i.id_tienda=@tienda)) AS AlertasStock;
             """, conexion);
         DateTime desde = hoy.Date.AddDays(-6), hasta = hoy.Date.AddDays(1);
-        comando.Parameters.Add("@ventas", SqlDbType.Bit).Value = permisos.Puede(Modulos.Ventas);
-        comando.Parameters.Add("@compras", SqlDbType.Bit).Value = permisos.Puede(Modulos.Compras);
-        comando.Parameters.Add("@traspasos", SqlDbType.Bit).Value = permisos.PuedeAlguno(Modulos.Traspasos, Modulos.Validacion);
-        comando.Parameters.Add("@inventario", SqlDbType.Bit).Value = permisos.Puede(Modulos.Inventario);
+        comando.Parameters.Add("@ventas", SqlDbType.Bit).Value = permisos.Puede(Modulos.ventas);
+        comando.Parameters.Add("@compras", SqlDbType.Bit).Value = permisos.Puede(Modulos.compras);
+        comando.Parameters.Add("@traspasos", SqlDbType.Bit).Value = permisos.PuedeAlguno(Modulos.traspasos, Modulos.validacion);
+        comando.Parameters.Add("@inventario", SqlDbType.Bit).Value = permisos.Puede(Modulos.inventario);
         comando.Parameters.Add("@tienda", SqlDbType.Int).Value = (object?)tienda ?? DBNull.Value;
         comando.Parameters.Add("@desde", SqlDbType.Date).Value = desde;
         comando.Parameters.Add("@hasta", SqlDbType.Date).Value = hasta;

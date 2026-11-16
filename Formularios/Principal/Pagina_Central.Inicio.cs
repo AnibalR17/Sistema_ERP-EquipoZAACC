@@ -37,7 +37,7 @@ public partial class Pagina_Central
         }
         EnlazarTarjeta(cardPanel0, () => salesButton_Click(this, EventArgs.Empty));
         EnlazarTarjeta(cardPanel1, () => comprasButton_Click(this, EventArgs.Empty));
-        EnlazarTarjeta(cardPanel2, () => { if (permisos.Puede(Modulos.Validacion)) MostrarValidacion(); else MostrarTraspaso(); });
+        EnlazarTarjeta(cardPanel2, () => { if (permisos.Puede(Modulos.validacion)) MostrarValidacion(); else MostrarTraspaso(); });
         EnlazarTarjeta(cardPanel3, () => notificationButton_Click(this, EventArgs.Empty));
     }
 
@@ -107,8 +107,8 @@ public partial class Pagina_Central
         using var textoCompras = new SolidBrush(ProductoEstilo.TextoAcento);
         using var textoSecundario = new SolidBrush(ProductoEstilo.TextoSecundario);
         using var cuadricula = new Pen(ProductoEstilo.Borde);
-        if (permisos.Puede(Modulos.Ventas)) { g.DrawLine(ventas, 28, 62, 53, 62); g.DrawString("Ventas", fuente, textoVentas, 59, 53); }
-        if (permisos.Puede(Modulos.Compras)) { g.DrawLine(compras, 143, 62, 168, 62); g.DrawString("Compras", fuente, textoCompras, 174, 53); }
+        if (permisos.Puede(Modulos.ventas)) { g.DrawLine(ventas, 28, 62, 53, 62); g.DrawString("Ventas", fuente, textoVentas, 59, 53); }
+        if (permisos.Puede(Modulos.compras)) { g.DrawLine(compras, 143, 62, 168, 62); g.DrawString("Compras", fuente, textoCompras, 174, 53); }
         if (diasInicio.Length == 0)
         { g.DrawString("El gráfico se mostrará al cargar el resumen.", fuente, textoSecundario, 28, 95); return; }
         float izquierda = 100, derecha = chartPanel.Width - 30, arriba = 95, abajo = chartPanel.Height - 50;
@@ -125,12 +125,12 @@ public partial class Pagina_Central
             izquierda + (derecha - izquierda) * i / (diasInicio.Length - 1),
             abajo - (abajo - arriba) * (float)(importe(dia) / maximo))).ToArray();
         var puntosVentas = Puntos(d => d.Ventas); var puntosCompras = Puntos(d => d.Compras);
-        if (permisos.Puede(Modulos.Compras)) g.DrawLines(compras, puntosCompras);
-        if (permisos.Puede(Modulos.Ventas)) g.DrawLines(ventas, puntosVentas);
+        if (permisos.Puede(Modulos.compras)) g.DrawLines(compras, puntosCompras);
+        if (permisos.Puede(Modulos.ventas)) g.DrawLines(ventas, puntosVentas);
         for (int i = 0; i < diasInicio.Length; i++)
         {
-            if (permisos.Puede(Modulos.Compras)) g.FillEllipse(textoCompras, puntosCompras[i].X - 3, puntosCompras[i].Y - 3, 6, 6);
-            if (permisos.Puede(Modulos.Ventas)) g.FillEllipse(textoVentas, puntosVentas[i].X - 3, puntosVentas[i].Y - 3, 6, 6);
+            if (permisos.Puede(Modulos.compras)) g.FillEllipse(textoCompras, puntosCompras[i].X - 3, puntosCompras[i].Y - 3, 6, 6);
+            if (permisos.Puede(Modulos.ventas)) g.FillEllipse(textoVentas, puntosVentas[i].X - 3, puntosVentas[i].Y - 3, 6, 6);
             g.DrawString(diasInicio[i].Fecha.ToString("dd/MM", CultureInfo.InvariantCulture), fuente, textoSecundario,
                 new PointF(puntosVentas[i].X, abajo + 12), centrado);
         }

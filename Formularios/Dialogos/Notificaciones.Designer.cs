@@ -106,7 +106,7 @@ namespace Sistema_ERP
             cerrar.BackColor = Color.FromArgb(24, 24, 24); cerrar.ForeColor = Color.White;
             tablaAlertas.TabIndex = 0; acciones.TabIndex = 1; actualizar.TabIndex = 0; cerrar.TabIndex = 1;
             acciones.Controls.Add(cerrar); acciones.Controls.Add(actualizar);
-            tarjeta.Controls.Add(tablaAlertas);
+            tarjeta.Controls.Add(BusquedaTabla.Crear(tablaAlertas));
             contenido.Controls.Add(titulo, 0, 0); contenido.Controls.Add(descripcion, 0, 1);
             contenido.Controls.Add(resumen, 0, 2); contenido.Controls.Add(tarjeta, 0, 3);
             contenido.Controls.Add(estado, 0, 4); contenido.Controls.Add(acciones, 0, 5);

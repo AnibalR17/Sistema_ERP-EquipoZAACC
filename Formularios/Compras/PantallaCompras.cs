@@ -6,7 +6,6 @@ namespace Sistema_ERP.Vistas
 {
     public partial class PantallaCompras : FormularioTematico
     {
-        private const decimal MaximoImporte = 9999999999999999.99m;
         private readonly DataTable dtCarrito = CrearCarrito();
         private bool ocupado, escribiendo, cargandoCampos, catalogosListos, historialListo, modificado, lineaPendiente;
         private int? compraId;
@@ -19,7 +18,7 @@ namespace Sistema_ERP.Vistas
             InitializeComponent();
             if (ModoDiseno.Activo(this)) return;
             ConfigurarPresentacion();
-            PermisosInterfaz.Configurar(this, Modulos.Compras, btnGuardar, btnConfirmar, btnAnular, btnAgregarCarrito, btnActualizarLinea, btnQuitarLinea);
+            PermisosInterfaz.Configurar(this, Modulos.compras, btnGuardar, btnConfirmar, btnAnular, btnAgregarCarrito, btnActualizarLinea, btnQuitarLinea);
             dgvDetalleCompra.DataBindingComplete += (_, _) =>
             {
                 if (dgvDetalleCompra.Columns["id_producto"] is DataGridViewColumn columna) columna.Visible = false;
@@ -177,32 +176,17 @@ namespace Sistema_ERP.Vistas
         }
 
         internal static decimal LeerCosto(string texto)
-        {
-            bool valido = ImporteMonetario.TryParse(texto, out decimal costo);
-            if (!valido || costo <= 0 || costo > MaximoImporte || decimal.Round(costo, 2) != costo)
-                throw new ArgumentException("Indica un costo positivo como 12.50 o 12,50, con hasta dos decimales, sin moneda ni separadores de miles.");
-            return costo;
-        }
+            => AgregarLineaCompraValidacion.Costo(texto);
 
         private void EditarLinea(bool actualizar)
         {
             if (ocupado || !catalogosListos || !Editable) return;
             try
             {
-                if (cmbProducto.SelectedItem is not DataRowView producto)
-                    throw new ArgumentException("Selecciona un producto activo.");
-                if (!int.TryParse(txtCantidad.Text.Trim(), NumberStyles.None, CultureInfo.CurrentCulture, out int cantidad) || cantidad <= 0)
-                    throw new ArgumentException("La cantidad debe ser un entero positivo.");
-                decimal costo = LeerCosto(txtPrecio.Text);
-                decimal subtotal = cantidad * costo;
-                if (subtotal > MaximoImporte) throw new ArgumentException("El subtotal supera el importe permitido.");
-                int id = (int)producto["id_producto"];
                 DataRow? seleccionada = actualizar ? LineaSeleccionada : null;
-                if (actualizar && seleccionada == null) throw new ArgumentException("Selecciona una línea para actualizarla.");
-                if (dtCarrito.AsEnumerable().Any(f => f != seleccionada && f.Field<int>("id_producto") == id))
-                    throw new ArgumentException("El producto ya está en el detalle. Selecciona su línea y pulsa Actualizar línea.");
-                decimal total = dtCarrito.AsEnumerable().Where(f => f != seleccionada).Sum(f => f.Field<decimal>("Subtotal")) + subtotal;
-                if (total > MaximoImporte) throw new ArgumentException("El total supera el importe permitido.");
+                var (producto, cantidad, costo) = AgregarLineaCompraValidacion.Validar(cmbProducto.SelectedItem as DataRowView,
+                    txtCantidad.Text, txtPrecio.Text, dtCarrito, seleccionada, actualizar);
+                int id = (int)producto["id_producto"];
                 cargandoCampos = true;
                 try
                 {
@@ -304,9 +288,7 @@ namespace Sistema_ERP.Vistas
             bool guardada = false;
             try
             {
-                if (lineaPendiente) throw new ArgumentException("Agrega o actualiza la línea en edición antes de guardar el borrador.");
-                if (cmbProveedor.SelectedValue is not int proveedor || cmbTienda.SelectedValue is not int tienda)
-                    throw new ArgumentException("Selecciona proveedor y tienda.");
+                var (proveedor, tienda) = GuardarCompraValidacion.Captura(lineaPendiente, cmbProveedor.SelectedValue as int?, cmbTienda.SelectedValue as int?);
                 string factura = txtFactura.Text.Trim(), notas = txtObservaciones.Text.Trim();
                 DateTime fecha = dtpFecha.Value.Date;
                 var lineas = dtCarrito.AsEnumerable().Select(f => new LineaCompra(f.Field<int>("id_producto"), f.Field<int>("Cantidad"), f.Field<decimal>("Costo"))).ToArray();

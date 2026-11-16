@@ -44,7 +44,7 @@ namespace Sistema_ERP
                 ? "Nombre, código y tienda son obligatorios. Selecciona una fila para actualizar sus datos."
                 : "El nombre es obligatorio. Selecciona una fila para actualizar sus datos.";
             inactivos.Text = "Mostrar también " + tipoActual.ToString().ToLowerInvariant() + " inactivos";
-            buscar.PlaceholderText = tipoActual switch { TipoDirectorio.Clientes => "Buscar cliente por nombre o documento...", TipoDirectorio.Proveedores => "Buscar proveedor por nombre o RTN...", _ => "Buscar empleado por nombre o código..." };
+            buscar.PlaceholderText = "Buscar por cualquier dato del directorio…";
             tabla.Columns.Clear();
             void Columna(string campo, string titulo) => tabla.Columns.Add(new DataGridViewTextBoxColumn { Name = campo, DataPropertyName = campo, HeaderText = titulo, MinimumWidth = 90 });
             Columna("Nombre", tipoActual == TipoDirectorio.Proveedores ? "Empresa" : "Nombre");

@@ -18,7 +18,7 @@ namespace Sistema_ERP
             RecargaManual.Agregar(accionesDirectorio, Cargar);
             ConectarEventos();
             ActualizarBotones();
-            PermisosInterfaz.Configurar(this, Modulos.Directorio, guardar, actualizar, nuevo, desactivar, reactivar);
+            PermisosInterfaz.Configurar(this, Modulos.directorio, guardar, actualizar, nuevo, desactivar, reactivar);
         }
 
         private void ConectarEventos()
@@ -154,8 +154,7 @@ namespace Sistema_ERP
         private void Filtrar()
         {
             if (vista is null) return;
-            string texto = System.Text.RegularExpressions.Regex.Replace(buscar.Text.Trim(), @"[%*\[\]]", "[$0]").Replace("'", "''");
-            vista.RowFilter = texto.Length == 0 ? "" : $"Nombre LIKE '%{texto}%' OR Identificador LIKE '%{texto}%' OR Telefono LIKE '%{texto}%' OR Correo LIKE '%{texto}%'";
+            BusquedaDatos.Filtrar(vista, buscar.Text, tabla);
             Limpiar(false); contador.Text = $"Mostrando {vista.Count} registros";
         }
 

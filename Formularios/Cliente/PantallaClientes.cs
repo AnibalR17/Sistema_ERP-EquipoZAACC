@@ -7,7 +7,7 @@ namespace Sistema_ERP.Vistas
 
     public partial class PantallaClientes
     {
-        private int? _idEditando;
+        private int? idEditando;
 
         public PantallaClientes()
         {
@@ -17,7 +17,7 @@ namespace Sistema_ERP.Vistas
             RecargaManual.Agregar(panelAcciones, CargarClientes);
             CargarClientes();
             ActualizarBotones();
-            PermisosInterfaz.Configurar(this, Modulos.Directorio, btnNuevo, btnEditar, btnGuardarCliente, btnDesactivarCliente, btnReactivarCliente);
+            PermisosInterfaz.Configurar(this, Modulos.directorio, btnNuevo, btnEditar, btnGuardarCliente, btnDesactivarCliente, btnReactivarCliente);
         }
 
 
@@ -114,7 +114,7 @@ namespace Sistema_ERP.Vistas
 
         private void Nuevo()
         {
-            _idEditando = null;
+            idEditando = null;
             LimpiarFormulario();
             dgvClientes.ClearSelection();
             txtNombreCliente.Focus();
@@ -125,7 +125,7 @@ namespace Sistema_ERP.Vistas
             DataRowView? fila = FilaSeleccionada();
             if (fila is null) { MostrarAviso("Seleccione un cliente de la tabla."); return; }
 
-            _idEditando = Convert.ToInt32(fila["id_cliente"]);
+            idEditando = Convert.ToInt32(fila["id_cliente"]);
             txtNombreCliente.Text = Convert.ToString(fila["nombre"]) ?? "";
             txtTelefonoCliente.Text = Convert.ToString(fila["telefono"]) ?? "";
             txtCorreoCliente.Text = Convert.ToString(fila["correo"]) ?? "";
@@ -136,7 +136,7 @@ namespace Sistema_ERP.Vistas
         {
             var cliente = new Cliente
             {
-                IdCliente = _idEditando ?? 0,
+                IdCliente = idEditando ?? 0,
                 Nombre = txtNombreCliente.Text,
                 Telefono = txtTelefonoCliente.Text,
                 Correo = txtCorreoCliente.Text
@@ -146,10 +146,10 @@ namespace Sistema_ERP.Vistas
             {
                 cliente.Validar();
 
-                if (_idEditando is null) ClienteDatos.Agregar(cliente);
+                if (idEditando is null) ClienteDatos.Agregar(cliente);
                 else ClienteDatos.Editar(cliente);
 
-                _idEditando = null;
+                idEditando = null;
                 LimpiarFormulario();
                 CargarClientes();
             }

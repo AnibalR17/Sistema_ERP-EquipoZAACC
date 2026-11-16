@@ -6,14 +6,14 @@ namespace Sistema_ERP
 {
     public static class InventarioDatos
     {
-        public const string DescripcionAlerta = "Stock disponible igual o inferior al mínimo (existencia menos reservas).";
+        public const string descripcionAlerta = "Stock disponible igual o inferior al mínimo (existencia menos reservas).";
 
         public static DataTable AlertasStock()
         {
             SesionActual.Exigir();
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction();
-            AutorizacionDatos.Exigir(conexion, Modulos.Inventario, transaccion: transaccion);
+            AutorizacionDatos.Exigir(conexion, Modulos.inventario, transaccion: transaccion);
             using var adaptador = new SqlDataAdapter("""
                 SELECT i.id_tienda, i.id_producto, t.nombre AS Tienda, p.codigo_barras AS Codigo,
                        p.nombre AS Producto, i.existencia AS Existencia, i.reservado AS Reservado,
@@ -34,7 +34,7 @@ namespace Sistema_ERP
         public static DataTable Existencias(int tienda, string buscar)
         {
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Inventario);
+            AutorizacionDatos.Exigir(conexion, Modulos.inventario);
             using var adaptador = new SqlDataAdapter("""
                 SELECT p.id_producto, p.codigo_barras AS Codigo, p.nombre AS Producto,
                        ISNULL(i.existencia,0) AS Existencia, ISNULL(i.reservado,0) AS Reservado,
@@ -54,9 +54,9 @@ namespace Sistema_ERP
 
         public static DataTable Movimientos(int tienda, string buscar, DateTime desde, DateTime hasta)
         {
-            if (desde.Date > hasta.Date || hasta.Date == DateTime.MaxValue.Date) throw new ArgumentException("Revisa el intervalo de fechas.");
+            ConsultarInventarioValidacion.Fechas(desde, hasta);
             using var conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Inventario);
+            AutorizacionDatos.Exigir(conexion, Modulos.inventario);
             using var adaptador = new SqlDataAdapter("""
                 SELECT m.id_movimiento AS Id, m.fecha AS FechaUTC, p.nombre AS Producto, m.tipo AS Tipo,
                        m.cantidad_delta AS Cantidad, u.nombre_usuario AS Usuario, m.motivo AS Motivo,
@@ -82,7 +82,7 @@ namespace Sistema_ERP
 
         public static void GuardarMinimo(int tienda, int producto, int minimo, byte[]? version)
         {
-            if (tienda <= 0 || producto <= 0 || minimo < 0) throw new ArgumentException("Selecciona tienda y producto e indica un mínimo no negativo.");
+            GuardarMinimoInventarioValidacion.Validar(tienda, producto, minimo);
             using var conexion = Conexion.AbrirConexion();
             using var transaccion = conexion.BeginTransaction(IsolationLevel.Serializable);
             Preparar(conexion, transaccion, "Cambio de stock mínimo");
@@ -108,13 +108,12 @@ namespace Sistema_ERP
             comando.Parameters.Add("@tienda", SqlDbType.Int).Value = tienda;
             comando.Parameters.Add("@producto", SqlDbType.Int).Value = producto;
             byte[]? actual = comando.ExecuteScalar() as byte[];
-            if ((actual is null) != (version is null) || (actual != null && !actual.SequenceEqual(version!)))
-                throw new InvalidOperationException("El inventario cambió. Actualiza la pantalla antes de guardar.");
+            GuardarMinimoInventarioValidacion.VersionActual(actual, version);
         }
 
         private static int Preparar(SqlConnection conexion, SqlTransaction transaccion, string motivo)
         {
-            int usuario = AutorizacionDatos.Exigir(conexion, Modulos.Inventario, gestionar: true, transaccion: transaccion);
+            int usuario = AutorizacionDatos.Exigir(conexion, Modulos.inventario, gestionar: true, transaccion: transaccion);
             using var comando = new SqlCommand("""
                 IF EXISTS(SELECT requerido.nombre FROM (VALUES (N'trg_MovimientoInventario_aplicar'),
                     (N'trg_MovimientoInventario_validar'),(N'trg_MovimientoInventario_inmutable')) requerido(nombre)

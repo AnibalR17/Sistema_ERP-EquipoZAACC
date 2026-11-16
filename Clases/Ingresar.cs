@@ -18,7 +18,7 @@ namespace Sistema_ERP.Clases
                                  VALUES (@nombre, @rtn, @contacto, @telefono, @correo, @direccion);
                                  SELECT id_proveedor FROM @insertados;";
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.ExigirAlguno(conexion, true, Modulos.Proveedores, Modulos.Directorio);
+            AutorizacionDatos.ExigirAlguno(conexion, true, Modulos.proveedores, Modulos.directorio);
             using var comando = new SqlCommand(sql, conexion);
             ProveedorDatos.AgregarParametros(comando, proveedor);
             return (int)comando.ExecuteScalar();
@@ -26,13 +26,7 @@ namespace Sistema_ERP.Clases
 
         public static int Categoria(string nombre, string? descripcion = null)
         {
-            ArgumentException.ThrowIfNullOrWhiteSpace(nombre);
-            ValidacionDatos.Nombre(nombre, "Nombre de la categoría");
-            ValidacionDatos.NoSoloCeros(descripcion, "Descripción");
-            if (nombre.Trim().Length > 100)
-                throw new ArgumentException("El nombre admite hasta 100 caracteres.", nameof(nombre));
-            if (descripcion?.Trim().Length > 300)
-                throw new ArgumentException("La descripción admite hasta 300 caracteres.", nameof(descripcion));
+            GuardarCategoriaValidacion.Validar(nombre, descripcion);
 
             const string sql = @"DECLARE @categoriasInsertadas TABLE (id_categoria int);
                                  INSERT INTO dbo.Categoria (nombre, descripcion)
@@ -41,7 +35,7 @@ namespace Sistema_ERP.Clases
                                  SELECT id_categoria FROM @categoriasInsertadas;";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Productos, gestionar: true);
+            AutorizacionDatos.Exigir(conexion, Modulos.productos, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@nombre", SqlDbType.NVarChar, 100).Value = nombre.Trim();
             comando.Parameters.Add("@descripcion", SqlDbType.NVarChar, 300).Value =

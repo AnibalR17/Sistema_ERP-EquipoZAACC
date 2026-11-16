@@ -18,7 +18,7 @@ namespace Sistema_ERP
             MostrarIndicadorDesconocido("Las alertas de inventario todavía no se han consultado.");
             Shown += async (_, _) =>
             {
-                if (acceso == null || IsDisposed || !permisos.Puede(Modulos.Inventario)) return;
+                if (acceso == null || IsDisposed || !permisos.Puede(Modulos.inventario)) return;
                 await ActualizarAlertasAutomaticamente();
                 if (!IsDisposed) actualizarAlertas.Start();
             };
@@ -28,7 +28,7 @@ namespace Sistema_ERP
 
         private async Task ActualizarAlertasAutomaticamente()
         {
-            if (IsDisposed || Disposing || acceso == null || !permisos.Puede(Modulos.Inventario) || notificacionesAbiertas || consultaAlertas != null) return;
+            if (IsDisposed || Disposing || acceso == null || !permisos.Puede(Modulos.inventario) || notificacionesAbiertas || consultaAlertas != null) return;
             try { await ConsultarAlertas(); }
             catch (Exception) {  }
         }
@@ -75,7 +75,7 @@ namespace Sistema_ERP
             try
             {
                 AuditoriaDatos.RegistrarNavegacion("Notificaciones");
-                DialogosMaqueta.Mostrar(this, new Notificaciones(ConsultarAlertas, InventarioDatos.DescripcionAlerta));
+                DialogosMaqueta.Mostrar(this, new Notificaciones(ConsultarAlertas, InventarioDatos.descripcionAlerta));
             }
             catch (Exception ex)
             {

@@ -31,12 +31,7 @@ namespace LoginERP
             {
                 if (pendiente != null)
                 {
-                    if (ValidacionDatos.SoloCeros(clave))
-                    {
-                        MostrarError("La contraseña no puede contener solo ceros.");
-                        return;
-                    }
-                    if (clave != txtConfirmacion.Text) throw new ArgumentException("Las contraseñas no coinciden.");
+                    CambiarClaveValidacion.Confirmacion(clave, txtConfirmacion.Text);
                     var cambio = pendiente;
                     await Task.Run(() => AccesoDatos.CambiarClave(cambio, claveAnterior, clave));
                     pendiente = null; claveAnterior = "";

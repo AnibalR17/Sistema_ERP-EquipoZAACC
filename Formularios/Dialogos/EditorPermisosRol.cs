@@ -46,7 +46,7 @@ public sealed partial class EditorPermisosRol : FormularioTematico
         };
         buscar.TextChanged += (_, _) => Filtrar();
         inactivos.CheckedChanged += (_, _) => Cargar(idSeleccionado);
-        PermisosInterfaz.Configurar(this, Modulos.Seguridad, guardar, actualizar, nuevo, desactivar, reactivar);
+        PermisosInterfaz.Configurar(this, Modulos.seguridad, guardar, actualizar, nuevo, desactivar, reactivar);
         Botones();
     }
 
@@ -111,9 +111,7 @@ public sealed partial class EditorPermisosRol : FormularioTematico
         if (!disponible || (editar && (!idSeleccionado.HasValue || !activo))) return;
         Ejecutar(() =>
         {
-            if (string.IsNullOrWhiteSpace(CodigoModulo())) throw new ArgumentException("Selecciona o escribe el módulo del permiso.");
-            if (string.IsNullOrWhiteSpace(accion.Text)) throw new ArgumentException("Selecciona o escribe la acción del permiso.");
-            if (string.IsNullOrWhiteSpace(descripcion.Text)) throw new ArgumentException("Escribe la descripción del permiso.");
+            GuardarPermisoValidacion.Captura(CodigoModulo(), accion.Text, descripcion.Text);
             int id = SeguridadDatos.Guardar(TipoSeguridad.Permisos, editar ? idSeleccionado : null, editar ? version : null,
                 CodigoModulo().ToUpperInvariant(), accion.Text.Trim().ToUpperInvariant(), descripcion.Text, null, "", []);
             if (!editar) creados.Add(id);
@@ -137,8 +135,7 @@ public sealed partial class EditorPermisosRol : FormularioTematico
     private void Filtrar()
     {
         if (vista is null) return;
-        string texto = buscar.Text.Trim().Replace("'", "''").Replace("[", "[[]").Replace("%", "[%]").Replace("*", "[*]");
-        vista.RowFilter = $"Primero LIKE '%{texto}%' OR Segundo LIKE '%{texto}%' OR Descripcion LIKE '%{texto}%'";
+        BusquedaDatos.Filtrar(vista, buscar.Text, tabla);
     }
 
     private void Botones()

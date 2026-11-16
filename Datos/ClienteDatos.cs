@@ -7,8 +7,8 @@ namespace Sistema_ERP.Datos
 
     public static class ClienteDatos
     {
-        private const int UniqueIndex = 2601;
-        private const int UniqueConstraint = 2627;
+        private const int uniqueIndex = 2601;
+        private const int uniqueConstraint = 2627;
 
 
         public static DataTable Listar(bool incluirInactivos)
@@ -21,7 +21,7 @@ namespace Sistema_ERP.Datos
                                  ORDER BY nombre";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Directorio);
+            AutorizacionDatos.Exigir(conexion, Modulos.directorio);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@incluir", SqlDbType.Bit).Value = incluirInactivos;
             using var adaptador = new SqlDataAdapter(comando);
@@ -40,7 +40,7 @@ namespace Sistema_ERP.Datos
             try
             {
                 using SqlConnection conexion = Conexion.AbrirConexion();
-                AutorizacionDatos.Exigir(conexion, Modulos.Directorio, gestionar: true);
+                AutorizacionDatos.Exigir(conexion, Modulos.directorio, gestionar: true);
                 using var comando = new SqlCommand(sql, conexion);
                 AgregarParametros(comando, cliente);
                 return (int)comando.ExecuteScalar();
@@ -61,7 +61,7 @@ namespace Sistema_ERP.Datos
             try
             {
                 using SqlConnection conexion = Conexion.AbrirConexion();
-                AutorizacionDatos.Exigir(conexion, Modulos.Directorio, gestionar: true);
+                AutorizacionDatos.Exigir(conexion, Modulos.directorio, gestionar: true);
                 using var comando = new SqlCommand(sql, conexion);
                 AgregarParametros(comando, cliente);
                 comando.Parameters.Add("@id", SqlDbType.Int).Value = cliente.IdCliente;
@@ -76,9 +76,7 @@ namespace Sistema_ERP.Datos
 
         public static bool Desactivar(int idCliente, string motivo, int? desactivadoPor = null)
         {
-            if (string.IsNullOrWhiteSpace(motivo))
-                throw new ArgumentException("El motivo de desactivacion es obligatorio.", nameof(motivo));
-            ValidacionDatos.NoSoloCeros(motivo, "Motivo");
+            DesactivarRegistroValidacion.Cliente(motivo);
 
             const string sql = @"UPDATE Cliente
                                  SET desactivado_en = SYSDATETIME(), desactivado_por = @por,
@@ -86,7 +84,7 @@ namespace Sistema_ERP.Datos
                                  WHERE id_cliente = @id AND desactivado_en IS NULL";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Directorio, gestionar: true);
+            AutorizacionDatos.Exigir(conexion, Modulos.directorio, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = idCliente;
             comando.Parameters.Add("@motivo", SqlDbType.NVarChar, 250).Value = motivo.Trim();
@@ -102,7 +100,7 @@ namespace Sistema_ERP.Datos
                                  WHERE id_cliente = @id AND desactivado_en IS NOT NULL";
 
             using SqlConnection conexion = Conexion.AbrirConexion();
-            AutorizacionDatos.Exigir(conexion, Modulos.Directorio, gestionar: true);
+            AutorizacionDatos.Exigir(conexion, Modulos.directorio, gestionar: true);
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@id", SqlDbType.Int).Value = idCliente;
             return comando.ExecuteNonQuery() > 0;
@@ -115,6 +113,6 @@ namespace Sistema_ERP.Datos
             comando.Parameters.Add("@correo", SqlDbType.NVarChar, 150).Value = (object?)c.Correo ?? DBNull.Value;
         }
 
-        private static bool EsDuplicado(SqlException ex) => ex.Number is UniqueIndex or UniqueConstraint;
+        private static bool EsDuplicado(SqlException ex) => ex.Number is uniqueIndex or uniqueConstraint;
     }
 }

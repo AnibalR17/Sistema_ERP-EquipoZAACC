@@ -25,7 +25,7 @@ internal sealed class PantallaBusquedaGlobal : PantallaMaqueta
         filas.Controls.Add(estado, 0, 0); filas.Controls.Add(resultados, 0, 1);
         var botones = new FlowLayoutPanel { Dock = DockStyle.Fill };
         detalle.Name = "verDetalleBusqueda"; modulo.Name = "abrirModuloBusqueda";
-        botones.Controls.AddRange([detalle, modulo]); filas.Controls.Add(botones, 0, 2); Cuerpo.Controls.Add(filas);
+        botones.Controls.AddRange([detalle, modulo]); filas.Controls.Add(botones, 0, 2); cuerpo.Controls.Add(filas);
         RecargaManual.Agregar(botones, async () => { if (ReiniciarSolicitado is { } recargar) await recargar(); });
         detalle.Click += (_, _) => AbrirSeleccion();
         modulo.Click += (_, _) => { if (Seleccion is { } resultado) AbrirModulo?.Invoke(resultado); };
@@ -53,7 +53,7 @@ internal sealed class PantallaBusquedaGlobal : PantallaMaqueta
     {
         resultados.DataSource = encontrados.ToArray();
         estado.Text = encontrados.Count == 0 ? $"Sin coincidencias para «{texto}» en el contenido permitido. {tienda}."
-            : $"{encontrados.Count} resultados para «{texto}» · {tienda} · Hasta {BusquedaGlobalDatos.LimitePorTipo} por tipo; afina la búsqueda para ver otros.";
+            : $"{encontrados.Count} resultados para «{texto}» · {tienda} · Hasta {BusquedaGlobalDatos.limitePorTipo} por tipo; afina la búsqueda para ver otros.";
         ActualizarAcciones();
     }
 
@@ -106,7 +106,7 @@ internal sealed class DetalleBusquedaGlobal : FormularioTematico
                     tabla.Columns.Add(columna);
                 }
                 tabla.DataSource = actuales.Tables[i];
-                pagina.Controls.Add(tabla); tabs.TabPages.Add(pagina);
+                pagina.Controls.Add(BusquedaTabla.Crear(tabla, conFechas: true)); tabs.TabPages.Add(pagina);
             }
             if (seleccion >= 0 && seleccion < tabs.TabCount) tabs.SelectedIndex = seleccion;
         }

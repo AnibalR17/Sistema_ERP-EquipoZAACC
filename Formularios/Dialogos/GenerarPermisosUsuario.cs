@@ -51,9 +51,13 @@ namespace Sistema_ERP
             bool administrador = seleccion.Overlaps(administradores);
             var permisos = permisosPorRol.Where(p => seleccion.Contains(p.RolId))
                 .DistinctBy(p => p.Id).OrderBy(p => p.Modulo).ThenBy(p => p.Accion).ToArray();
-            tablaPermisos.DataSource = permisos.Select(p => new { Modulo = CatalogoPermisos.NombrePantalla(p.Modulo), p.Accion, p.Descripcion }).ToArray();
+            var datos = new DataTable();
+            datos.Columns.Add("Modulo"); datos.Columns.Add("Accion"); datos.Columns.Add("Descripcion");
+            foreach (var permiso in permisos) datos.Rows.Add(CatalogoPermisos.NombrePantalla(permiso.Modulo), permiso.Accion, permiso.Descripcion);
+            tablaPermisos.DataSource = datos;
             bool mostrarTabla = !administrador && permisos.Length > 0;
             tablaPermisos.Visible = mostrarTabla;
+            busquedaPermisos.Visible = mostrarTabla;
             mensajePermisos.Visible = !mostrarTabla;
             mensajePermisos.Text = administrador
                 ? "Acceso total. El rol ADMINISTRADOR permite consultar y gestionar todos los módulos."

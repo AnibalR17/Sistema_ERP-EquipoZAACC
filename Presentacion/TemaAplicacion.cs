@@ -6,7 +6,7 @@ namespace Sistema_ERP;
 internal static class TemaAplicacion
 {
     private enum FondoControl { Heredado, Transparente, Fondo, Superficie, Lateral, Suave, Campo, Borde, Original }
-    private sealed class Preparacion(FondoControl fondo) { internal FondoControl Fondo = fondo; }
+    private sealed class Preparacion(FondoControl fondo) { internal FondoControl fondoControl = fondo; }
     private static readonly ConditionalWeakTable<Control, Preparacion> preparados = new();
     internal static TemaVisual Actual => ProductoEstilo.Oscuro ? TemaVisual.Oscuro : TemaVisual.Claro;
 
@@ -18,7 +18,7 @@ internal static class TemaAplicacion
 
     internal static void Cambiar(TemaVisual tema, bool guardar = true)
     {
-        if (!Enum.IsDefined(tema)) throw new ArgumentOutOfRangeException(nameof(tema));
+        CambiarTemaValidacion.Validar(tema);
         // Mantiene la selección anterior si no se puede guardar la preferencia.
         if (guardar) PreferenciasApariencia.Guardar(PreferenciasApariencia.Ruta, tema);
         ProductoEstilo.Oscuro = tema == TemaVisual.Oscuro;
@@ -47,13 +47,17 @@ internal static class TemaAplicacion
             if (control is TextBoxBase entrada) entrada.ReadOnlyChanged += (_, _) => AplicarColores(entrada, preparacion);
             if (control is ComboBox combo)
             {
+                BusquedaCombos.Preparar(combo);
                 combo.DrawMode = DrawMode.OwnerDrawFixed;
                 combo.DrawItem += PintarOpcion;
             }
+            if (control is DataGridView tabla) BusquedaCombos.Preparar(tabla);
         }
 
         if (control is Button boton)
         {
+            if (boton.DialogResult == DialogResult.Cancel || boton.FindForm()?.CancelButton == boton
+                || boton.Text is "Cancelar" or "Cerrar") boton.CausesValidation = false;
             if (!EstiloBotones.EstaAplicado(boton))
             {
                 var fondo = boton.BackColor;
@@ -89,7 +93,7 @@ internal static class TemaAplicacion
     private static void AplicarColores(Control control, Preparacion preparacion)
     {
         control.ForeColor = TextoNeutral(control.ForeColor);
-        control.BackColor = preparacion.Fondo switch
+        control.BackColor = preparacion.fondoControl switch
         {
             FondoControl.Heredado => Color.Empty,
             FondoControl.Transparente => Color.Transparent,

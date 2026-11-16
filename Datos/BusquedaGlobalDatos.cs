@@ -10,8 +10,8 @@ internal sealed record DestinoBusqueda(string Nombre, string Pantalla, string Pa
 
 internal static class BusquedaGlobalDatos
 {
-    internal const int LimitePorTipo = 10;
-    internal static readonly DestinoBusqueda[] Destinos = [
+    internal const int limitePorTipo = 10;
+    internal static readonly DestinoBusqueda[] destinos = [
         new("Inicio", "Inicio", "resumen dashboard"),
         new("Punto de venta", "Punto de Venta", "ventas facturas facturación pagos recibos"),
         new("Inventario y movimientos", "Inventario y movimientos", "stock existencias mínimos notificaciones alertas"),
@@ -36,13 +36,12 @@ internal static class BusquedaGlobalDatos
     internal static IReadOnlyList<ResultadoBusqueda> Buscar(string texto, int? tienda = null, CancellationToken cancelacion = default)
     {
         texto = texto.Trim();
-        if (texto.Length > 150) throw new ArgumentException("La búsqueda admite hasta 150 caracteres.");
-        if (tienda is <= 0) throw new ArgumentException("Selecciona una tienda válida.");
+        BuscarContenidoValidacion.Validar(texto, tienda);
         cancelacion.ThrowIfCancellationRequested();
         using var conexion = Conexion.AbrirConexion();
         var permisos = AutorizacionDatos.Obtener(conexion);
         if (texto.Length < 2) return [];
-        var resultados = Destinos.Where(d => PuedeVer(permisos, d.Pantalla) &&
+        var resultados = destinos.Where(d => PuedeVer(permisos, d.Pantalla) &&
             CultureInfo.InvariantCulture.CompareInfo.IndexOf(d.Nombre + " " + d.Palabras, texto,
                 CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace) >= 0)
             .Select(d => new ResultadoBusqueda("Módulo", 0, d.Nombre, "Abrir módulo", d.Pantalla, tienda)).ToList();
@@ -58,7 +57,7 @@ internal static class BusquedaGlobalDatos
                 """));
             using var comando = new SqlCommand(sql, conexion);
             comando.Parameters.Add("@buscar", SqlDbType.NVarChar, 150).Value = texto;
-            comando.Parameters.Add("@limite", SqlDbType.Int).Value = LimitePorTipo;
+            comando.Parameters.Add("@limite", SqlDbType.Int).Value = limitePorTipo;
             comando.Parameters.Add("@tienda", SqlDbType.Int).Value = (object?)tienda ?? DBNull.Value;
             using var registro = cancelacion.Register(comando.Cancel);
             try
@@ -84,7 +83,7 @@ internal static class BusquedaGlobalDatos
 
     internal static DataSet ObtenerDetalle(ResultadoBusqueda resultado)
     {
-        if (resultado.Id <= 0) throw new ArgumentException("Selecciona un registro para ver su detalle.");
+        BuscarContenidoValidacion.Detalle(resultado.Id);
         using var conexion = Conexion.AbrirConexion();
         var fuente = Fuentes(AutorizacionDatos.Obtener(conexion)).SingleOrDefault(f => f.Tipo == resultado.Tipo)
             ?? throw new UnauthorizedAccessException("No tienes permiso para consultar este resultado.");
@@ -129,7 +128,7 @@ internal static class BusquedaGlobalDatos
         Agregar(new("Categoría", "Catalogo", "dbo.Categoria c", "c.id_categoria", "c.nombre",
             "CONCAT(c.descripcion,CASE WHEN c.activo=0 THEN N' · Inactiva' ELSE N'' END)", "CONCAT(c.nombre,N' ',c.descripcion)",
             "SELECT nombre AS Categoría,descripcion AS Descripción,activo AS Activa FROM dbo.Categoria WHERE id_categoria=@id"));
-        string proveedores = permisos.Puede(Modulos.Proveedores) ? "Proveedores" : "Directorio y roles";
+        string proveedores = permisos.Puede(Modulos.proveedores) ? "Proveedores" : "Directorio y roles";
         Agregar(new("Proveedor", proveedores, "dbo.Proveedor p", "p.id_proveedor", "p.nombre_empresa",
             "CONCAT(p.rtn,N' · ',p.contacto,CASE WHEN p.activo=0 THEN N' · Inactivo' ELSE N'' END)",
             "CONCAT(p.nombre_empresa,N' ',p.rtn,N' ',p.contacto,N' ',p.telefono,N' ',p.correo)",
@@ -171,7 +170,7 @@ internal static class BusquedaGlobalDatos
         Agregar(new("Devolución", "Apartados y devoluciones", "dbo.Devolucion d JOIN dbo.Venta v ON v.id_venta=d.id_venta JOIN dbo.Cliente c ON c.id_cliente=v.id_cliente JOIN dbo.Tienda t ON t.id_tienda=d.id_tienda",
             "d.id_devolucion", "CONCAT(N'Devolución #',d.id_devolucion)", "CONCAT(v.numero,N' · ',c.nombre,N' · ',t.nombre,N' · ',d.estado)",
             "CONCAT(N'Devolución #',d.id_devolucion,N' ',v.numero,N' ',c.nombre,N' ',t.nombre,N' ',d.motivo)", "", "@tienda IS NULL OR d.id_tienda=@tienda", "d.id_tienda"));
-        string traspasos = permisos.Puede(Modulos.Validacion) ? "Validacion" : "Traspasos";
+        string traspasos = permisos.Puede(Modulos.validacion) ? "Validacion" : "Traspasos";
         Agregar(new("Traspaso", traspasos, "dbo.Traspaso t JOIN dbo.Tienda o ON o.id_tienda=t.id_tienda_origen JOIN dbo.Tienda d ON d.id_tienda=t.id_tienda_destino",
             "t.id_traspaso", "CONCAT(N'Traspaso #',t.id_traspaso)", "CONCAT(o.nombre,N' → ',d.nombre,N' · ',t.estado)",
             "CONCAT(N'Traspaso #',t.id_traspaso,N' ',o.nombre,N' ',d.nombre,N' ',t.observaciones)",

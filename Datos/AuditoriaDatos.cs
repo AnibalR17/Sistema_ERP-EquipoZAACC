@@ -38,10 +38,11 @@ internal static class AuditoriaDatos
         comando.ExecuteNonQuery();
     }
 
-    internal static DataTable Listar(string filtro, long antes = long.MaxValue)
+    internal static DataTable Listar(string filtro, long antes = long.MaxValue, DateTime? desde = null, DateTime? hasta = null)
     {
+        var rango = new RangoFechas(desde, hasta);
         using var conexion = Conexion.AbrirConexion();
-        AutorizacionDatos.Exigir(conexion, Modulos.Configuracion);
+        AutorizacionDatos.Exigir(conexion, Modulos.configuracion);
         using var comando = new SqlCommand("""
             SELECT TOP(200) a.id_auditoria AS Id,a.fecha AS [Fecha UTC],
             COALESCE(u.nombre_usuario,N'Sistema / acceso sin autenticar') AS Usuario,
@@ -53,7 +54,8 @@ internal static class AuditoriaDatos
                 WHEN 'Traspaso' THEN 'TRASPASOS' WHEN 'Apartado' THEN 'APARTADOS'
                 WHEN 'Devolucion' THEN 'DEVOLUCIONES' WHEN 'Categoria' THEN 'PRODUCTOS' ELSE a.modulo END
                 ELSE a.modulo END)) m(modulo)
-            WHERE a.id_auditoria<@antes AND (@buscar=N'' OR CHARINDEX(@buscar,a.descripcion)>0
+            WHERE a.id_auditoria<@antes AND (@desde IS NULL OR a.fecha>=@desde) AND (@hasta IS NULL OR a.fecha<@hasta)
+                AND (@buscar=N'' OR CHARINDEX(@buscar,a.descripcion)>0
                 OR CHARINDEX(@buscar,m.modulo)>0 OR CHARINDEX(@buscar,a.entidad)>0
                 OR CHARINDEX(@buscar,a.id_registro)>0 OR CHARINDEX(@buscar,a.equipo)>0
                 OR CHARINDEX(@buscar,a.accion)>0 OR CHARINDEX(@buscar,u.nombre_usuario)>0)
@@ -61,6 +63,8 @@ internal static class AuditoriaDatos
             """, conexion);
         comando.Parameters.Add("@antes", SqlDbType.BigInt).Value = antes;
         comando.Parameters.Add("@buscar", SqlDbType.NVarChar, 150).Value = filtro.Trim();
+        comando.Parameters.Add("@desde", SqlDbType.DateTime2).Value = (object?)rango.Desde ?? DBNull.Value;
+        comando.Parameters.Add("@hasta", SqlDbType.DateTime2).Value = (object?)rango.HastaExclusivo ?? DBNull.Value;
         using var adaptador = new SqlDataAdapter(comando);
         var tabla = new DataTable(); adaptador.Fill(tabla); return tabla;
     }

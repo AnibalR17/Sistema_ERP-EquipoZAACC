@@ -18,7 +18,7 @@ namespace Sistema_ERP
             foreach (Control control in content.Controls.Cast<Control>().ToArray()) control.Dispose();
             InitializeInventarioFuncional();
             RecargaManual.Preparar(consultarInventario);
-            PermisosInterfaz.Configurar(this, Modulos.Inventario, guardarMinimo);
+            PermisosInterfaz.Configurar(this, Modulos.inventario, guardarMinimo);
             consultarInventario.Click += async (_, _) => await CargarInventario(true);
             tiendaInventario.SelectedIndexChanged += async (_, _) => { if (!cargandoInventario) await CargarInventario(false); };
             buscarInventario.KeyDown += async (_, e) => { if (e.KeyCode == Keys.Enter) { e.SuppressKeyPress = true; await CargarInventario(false); } };
@@ -51,7 +51,7 @@ namespace Sistema_ERP
                     tiendaInventario.DataSource = tiendas;
                     if (anterior is int id && tiendas.AsEnumerable().Any(t => t.Field<int>("id_tienda") == id)) tiendaInventario.SelectedValue = id;
                 }
-                if (tiendaInventario.SelectedValue is not int tienda) throw new ArgumentException("Registra una tienda antes de consultar inventario.");
+                int tienda = ConsultarInventarioValidacion.Tienda(tiendaInventario.SelectedValue as int?);
                 string texto = buscarInventario.Text;
                 DateTime desde = desdeInventario.Value, hasta = hastaInventario.Value;
                 var resultado = await Task.Run(() => (InventarioDatos.Existencias(tienda, texto), InventarioDatos.Movimientos(tienda, texto, desde, hasta)));
