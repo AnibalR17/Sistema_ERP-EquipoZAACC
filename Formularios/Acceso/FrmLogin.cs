@@ -23,7 +23,21 @@ namespace LoginERP
         private async void btnIngresar_Click(object sender, EventArgs e)
         {
             if (trabajando) return;
-            string usuario = txtUsuario.Text, clave = txtClave.Text;
+            string usuario = txtUsuario.Text.Trim(), clave = txtClave.Text;
+            if (!ValidarUsuario(usuario)) return;
+            if (pendiente is null && clave.Length == 0)
+            {
+                MostrarError("Escribe tu contraseña.");
+                txtClave.Focus();
+                return;
+            }
+            if (clave.Length > 128)
+            {
+                MostrarError("La contraseña admite hasta 128 caracteres.");
+                txtClave.Focus();
+                return;
+            }
+
             trabajando = true;
             btnIngresar.Enabled = txtUsuario.Enabled = txtClave.Enabled = txtConfirmacion.Enabled = false;
             lblEstado.Text = "Validando acceso...";
@@ -84,12 +98,7 @@ namespace LoginERP
         {
             if (trabajando || pendiente != null) return;
             string usuario = txtUsuario.Text.Trim();
-            if (usuario.Length == 0)
-            {
-                MostrarError("Escribe tu usuario y luego selecciona «Usar passkey».");
-                txtUsuario.Focus();
-                return;
-            }
+            if (!ValidarUsuario(usuario)) return;
 
             trabajando = true;
             btnIngresar.Enabled = btnUsarPasskey.Enabled = txtUsuario.Enabled = txtClave.Enabled = false;
@@ -127,6 +136,29 @@ namespace LoginERP
             lblEstado.Text = mensaje;
             txtClave.Clear();
             txtConfirmacion.Clear();
+        }
+
+        private bool ValidarUsuario(string usuario)
+        {
+            if (usuario.Length == 0)
+            {
+                MostrarError("Escribe tu usuario.");
+                txtUsuario.Focus();
+                return false;
+            }
+            if (usuario.Length < 3)
+            {
+                MostrarError("El usuario debe tener al menos 3 caracteres.");
+                txtUsuario.Focus();
+                return false;
+            }
+            if (usuario.Length > 50)
+            {
+                MostrarError("El usuario admite hasta 50 caracteres.");
+                txtUsuario.Focus();
+                return false;
+            }
+            return true;
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
