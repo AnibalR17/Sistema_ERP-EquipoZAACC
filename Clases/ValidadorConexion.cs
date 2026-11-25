@@ -38,7 +38,9 @@ internal static class ValidadorConexion
             comando.Parameters.Add("@base", System.Data.SqlDbType.NVarChar, 128).Value = baseDatos;
             using var lector = comando.ExecuteReader();
             if (!lector.Read()) throw new InvalidOperationException("No se pudo verificar el acceso al servidor.");
-            idBase = lector.IsDBNull(0) ? null : lector.GetInt32(0);
+            // DB_ID puede llegar como Int16 según el proveedor/servidor; GetInt32
+            // exige que el tipo CLR ya sea exactamente Int32 y no hace conversión.
+            idBase = lector.IsDBNull(0) ? null : Convert.ToInt32(lector.GetValue(0));
             puedeCrearBase = lector.GetInt32(1) == 1;
         }
 
