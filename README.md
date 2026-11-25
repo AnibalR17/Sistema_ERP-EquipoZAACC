@@ -59,7 +59,9 @@ La barra superior del MDI permite buscar en todos los módulos autorizados: nomb
 
 ## Conexion a la base de datos
 
-Configure la variable de entorno `SISTEMA_ERP_CONNECTION_STRING` o cree `connection.local.txt` en la raiz del proyecto con la cadena de conexion de SQL Server. La variable de entorno tiene prioridad. El archivo local se copia al directorio de salida y esta excluido de Git para proteger las credenciales.
+Al iniciar, el sistema muestra una pantalla para configurar el servidor o instancia, la base de datos y el método de autenticación. La cadena se prueba y se guarda cifrada con DPAPI en el perfil de Windows actual. Después se solicita el usuario y la contraseña propios del ERP.
+
+Para desarrollo también se admite `SISTEMA_ERP_CONNECTION_STRING` o `connection.local.txt`. La configuración guardada desde la pantalla tiene prioridad; luego se consulta la variable de entorno y finalmente el archivo local heredado. No incluya credenciales en archivos versionados.
 
 En Inicio, haga clic en **Probar conexion** para comprobar el acceso a la base de datos. Se mostrara un mensaje de exito o error sin bloquear la interfaz.
 
@@ -67,28 +69,11 @@ Inicio muestra las ventas y compras confirmadas del dia y un grafico de los ulti
 
 Todas las pantallas que consultan datos incluyen **Reiniciar** para recargarlos manualmente, también en sus pestañas y ventanas de detalle. La acción está disponible con permiso de consulta y vuelve a usar la autorización del módulo. En los editores de captura actualiza los catálogos; las ventanas de detalle consultan nuevamente el registro. Ver [alcance y pruebas de la recarga manual](Datos/RecargaManual-verificacion.md).
 
-### Como obtener el connection string
+### Permisos para preparar la base
 
-Puede obtener la cadena desde Visual Studio y guardarla en la configuracion local del proyecto:
+La pantalla verifica el acceso a SQL Server. Si la base indicada todavía no existe, la cuenta de conexión necesita permiso para crearla. Si la base existe, la cuenta debe poder conectarse a ella y tener los permisos requeridos para aplicar el esquema y las migraciones pendientes.
 
-1. Abra **Ver > Explorador de servidores** y, en **Conexiones de datos**, seleccione **Agregar conexion**.
-2. Seleccione Microsoft SQL Server como origen de datos. Ingrese el nombre del servidor y su instancia, tal como los utiliza para conectarse desde SQL Server Management Studio (por ejemplo, `localhost\SQLEXPRESS`).
-3. Seleccione la autenticacion correspondiente: Windows o SQL Server. Si utiliza SQL Server, ingrese el usuario y la contrasena de su entorno.
-4. Pruebe la conexion con `master`. En la cadena guardada para la aplicacion, use en `Database` el nombre deseado para el ERP; el primer arranque crea esa base si no existe. La cuenta de SQL Server necesita permiso para crearla.
-5. Pulse **Probar conexion** y acepte. Seleccione la conexion creada y abra **Propiedades** para copiar el valor de **Cadena de conexion / Connection String**. Si la contrasena no aparece, debera completarla localmente cuando use autenticacion SQL Server.
-6. Pegue la cadena en `connection.local.txt`, cambie `Database` de `master` al nombre elegido para el ERP, y deje la cadena en una sola linea sin comillas externas ni prefijos como `ConnectionString=`. Vuelva a compilar para copiar el archivo al directorio de salida.
-
-Ejemplo con autenticacion de Windows (reemplace el servidor por el suyo):
-
-```text
-Server=localhost\SQLEXPRESS;Database=EquipoZAACC;Integrated Security=True;Encrypt=True;
-```
-
-Con autenticacion de SQL Server, sustituya `Integrated Security=True` por `User ID=TU_USUARIO;Password=TU_CONTRASENA`. Si el servidor local de desarrollo usa un certificado autofirmado y aparece un error de confianza del certificado, puede agregar `TrustServerCertificate=True` para ese entorno; en produccion utilice un certificado valido.
-
-Tambien puede guardar la cadena en la variable de entorno `SISTEMA_ERP_CONNECTION_STRING`. Si la define desde Windows, reinicie Visual Studio o la terminal desde donde ejecuta la aplicacion para que reciba el nuevo valor. Esta variable tiene prioridad sobre el archivo local.
-
-`Datos/Conexion.cs` obtiene primero la variable de entorno y, si esta vacia o no existe, lee `connection.local.txt` desde el directorio del ejecutable. No publique cadenas con credenciales en el README ni en archivos versionados; el archivo local ya esta excluido de Git.
+La opción **Confiar en un certificado local** está pensada para instancias de desarrollo con certificados autofirmados. En producción, utiliza un certificado válido del servidor.
 
 Al iniciar, el programa prepara el esquema y los triggers faltantes en una base ERP vacia o 3FN reconocida. Los traspasos usan Base de Datos/Triggers2.sql; la base genera el historial y reserva inventario al aprobar. Consulte [Datos/Traspasos-verificacion.md](Datos/Traspasos-verificacion.md).
 

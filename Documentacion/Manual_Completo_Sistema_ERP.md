@@ -435,15 +435,9 @@ La pantalla ofrece búsqueda y páginas de hasta 200 eventos. Usa el último ID 
 
 ## 11.1 Configurar la conexión
 
-Conexion prioriza SISTEMA_ERP_CONNECTION_STRING. Si está vacía o ausente, lee connection.local.txt desde la carpeta del ejecutable. El proyecto copia el archivo de la raíz a la salida cuando existe y Git lo excluye. Sin configuración lanza un error explicativo.
+En el primer arranque aparece una pantalla para configurar el servidor, la base de datos y la autenticación. La conexión se prueba y se guarda cifrada con DPAPI para la cuenta de Windows actual. Después se valida el usuario del ERP. Para desarrollo se admiten también SISTEMA_ERP_CONNECTION_STRING y connection.local.txt; la configuración guardada desde la pantalla tiene prioridad.
 
-Ejemplo de desarrollo con autenticación de Windows; sustituir servidor e instancia por los reales:
-
-```text
-Server=localhost\SQLEXPRESS;Database=EquipoZAACC;Integrated Security=True;Encrypt=True;
-```
-
-Guardar la cadena en una sola línea, sin comillas externas ni prefijo ConnectionString=. Después de cambiar variables desde Windows, reiniciar Visual Studio o la terminal. Este ejemplo no revela credenciales de la instalación revisada.
+Si la base no existe, la cuenta necesita permiso para crearla. En bases existentes, requiere permiso para aplicar los objetos pendientes. La opción para confiar en un certificado local se reserva para instancias de desarrollo.
 
 ## 11.2 Orden de instalación en una base nueva
 

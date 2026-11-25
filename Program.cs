@@ -12,6 +12,7 @@
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             TemaAplicacion.Inicializar();
+            if (!ConfigurarConexionInicial()) return;
             if (!PrepararBaseDatos()) return;
             while (true)
             {
@@ -30,6 +31,28 @@
                 }
                 if (!principal.VolverAlAcceso) break;
             }
+        }
+
+        private static bool ConfigurarConexionInicial()
+        {
+            string? cadena = null;
+            Exception? error = null;
+            try
+            {
+                cadena = Clases.Conexion.LeerCadenaConfigurada();
+                if (!string.IsNullOrWhiteSpace(cadena))
+                {
+                    Clases.ValidadorConexion.Verificar(cadena);
+                    return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                error = ex;
+            }
+
+            using var configuracion = new ConfiguracionConexionInicial(cadena, error?.Message);
+            return configuracion.ShowDialog() == DialogResult.OK;
         }
 
         private static bool PrepararBaseDatos()
