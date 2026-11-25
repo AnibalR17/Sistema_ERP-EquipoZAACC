@@ -101,6 +101,9 @@ namespace Sistema_ERP
             return new ResultadoAcceso(new AccesoUsuario(id!.Value, nombre, roles, cambiar, version, sesion), null);
         }
 
+        internal static ResultadoAcceso IngresarConPasskey(string usuario, IntPtr propietario)
+            => Passkeys.Ingresar(usuario, propietario);
+
         private static void CrearAdministradorTemporal(SqlConnection conexion, SqlTransaction transaccion)
         {
             using var comprobar = new SqlCommand("SELECT COUNT(*) FROM dbo.Usuario WITH (UPDLOCK,HOLDLOCK)", conexion, transaccion);

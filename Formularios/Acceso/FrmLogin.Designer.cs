@@ -55,6 +55,7 @@
             this.lblRol = new System.Windows.Forms.Label();
             this.cmbRol = new System.Windows.Forms.ComboBox();
             this.btnIngresar = new System.Windows.Forms.Button();
+            this.btnUsarPasskey = new System.Windows.Forms.Button();
             this.txtConfirmacion = new System.Windows.Forms.TextBox();
             this.lblEstado = new System.Windows.Forms.Label();
             this.pnlIzquierdo.SuspendLayout();
@@ -63,9 +64,9 @@
             this.pnlTarjeta3.SuspendLayout();
             this.pnlLogin.SuspendLayout();
             this.SuspendLayout();
-            // 
+            //
             // pnlIzquierdo
-            // 
+            //
             this.pnlIzquierdo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(242)))), ((int)(((byte)(242)))));
             this.pnlIzquierdo.Controls.Add(this.pnlTarjeta3);
             this.pnlIzquierdo.Controls.Add(this.pnlTarjeta2);
@@ -223,6 +224,7 @@
             // 
             this.pnlLogin.BackColor = System.Drawing.Color.White;
             this.pnlLogin.Controls.Add(this.btnIngresar);
+            this.pnlLogin.Controls.Add(this.btnUsarPasskey);
             this.pnlLogin.Controls.Add(this.cmbRol);
             this.pnlLogin.Controls.Add(this.lblRol);
             this.pnlLogin.Controls.Add(this.lineaRol);
@@ -365,9 +367,25 @@
             this.btnIngresar.Text = "Ingresar";
             this.btnIngresar.UseVisualStyleBackColor = false;
             this.btnIngresar.Click += new System.EventHandler(this.btnIngresar_Click);
-            // 
+            //
+            // btnUsarPasskey
+            //
+            this.btnUsarPasskey.BackColor = System.Drawing.Color.White;
+            this.btnUsarPasskey.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnUsarPasskey.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
+            this.btnUsarPasskey.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnUsarPasskey.Font = new System.Drawing.Font("Segoe UI", 9.6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnUsarPasskey.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
+            this.btnUsarPasskey.Location = new System.Drawing.Point(32, 382);
+            this.btnUsarPasskey.Name = "btnUsarPasskey";
+            this.btnUsarPasskey.Size = new System.Drawing.Size(336, 40);
+            this.btnUsarPasskey.TabIndex = 11;
+            this.btnUsarPasskey.Text = "Usar passkey del teléfono";
+            this.btnUsarPasskey.UseVisualStyleBackColor = false;
+            this.btnUsarPasskey.Click += new System.EventHandler(this.btnUsarPasskey_Click);
+            //
             // FrmLogin
-            // 
+            //
             this.AcceptButton = this.btnIngresar;
             this.txtUsuario.MaxLength = 50;
             this.txtClave.MaxLength = 128;
@@ -381,8 +399,8 @@
             this.txtConfirmacion.MaxLength = 128;
             this.txtConfirmacion.TabIndex = 9;
             this.txtConfirmacion.Visible = false;
-            this.lblEstado.Location = new System.Drawing.Point(32, 382);
-            this.lblEstado.Size = new System.Drawing.Size(336, 90);
+            this.lblEstado.Location = new System.Drawing.Point(32, 432);
+            this.lblEstado.Size = new System.Drawing.Size(336, 46);
             this.lblEstado.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblEstado.ForeColor = Sistema_ERP.ProductoEstilo.Error;
             this.pnlLogin.Height = 490;
@@ -443,6 +461,7 @@
         private System.Windows.Forms.Label lblRol;
         private System.Windows.Forms.ComboBox cmbRol;
         private System.Windows.Forms.Button btnIngresar;
+        private System.Windows.Forms.Button btnUsarPasskey;
         private System.Windows.Forms.TextBox txtConfirmacion;
         private System.Windows.Forms.Label lblEstado;
     }

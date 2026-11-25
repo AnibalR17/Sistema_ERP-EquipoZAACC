@@ -82,6 +82,14 @@ namespace Sistema_ERP
             panelContenedor.Visible = !panelContenedor.Visible;
         }
 
+        private void passkeyButton_Click(object? sender, EventArgs e)
+        {
+            if (acceso is not AccesoUsuario usuario) return;
+            using var dialogo = new GestionarPasskeys(usuario);
+            TemaAplicacion.Aplicar(dialogo);
+            dialogo.ShowDialog(this);
+        }
+
         private void Header_Resize(object? sender, EventArgs e)
         {
             if (searchBox == null || accountLabel == null || notificationButton == null) return;
@@ -224,20 +232,22 @@ namespace Sistema_ERP
 
             var menu = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
             menuNavegacion = menu;
-            var pie = new Panel { Dock = DockStyle.Bottom, Height = 130 };
+            var pie = new Panel { Dock = DockStyle.Bottom, Height = 176 };
             foreach (Control control in panelContenedor.Controls.Cast<Control>().ToArray())
             {
-                if (control == userLabel || control == roleLabel || control == logoutButton)
+                if (control == userLabel || control == roleLabel || control == passkeyButton || control == logoutButton)
                     pie.Controls.Add(control);
                 else
                     menu.Controls.Add(control);
             }
-            userLabel.Anchor = roleLabel.Anchor = logoutButton.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+            userLabel.Anchor = roleLabel.Anchor = passkeyButton.Anchor = logoutButton.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             userLabel.Top = 8;
             roleLabel.Top = 40;
-            logoutButton.Top = 70;
+            passkeyButton.Top = 68;
+            logoutButton.Top = 116;
             panelContenedor.Controls.Add(menu);
             panelContenedor.Controls.Add(pie);
+            ProductoEstilo.Navegacion(passkeyButton, false);
             foreach (var boton in menu.Controls.OfType<Button>())
             {
                 boton.AutoSize = false;

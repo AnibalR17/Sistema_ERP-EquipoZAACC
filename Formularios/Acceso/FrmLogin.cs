@@ -36,6 +36,7 @@ namespace LoginERP
                     await Task.Run(() => AccesoDatos.CambiarClave(cambio, claveAnterior, clave));
                     pendiente = null; claveAnterior = "";
                     txtConfirmacion.Visible = false; lblRol.Visible = false;
+                    btnUsarPasskey.Visible = true;
                     txtUsuario.ReadOnly = false; lblClave.Text = "Contraseña";
                     btnIngresar.Text = "Ingresar";
                 }
@@ -48,6 +49,7 @@ namespace LoginERP
                 if (resultado.CambiarClave)
                 {
                     pendiente = resultado; claveAnterior = clave;
+                    btnUsarPasskey.Visible = false;
                     txtUsuario.ReadOnly = true;
                     txtClave.Clear(); txtConfirmacion.Clear();
                     txtConfirmacion.Visible = lblRol.Visible = true;
@@ -74,6 +76,47 @@ namespace LoginERP
                 {
                     btnIngresar.Enabled = txtUsuario.Enabled = txtClave.Enabled = txtConfirmacion.Enabled = true;
                     txtClave.Focus();
+                }
+            }
+        }
+
+        private void btnUsarPasskey_Click(object? sender, EventArgs e)
+        {
+            if (trabajando || pendiente != null) return;
+            string usuario = txtUsuario.Text.Trim();
+            if (usuario.Length == 0)
+            {
+                MostrarError("Escribe tu usuario y luego selecciona «Usar passkey».");
+                txtUsuario.Focus();
+                return;
+            }
+
+            trabajando = true;
+            btnIngresar.Enabled = btnUsarPasskey.Enabled = txtUsuario.Enabled = txtClave.Enabled = false;
+            lblEstado.ForeColor = Color.FromArgb(110, 110, 110);
+            lblEstado.Text = "Confirma el acceso en el teléfono o en el dispositivo de seguridad…";
+            try
+            {
+                var respuesta = AccesoDatos.IngresarConPasskey(usuario, Handle);
+                if (respuesta.Usuario is not AccesoUsuario resultado)
+                {
+                    MostrarError(respuesta.Error ?? "No se pudo iniciar sesión con passkey.");
+                    return;
+                }
+                Acceso = resultado;
+                txtClave.Clear(); txtConfirmacion.Clear();
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            catch (OperationCanceledException) { MostrarError("Se canceló el acceso con passkey."); }
+            catch (Exception) { MostrarError("No se pudo completar el acceso con passkey. Revisa la conexión e inténtalo nuevamente."); }
+            finally
+            {
+                trabajando = false;
+                if (!IsDisposed)
+                {
+                    btnIngresar.Enabled = btnUsarPasskey.Enabled = txtUsuario.Enabled = txtClave.Enabled = true;
+                    txtUsuario.Focus();
                 }
             }
         }

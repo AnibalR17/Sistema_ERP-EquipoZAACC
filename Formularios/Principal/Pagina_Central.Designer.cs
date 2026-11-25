@@ -52,6 +52,7 @@ namespace Sistema_ERP
             accountLabel = new System.Windows.Forms.Label();
             notificationButton = new System.Windows.Forms.Button();
             logoutButton = new System.Windows.Forms.Button();
+            passkeyButton = new System.Windows.Forms.Button();
             roleLabel = new System.Windows.Forms.Label();
             userLabel = new System.Windows.Forms.Label();
             settingsButton = new System.Windows.Forms.Button();
@@ -84,9 +85,9 @@ namespace Sistema_ERP
             header.SuspendLayout();
             panelContenedor.SuspendLayout();
             SuspendLayout();
-            // 
+            //
             // main
-            // 
+            //
             main.BackColor = System.Drawing.Color.FromArgb(253, 253, 253);
             main.Controls.Add(content);
             main.Controls.Add(header);
@@ -526,9 +527,27 @@ namespace Sistema_ERP
             logoutButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             logoutButton.UseVisualStyleBackColor = false;
             logoutButton.Click += logoutButton_Click;
-            // 
+            //
+            // passkeyButton
+            //
+            passkeyButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
+            passkeyButton.BackColor = System.Drawing.Color.White;
+            passkeyButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            passkeyButton.FlatAppearance.BorderSize = 0;
+            passkeyButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(245, 245, 245);
+            passkeyButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            passkeyButton.Location = new System.Drawing.Point(24, 735);
+            passkeyButton.Name = "passkeyButton";
+            passkeyButton.Padding = new System.Windows.Forms.Padding(10, 0, 0, 0);
+            passkeyButton.Size = new System.Drawing.Size(216, 34);
+            passkeyButton.TabIndex = 17;
+            passkeyButton.Text = "Mis passkeys";
+            passkeyButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            passkeyButton.UseVisualStyleBackColor = false;
+            passkeyButton.Click += passkeyButton_Click;
+            //
             // roleLabel
-            // 
+            //
             roleLabel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left;
             roleLabel.BackColor = System.Drawing.Color.Transparent;
             roleLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
@@ -795,6 +814,7 @@ namespace Sistema_ERP
             panelContenedor.Controls.Add(seguridadButton);
             panelContenedor.Controls.Add(comprasButton);
             panelContenedor.Controls.Add(settingsButton);
+            panelContenedor.Controls.Add(passkeyButton);
             panelContenedor.Controls.Add(userLabel);
             panelContenedor.Controls.Add(roleLabel);
             panelContenedor.Controls.Add(logoutButton);
@@ -871,6 +891,7 @@ namespace Sistema_ERP
         private System.Windows.Forms.Panel chartPanel = null!;
         private System.Windows.Forms.Label chartTitleLabel = null!;
         private System.Windows.Forms.Button logoutButton = null!;
+        private System.Windows.Forms.Button passkeyButton = null!;
         private System.Windows.Forms.Label roleLabel = null!;
         private System.Windows.Forms.Label userLabel = null!;
         private System.Windows.Forms.Button settingsButton = null!;

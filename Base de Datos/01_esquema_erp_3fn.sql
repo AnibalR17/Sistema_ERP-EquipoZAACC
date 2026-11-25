@@ -156,6 +156,28 @@ CREATE TABLE dbo.Usuario (
     CONSTRAINT CK_Usuario_desactivacion CHECK (desactivado_en IS NOT NULL OR (desactivado_por IS NULL AND motivo_desactivacion IS NULL))
 );
 GO
+CREATE TABLE dbo.PasskeyUsuario (
+    id_credencial       varbinary(1024) NOT NULL,
+    id_usuario          int NOT NULL,
+    user_handle         varbinary(64) NOT NULL,
+    clave_publica       varbinary(4096) NOT NULL,
+    contador_firma      bigint NOT NULL DEFAULT 0,
+    aaguid              uniqueidentifier NULL,
+    nombre              nvarchar(100) NOT NULL,
+    creada_en           datetime2(3) NOT NULL DEFAULT SYSUTCDATETIME(),
+    ultimo_uso_en       datetime2(3) NULL,
+    revocada_en         datetime2(3) NULL,
+    CONSTRAINT PK_PasskeyUsuario PRIMARY KEY NONCLUSTERED (id_credencial),
+    CONSTRAINT FK_PasskeyUsuario_Usuario FOREIGN KEY (id_usuario) REFERENCES dbo.Usuario(id_usuario),
+    CONSTRAINT CK_PasskeyUsuario_credencial CHECK (DATALENGTH(id_credencial) BETWEEN 1 AND 1024),
+    CONSTRAINT CK_PasskeyUsuario_handle CHECK (DATALENGTH(user_handle) BETWEEN 1 AND 64),
+    CONSTRAINT CK_PasskeyUsuario_publica CHECK (DATALENGTH(clave_publica) BETWEEN 1 AND 4096),
+    CONSTRAINT CK_PasskeyUsuario_contador CHECK (contador_firma >= 0)
+);
+GO
+CREATE INDEX IX_PasskeyUsuario_user_handle ON dbo.PasskeyUsuario(user_handle);
+CREATE INDEX IX_PasskeyUsuario_usuario_activo ON dbo.PasskeyUsuario(id_usuario, revocada_en);
+GO
 CREATE TABLE dbo.Rol (
     id_rol               int IDENTITY(1,1) NOT NULL,
     codigo               varchar(30) NOT NULL,
