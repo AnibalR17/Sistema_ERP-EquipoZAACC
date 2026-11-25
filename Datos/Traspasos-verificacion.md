@@ -2,7 +2,7 @@
 
 ## Preparacion
 
-Usar una base de pruebas con el esquema 3FN instalado. Base de Datos/01_esquema_erp_3fn.sql es para una base vacia; no ejecutarlo sobre una base con datos. Instalar Base de Datos/Triggers2.sql en la misma base configurada para la aplicacion. La aplicacion no instala ni modifica el esquema.
+Usar una base de pruebas con el esquema 3FN instalado. Base de Datos/01_esquema_erp_3fn.sql es para una base vacia; no ejecutarlo sobre una base con datos. Instalar Base de Datos/Triggers2.sql en la misma base configurada para la aplicacion. El arranque instala Triggers2 si falta en una base 3FN reconocida; no ejecuta el esquema inicial sobre tablas existentes.
 
 Se requieren los triggers de movimientos (validar, aplicar e inmutable), los de estados y operacion de traspasos y sus dependencias. Configurar nested triggers habilitado y RECURSIVE_TRIGGERS deshabilitado, como indica el script. No deshabilitar triggers para eludir errores de disponibilidad.
 

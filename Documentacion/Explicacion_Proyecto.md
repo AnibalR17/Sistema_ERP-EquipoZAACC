@@ -456,7 +456,7 @@ Guardar la cadena en una sola línea, sin comillas externas ni prefijo Connectio
 7. Configurar la conexión del programa. Con Usuario vacía, completar acceso inicial y cambio de contraseña.
 8. Crear o revisar tiendas, categorías, proveedores, clientes y empleados. Cargar existencias mediante compras confirmadas o importación con stock inicial.
 
-La aplicación no instala automáticamente el esquema. Varias escrituras comprueban triggers requeridos y habilitados antes de operar. Todos los scripts sin USE explícito se ejecutan sobre la base seleccionada en la herramienta SQL.
+En el primer arranque se aplica el esquema completo solo a una base inexistente o vacía; en una base 3FN reconocida se instalan los objetos faltantes. Si detecta objetos sin dbo.Usuario, el programa se detiene para proteger los datos. Varias escrituras comprueban triggers requeridos y habilitados antes de operar. Todos los scripts sin USE explícito se ejecutan sobre la base seleccionada en la herramienta SQL.
 
 ## 11.3 Migraciones
 

@@ -12,6 +12,7 @@
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             TemaAplicacion.Inicializar();
+            if (!PrepararBaseDatos()) return;
             while (true)
             {
                 using var login = new LoginERP.FrmLogin();
@@ -29,6 +30,64 @@
                 }
                 if (!principal.VolverAlAcceso) break;
             }
+        }
+
+        private static bool PrepararBaseDatos()
+        {
+            using var ventana = new Form
+            {
+                Text = "Preparación de la base ERP",
+                ClientSize = new Size(520, 145),
+                FormBorderStyle = FormBorderStyle.FixedDialog,
+                StartPosition = FormStartPosition.CenterScreen,
+                ShowInTaskbar = false,
+                ControlBox = false
+            };
+            var estado = new Label
+            {
+                AutoSize = false,
+                Location = new Point(24, 22),
+                Size = new Size(472, 42),
+                Text = "Verificando la base de datos…",
+                TextAlign = ContentAlignment.MiddleLeft
+            };
+            var progreso = new ProgressBar
+            {
+                Location = new Point(24, 82),
+                Size = new Size(472, 22),
+                Style = ProgressBarStyle.Marquee,
+                MarqueeAnimationSpeed = 28
+            };
+            ventana.Controls.Add(estado);
+            ventana.Controls.Add(progreso);
+
+            Exception? error = null;
+            bool cambios = false;
+            ventana.Shown += async (_, _) =>
+            {
+                try
+                {
+                    cambios = await Task.Run(() => Datos.PreparacionBaseDatos.Asegurar(mensaje =>
+                        ventana.BeginInvoke((Action)(() => estado.Text = mensaje))));
+                    ventana.DialogResult = DialogResult.OK;
+                }
+                catch (Exception ex)
+                {
+                    error = ex;
+                    ventana.DialogResult = DialogResult.Abort;
+                }
+            };
+
+            if (ventana.ShowDialog() != DialogResult.OK)
+            {
+                MessageBox.Show(error?.Message ?? "No se pudo verificar la base de datos.",
+                    "Preparación de la base ERP", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+            if (cambios)
+                MessageBox.Show("La base ERP quedó preparada. Se aplicaron el esquema o los scripts que hacían falta.",
+                    "Preparación completada", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return true;
         }
     }
 }

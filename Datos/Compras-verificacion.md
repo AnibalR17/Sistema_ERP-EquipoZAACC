@@ -2,7 +2,7 @@
 
 ## Preparacion
 
-Usar una base de pruebas con `Base de Datos/01_esquema_erp_3fn.sql` instalado y la conexion descrita en README. El esquema de creacion es para una base vacia; no ejecutarlo sobre una base existente con datos. Instalar `Base de Datos/Triggers2.sql` en la misma base, con nested triggers habilitado y RECURSIVE_TRIGGERS deshabilitado. La aplicacion no instala ni modifica el esquema.
+Usar una base de pruebas con `Base de Datos/01_esquema_erp_3fn.sql` instalado y la conexion descrita en README. El esquema de creacion es para una base vacia; no ejecutarlo sobre una base existente con datos. Instalar `Base de Datos/Triggers2.sql` en la misma base, con nested triggers habilitado y RECURSIVE_TRIGGERS deshabilitado. El arranque instala los scripts faltantes en una base 3FN reconocida; no ejecuta el esquema inicial sobre tablas existentes.
 
 Iniciar sesion con usuario y empleado activos. Preparar proveedor, tienda y dos productos activos mediante los CRUD existentes. El costo de compra es independiente del precio de venta del catalogo: `DetalleCompra.costo_unitario` requiere decimal(18,2) positivo; el esquema no incluye impuestos ni descuentos de compra.
 

@@ -248,6 +248,10 @@
     <PackageReference Include="ClosedXML" Version="0.105.1" />
     <PackageReference Include="Fido2" Version="4.3.3" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.1" />
+    <EmbeddedResource Include="Base de Datos/01_esquema_erp_3fn.sql" LogicalName="Sistema_ERP.Setup.Esquema.sql" />
+    <EmbeddedResource Include="Base de Datos/Triggers2.sql" LogicalName="Sistema_ERP.Setup.Triggers.sql" />
+    <EmbeddedResource Include="Datos/Migraciones/002_bitacora_sistema.sql" LogicalName="Sistema_ERP.Setup.Bitacora.sql" />
+    <EmbeddedResource Include="Datos/Migraciones/006_passkeys.sql" LogicalName="Sistema_ERP.Setup.Passkeys.sql" />
     <EmbeddedResource Include="Datos/Plantillas/Plantilla_carga_masiva.xlsx" LogicalName="Sistema_ERP.PlantillaCargaMasiva.xlsx" />
     <None Update="connection.local.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
     <PackageReference Include="PDFsharp-GDI" Version="6.2.4" />
