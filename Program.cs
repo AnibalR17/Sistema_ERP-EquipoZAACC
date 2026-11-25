@@ -51,7 +51,8 @@
                 error = ex;
             }
 
-            using var configuracion = new ConfiguracionConexionInicial(cadena, error?.Message);
+            using var configuracion = new ConfiguracionConexionInicial(
+                cadena, error is null ? null : Clases.DiagnosticoConexion.Describir(error));
             return configuracion.ShowDialog() == DialogResult.OK;
         }
 

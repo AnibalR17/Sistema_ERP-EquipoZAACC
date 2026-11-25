@@ -354,7 +354,7 @@ internal sealed class ConfiguracionConexionInicial : FormularioTematico
         catch (Exception ex)
         {
             cadenaProbada = null;
-            MostrarEstado(ex.Message, error: true);
+            MostrarEstado(DiagnosticoConexion.Describir(ex), error: true);
             return false;
         }
         finally

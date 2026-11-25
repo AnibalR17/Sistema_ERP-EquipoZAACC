@@ -39,18 +39,18 @@ Un ejecutable temporal sobre .NET 10 comprobo construccion del formulario sin co
 
 El login autentica y obliga a cambiar claves temporales. Las asignaciones activas restringen la navegacion y las operaciones mediante MODULO.CONSULTAR y MODULO.GESTIONAR; gestionar requiere consultar. ADMINISTRADOR conserva acceso total. Ver Datos/Autorizacion-verificacion.md. Los actores de creacion, modificacion, desactivacion y asignacion de los CRUD quedan nulos. No se gestionan UsuarioTienda ni recuperacion de acceso en esta pantalla. Desactivar conserva las relaciones: reactivar un rol o permiso puede restaurar privilegios de sus asignaciones vigentes.
 
-## Passkeys desde teléfono o llave FIDO2
+## Passkeys desde Windows Hello, teléfono o llave FIDO2
 
 En bases existentes compatibles, el arranque ejecuta `Datos/Migraciones/006_passkeys.sql` después de `002_bitacora_sistema.sql` si detecta que falta. La migración crea `PasskeyUsuario` y un registro de auditoría que no guarda las claves públicas ni los identificadores en el detalle de auditoría. Las instalaciones nuevas incluyen la tabla en el esquema y el arranque aplica la migración para instalar su trigger de auditoría. El arranque instala la migración cuando falta y reconoce el trigger de auditoría especial de passkeys.
 
-Con una sesión iniciada, abre **Mis passkeys**, confirma la contraseña actual y pulsa **Registrar passkey**. En la pantalla segura de Windows elige el teléfono u otro dispositivo. Para completar el registro por QR, Windows 11 23H2 o posterior y Bluetooth deben estar activos tanto en el PC como en el teléfono; el proveedor de passkeys del teléfono debe admitir FIDO2/WebAuthn. En el acceso, escribe el nombre de usuario y pulsa **Usar passkey del teléfono**. El sistema también admite llaves de seguridad FIDO2. La contraseña sigue disponible como método alternativo.
+Con una sesión iniciada, abre **Mis passkeys**, confirma la contraseña actual y pulsa **Registrar passkey**. En la pantalla segura de Windows puedes elegir Windows Hello para guardar la passkey en este equipo, usar un teléfono o una llave de seguridad FIDO2. Windows Hello solicita el PIN o la biometría configurada en el equipo. Para completar el registro por QR con teléfono, Windows 11 23H2 o posterior y Bluetooth deben estar activos tanto en el PC como en el teléfono; el proveedor de passkeys del teléfono debe admitir FIDO2/WebAuthn. En el acceso, escribe el nombre de usuario y pulsa **Usar passkey**. La contraseña sigue disponible como método alternativo.
 
-La tabla conserva la clave pública, el identificador de credencial, el contador y el identificador de usuario opaco que necesita WebAuthn. La clave privada permanece en el teléfono o autenticador. **Mis passkeys** permite revocar una credencial con confirmación de contraseña; la revocación se audita y surte efecto en el siguiente intento.
+La tabla conserva la clave pública, el identificador de credencial, el contador y el identificador de usuario opaco que necesita WebAuthn. La clave privada permanece en Windows Hello, el teléfono o la llave de seguridad. **Mis passkeys** permite revocar una credencial con confirmación de contraseña; la revocación se audita y surte efecto en el siguiente intento.
 
 Comprobaciones manuales recomendadas en una base de pruebas:
 
-1. Registrar un passkey desde Windows 11 y el teléfono; comprobar que la credencial aparece en la lista sin exponer la clave privada.
-2. Cerrar la sesión, entrar con usuario y passkey desde el teléfono, y confirmar el nombre, roles y sesión vigentes.
+1. Registrar una passkey con Windows Hello y otra desde el teléfono o una llave FIDO2; comprobar que aparecen en la lista sin exponer la clave privada.
+2. Cerrar la sesión y probar el acceso con cada passkey; confirmar el nombre, los roles y la sesión vigentes.
 3. Probar credencial de otra cuenta, cuenta inactiva, passkey revocado y cancelación del cuadro de Windows: ninguno debe abrir una sesión.
 4. Revocar un passkey con contraseña incorrecta y correcta; comprobar que la clave anterior deja de iniciar sesión y la contraseña habitual continúa disponible.
 

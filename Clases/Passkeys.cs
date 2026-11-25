@@ -28,7 +28,6 @@ internal static class Passkeys
             ExcludeCredentials = Descriptores(existentes),
             AuthenticatorSelection = new AuthenticatorSelection
             {
-                AuthenticatorAttachment = AuthenticatorAttachment.CrossPlatform,
                 ResidentKey = ResidentKeyRequirement.Required,
                 UserVerification = UserVerificationRequirement.Required
             },
@@ -47,7 +46,7 @@ internal static class Passkeys
             {
                 AttestationObject = nativa.ObjetoAtestacion,
                 ClientDataJson = nativa.DatosCliente,
-                Transports = [AuthenticatorTransport.Hybrid, AuthenticatorTransport.Ble]
+                Transports = []
             },
             ClientExtensionResults = new AuthenticationExtensionsClientOutputs()
         };
@@ -89,7 +88,7 @@ internal static class Passkeys
         }
         catch (InvalidOperationException)
         {
-            return ResultadoAcceso.Rechazado("No se pudo completar el acceso con passkey. Comprueba el teléfono o inténtalo de nuevo.");
+            return ResultadoAcceso.Rechazado("No se pudo completar el acceso con passkey. Comprueba Windows Hello, el teléfono o la llave de seguridad e inténtalo de nuevo.");
         }
         catch (PlatformNotSupportedException)
         {
@@ -141,7 +140,7 @@ internal static class Passkeys
 
     private static IReadOnlyList<PublicKeyCredentialDescriptor> Descriptores(IEnumerable<CredencialPasskey> credenciales) =>
         credenciales.Select(credencial => new PublicKeyCredentialDescriptor(PublicKeyCredentialType.PublicKey,
-            credencial.Id, [AuthenticatorTransport.Hybrid, AuthenticatorTransport.Ble])).ToArray();
+            credencial.Id, [])).ToArray();
 
     private static byte[] CrearDatosCliente(string tipo, byte[] challenge) => JsonSerializer.SerializeToUtf8Bytes(new
     {

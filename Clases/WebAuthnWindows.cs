@@ -31,9 +31,11 @@ internal static class WebAuthnWindows
 {
     private const uint versionEstructura = 1;
     private const uint tiempoEspera = 120_000;
-    private const uint autenticadorPlataformaCruzada = 2;
+    private const uint cualquierAutenticador = 0;
     private const uint verificacionUsuarioRequerida = 1;
     private const uint atestacionNinguna = 1;
+    private const int restaurarVentana = 9;
+    private const string claseDialogoSeguridad = "Credential Dialog Xaml Host";
     private const int cancelado = unchecked((int)0x80090036);
     private const int abortado = unchecked((int)0x80004004);
     private const int maximoCredencial = 1024;
@@ -75,12 +77,14 @@ internal static class WebAuthnWindows
             version = versionEstructura,
             tiempoEsperaMs = tiempoEspera,
             credenciales = excluidas.Lista,
-            adjuncion = autenticadorPlataformaCruzada,
+            adjuncion = cualquierAutenticador,
             requiereCredencialResidente = 1,
             verificacionUsuario = verificacionUsuarioRequerida,
             preferenciaAtestacion = atestacionNinguna
         };
 
+        PrepararVentanaPropietaria(propietario);
+        using var observador = new ObservadorDialogoSeguridad();
         int resultado = WebAuthNAuthenticatorMakeCredential(propietario, ref rp, ref usuario, ref parametros,
             ref cliente, ref opciones, out IntPtr salida);
         ComprobarResultado(resultado, "No se pudo crear el passkey");
@@ -120,10 +124,12 @@ internal static class WebAuthnWindows
             version = versionEstructura,
             tiempoEsperaMs = tiempoEspera,
             credenciales = permitidas.Lista,
-            adjuncion = autenticadorPlataformaCruzada,
+            adjuncion = cualquierAutenticador,
             verificacionUsuario = verificacionUsuarioRequerida
         };
 
+        PrepararVentanaPropietaria(propietario);
+        using var observador = new ObservadorDialogoSeguridad();
         int resultado = WebAuthNAuthenticatorGetAssertion(propietario, rpId, ref cliente, ref opciones, out IntPtr salida);
         ComprobarResultado(resultado, "No se pudo usar el passkey");
         try
@@ -153,6 +159,50 @@ internal static class WebAuthnWindows
     {
         if (!OperatingSystem.IsWindowsVersionAtLeast(10, 0, 18362))
             throw new PlatformNotSupportedException("Los passkeys requieren Windows 10 versión 1903 o posterior.");
+    }
+
+    private static void PrepararVentanaPropietaria(IntPtr propietario)
+    {
+        if (propietario == IntPtr.Zero || !IsWindow(propietario)) return;
+        if (IsIconic(propietario)) _ = ShowWindow(propietario, restaurarVentana);
+        _ = SetForegroundWindow(propietario);
+        _ = BringWindowToTop(propietario);
+    }
+
+    private sealed class ObservadorDialogoSeguridad : IDisposable
+    {
+        private readonly ManualResetEvent detener = new(false);
+        private readonly Thread hilo;
+
+        internal ObservadorDialogoSeguridad()
+        {
+            hilo = new Thread(Observar) { IsBackground = true, Name = "Windows WebAuthn dialog foreground" };
+            hilo.Start();
+        }
+
+        private void Observar()
+        {
+            // Windows can leave its Win32 security dialog behind the caller; activate the actual dialog as it appears and on retries.
+            int intervaloMs = 100;
+            while (!detener.WaitOne(intervaloMs))
+            {
+                IntPtr dialogo = FindWindow(claseDialogoSeguridad, null);
+                if (dialogo != IntPtr.Zero && IsWindowVisible(dialogo))
+                {
+                    _ = SetForegroundWindow(dialogo);
+                    _ = BringWindowToTop(dialogo);
+                    intervaloMs = 500;
+                }
+                else intervaloMs = 100;
+            }
+        }
+
+        public void Dispose()
+        {
+            detener.Set();
+            hilo.Join();
+            detener.Dispose();
+        }
     }
 
     private static void ComprobarResultado(int resultado, string mensaje)
@@ -186,6 +236,33 @@ internal static class WebAuthnWindows
 
     [DllImport("webauthn.dll", ExactSpelling = true, CallingConvention = CallingConvention.Winapi)]
     private static extern void WebAuthNFreeAssertion(IntPtr afirmacion);
+
+    [DllImport("user32.dll", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool IsWindow(IntPtr ventana);
+
+    [DllImport("user32.dll", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool IsIconic(IntPtr ventana);
+
+    [DllImport("user32.dll", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool ShowWindow(IntPtr ventana, int comando);
+
+    [DllImport("user32.dll", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool SetForegroundWindow(IntPtr ventana);
+
+    [DllImport("user32.dll", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool BringWindowToTop(IntPtr ventana);
+
+    [DllImport("user32.dll", ExactSpelling = true, CharSet = CharSet.Unicode, EntryPoint = "FindWindowW")]
+    private static extern IntPtr FindWindow(string clase, string? titulo);
+
+    [DllImport("user32.dll", ExactSpelling = true)]
+    [return: MarshalAs(UnmanagedType.Bool)]
+    private static extern bool IsWindowVisible(IntPtr ventana);
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
     private struct EntidadRp

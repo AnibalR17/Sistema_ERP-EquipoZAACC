@@ -380,7 +380,7 @@
             this.btnUsarPasskey.Name = "btnUsarPasskey";
             this.btnUsarPasskey.Size = new System.Drawing.Size(336, 40);
             this.btnUsarPasskey.TabIndex = 11;
-            this.btnUsarPasskey.Text = "Usar passkey del teléfono";
+            this.btnUsarPasskey.Text = "Usar passkey";
             this.btnUsarPasskey.UseVisualStyleBackColor = false;
             this.btnUsarPasskey.Click += new System.EventHandler(this.btnUsarPasskey_Click);
             //

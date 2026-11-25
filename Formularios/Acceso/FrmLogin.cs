@@ -94,7 +94,7 @@ namespace LoginERP
             trabajando = true;
             btnIngresar.Enabled = btnUsarPasskey.Enabled = txtUsuario.Enabled = txtClave.Enabled = false;
             lblEstado.ForeColor = Color.FromArgb(110, 110, 110);
-            lblEstado.Text = "Confirma el acceso en el teléfono o en el dispositivo de seguridad…";
+            lblEstado.Text = "Confirma el acceso en Windows Hello, el teléfono o la llave de seguridad…";
             try
             {
                 var respuesta = AccesoDatos.IngresarConPasskey(usuario, Handle);
