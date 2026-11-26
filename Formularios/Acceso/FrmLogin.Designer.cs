@@ -28,389 +28,412 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.pnlIzquierdo = new System.Windows.Forms.Panel();
-            this.lblMarca = new System.Windows.Forms.Label();
-            this.lblTitulo = new System.Windows.Forms.Label();
-            this.lblSubtitulo = new System.Windows.Forms.Label();
-            this.lblPie = new System.Windows.Forms.Label();
-            this.pnlTarjeta1 = new System.Windows.Forms.Panel();
-            this.lblTarjeta1Titulo = new System.Windows.Forms.Label();
-            this.lblTarjeta1Desc = new System.Windows.Forms.Label();
-            this.pnlTarjeta2 = new System.Windows.Forms.Panel();
-            this.lblTarjeta2Desc = new System.Windows.Forms.Label();
-            this.lblTarjeta2Titulo = new System.Windows.Forms.Label();
-            this.pnlTarjeta3 = new System.Windows.Forms.Panel();
-            this.lblTarjeta3Desc = new System.Windows.Forms.Label();
-            this.lblTarjeta3Titulo = new System.Windows.Forms.Label();
-            this.pnlLogin = new System.Windows.Forms.Panel();
-            this.lblLoginTitulo = new System.Windows.Forms.Label();
-            this.lblLoginSub = new System.Windows.Forms.Label();
-            this.lblUsuario = new System.Windows.Forms.Label();
-            this.lblClave = new System.Windows.Forms.Label();
-            this.txtUsuario = new System.Windows.Forms.TextBox();
-            this.txtClave = new System.Windows.Forms.TextBox();
-            this.lineaUsuario = new System.Windows.Forms.Panel();
-            this.lineaClave = new System.Windows.Forms.Panel();
-            this.lineaRol = new System.Windows.Forms.Panel();
-            this.lblRol = new System.Windows.Forms.Label();
-            this.cmbRol = new System.Windows.Forms.ComboBox();
-            this.btnIngresar = new System.Windows.Forms.Button();
-            this.txtConfirmacion = new System.Windows.Forms.TextBox();
-            this.lblEstado = new System.Windows.Forms.Label();
-            this.pnlIzquierdo.SuspendLayout();
-            this.pnlTarjeta1.SuspendLayout();
-            this.pnlTarjeta2.SuspendLayout();
-            this.pnlTarjeta3.SuspendLayout();
-            this.pnlLogin.SuspendLayout();
-            this.SuspendLayout();
+            pnlIzquierdo = new Panel();
+            pnlTarjeta3 = new Panel();
+            lblTarjeta3Desc = new Label();
+            lblTarjeta3Titulo = new Label();
+            pnlTarjeta2 = new Panel();
+            lblTarjeta2Desc = new Label();
+            lblTarjeta2Titulo = new Label();
+            pnlTarjeta1 = new Panel();
+            lblTarjeta1Desc = new Label();
+            lblTarjeta1Titulo = new Label();
+            lblPie = new Label();
+            lblSubtitulo = new Label();
+            lblTitulo = new Label();
+            lblMarca = new Label();
+            pnlLogin = new Panel();
+            btnIngresar = new Button();
+            cmbRol = new ComboBox();
+            lblRol = new Label();
+            lineaRol = new Panel();
+            lineaClave = new Panel();
+            lineaUsuario = new Panel();
+            txtClave = new TextBox();
+            txtUsuario = new TextBox();
+            lblClave = new Label();
+            lblUsuario = new Label();
+            lblLoginSub = new Label();
+            lblLoginTitulo = new Label();
+            txtConfirmacion = new TextBox();
+            lblEstado = new Label();
+            pnlIzquierdo.SuspendLayout();
+            pnlTarjeta3.SuspendLayout();
+            pnlTarjeta2.SuspendLayout();
+            pnlTarjeta1.SuspendLayout();
+            pnlLogin.SuspendLayout();
+            SuspendLayout();
             // 
             // pnlIzquierdo
             // 
-            this.pnlIzquierdo.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(242)))), ((int)(((byte)(242)))), ((int)(((byte)(242)))));
-            this.pnlIzquierdo.Controls.Add(this.pnlTarjeta3);
-            this.pnlIzquierdo.Controls.Add(this.pnlTarjeta2);
-            this.pnlIzquierdo.Controls.Add(this.pnlTarjeta1);
-            this.pnlIzquierdo.Controls.Add(this.lblPie);
-            this.pnlIzquierdo.Controls.Add(this.lblSubtitulo);
-            this.pnlIzquierdo.Controls.Add(this.lblTitulo);
-            this.pnlIzquierdo.Controls.Add(this.lblMarca);
-            this.pnlIzquierdo.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlIzquierdo.Location = new System.Drawing.Point(0, 0);
-            this.pnlIzquierdo.Name = "pnlIzquierdo";
-            this.pnlIzquierdo.Size = new System.Drawing.Size(540, 650);
-            this.pnlIzquierdo.TabIndex = 0;
-            // 
-            // lblMarca
-            // 
-            this.lblMarca.AutoSize = true;
-            this.lblMarca.Font = new System.Drawing.Font("Segoe UI", 13.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblMarca.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.lblMarca.Location = new System.Drawing.Point(40, 40);
-            this.lblMarca.Name = "lblMarca";
-            this.lblMarca.Size = new System.Drawing.Size(145, 31);
-            this.lblMarca.TabIndex = 0;
-            this.lblMarca.Text = "Sistema ERP";
-            // 
-            // lblTitulo
-            // 
-            this.lblTitulo.Font = new System.Drawing.Font("Segoe UI", 25.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.lblTitulo.Location = new System.Drawing.Point(40, 150);
-            this.lblTitulo.Name = "lblTitulo";
-            this.lblTitulo.Size = new System.Drawing.Size(460, 190);
-            this.lblTitulo.TabIndex = 1;
-            this.lblTitulo.Text = "Ventas, inventario y traspasos en un solo lugar ";
-            // 
-            // lblSubtitulo
-            // 
-            this.lblSubtitulo.AutoSize = true;
-            this.lblSubtitulo.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblSubtitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
-            this.lblSubtitulo.Location = new System.Drawing.Point(40, 340);
-            this.lblSubtitulo.Name = "lblSubtitulo";
-            this.lblSubtitulo.Size = new System.Drawing.Size(344, 23);
-            this.lblSubtitulo.TabIndex = 2;
-            this.lblSubtitulo.Text = "Administra todas tus tiendas desde la nube ";
-            // 
-            // lblPie
-            // 
-            this.lblPie.AutoSize = true;
-            this.lblPie.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPie.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
-            this.lblPie.Location = new System.Drawing.Point(40, 610);
-            this.lblPie.Name = "lblPie";
-            this.lblPie.Size = new System.Drawing.Size(161, 17);
-            this.lblPie.TabIndex = 3;
-            this.lblPie.Text = "© 2026 Sistema ERP · v1.0";
-            // 
-            // pnlTarjeta1
-            // 
-            this.pnlTarjeta1.BackColor = System.Drawing.Color.White;
-            this.pnlTarjeta1.Controls.Add(this.lblTarjeta1Desc);
-            this.pnlTarjeta1.Controls.Add(this.lblTarjeta1Titulo);
-            this.pnlTarjeta1.Location = new System.Drawing.Point(40, 390);
-            this.pnlTarjeta1.Name = "pnlTarjeta1";
-            this.pnlTarjeta1.Size = new System.Drawing.Size(400, 54);
-            this.pnlTarjeta1.TabIndex = 4;
-            // 
-            // lblTarjeta1Titulo
-            // 
-            this.lblTarjeta1Titulo.AutoSize = true;
-            this.lblTarjeta1Titulo.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTarjeta1Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.lblTarjeta1Titulo.Location = new System.Drawing.Point(14, 8);
-            this.lblTarjeta1Titulo.Name = "lblTarjeta1Titulo";
-            this.lblTarjeta1Titulo.Size = new System.Drawing.Size(132, 23);
-            this.lblTarjeta1Titulo.TabIndex = 0;
-            this.lblTarjeta1Titulo.Text = "Punto de Venta";
-            // 
-            // lblTarjeta1Desc
-            // 
-            this.lblTarjeta1Desc.AutoSize = true;
-            this.lblTarjeta1Desc.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTarjeta1Desc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
-            this.lblTarjeta1Desc.Location = new System.Drawing.Point(14, 29);
-            this.lblTarjeta1Desc.Name = "lblTarjeta1Desc";
-            this.lblTarjeta1Desc.Size = new System.Drawing.Size(246, 17);
-            this.lblTarjeta1Desc.TabIndex = 1;
-            this.lblTarjeta1Desc.Text = "Facturacion rapida con control de pagos";
-            // 
-            // pnlTarjeta2
-            // 
-            this.pnlTarjeta2.BackColor = System.Drawing.Color.White;
-            this.pnlTarjeta2.Controls.Add(this.lblTarjeta2Desc);
-            this.pnlTarjeta2.Controls.Add(this.lblTarjeta2Titulo);
-            this.pnlTarjeta2.Location = new System.Drawing.Point(40, 455);
-            this.pnlTarjeta2.Name = "pnlTarjeta2";
-            this.pnlTarjeta2.Size = new System.Drawing.Size(400, 54);
-            this.pnlTarjeta2.TabIndex = 5;
-            // 
-            // lblTarjeta2Desc
-            // 
-            this.lblTarjeta2Desc.AutoSize = true;
-            this.lblTarjeta2Desc.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTarjeta2Desc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
-            this.lblTarjeta2Desc.Location = new System.Drawing.Point(14, 29);
-            this.lblTarjeta2Desc.Name = "lblTarjeta2Desc";
-            this.lblTarjeta2Desc.Size = new System.Drawing.Size(216, 17);
-            this.lblTarjeta2Desc.TabIndex = 1;
-            this.lblTarjeta2Desc.Text = "Solicitud, aprobacion y seguimiento";
-            // 
-            // lblTarjeta2Titulo
-            // 
-            this.lblTarjeta2Titulo.AutoSize = true;
-            this.lblTarjeta2Titulo.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTarjeta2Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.lblTarjeta2Titulo.Location = new System.Drawing.Point(14, 8);
-            this.lblTarjeta2Titulo.Name = "lblTarjeta2Titulo";
-            this.lblTarjeta2Titulo.Size = new System.Drawing.Size(196, 23);
-            this.lblTarjeta2Titulo.TabIndex = 0;
-            this.lblTarjeta2Titulo.Text = "Traspasos entre tiendas";
+            pnlIzquierdo.BackColor = Color.FromArgb(242, 242, 242);
+            pnlIzquierdo.Controls.Add(pnlTarjeta3);
+            pnlIzquierdo.Controls.Add(pnlTarjeta2);
+            pnlIzquierdo.Controls.Add(pnlTarjeta1);
+            pnlIzquierdo.Controls.Add(lblPie);
+            pnlIzquierdo.Controls.Add(lblSubtitulo);
+            pnlIzquierdo.Controls.Add(lblTitulo);
+            pnlIzquierdo.Controls.Add(lblMarca);
+            pnlIzquierdo.Dock = DockStyle.Left;
+            pnlIzquierdo.Location = new Point(0, 0);
+            pnlIzquierdo.Margin = new Padding(3, 4, 3, 4);
+            pnlIzquierdo.Name = "pnlIzquierdo";
+            pnlIzquierdo.Size = new Size(540, 812);
+            pnlIzquierdo.TabIndex = 0;
             // 
             // pnlTarjeta3
             // 
-            this.pnlTarjeta3.BackColor = System.Drawing.Color.White;
-            this.pnlTarjeta3.Controls.Add(this.lblTarjeta3Desc);
-            this.pnlTarjeta3.Controls.Add(this.lblTarjeta3Titulo);
-            this.pnlTarjeta3.Location = new System.Drawing.Point(40, 520);
-            this.pnlTarjeta3.Name = "pnlTarjeta3";
-            this.pnlTarjeta3.Size = new System.Drawing.Size(400, 54);
-            this.pnlTarjeta3.TabIndex = 5;
+            pnlTarjeta3.BackColor = Color.White;
+            pnlTarjeta3.Controls.Add(lblTarjeta3Desc);
+            pnlTarjeta3.Controls.Add(lblTarjeta3Titulo);
+            pnlTarjeta3.Location = new Point(40, 650);
+            pnlTarjeta3.Margin = new Padding(3, 4, 3, 4);
+            pnlTarjeta3.Name = "pnlTarjeta3";
+            pnlTarjeta3.Size = new Size(400, 68);
+            pnlTarjeta3.TabIndex = 5;
             // 
             // lblTarjeta3Desc
             // 
-            this.lblTarjeta3Desc.AutoSize = true;
-            this.lblTarjeta3Desc.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTarjeta3Desc.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
-            this.lblTarjeta3Desc.Location = new System.Drawing.Point(14, 29);
-            this.lblTarjeta3Desc.Name = "lblTarjeta3Desc";
-            this.lblTarjeta3Desc.Size = new System.Drawing.Size(196, 17);
-            this.lblTarjeta3Desc.TabIndex = 1;
-            this.lblTarjeta3Desc.Text = "Cajero, Gerente y Administrador";
+            lblTarjeta3Desc.AutoSize = true;
+            lblTarjeta3Desc.Font = new Font("Segoe UI", 7.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblTarjeta3Desc.ForeColor = Color.FromArgb(110, 110, 110);
+            lblTarjeta3Desc.Location = new Point(14, 36);
+            lblTarjeta3Desc.Name = "lblTarjeta3Desc";
+            lblTarjeta3Desc.Size = new Size(196, 17);
+            lblTarjeta3Desc.TabIndex = 1;
+            lblTarjeta3Desc.Text = "Cajero, Gerente y Administrador";
             // 
             // lblTarjeta3Titulo
             // 
-            this.lblTarjeta3Titulo.AutoSize = true;
-            this.lblTarjeta3Titulo.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTarjeta3Titulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.lblTarjeta3Titulo.Location = new System.Drawing.Point(14, 8);
-            this.lblTarjeta3Titulo.Name = "lblTarjeta3Titulo";
-            this.lblTarjeta3Titulo.Size = new System.Drawing.Size(146, 23);
-            this.lblTarjeta3Titulo.TabIndex = 0;
-            this.lblTarjeta3Titulo.Text = "Control por roles";
+            lblTarjeta3Titulo.AutoSize = true;
+            lblTarjeta3Titulo.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTarjeta3Titulo.ForeColor = Color.FromArgb(17, 17, 17);
+            lblTarjeta3Titulo.Location = new Point(14, 10);
+            lblTarjeta3Titulo.Name = "lblTarjeta3Titulo";
+            lblTarjeta3Titulo.Size = new Size(146, 23);
+            lblTarjeta3Titulo.TabIndex = 0;
+            lblTarjeta3Titulo.Text = "Control por roles";
+            // 
+            // pnlTarjeta2
+            // 
+            pnlTarjeta2.BackColor = Color.White;
+            pnlTarjeta2.Controls.Add(lblTarjeta2Desc);
+            pnlTarjeta2.Controls.Add(lblTarjeta2Titulo);
+            pnlTarjeta2.Location = new Point(40, 569);
+            pnlTarjeta2.Margin = new Padding(3, 4, 3, 4);
+            pnlTarjeta2.Name = "pnlTarjeta2";
+            pnlTarjeta2.Size = new Size(400, 68);
+            pnlTarjeta2.TabIndex = 5;
+            // 
+            // lblTarjeta2Desc
+            // 
+            lblTarjeta2Desc.AutoSize = true;
+            lblTarjeta2Desc.Font = new Font("Segoe UI", 7.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblTarjeta2Desc.ForeColor = Color.FromArgb(110, 110, 110);
+            lblTarjeta2Desc.Location = new Point(14, 36);
+            lblTarjeta2Desc.Name = "lblTarjeta2Desc";
+            lblTarjeta2Desc.Size = new Size(216, 17);
+            lblTarjeta2Desc.TabIndex = 1;
+            lblTarjeta2Desc.Text = "Solicitud, aprobación y seguimiento";
+            // 
+            // lblTarjeta2Titulo
+            // 
+            lblTarjeta2Titulo.AutoSize = true;
+            lblTarjeta2Titulo.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTarjeta2Titulo.ForeColor = Color.FromArgb(17, 17, 17);
+            lblTarjeta2Titulo.Location = new Point(14, 10);
+            lblTarjeta2Titulo.Name = "lblTarjeta2Titulo";
+            lblTarjeta2Titulo.Size = new Size(196, 23);
+            lblTarjeta2Titulo.TabIndex = 0;
+            lblTarjeta2Titulo.Text = "Traspasos entre tiendas";
+            // 
+            // pnlTarjeta1
+            // 
+            pnlTarjeta1.BackColor = Color.White;
+            pnlTarjeta1.Controls.Add(lblTarjeta1Desc);
+            pnlTarjeta1.Controls.Add(lblTarjeta1Titulo);
+            pnlTarjeta1.Location = new Point(40, 488);
+            pnlTarjeta1.Margin = new Padding(3, 4, 3, 4);
+            pnlTarjeta1.Name = "pnlTarjeta1";
+            pnlTarjeta1.Size = new Size(400, 68);
+            pnlTarjeta1.TabIndex = 4;
+            // 
+            // lblTarjeta1Desc
+            // 
+            lblTarjeta1Desc.AutoSize = true;
+            lblTarjeta1Desc.Font = new Font("Segoe UI", 7.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblTarjeta1Desc.ForeColor = Color.FromArgb(110, 110, 110);
+            lblTarjeta1Desc.Location = new Point(14, 36);
+            lblTarjeta1Desc.Name = "lblTarjeta1Desc";
+            lblTarjeta1Desc.Size = new Size(246, 17);
+            lblTarjeta1Desc.TabIndex = 1;
+            lblTarjeta1Desc.Text = "Facturación rápida con control de pagos";
+            lblTarjeta1Desc.Click += lblTarjeta1Desc_Click;
+            // 
+            // lblTarjeta1Titulo
+            // 
+            lblTarjeta1Titulo.AutoSize = true;
+            lblTarjeta1Titulo.Font = new Font("Segoe UI", 10.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTarjeta1Titulo.ForeColor = Color.FromArgb(17, 17, 17);
+            lblTarjeta1Titulo.Location = new Point(14, 10);
+            lblTarjeta1Titulo.Name = "lblTarjeta1Titulo";
+            lblTarjeta1Titulo.Size = new Size(132, 23);
+            lblTarjeta1Titulo.TabIndex = 0;
+            lblTarjeta1Titulo.Text = "Punto de Venta";
+            // 
+            // lblPie
+            // 
+            lblPie.AutoSize = true;
+            lblPie.Font = new Font("Segoe UI", 7.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblPie.ForeColor = Color.FromArgb(110, 110, 110);
+            lblPie.Location = new Point(40, 762);
+            lblPie.Name = "lblPie";
+            lblPie.Size = new Size(161, 17);
+            lblPie.TabIndex = 3;
+            lblPie.Text = "© 2026 Sistema ERP · v1.0";
+            // 
+            // lblSubtitulo
+            // 
+            lblSubtitulo.AutoSize = true;
+            lblSubtitulo.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblSubtitulo.ForeColor = Color.FromArgb(110, 110, 110);
+            lblSubtitulo.Location = new Point(40, 425);
+            lblSubtitulo.Name = "lblSubtitulo";
+            lblSubtitulo.Size = new Size(344, 23);
+            lblSubtitulo.TabIndex = 2;
+            lblSubtitulo.Text = "Administra todas tus tiendas desde la nube ";
+            // 
+            // lblTitulo
+            // 
+            lblTitulo.Font = new Font("Segoe UI", 25.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblTitulo.ForeColor = Color.FromArgb(17, 17, 17);
+            lblTitulo.Location = new Point(40, 188);
+            lblTitulo.Name = "lblTitulo";
+            lblTitulo.Size = new Size(460, 238);
+            lblTitulo.TabIndex = 1;
+            lblTitulo.Text = "Ventas, inventario y traspasos en un solo lugar ";
+            // 
+            // lblMarca
+            // 
+            lblMarca.AutoSize = true;
+            lblMarca.Font = new Font("Segoe UI", 13.2F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblMarca.ForeColor = Color.FromArgb(17, 17, 17);
+            lblMarca.Location = new Point(40, 50);
+            lblMarca.Name = "lblMarca";
+            lblMarca.Size = new Size(140, 30);
+            lblMarca.TabIndex = 0;
+            lblMarca.Text = "Sistema ERP";
             // 
             // pnlLogin
             // 
-            this.pnlLogin.BackColor = System.Drawing.Color.White;
-            this.pnlLogin.Controls.Add(this.btnIngresar);
-            this.pnlLogin.Controls.Add(this.cmbRol);
-            this.pnlLogin.Controls.Add(this.lblRol);
-            this.pnlLogin.Controls.Add(this.lineaRol);
-            this.pnlLogin.Controls.Add(this.lineaClave);
-            this.pnlLogin.Controls.Add(this.lineaUsuario);
-            this.pnlLogin.Controls.Add(this.txtClave);
-            this.pnlLogin.Controls.Add(this.txtUsuario);
-            this.pnlLogin.Controls.Add(this.lblClave);
-            this.pnlLogin.Controls.Add(this.lblUsuario);
-            this.pnlLogin.Controls.Add(this.lblLoginSub);
-            this.pnlLogin.Controls.Add(this.lblLoginTitulo);
-            this.pnlLogin.Location = new System.Drawing.Point(620, 125);
-            this.pnlLogin.Name = "pnlLogin";
-            this.pnlLogin.Size = new System.Drawing.Size(400, 400);
-            this.pnlLogin.TabIndex = 1;
-            this.pnlLogin.Paint += new System.Windows.Forms.PaintEventHandler(this.pnlLogin_Paint);
-            // 
-            // lblLoginTitulo
-            // 
-            this.lblLoginTitulo.AutoSize = true;
-            this.lblLoginTitulo.Font = new System.Drawing.Font("Segoe UI", 19.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLoginTitulo.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.lblLoginTitulo.Location = new System.Drawing.Point(32, 26);
-            this.lblLoginTitulo.Name = "lblLoginTitulo";
-            this.lblLoginTitulo.Size = new System.Drawing.Size(229, 46);
-            this.lblLoginTitulo.TabIndex = 0;
-            this.lblLoginTitulo.Text = "Iniciar sesion";
-            // 
-            // lblLoginSub
-            // 
-            this.lblLoginSub.AutoSize = true;
-            this.lblLoginSub.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLoginSub.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
-            this.lblLoginSub.Location = new System.Drawing.Point(32, 68);
-            this.lblLoginSub.Name = "lblLoginSub";
-            this.lblLoginSub.Size = new System.Drawing.Size(266, 20);
-            this.lblLoginSub.TabIndex = 1;
-            this.lblLoginSub.Text = "Ingresa tus credenciales para continuar";
-            // 
-            // lblUsuario
-            // 
-            this.lblUsuario.AutoSize = true;
-            this.lblUsuario.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUsuario.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
-            this.lblUsuario.Location = new System.Drawing.Point(32, 108);
-            this.lblUsuario.Name = "lblUsuario";
-            this.lblUsuario.Size = new System.Drawing.Size(53, 17);
-            this.lblUsuario.TabIndex = 2;
-            this.lblUsuario.Text = "Usuario";
-            // 
-            // lblClave
-            // 
-            this.lblClave.AutoSize = true;
-            this.lblClave.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblClave.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
-            this.lblClave.Location = new System.Drawing.Point(32, 176);
-            this.lblClave.Name = "lblClave";
-            this.lblClave.Size = new System.Drawing.Size(74, 17);
-            this.lblClave.TabIndex = 3;
-            this.lblClave.Text = "Contrasena";
-            // 
-            // txtUsuario
-            // 
-            this.txtUsuario.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtUsuario.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtUsuario.Location = new System.Drawing.Point(32, 130);
-            this.txtUsuario.Name = "txtUsuario";
-            this.txtUsuario.Size = new System.Drawing.Size(336, 24);
-            this.txtUsuario.TabIndex = 2;
-            // 
-            // txtClave
-            // 
-            this.txtClave.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtClave.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtClave.Location = new System.Drawing.Point(32, 198);
-            this.txtClave.Name = "txtClave";
-            this.txtClave.Size = new System.Drawing.Size(336, 24);
-            this.txtClave.TabIndex = 4;
-            this.txtClave.UseSystemPasswordChar = true;
-            // 
-            // lineaUsuario
-            // 
-            this.lineaUsuario.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
-            this.lineaUsuario.Location = new System.Drawing.Point(32, 158);
-            this.lineaUsuario.Name = "lineaUsuario";
-            this.lineaUsuario.Size = new System.Drawing.Size(336, 1);
-            this.lineaUsuario.TabIndex = 5;
-            // 
-            // lineaClave
-            // 
-            this.lineaClave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
-            this.lineaClave.Location = new System.Drawing.Point(32, 226);
-            this.lineaClave.Name = "lineaClave";
-            this.lineaClave.Size = new System.Drawing.Size(336, 1);
-            this.lineaClave.TabIndex = 6;
-            // 
-            // lineaRol
-            // 
-            this.lineaRol.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(210)))), ((int)(((byte)(210)))), ((int)(((byte)(210)))));
-            this.lineaRol.Location = new System.Drawing.Point(32, 300);
-            this.lineaRol.Name = "lineaRol";
-            this.lineaRol.Size = new System.Drawing.Size(336, 1);
-            this.lineaRol.TabIndex = 7;
-            // 
-            // lblRol
-            // 
-            this.lblRol.AutoSize = true;
-            this.lblRol.Font = new System.Drawing.Font("Segoe UI", 7.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblRol.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(110)))), ((int)(((byte)(110)))), ((int)(((byte)(110)))));
-            this.lblRol.Location = new System.Drawing.Point(32, 244);
-            this.lblRol.Name = "lblRol";
-            this.lblRol.Size = new System.Drawing.Size(73, 17);
-            this.lblRol.TabIndex = 8;
-            this.lblRol.Text = "Confirmar nueva contraseña";
-            // 
-            // cmbRol
-            // 
-            this.cmbRol.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbRol.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.cmbRol.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.cmbRol.FormattingEnabled = true;
-            this.cmbRol.Location = new System.Drawing.Point(32, 264);
-            this.cmbRol.Name = "cmbRol";
-            this.cmbRol.Size = new System.Drawing.Size(336, 33);
-            this.cmbRol.TabIndex = 9;
-            this.cmbRol.SelectedIndexChanged += new System.EventHandler(this.cmbRol_SelectedIndexChanged);
+            pnlLogin.BackColor = Color.White;
+            pnlLogin.Controls.Add(btnIngresar);
+            pnlLogin.Controls.Add(cmbRol);
+            pnlLogin.Controls.Add(lblRol);
+            pnlLogin.Controls.Add(lineaRol);
+            pnlLogin.Controls.Add(lineaClave);
+            pnlLogin.Controls.Add(lineaUsuario);
+            pnlLogin.Controls.Add(txtClave);
+            pnlLogin.Controls.Add(txtUsuario);
+            pnlLogin.Controls.Add(lblClave);
+            pnlLogin.Controls.Add(lblUsuario);
+            pnlLogin.Controls.Add(lblLoginSub);
+            pnlLogin.Controls.Add(lblLoginTitulo);
+            pnlLogin.Controls.Add(txtConfirmacion);
+            pnlLogin.Controls.Add(lblEstado);
+            pnlLogin.Location = new Point(620, 156);
+            pnlLogin.Margin = new Padding(3, 4, 3, 4);
+            pnlLogin.Name = "pnlLogin";
+            pnlLogin.Size = new Size(400, 612);
+            pnlLogin.TabIndex = 1;
+            pnlLogin.Paint += pnlLogin_Paint;
             // 
             // btnIngresar
             // 
-            this.btnIngresar.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(17)))), ((int)(((byte)(17)))), ((int)(((byte)(17)))));
-            this.btnIngresar.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnIngresar.FlatAppearance.BorderSize = 0;
-            this.btnIngresar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnIngresar.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnIngresar.ForeColor = System.Drawing.Color.White;
-            this.btnIngresar.Location = new System.Drawing.Point(32, 326);
-            this.btnIngresar.Name = "btnIngresar";
-            this.btnIngresar.Size = new System.Drawing.Size(336, 46);
-            this.btnIngresar.TabIndex = 10;
-            this.btnIngresar.Text = "Ingresar";
-            this.btnIngresar.UseVisualStyleBackColor = false;
-            this.btnIngresar.Click += new System.EventHandler(this.btnIngresar_Click);
+            btnIngresar.BackColor = Color.FromArgb(17, 17, 17);
+            btnIngresar.Cursor = Cursors.Hand;
+            btnIngresar.FlatAppearance.BorderSize = 0;
+            btnIngresar.FlatStyle = FlatStyle.Flat;
+            btnIngresar.Font = new Font("Segoe UI", 10.2F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            btnIngresar.ForeColor = Color.White;
+            btnIngresar.Location = new Point(32, 408);
+            btnIngresar.Margin = new Padding(3, 4, 3, 4);
+            btnIngresar.Name = "btnIngresar";
+            btnIngresar.Size = new Size(336, 58);
+            btnIngresar.TabIndex = 10;
+            btnIngresar.Text = "Ingresar";
+            btnIngresar.UseVisualStyleBackColor = false;
+            btnIngresar.Click += btnIngresar_Click;
+            // 
+            // cmbRol
+            // 
+            cmbRol.DropDownStyle = ComboBoxStyle.DropDownList;
+            cmbRol.FlatStyle = FlatStyle.Flat;
+            cmbRol.Font = new Font("Segoe UI", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            cmbRol.FormattingEnabled = true;
+            cmbRol.Location = new Point(32, 330);
+            cmbRol.Margin = new Padding(3, 4, 3, 4);
+            cmbRol.Name = "cmbRol";
+            cmbRol.Size = new Size(336, 33);
+            cmbRol.TabIndex = 9;
+            cmbRol.Visible = false;
+            cmbRol.SelectedIndexChanged += cmbRol_SelectedIndexChanged;
+            // 
+            // lblRol
+            // 
+            lblRol.AutoSize = true;
+            lblRol.Font = new Font("Segoe UI", 7.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblRol.ForeColor = Color.FromArgb(110, 110, 110);
+            lblRol.Location = new Point(32, 305);
+            lblRol.Name = "lblRol";
+            lblRol.Size = new Size(172, 17);
+            lblRol.TabIndex = 8;
+            lblRol.Text = "Confirmar nueva contraseña";
+            lblRol.Visible = false;
+            // 
+            // lineaRol
+            // 
+            lineaRol.BackColor = Color.FromArgb(210, 210, 210);
+            lineaRol.Location = new Point(32, 375);
+            lineaRol.Margin = new Padding(3, 4, 3, 4);
+            lineaRol.Name = "lineaRol";
+            lineaRol.Size = new Size(336, 1);
+            lineaRol.TabIndex = 7;
+            lineaRol.Visible = false;
+            // 
+            // lineaClave
+            // 
+            lineaClave.BackColor = Color.FromArgb(210, 210, 210);
+            lineaClave.Location = new Point(32, 282);
+            lineaClave.Margin = new Padding(3, 4, 3, 4);
+            lineaClave.Name = "lineaClave";
+            lineaClave.Size = new Size(336, 1);
+            lineaClave.TabIndex = 6;
+            // 
+            // lineaUsuario
+            // 
+            lineaUsuario.BackColor = Color.FromArgb(210, 210, 210);
+            lineaUsuario.Location = new Point(32, 198);
+            lineaUsuario.Margin = new Padding(3, 4, 3, 4);
+            lineaUsuario.Name = "lineaUsuario";
+            lineaUsuario.Size = new Size(336, 1);
+            lineaUsuario.TabIndex = 5;
+            // 
+            // txtClave
+            // 
+            txtClave.BorderStyle = BorderStyle.None;
+            txtClave.Font = new Font("Segoe UI", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtClave.Location = new Point(32, 248);
+            txtClave.Margin = new Padding(3, 4, 3, 4);
+            txtClave.MaxLength = 128;
+            txtClave.Name = "txtClave";
+            txtClave.Size = new Size(336, 24);
+            txtClave.TabIndex = 4;
+            txtClave.UseSystemPasswordChar = true;
+            // 
+            // txtUsuario
+            // 
+            txtUsuario.BorderStyle = BorderStyle.None;
+            txtUsuario.Font = new Font("Segoe UI", 10.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            txtUsuario.Location = new Point(32, 162);
+            txtUsuario.Margin = new Padding(3, 4, 3, 4);
+            txtUsuario.MaxLength = 50;
+            txtUsuario.Name = "txtUsuario";
+            txtUsuario.Size = new Size(336, 24);
+            txtUsuario.TabIndex = 2;
+            // 
+            // lblClave
+            // 
+            lblClave.AutoSize = true;
+            lblClave.Font = new Font("Segoe UI", 7.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblClave.ForeColor = Color.FromArgb(110, 110, 110);
+            lblClave.Location = new Point(32, 220);
+            lblClave.Name = "lblClave";
+            lblClave.Size = new Size(74, 17);
+            lblClave.TabIndex = 3;
+            lblClave.Text = "Contraseña";
+            // 
+            // lblUsuario
+            // 
+            lblUsuario.AutoSize = true;
+            lblUsuario.Font = new Font("Segoe UI", 7.8F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblUsuario.ForeColor = Color.FromArgb(110, 110, 110);
+            lblUsuario.Location = new Point(32, 135);
+            lblUsuario.Name = "lblUsuario";
+            lblUsuario.Size = new Size(53, 17);
+            lblUsuario.TabIndex = 2;
+            lblUsuario.Text = "Usuario";
+            // 
+            // lblLoginSub
+            // 
+            lblLoginSub.AutoSize = true;
+            lblLoginSub.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            lblLoginSub.ForeColor = Color.FromArgb(110, 110, 110);
+            lblLoginSub.Location = new Point(32, 85);
+            lblLoginSub.Name = "lblLoginSub";
+            lblLoginSub.Size = new Size(266, 20);
+            lblLoginSub.TabIndex = 1;
+            lblLoginSub.Text = "Ingresa tus credenciales para continuar";
+            // 
+            // lblLoginTitulo
+            // 
+            lblLoginTitulo.AutoSize = true;
+            lblLoginTitulo.Font = new Font("Segoe UI", 19.8F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblLoginTitulo.ForeColor = Color.FromArgb(17, 17, 17);
+            lblLoginTitulo.Location = new Point(32, 32);
+            lblLoginTitulo.Name = "lblLoginTitulo";
+            lblLoginTitulo.Size = new Size(221, 45);
+            lblLoginTitulo.TabIndex = 0;
+            lblLoginTitulo.Text = "Iniciar sesión";
+            // 
+            // txtConfirmacion
+            // 
+            txtConfirmacion.Font = new Font("Segoe UI", 11F);
+            txtConfirmacion.Location = new Point(32, 330);
+            txtConfirmacion.Margin = new Padding(3, 4, 3, 4);
+            txtConfirmacion.MaxLength = 128;
+            txtConfirmacion.Name = "txtConfirmacion";
+            txtConfirmacion.Size = new Size(336, 32);
+            txtConfirmacion.TabIndex = 9;
+            txtConfirmacion.UseSystemPasswordChar = true;
+            txtConfirmacion.Visible = false;
+            // 
+            // lblEstado
+            // 
+            lblEstado.Font = new Font("Segoe UI", 10F);
+            lblEstado.ForeColor = Color.FromArgb(178, 34, 34);
+            lblEstado.Location = new Point(32, 478);
+            lblEstado.Name = "lblEstado";
+            lblEstado.Size = new Size(336, 112);
+            lblEstado.TabIndex = 11;
             // 
             // FrmLogin
             // 
-            this.AcceptButton = this.btnIngresar;
-            this.txtUsuario.MaxLength = 50;
-            this.txtClave.MaxLength = 128;
-            this.cmbRol.Visible = false;
-            this.lblRol.Visible = false;
-            this.lineaRol.Visible = false;
-            this.txtConfirmacion.Location = new System.Drawing.Point(32, 264);
-            this.txtConfirmacion.Size = new System.Drawing.Size(336, 28);
-            this.txtConfirmacion.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.txtConfirmacion.UseSystemPasswordChar = true;
-            this.txtConfirmacion.MaxLength = 128;
-            this.txtConfirmacion.TabIndex = 9;
-            this.txtConfirmacion.Visible = false;
-            this.lblEstado.Location = new System.Drawing.Point(32, 382);
-            this.lblEstado.Size = new System.Drawing.Size(336, 90);
-            this.lblEstado.Font = new System.Drawing.Font("Segoe UI", 10F);
-            this.lblEstado.ForeColor = Sistema_ERP.ProductoEstilo.Error;
-            this.pnlLogin.Height = 490;
-            this.pnlLogin.Controls.Add(this.txtConfirmacion);
-            this.pnlLogin.Controls.Add(this.lblEstado);
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(250)))), ((int)(((byte)(250)))));
-            this.ClientSize = new System.Drawing.Size(1098, 650);
-            this.Controls.Add(this.pnlLogin);
-            this.Controls.Add(this.pnlIzquierdo);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.MaximizeBox = false;
-            this.Name = "FrmLogin";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Iniciar Sesion";
-            this.Load += new System.EventHandler(this.FrmLogin_Load);
-            this.pnlIzquierdo.ResumeLayout(false);
-            this.pnlIzquierdo.PerformLayout();
-            this.pnlTarjeta1.ResumeLayout(false);
-            this.pnlTarjeta1.PerformLayout();
-            this.pnlTarjeta2.ResumeLayout(false);
-            this.pnlTarjeta2.PerformLayout();
-            this.pnlTarjeta3.ResumeLayout(false);
-            this.pnlTarjeta3.PerformLayout();
-            this.pnlLogin.ResumeLayout(false);
-            this.pnlLogin.PerformLayout();
-            this.ResumeLayout(false);
+            AcceptButton = btnIngresar;
+            AutoScaleDimensions = new SizeF(8F, 20F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(250, 250, 250);
+            ClientSize = new Size(1098, 812);
+            Controls.Add(pnlLogin);
+            Controls.Add(pnlIzquierdo);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            Margin = new Padding(3, 4, 3, 4);
+            MaximizeBox = false;
+            Name = "FrmLogin";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Iniciar Sesion";
+            Load += FrmLogin_Load;
+            pnlIzquierdo.ResumeLayout(false);
+            pnlIzquierdo.PerformLayout();
+            pnlTarjeta3.ResumeLayout(false);
+            pnlTarjeta3.PerformLayout();
+            pnlTarjeta2.ResumeLayout(false);
+            pnlTarjeta2.PerformLayout();
+            pnlTarjeta1.ResumeLayout(false);
+            pnlTarjeta1.PerformLayout();
+            pnlLogin.ResumeLayout(false);
+            pnlLogin.PerformLayout();
+            ResumeLayout(false);
 
         }
 

@@ -92,5 +92,10 @@ namespace LoginERP
             claveAnterior = "";
             base.OnFormClosing(e);
         }
+
+        private void lblTarjeta1Desc_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

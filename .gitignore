@@ -365,3 +365,6 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 Datos/Plantillas/Catalogo_productos_20261109.xlsx
+
+Instalador/publicado/
+Instalador/salida/
