@@ -253,7 +253,7 @@
     <EmbeddedResource Include="Datos/Migraciones/002_bitacora_sistema.sql" LogicalName="Sistema_ERP.Setup.Bitacora.sql" />
     <EmbeddedResource Include="Datos/Migraciones/006_passkeys.sql" LogicalName="Sistema_ERP.Setup.Passkeys.sql" />
     <EmbeddedResource Include="Datos/Plantillas/Plantilla_carga_masiva.xlsx" LogicalName="Sistema_ERP.PlantillaCargaMasiva.xlsx" />
-    <None Update="connection.local.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <None Update="connection.local.txt" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="Never" />
     <PackageReference Include="PDFsharp-GDI" Version="6.2.4" />
   </ItemGroup>
 

@@ -365,3 +365,22 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 Datos/Plantillas/Catalogo_productos_20261109.xlsx
+
+# Evidencias y documentos generados localmente
+/Documentacion/Evidencia_K11_Publicacion_2026-11-23.txt
+/Documentacion/Evidencia_K12-K16_Automatizada_2026-11-23.txt
+/Documentacion/Evidencia_K16_2026-11-23/
+/Documentacion/Ejecucion_K12-K16_2026-11-23.md
+/Documentacion/K11_Especificacion_Instalador.md
+/Documentacion/K17_Informe_Caja_Negra_2026-11-23.md
+/Documentacion/Manual_Tecnico.docx
+/Documentacion/Manual_Tecnico.md
+/Documentacion/Manual_Usuario.docx
+/Documentacion/Manual_Usuario.md
+/Documentacion/Matriz_Clases_Entradas.docx
+/Documentacion/Matriz_Clases_Entradas.md
+/Documentacion/Matriz_Clases_Entradas_K07_Actualizada.docx
+/Documentacion/Pruebas_Caja_Negra_K07-K17.docx
+/Documentacion/Pruebas_Caja_Negra_K07-K17.md
+/Documentacion/Pruebas_Caja_Negra_K11-K17.docx
+/Documentacion/README.md
